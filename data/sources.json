@@ -96,5 +96,26 @@
     "url": "https://link.amazon/B0f3GKalj",
     "used_for": "Observed redirect target B0DZFD6R9Z",
     "checked": "2026-11-20"
+  },
+  {
+    "id": "S20",
+    "name": "Amazon Creators API — Register for Creators API (onboarding requirements)",
+    "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api",
+    "used_for": "Access is limited to Associates whose account has been reviewed and received final acceptance into the program, and who have referred qualified sales. Only the primary account owner can register. This is the gate on any automated product-data pipeline. Checked verbatim against the page on 2026-11-20.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S21",
+    "name": "Amazon Creators API — PA-API 5 deprecation notice",
+    "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation",
+    "used_for": "States that Amazon Product Advertising API 5.0 is deprecated and that existing calls receive HTTP 403 Forbidden with AccessDeniedException; the supported successor is the Creators API.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S22",
+    "name": "USDA FSIS — Safe Minimum Internal Temperature Chart",
+    "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
+    "used_for": "Official minimum internal cooking temperatures: poultry 165 F (73.9 C); ground meats 160 F (71.1 C); beef, pork, veal and lamb steaks, chops and roasts 145 F (62.8 C) with a 3-minute rest; fish and shellfish 145 F (62.8 C); leftovers and casseroles 165 F (73.9 C). Any doneness figure on this site must defer to this chart.",
+    "checked": "2026-11-20"
   }
 ]
