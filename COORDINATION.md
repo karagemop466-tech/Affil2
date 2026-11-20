@@ -781,3 +781,90 @@ Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`0b509ab`, pr
 ### Claim (2026-11-20, `active`)
 
 Claimed and started: (1) close-out of live source verification — Program Policies **Appendix** (chunks 9–10) + commission-**schedule** page, S03/S23 FTC pages, S04 Google outbound-links, S20 Creators API onboarding, S21 PA-API 5 deprecation, S22/S24 USDA FSIS pages, and a third dated re-test of all five `link.amazon` short links; (2) revision-date patch to the source register (`data/sources.json` + `build_sources()`): Program Policies *Updated April 14, 2026*, Operating Agreement *Updated October 15, 2025*, IP License §4 Agent Terms recorded as verified-verbatim; (3) row-level sourcing fix — every `<tbody>` claim row gains an official source link or an explicit unverified marker (compare spec rows, executive-summary conflict rows, product intent/USDA rows) plus a `check_site.py` gate rule; (4) `tag=shopnow047c-20` policy decision for evidence links with gate update. Short-link instability observed today (2 of 5 tokens landed on the Amazon homepage on repeated attempts) is recorded as a dated addendum in `data/reverification-2026-11-20.json` and folded into `FLG-011` — **no validity claim is made about the short links (FLG-003 stands)**. Scope: `data/reverification-2026-11-20.json`, `data/flags.json` (FLG-011 dated follow-up note only), `data/sources.json`, `scripts/build_site.py`, `scripts/check_site.py`, `README.md`, `COORDINATION.md`, regenerated HTML. `data/products.json` and all other flags are untouched. Open PRs #35/#34 are preserved by merging their branches into this session's branch before the integration PR (conflicts resolved preserving both sides, logged below).
+
+### Completed work (2026-11-20, session `arena/195d1d32-affil2`)
+
+1. **Live source verification close-out (all 19 sources now read this session).** Program Policies
+   read to the end (chunk 10 of 11): the **Appendix** contains only two links — Standard and Special
+   Commission Income → `affiliate-program.amazon.com/help/operating/schedule` — and that schedule
+   page is **login-gated** (fetch lands on the Associates sign-in). No commission rate is therefore
+   reproduced anywhere on the site, now as a verified fact rather than an assumption. Re-verified
+   live and matching the register: S03 FTC Endorsement Guides FAQ (clear-and-conspicuous, 2023
+   revision of 16 CFR 255), S23 FTC Disclosures 101 (Nov 2019), S04 Google outbound-link
+   qualification (page updated 2025-12-10; `rel="sponsored"` confirmed), S20 Creators API onboarding
+   (final acceptance required; 2 applications/store), S21 PA-API 5 deprecation (deprecated →
+   Creators API; legacy calls receive HTTP 403 `AccessDeniedException`), S22 USDA temperature chart
+   (Last Updated Apr 14, 2025; rows match the site's USDA tables), S24 USDA Food Thermometers.
+   All five `/dp/` listings re-confirmed live and identity-consistent.
+2. **Third dated re-test of the five `link.amazon` short links** — 3 of 5 re-confirmed their
+   recorded ASINs (`B02NbDxp3→B09B7SB46R`, `B00hJ57DV→B08DKYBTPH`, `B0f3GKalj→B0DZFD6R9Z`);
+   `B04G1MEwY` and `B0c8moW59` landed on the Amazon homepage on 2 of 2 attempts each — both target
+   listings (`B0CDY277D3`, `B0DHZTCNR5`) were separately re-confirmed live the same day. Recorded as
+   a dated addendum in `data/reverification-2026-11-20.json` and folded into **FLG-011**; no
+   validity claim made (FLG-003 stands). The only valid compliance check remains the in-workflow
+   Associates link test (FLG-004).
+3. **Source register revision dates** (`data/sources.json` + `build_sources()`): S01 *Updated
+   October 15, 2025*, S02 *Updated April 14, 2026*, plus revision/provenance lines for S03, S04,
+   S20–S24. IP License §4 Agent Terms recorded as verified verbatim.
+4. **Row-level sourcing closed.** Every `<tbody>` claim row now carries an official source link or
+   an explicit `unverified` marker: compare 5-column table (new Source column + pair view via
+   `pairData` third field), executive-summary conflict table (flag anchors + source column),
+   product intent records (submitted short link, observed target, official listing, model, date,
+   FLG-004 status all linked), USDA tables (new Source column), Decision Center proposals (new
+   Provenance column, register tokens auto-linked), shortlist, Design & Traffic Brief (clusters,
+   standards, seasonal calendar, brief-to-build mapping), disclosure and measurement event tables,
+   campaign-ledger empty-state row. New gate rule in `check_site.py` enforces this on every page.
+5. **`tag=shopnow047c-20` on every clickable amazon.com anchor.** Evidence citations keep the plain
+   official URL as their visible text and mark themselves "(tagged paid link)"; `link.amazon`
+   supplied links are published unmodified and exempt (FLG-003). New gate rule enforces the tag on
+   every `www.amazon.com` anchor. Recorded in README ("Rules the gate enforces").
+6. **Open PRs preserved and closed (integration role).** The two remaining open PRs have histories
+   disjoint from `main` (main was re-rooted earlier in the day), so a git merge is impossible; their
+   work was preserved by content port instead:
+   - **#34** (`arena/82c875a9-affil2`, COORDINATION.md-only): its session-`82c875a9` publication
+     record (PR #30/#32/#33 merge results, the "26.5 lb" lesson, and the SG-17 renumbering note) was
+     recovered from its branch and is preserved below verbatim — it had been lost from `main`'s
+     re-rooted history.
+   - **#35** (`arena/36170d15-affil2`, T-17): the only artifact in its tree absent from `main` is
+     **`scripts/analytics_server.py`** (privacy-preserving aggregate-only Python collector,
+     complementing `analytics/server.js`); ported and smoke-tested (`/healthz` → `ok`, schema
+     validation active; state file path git-ignored). Everything else in its tree — separate
+     intended/observed product identities, source-linked evidence rows, five-event schema, hardened
+     gate — was independently re-implemented and merged through PRs #31/#36/#37 and re-verified
+     line by line in this session; its generator-owned page outputs predate the current generator
+     and are superseded.
+   Both PRs are closed with a comment pointing at this record. Their work is preserved; nothing was
+   discarded silently.
+
+#### Recovered publication record (session `82c875a9`, ported verbatim from PR #34)
+
+> ### Publication record (session `82c875a9`)
+> | PR | Title | Result |
+> |----|-------|--------|
+> | [#30](https://github.com/karagemop466-tech/Affil2/pull/30) | Storefront rebuild, working search and pair compare, register re-verified against live listings | merged → `63cb1fb`; Pages **success**, Verify site **success** on that SHA |
+> | [#32](https://github.com/karagemop466-tech/Affil2/pull/32) | Remove the last unsupported weight claim, gate against any lb figure in prose | merged → `c916fce`; live page confirmed |
+> | [#33](https://github.com/karagemop466-tech/Affil2/pull/33) | P-02 lede stops promising weight content the register cannot supply | merged → `e948aae`; live page confirmed |
+>
+> Live: https://karagemop466-tech.github.io/Affil2/ — all 30 pages, plus `compare.html` with the working
+> pair view, checked on the deployed URL rather than the local build.
+>
+> **Lesson repeated, and worth writing down.** PR #30 passed the gate, deployed green, and still shipped
+> one wrong number: `data/editorial.json` carried "26.5 lb" for the Emeril, and that string is rendered
+> into the compare table's catch column and into a product FAQ. I found it by reading the deployed
+> `compare.html`, not by running `check_site.py` twice. The gate now fails on any `N lb/lbs/pound` figure
+> in page prose, and on any promise of weight information, but the general point stands: the gate proves
+> markup and sourcing rules, not that the sentence is true. Read the live page after every deploy.
+>
+> **Renumbering note for the next session.** `main` gained the Design & Traffic Brief at SG-17 while this
+> branch was open. This branch's six proposals are therefore SG-18 to SG-23, and its two shipped items are
+> SG-20 (change log) and SG-21 (pair compare). Do not re-use SG-17.
+
+### Verification performed before this integration PR
+
+- `python3 -B scripts/build_site.py` → `built 33 pages`, idempotent across consecutive runs.
+- `python3 -B scripts/check_site.py` → `checked 33 pages, 5 product records, 40 flags, 19 sources —
+  ALL CHECKS PASS` with the two new rules active (tbody-row sourcing; Associates tag on every
+  amazon.com anchor).
+- `python3 -B -m unittest discover -s tests -p "test_*.py"` → 3 tests OK; `node --check assets/app.js`
+  clean; `node tests/test_collector.js` → ALL PASS; `python3 -m py_compile scripts/analytics_server.py`
+  + live smoke test of `/healthz` and one POST.
