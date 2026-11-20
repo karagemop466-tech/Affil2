@@ -675,13 +675,13 @@
   },
   {
     "id": "FLG-062",
-    "title": "The reading-time estimate counted only part of the page",
-    "detail": "The generator computed an honest estimate from intro, verdict and section prose, then printed it beside pages that also carry a table, a checklist and a sources panel: a 970-word guide was labelled 2 minutes. Found on 2026-11-20 while publishing the November wave. The estimate now counts the whole rendered page, stripped of markup, so the number on the line matches the words below it. If an estimate cannot include a section, it should not be printed next to it.",
+    "title": "Two reading-time figures on one line, one of them measured over half the page",
+    "detail": "The seasonal guides printed a hand-written '7 min read' claim beside the generator's computed 'about 2 min of reading': two numbers for one thing, the unmeasured one first. The generator's own estimate also ignored the tables, checklists and source panels that make up a third of a guide, so it under-counted every page it printed \u2014 a 970-word guide was labelled 2 minutes. Fixed in the merge: the asserted numbers are gone, and the surviving measure (build_site.guide_words, contributed by session 93894704) counts the kicker, title, sub, intro, verdict, every section and the extra block. This session's duplicate helper was deleted rather than kept alongside it, so one formula produces the single figure the gate now requires on each guide.",
     "links": [
       "S10"
     ],
     "severity": "corrected",
-    "owner_status": "Repaired on 2026-11-20 in scripts/build_site.py. Estimates rose across the guide set; nothing else on the page changed."
+    "owner_status": "Repaired on 2026-11-20. One measured figure per guide, and a test asserts it is the only one on the page."
   },
   {
     "id": "FLG-063",

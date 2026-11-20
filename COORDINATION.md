@@ -2069,3 +2069,29 @@ The second wave of parallel work overlapped this session heavily, so the merge r
 
 Gate after this merge: 43 pages, 5 product records, 63 flags, 22 sources — ALL CHECKS PASS;
 19 Python tests OK; JS collector tests PASS; two consecutive builds are byte-identical.
+
+### Session `arena/19dbf5e2-affil2` — final addendum (2026-11-20)
+
+Two corrections to the record above, made after the second merge round, because the numbers in this
+board must match the files:
+
+- **The traffic wave is five guides, not six.** `guides/ice-water-test.html` and
+  `guides/what-presets-tell-you.html` were retired once upstream published `thermometer-ice-test` and
+  `read-an-air-fryer-listing` on the same topics; their unique substance was folded into those live
+  pages (the immersion-depth caution, and the preset-count analysis). The wave that shipped is
+  `dual-basket-worth-it`, `reheating-to-165`, `what-a-certification-line-means`,
+  `appliance-gift-checklist` and `first-week-wireless-probe`. Guide total: **18**, one page each.
+- **FLG-062 was re-worded, not duplicated.** This session found the reading-time defect and wrote its
+  own measure; upstream's `guide_words` (which already includes the `extra` block) is the better
+  mechanism, so this session's now-redundant `reading_minutes` helper was **deleted** and the flag
+  updated to describe the merged fix. One formula, one figure per page, enforced by the gate.
+
+Also added after the record above: a **Draft queue** panel on `suggestions.html`, generated from
+`data/drafts/` at build time so it cannot drift from the files, seeded with one real draft
+(`family-of-four-worksheet`) that lints clean and stays `unapproved` — this session does not approve
+its own work, because approving is the human half of the gate. The front-page rail now links the whole
+live wave (last six guides rather than last three), and `tests/test_site.py` fails if any guide record
+is missing from `index.html`.
+
+Final state at push: 43 pages, 5 product records, 63 flags, 22 sources — **ALL CHECKS PASS**;
+20 Python tests OK; JS collector tests PASS; two consecutive builds byte-identical.
