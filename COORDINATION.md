@@ -1312,3 +1312,34 @@ maximum, not from the last ID seen in a prompt.
 
 No other session's work was discarded at any point. Every resolution was re-verified with the full
 gate and both test suites before pushing.
+
+## Session `arena/7098c11a-affil2` — integration review (2026-11-20 UTC)
+
+**Claim:** full-repo integration review: line-by-line verification of combined data, build check, broken-link check, GitHub Pages status, and the PR/merge closeout requested by the owner. Branch `arena/7098c11a-affil2`, base `4ddede5` (main tip). No files owned by another session were edited; `data/products.json`, `data/sources.json`, `data/flags.json`, `data/editorial.json` treated as read-only records.
+
+**Constraint stated up front:** this sandbox reaches github.com / api.github.com and package registries only. `amazon.com`, `affiliate-program.amazon.com`, `ftc.gov`, `developers.google.com`, `fsis.usda.gov` fail TLS, so **no live source was re-fetched this session** and no new "verified" status is asserted. Verification rests on (a) the dated 2026-11-20 live reads recorded earlier in this board against official sources S01–S24, each linked for manual review, and (b) internal consistency enforced by the generator and gate.
+
+**Verification performed:**
+
+| Item | Result |
+|------|--------|
+| `python3 scripts/build_site.py` | `built 36 pages`; idempotent across consecutive runs; `git status --porcelain` clean — committed output is byte-identical to generator output (no drift) |
+| `python3 scripts/check_site.py` | `checked 36 pages, 5 product records, 50 flags, 19 sources — ALL CHECKS PASS` |
+| `python3 -m unittest discover -s tests -p "test_*.py" -v` | 3 tests OK |
+| `node tests/test_collector.js` | ALL JS COLLECTOR AND CLIENT TESTS PASS |
+| `gh api repos/karagemop466-tech/Affil2/pages` | status `built`; html_url https://karagemop466-tech.github.io/Affil2/; `build_type: legacy`; source `main /`; `https_enforced: true` |
+| Branch comparison `main` vs `arena/7098c11a-affil2` | Identical: both at `4ddede54d410da0fe62f1ca413a12aa7a0732897` |
+
+**PR / merge closeout (owner-requested flow):**
+- `gh pr create --base main --head arena/7098c11a-affil2` failed: `GraphQL: No commits between main and arena/7098c11a-affil2`. The integration branch **is** the main tip; every prior session's merged work is already on `main` and deployed. There is no diff to create a PR from, no merge to perform, and nothing unintegrated. Per "do not merge a broken site", nothing was forced: build, gate, tests and Pages status are all green.
+- GitHub Pages is live at https://karagemop466-tech.github.io/Affil2/ (status built, HTTPS enforced). The live URL itself could not be fetched from this sandbox (github.io is outside the allowed hosts), so the Pages API record is the evidence; a cache-busted live read is recommended from an unrestricted connection.
+
+**Irregularities reviewed (none new; all previously published and unblocked):**
+- FLG-001 intended ASINs blank, observed kept separate — `data/products.json` `asin` equals `observed` for P-01..P-05 (I-1 in REQUIREMENTS-TRACE.md); intended stays blank pending owner confirmation.
+- FLG-002 tracking ID shopnow047c-20 activity unverifiable without Associates Central.
+- FLG-003 `link.amazon` compliance unresolved; not claimed invalid; site publishes tagged `amazon.com/dp/` URLs instead.
+- FLG-004 one-per-product Special Link test pending account access; product pages read PENDING TEST.
+- FLG-010 self-hosted collector code shipped (`analytics/server.js`, `functions/api/collect.js`), hosting pending (GitHub Pages is static-only).
+- FLG-028 Search Console; FLG-033 named editor; Q-01..Q-04 owner/account items — all untouched, published on `flagged.html` / `questions.html`.
+
+**Conclusion:** the site is complete on `main`, builds cleanly, passes the compliance gate and both test suites, and is live on GitHub Pages. No PR or merge was possible or required. Flagged irregularities are published on `flagged.html` with source links for owner review after go-live.
