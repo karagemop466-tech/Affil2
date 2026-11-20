@@ -773,3 +773,12 @@ Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`0b509ab`, pr
 - `python3 -B scripts/check_site.py`: `checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`.
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
 - `node tests/test_collector.js`: `ALL JS COLLECTOR AND CLIENT TESTS PASS`.
+
+---
+
+## Claim — session `35973829` (2026-11-20, `active`)
+
+- **T-21 | Final integration: reconcile the five open PRs, re-verify combined data, build + broken-link check, PR → main, merge, Pages confirmation, record** — in progress | `35973829` | files: `COORDINATION.md`, and (via merge/reconcile only) the outputs already owned by open PRs #16/#28/#29/#34/#35.
+- Branch `arena/35973829-affil2`, base `c8b8926` (main, after PR #31).
+- Scope note: baseline on this branch already passes `build_site.py` + `check_site.py` (33 pages, 5 products, 40 flags, 19 sources), `tests/test_site.py` (3 OK), `tests/test_collector.js` (ALL PASS), XML parse of feed.xml/sitemap.xml, `node --check assets/app.js`. Pages `main` = `c8b8926`, status `built`, Verify site + pages-build-deployment both success for that SHA.
+- Per the handoff rule this session takes the integration role: PRs #16, #28, #29, #34, #35 are all `CONFLICTING`/`DIRTY`; each will be evaluated for unique, still-relevant content, merged without discarding any other session's work, and recorded here.
