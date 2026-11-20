@@ -1,113 +1,142 @@
 {
-  "generated": "2026-11-20",
-  "session": "7481731c",
-  "task": "T-26",
-  "method": "Live fetch with the fetch_page tool from the sandbox on 2026-11-20 (UTC). The URL reported by the fetch tool after redirects is recorded as final_url. Prices, ratings and review counts were seen on the pages but are deliberately not recorded (Program Policies, S02).",
-  "purpose": "Records where each submitted link resolved on the re-check date. It is kept apart from the intended and observed ASIN fields in data/products.json, which must not be merged with it. A submitted link that resolves to a non-listing page is recorded here as an observation. It is not called invalid, because FLG-003 keeps that status unresolved.",
-  "short_links": [
+ "generated": "2026-11-20",
+ "session": "7481731c",
+ "task": "T-31",
+ "method": "Live fetch with the fetch_page tool from the sandbox on 2026-11-20 (UTC). The URL reported by the fetch tool after redirects is recorded as final_url. Prices, ratings and review counts were seen on the pages but are deliberately not recorded (Program Policies, S02).",
+ "purpose": "Records where each submitted link resolved on the re-check date. It is kept apart from the intended and observed ASIN fields in data/products.json, which must not be merged with it. A submitted link that resolves to a non-listing page is recorded here as an observation. It is not called invalid, because FLG-003 keeps that status unresolved.",
+ "short_links": [
+  {
+   "product": "P-01",
+   "submitted": "https://link.amazon/B04G1MEwY",
+   "register_observed_asin": "B0CDY277D3",
+   "earlier_record": "data/products.json observed_status: 'Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B0CDY277D3'",
+   "attempts": [
     {
-      "product": "P-01",
-      "submitted": "https://link.amazon/B04G1MEwY",
-      "register_observed_asin": "B0CDY277D3",
-      "earlier_record": "data/products.json observed_status: 'Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B0CDY277D3'",
-      "attempts": [
-        {"round": 1, "final_url": "https://www.amazon.com/", "final_title": "Amazon.com. Spend less. Smile more."},
-        {"round": 2, "final_url": "https://www.amazon.com/", "final_title": "Amazon.com. Spend less. Smile more."}
-      ],
-      "reproduces_earlier_record": false,
-      "source_row": "S15"
+     "round": 1,
+     "final_url": "https://www.amazon.com/",
+     "final_title": "Amazon.com. Spend less. Smile more."
     },
     {
-      "product": "P-02",
-      "submitted": "https://link.amazon/B02NbDxp3",
-      "register_observed_asin": "B09B7SB46R",
-      "earlier_record": "data/products.json observed_status: 'Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B09B7SB46R'",
-      "attempts": [
-        {"round": 1, "final_url": "https://www.amazon.com/", "final_title": "Amazon.com. Spend less. Smile more."}
-      ],
-      "reproduces_earlier_record": false,
-      "source_row": "S16"
-    },
-    {
-      "product": "P-03",
-      "submitted": "https://link.amazon/B00hJ57DV",
-      "register_observed_asin": "B08DKYBTPH",
-      "earlier_record": "data/products.json observed_status: 'Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B08DKYBTPH'",
-      "attempts": [
-        {"round": 1, "final_url": "https://www.amazon.com/", "final_title": "Amazon.com. Spend less. Smile more."}
-      ],
-      "reproduces_earlier_record": false,
-      "source_row": "S17"
-    },
-    {
-      "product": "P-04",
-      "submitted": "https://link.amazon/B0c8moW59",
-      "register_observed_asin": "B0DHZTCNR5",
-      "earlier_record": "data/products.json observed_status: 'Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages; fresh fetch ... resolved directly to amazon.com/dp/B0DHZTCNR5'",
-      "attempts": [
-        {"round": 1, "final_url": "https://www.amazon.com/", "final_title": "Amazon.com. Spend less. Smile more."},
-        {"round": 2, "final_url": "https://www.amazon.com/", "final_title": "Amazon.com. Spend less. Smile more."}
-      ],
-      "reproduces_earlier_record": false,
-      "source_row": "S18"
-    },
-    {
-      "product": "P-05",
-      "submitted": "https://link.amazon/B0f3GKalj",
-      "register_observed_asin": "B0DZFD6R9Z",
-      "earlier_record": "data/products.json observed_status: 'Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B0DZFD6R9Z'",
-      "attempts": [
-        {"round": 1, "final_url": "https://www.amazon.com/", "final_title": "Amazon.com. Spend less. Smile more."}
-      ],
-      "reproduces_earlier_record": false,
-      "source_row": "S19"
+     "round": 2,
+     "final_url": "https://www.amazon.com/",
+     "final_title": "Amazon.com. Spend less. Smile more."
     }
-  ],
-  "listing_pages": [
+   ],
+   "reproduces_earlier_record": false,
+   "source_row": "S15"
+  },
+  {
+   "product": "P-02",
+   "submitted": "https://link.amazon/B02NbDxp3",
+   "register_observed_asin": "B09B7SB46R",
+   "earlier_record": "data/products.json observed_status: 'Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B09B7SB46R'",
+   "attempts": [
     {
-      "product": "P-01",
-      "asin_in_url": "B0CDY277D3",
-      "fetched_url": "https://www.amazon.com/dp/B0CDY277D3",
-      "final_url": "https://www.amazon.com/dp/B0CDY277D3?lv=shuf&channelId=500&plpRedirect=mhFallback",
-      "title_as_read": "Amazon.com: CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black : Home & Kitchen",
-      "source_row": "S10"
-    },
-    {
-      "product": "P-02",
-      "asin_in_url": "B09B7SB46R",
-      "fetched_url": "https://www.amazon.com/dp/B09B7SB46R",
-      "final_url": "https://www.amazon.com/dp/B09B7SB46R?lv=shuf&channelId=500&plpRedirect=mhFallback",
-      "title_as_read": "Amazon.com: Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included : Home & Kitchen",
-      "source_row": "S11"
-    },
-    {
-      "product": "P-03",
-      "asin_in_url": "B08DKYBTPH",
-      "fetched_url": "https://www.amazon.com/dp/B08DKYBTPH",
-      "final_url": "https://www.amazon.com/dp/B08DKYBTPH?lv=shuf&channelId=500&plpRedirect=mhFallback&th=1",
-      "title_as_read": "Amazon.com: Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel : Home & Kitchen",
-      "source_row": "S12"
-    },
-    {
-      "product": "P-04",
-      "asin_in_url": "B0DHZTCNR5",
-      "fetched_url": "https://www.amazon.com/dp/B0DHZTCNR5",
-      "final_url": "https://www.amazon.com/dp/B0DHZTCNR5?lv=shuf&channelId=500&plpRedirect=mhFallback",
-      "title_as_read": "Amazon.com: ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black : Home & Kitchen",
-      "source_row": "S13"
-    },
-    {
-      "product": "P-05",
-      "asin_in_url": "B0DZFD6R9Z",
-      "fetched_url": "https://www.amazon.com/dp/B0DZFD6R9Z",
-      "final_url": "https://www.amazon.com/dp/B0DZFD6R9Z?lv=shuf&channelId=500&plpRedirect=mhFallback&th=1",
-      "title_as_read": "Amazon.com: CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3: Home & Kitchen",
-      "source_row": "S14"
+     "round": 1,
+     "final_url": "https://www.amazon.com/",
+     "final_title": "Amazon.com. Spend less. Smile more."
     }
-  ],
-  "intended_asin": "Not recorded here. The owner has not confirmed intended ASINs (FLG-001). This file records observations only.",
-  "open_items": [
-    "Repeat the five short-link checks from a browser signed in to Associates Central, and record the final URL and date (owner action, FLG-052).",
-    "Run the Special Link test for one product in the enrolled Associates workflow (owner action, FLG-004)."
-  ]
+   ],
+   "reproduces_earlier_record": false,
+   "source_row": "S16"
+  },
+  {
+   "product": "P-03",
+   "submitted": "https://link.amazon/B00hJ57DV",
+   "register_observed_asin": "B08DKYBTPH",
+   "earlier_record": "data/products.json observed_status: 'Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B08DKYBTPH'",
+   "attempts": [
+    {
+     "round": 1,
+     "final_url": "https://www.amazon.com/",
+     "final_title": "Amazon.com. Spend less. Smile more."
+    }
+   ],
+   "reproduces_earlier_record": false,
+   "source_row": "S17"
+  },
+  {
+   "product": "P-04",
+   "submitted": "https://link.amazon/B0c8moW59",
+   "register_observed_asin": "B0DHZTCNR5",
+   "earlier_record": "data/products.json observed_status: 'Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages; fresh fetch ... resolved directly to amazon.com/dp/B0DHZTCNR5'",
+   "attempts": [
+    {
+     "round": 1,
+     "final_url": "https://www.amazon.com/",
+     "final_title": "Amazon.com. Spend less. Smile more."
+    },
+    {
+     "round": 2,
+     "final_url": "https://www.amazon.com/",
+     "final_title": "Amazon.com. Spend less. Smile more."
+    }
+   ],
+   "reproduces_earlier_record": false,
+   "source_row": "S18"
+  },
+  {
+   "product": "P-05",
+   "submitted": "https://link.amazon/B0f3GKalj",
+   "register_observed_asin": "B0DZFD6R9Z",
+   "earlier_record": "data/products.json observed_status: 'Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B0DZFD6R9Z'",
+   "attempts": [
+    {
+     "round": 1,
+     "final_url": "https://www.amazon.com/",
+     "final_title": "Amazon.com. Spend less. Smile more."
+    }
+   ],
+   "reproduces_earlier_record": false,
+   "source_row": "S19"
+  }
+ ],
+ "listing_pages": [
+  {
+   "product": "P-01",
+   "asin_in_url": "B0CDY277D3",
+   "fetched_url": "https://www.amazon.com/dp/B0CDY277D3",
+   "final_url": "https://www.amazon.com/dp/B0CDY277D3?lv=shuf&channelId=500&plpRedirect=mhFallback",
+   "title_as_read": "Amazon.com: CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black : Home & Kitchen",
+   "source_row": "S10"
+  },
+  {
+   "product": "P-02",
+   "asin_in_url": "B09B7SB46R",
+   "fetched_url": "https://www.amazon.com/dp/B09B7SB46R",
+   "final_url": "https://www.amazon.com/dp/B09B7SB46R?lv=shuf&channelId=500&plpRedirect=mhFallback",
+   "title_as_read": "Amazon.com: Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included : Home & Kitchen",
+   "source_row": "S11"
+  },
+  {
+   "product": "P-03",
+   "asin_in_url": "B08DKYBTPH",
+   "fetched_url": "https://www.amazon.com/dp/B08DKYBTPH",
+   "final_url": "https://www.amazon.com/dp/B08DKYBTPH?lv=shuf&channelId=500&plpRedirect=mhFallback&th=1",
+   "title_as_read": "Amazon.com: Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel : Home & Kitchen",
+   "source_row": "S12"
+  },
+  {
+   "product": "P-04",
+   "asin_in_url": "B0DHZTCNR5",
+   "fetched_url": "https://www.amazon.com/dp/B0DHZTCNR5",
+   "final_url": "https://www.amazon.com/dp/B0DHZTCNR5?lv=shuf&channelId=500&plpRedirect=mhFallback",
+   "title_as_read": "Amazon.com: ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black : Home & Kitchen",
+   "source_row": "S13"
+  },
+  {
+   "product": "P-05",
+   "asin_in_url": "B0DZFD6R9Z",
+   "fetched_url": "https://www.amazon.com/dp/B0DZFD6R9Z",
+   "final_url": "https://www.amazon.com/dp/B0DZFD6R9Z?lv=shuf&channelId=500&plpRedirect=mhFallback&th=1",
+   "title_as_read": "Amazon.com: CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3: Home & Kitchen",
+   "source_row": "S14"
+  }
+ ],
+ "intended_asin": "Not recorded here. The owner has not confirmed intended ASINs (FLG-001). This file records observations only.",
+ "open_items": [
+  "Repeat the five short-link checks from a browser signed in to Associates Central, and record the final URL and date (owner action, FLG-051).",
+  "Run the Special Link test for one product in the enrolled Associates workflow (owner action, FLG-004)."
+ ],
+ "short_links_note": "Short-link results duplicate, and corroborate, main's data/verification-2026-11-20-shortlinks.json (session 614b9fe7) and FLG-051 for the same date; this file adds the second round and the listing re-reads."
 }

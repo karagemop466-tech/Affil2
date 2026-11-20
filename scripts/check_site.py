@@ -365,7 +365,7 @@ for s in sources:
     if host not in OFFICIAL_SOURCE_HOSTS:
         err(f"sources.json {s['id']}: host '{host}' is not on the official-source allowlist (I-4)")
 
-# T-26: submitted-link re-check record (data/link-resolution-2026-11-20.json)
+# T-31: submitted-link re-check record (data/link-resolution-2026-11-20.json)
 src_ids_all = {s["id"] for s in sources}
 lr = json.loads((ROOT / "data" / "link-resolution-2026-11-20.json").read_text())
 if re.search(r"\$\s?\d", json.dumps(lr)):

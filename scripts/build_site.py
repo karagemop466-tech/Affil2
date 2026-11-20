@@ -1690,7 +1690,7 @@ def build_verification():
 <thead><tr><th scope="col">Item</th><th scope="col">Observation</th><th scope="col">Status</th></tr></thead>
 <tbody>{review}</tbody></table>
 """
-    # ---- submitted-link re-check (T-26): observations kept apart from the intended/observed ASIN fields
+    # ---- submitted-link re-check (T-31): observations kept apart from the intended/observed ASIN fields
     lr = _json.loads((DATA / "link-resolution-2026-11-20.json").read_text())
     reg_titles = {p["id"]: p["title"] for p in _json.loads((DATA / "products.json").read_text())}
     sr_rows = ""
@@ -1714,7 +1714,7 @@ def build_verification():
 <h2 id="link-recheck">Submitted-link re-check &middot; {esc(lr["generated"])}</h2>
 <p class="lede">Each submitted <code>link.amazon</code> address was fetched again. The final URL is recorded
   apart from the intended ASIN, which stays blank until the owner confirms it. A link that ends on the
-  Amazon home page is recorded as an observation. It is not a finding that the link is invalid (FLG-003, FLG-052).</p>
+  Amazon home page is recorded as an observation. It is not a finding that the link is invalid (FLG-003, FLG-051).</p>
 <table><caption>Short links: what this re-check saw, next to what the earlier record said.</caption>
 <thead><tr><th scope="col">Product</th><th scope="col">Submitted link</th><th scope="col">Earlier record</th><th scope="col">This re-check (final URL)</th><th scope="col">Result</th><th scope="col">Source</th></tr></thead>
 <tbody>{sr_rows}</tbody></table>
@@ -2396,7 +2396,7 @@ phrase that reads like it was produced by filling in a template."""
         ("A · Air fryer buying", "Basket or oven-style: which fits a family of four", "Not written", "Proposed", "Search Console may confirm or kill this title"),
         ("B · Holiday and seasonal", "Air fryer at Thanksgiving: what actually fits", "guides/air-fryer-thanksgiving.html", "Live", "Seasonal spike, Nov 2026"),
         ("B · Holiday and seasonal", "Turkey thermometer maths: the USDA minimums", "Not written", "Proposed", "USDA chart is already the source of record (S22)"),
-        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Black Friday is 2026-11-27 (computed, FLG-053); must not print prices (SG-13)"),
+        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Black Friday is 2026-11-27 (computed, FLG-052); must not print prices (SG-13)"),
         ("B · Holiday and seasonal", "Wireless or instant-read for a long smoker cook", "guides/instant-vs-wireless.html", "Live", "Holiday brisket and turkey season"),
         ("C · Thermometer education", "How to read accuracy claims: plus-or-minus 0.5 and NIST", "guides/thermometer-accuracy.html", "Live", "Trust content, supports both thermometer pages"),
         ("C · Thermometer education", "Is NIST certification on a listing a guarantee", "Not written", "Proposed", "Honest answer: it is a seller statement (FLG-035)"),
@@ -2494,16 +2494,16 @@ phrase that reads like it was produced by filling in a template."""
 
 <h3>Seasonal calendar</h3>
 <table>
-  <caption>Every row states its source. Holiday dates are read from OPM's federal holiday tables (S26). Rows marked computed are calendar arithmetic with no cited source, so they are unverified (FLG-053). No event on this page licenses a price, a sale claim or a countdown.</caption>
+  <caption>Every row states its source. Holiday dates are read from OPM's federal holiday tables (S26). Rows marked computed are calendar arithmetic with no cited source, so they are unverified (FLG-052). No event on this page licenses a price, a sale claim or a countdown.</caption>
   <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Lead time</th><th scope="col">What to do</th><th scope="col">Source</th></tr></thead>
   <tbody>
     <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
-    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td><td>Unverified: computed as the day after Thanksgiving (FLG-053)</td></tr>
-    <tr><td>2026-11-29</td><td>First Sunday of Advent</td><td>Weekend after Black Friday</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td><td>Unverified: computed as the fourth Sunday before 25 December (FLG-053)</td></tr>
-    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td><td>Unverified: computed as the Monday after Thanksgiving (FLG-053)</td></tr>
+    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td><td>Unverified: computed as the day after Thanksgiving (FLG-052)</td></tr>
+    <tr><td>2026-11-29</td><td>First Sunday of Advent</td><td>Weekend after Black Friday</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td><td>Unverified: computed as the fourth Sunday before 25 December (FLG-052)</td></tr>
+    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td><td>Unverified: computed as the Monday after Thanksgiving (FLG-052)</td></tr>
     <tr><td>2026-12-25</td><td>Christmas Day</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
     <tr><td>2027-01-01</td><td>New Year's Day</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2027 table</a></td></tr>
-    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td><td>Unverified: computed calendar date (FLG-053)</td></tr>
+    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td><td>Unverified: computed calendar date (FLG-052)</td></tr>
   </tbody>
 </table>
 
