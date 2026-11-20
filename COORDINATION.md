@@ -773,3 +773,11 @@ Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`0b509ab`, pr
 - `python3 -B scripts/check_site.py`: `checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`.
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
 - `node tests/test_collector.js`: `ALL JS COLLECTOR AND CLIENT TESTS PASS`.
+
+---
+
+## Session `arena/195d1d32-affil2` — live source re-verification close-out, row-level sourcing, tagged evidence links (2026-11-20, in progress)
+
+### Claim (2026-11-20, `active`)
+
+Claimed and started: (1) close-out of live source verification — Program Policies **Appendix** (chunks 9–10) + commission-**schedule** page, S03/S23 FTC pages, S04 Google outbound-links, S20 Creators API onboarding, S21 PA-API 5 deprecation, S22/S24 USDA FSIS pages, and a third dated re-test of all five `link.amazon` short links; (2) revision-date patch to the source register (`data/sources.json` + `build_sources()`): Program Policies *Updated April 14, 2026*, Operating Agreement *Updated October 15, 2025*, IP License §4 Agent Terms recorded as verified-verbatim; (3) row-level sourcing fix — every `<tbody>` claim row gains an official source link or an explicit unverified marker (compare spec rows, executive-summary conflict rows, product intent/USDA rows) plus a `check_site.py` gate rule; (4) `tag=shopnow047c-20` policy decision for evidence links with gate update. Short-link instability observed today (2 of 5 tokens landed on the Amazon homepage on repeated attempts) is recorded as a dated addendum in `data/reverification-2026-11-20.json` and folded into `FLG-011` — **no validity claim is made about the short links (FLG-003 stands)**. Scope: `data/reverification-2026-11-20.json`, `data/flags.json` (FLG-011 dated follow-up note only), `data/sources.json`, `scripts/build_site.py`, `scripts/check_site.py`, `README.md`, `COORDINATION.md`, regenerated HTML. `data/products.json` and all other flags are untouched. Open PRs #35/#34 are preserved by merging their branches into this session's branch before the integration PR (conflicts resolved preserving both sides, logged below).
