@@ -62,18 +62,29 @@ Zero, and no forecast. No commission rate, click, session or order figure is pre
 `scripts/build_site.py` generates every page from `data/*.json`; nothing is hand-edited.
 `scripts/check_site.py` fails the build if the disclosure is missing or below the fold, if any amazon.com link lacks `rel="sponsored nofollow"`, if a price or star rating appears, if a link is broken, if a page is missing from the sitemap, if JSON-LD does not parse, or if a flag is referenced that is not defined. CI runs both, and fails if the committed pages drift from the generator.
 
-## Suggestions for improvement (SG-17..SG-20)
-- SG-17: Add an AI-powered research dashboard that ingests the five product ASINs, pulls live Amazon listing chunks, and flags new contradictions (automated research layer).
-- SG-18: Generate SEO-optimized question-shaped article drafts based on measured queries (once Search Console is verified in SG-10) and feed them into the existing guide pipeline.
-- SG-19: Create a dedicated Suggestions Review section (already in `suggestions.html`) where a human reviewer ranks SG-13, SG-14, SG-15, SG-16 before implementation.
-- SG-20: Implement a privacy-preserving self-hosted analytics endpoint (Q-08) to record the five defined events without cookies, exportable to CSV.
+## Suggestions for improvement
+- SG-17 (live in the Decision Center): Adopt the Design & Traffic Brief as the next build step — a copy-paste design prompt, a topic-cluster plan with a seasonal calendar, and the editorial standards checklist, published at `design-brief.html`.
+- Proposed, not yet registered: an AI-assisted research dashboard that re-reads the five listings and flags new contradictions (blocked on Creators API eligibility — see S20/S21 and FLG-029/FLG-030).
+- Proposed, not yet registered: SEO article drafts generated from measured queries, fed into the existing guide pipeline (blocked on Search Console verification, SG-10).
+- The privacy-preserving, self-hosted analytics endpoint for the five defined events (Q-08) is open as PR #16 (branch arena/bdedd85e-affil2), not merged in this document.
+- The Suggestions review section exists at `suggestions.html`; rank SG-13, SG-14, SG-15, SG-16 and SG-17 there before anything is built.
 
-## Open Questions register (Q-15..Q-16)
-- Q-15: How will the AI-powered research agent identify profitable niches beyond the five submitted products? (Discovery: monitor Amazon Best Sellers API / Creators API eligibility; blocks SG-17)
-- Q-16: What organic traffic metrics will define success for the question-shaped guides? (Discovery: Search Console once SG-10 is verified; blocks SG-16)
+## Open Questions register (beyond Q-14)
+- UF-1: How will an AI-powered research layer identify profitable niches beyond the five submitted products? (Discovery: Creators API eligibility and Commission Income Statement; blocks any niche-expansion automation)
+- UF-2: What organic traffic metrics will define success for the question-shaped guides? (Discovery: Search Console once SG-10 is verified; blocks SG-16)
+- Q-15 and Q-16 as numbered in an earlier draft of this summary were never registered in `questions.html`; the live register ends at Q-14.
 
 ## Verification log (2026-11-20, session arena/436f4dbe-affil2)
 - All 29 pages built successfully by `scripts/build_site.py`.
 - `scripts/check_site.py` passed (ALL CHECKS PASS).
 - GitHub Pages deployment is live at https://karagemop466-tech.github.io/Affil2/ (source branch main, commit eacaeca2d55ce8d5d01ecbb6de74ee3fd8067297).
 - No manual input required; all tasks completed autonomously.
+
+## Re-verification log (2026-11-20, session arena/3fb8f29e-affil2)
+- All five official listings re-fetched and read line by line against `data/products.json`: titles, breadcrumbs, capacity, temperature ranges, wattage, dimensions, warranty, presets, probes, sensors, battery wording and included components all match the register. The known listing contradictions (24 vs 25 presets on the Emeril, 50 vs 70 hours on the CHEF iQ, 1000 W vs 1700 W on the Chefman 8 Qt, 6 quarts vs 6 litres capacity field on the Chefman 6 Qt) reproduce exactly as flagged.
+- USDA FSIS Safe Minimum Internal Temperature Chart re-fetched; the values on this site match verbatim (165 / 160 / 145+3 min / 145 / 165 °F), last updated 2025-04-14.
+- Google "Qualify your outbound links" re-fetched (last updated 2025-12-10); rel=sponsored for paid links confirmed.
+- Associates Program Policies page reachable and live (updated 2026-04-14); PA-API 5 deprecation notice re-fetched (HTTP 403, migrate to Creators API).
+- FTC Endorsement Guides FAQ re-fetched; disclosure-above-the-fold requirement reaffirmed.
+- No register corrections were required. 30 pages build; `check_site.py` passes ALL CHECKS.
+- New: `design-brief.html` — the Design & Traffic Brief (SG-17).
