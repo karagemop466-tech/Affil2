@@ -24,6 +24,7 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-23 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | done | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
 | T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
+| T-26 | Independent short-link re-check (5 submitted links) + repo gate/test re-run; new flag FLG-051 for non-reproduced redirects; no recorded values changed | done | 614b9fe7 | data/verification-2026-11-20-shortlinks.json, data/flags.json (append only), COORDINATION.md, generated flagged/sources/executive-summary pages |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -1331,3 +1332,12 @@ Questions. No task from this session remains open, and no other session's work w
 **For the next session:** claim task IDs from the current maximum in the task board, not from the
 last ID mentioned in a prompt — T-20, T-21 and T-23 each ended up used twice during this session
 because parallel sessions read the same stale prompt. Flag IDs are safe (monotonic to FLG-050).
+## Session `arena/614b9fe7-affil2` (T-26) — short-link re-check
+
+- **Claimed:** T-26, files: data/verification-2026-11-20-shortlinks.json, data/flags.json (append only), COORDINATION.md, regenerated pages.
+- **Sources fetched:** the five submitted links (S15–S19 in data/sources.json), each via fetch on 2026-11-20.
+- **Result:** all five final URLs were `https://www.amazon.com/` (homepage), not the product pages recorded in the observed-destination field. Not reproduced. Recorded observed values were **not** changed; causes unconfirmed. Logged as **FLG-051** (needs review). Does not mean the short links are invalid (FLG-003 remains).
+- **Gate:** `scripts/check_site.py` — 36 pages, 5 product records, 51 flags, 19 sources — ALL CHECKS PASS. `tests/test_site.py` OK; `tests/test_collector.js` PASS.
+- **Not re-verified this session:** Associates agreement wording, tracking-ID issuance, the one-per-product Special Link test (requires the owner's Associates account; FLG-004), analytics endpoint, Search Console.
+- **Conflict log:** none. Branch `arena/614b9fe7-affil2` at `main` 4ddede5 when claimed; no other session's claims touched.
+

@@ -554,5 +554,19 @@
   ],
   "severity": "needs review",
   "owner_status": "Queued for the next verification pass. Not removed, because earlier passes did read them off the official tables."
+ },
+{
+   "id": "FLG-051",
+   "title": "Re-check of the five short links did not reproduce the recorded product-page redirects",
+   "detail": "On 2026-11-20 (session arena/614b9fe7-affil2) each submitted link.amazon URL was fetched. All five returned the Amazon homepage (https://www.amazon.com/) as the final URL, not the product pages recorded in the observed-destination field (B0CDY277D3, B09B7SB46R, B08DKYBTPH, B0DHZTCNR5, B0DZFD6R9Z). The recorded values were not changed. Causes are unconfirmed (fetch-tool redirect handling, an Amazon interstitial, or a change in short-link behaviour). Owner action: re-test each short link in a normal browser and record the final URL in the observed field with its date. Details: data/verification-2026-11-20-shortlinks.json.",
+   "links": [
+     "S15",
+     "S16",
+     "S17",
+     "S18",
+     "S19"
+   ],
+   "severity": "needs review",
+   "owner_status": "Open. Not removed or downgraded. Next pass should re-test the five short links directly."
  }
 ]
