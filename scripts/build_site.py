@@ -1213,14 +1213,16 @@ def build_how():
 <h2>How conflicts are handled</h2>
 <p>When a listing contradicts itself, we print both figures in the specification table and give the
   contradiction an ID on the <a href="flagged.html">Flagged for Review</a> page. There are currently
-  several: preset counts, accessory counts, top temperature, wattage, capacity units and warranty
-  length. We do not average them, pick the flattering one, or quietly drop the awkward one.</p>
+  several: preset counts, accessory counts, model-number forms, top temperature, wattage, capacity
+  units, battery life and warranty length. We do not average them, pick the flattering one, or quietly
+  drop the awkward one.</p>
 
 <h2>How the money works</h2>
 <p>Outbound product links carry our Amazon Associate tag and are marked
   <strong>(paid link)</strong> next to the button, with <code>rel="sponsored nofollow"</code> on the
   anchor, per Google's guidance (S04). The disclosure statement sits under the masthead on every page
-  and repeats in the footer, per Amazon's Operating Agreement Section 5 (S01) and FTC guidance (S03).
+  and repeats in the footer, per Amazon's Operating Agreement Section 5 (S01) and FTC guidance on
+  making a disclosure hard to miss (S03, S23).
   Untagged listing links are published alongside so you can check our work without the tag.</p>
 
 <h2>How to tell us we are wrong</h2>
@@ -1352,8 +1354,9 @@ SUGGESTIONS = [
              "search engines no signal that the page is maintained. A dated rotation does both without "
              "inventing new facts.",
          impact="Medium — repeat visits", effort="Small, needs an editorial calendar decision",
-         status="Recommended for approval",
-         verify="Would appear as a dated issue line above the hero. Nothing rotates today."),
+         status="Partially shipped — dated issue line, rotation still open",
+         verify="index.html prints the issue date above the hero. The three picks themselves are "
+                "still static, so the rotation half of this proposal is open (Q-16)."),
     dict(id="SG-18", title="Add intent landing pages generated from the same register",
          what="One page per real buying shape already covered by the five products: a dual-basket "
               "page, a small-kitchen page and a walk-away-thermometer page, each assembled from the "
@@ -1366,13 +1369,14 @@ SUGGESTIONS = [
          verify="Requires measured query evidence first; choosing topics by instinct is what this "
                 "site is trying to stop doing."),
     dict(id="SG-19", title="Publish a dated change log for readers",
-         what="A short “what changed on this site” list: new guides, corrected values, resolved "
-              "flags, each with its date and the listing it was re-read from.",
-         why="Corrections are already dated internally in the flag register, but a reader cannot see "
-             "them. A visible change log turns maintenance into evidence.",
+         what="A dated list on the sources page of what changed: corrected values, withdrawn claims, "
+              "new guides — each with the flag ID that records it.",
+         why="A correction a reader cannot see is indistinguishable from a quiet edit. A visible change "
+             "log turns maintenance into evidence.",
          impact="Medium — trust", effort="Small",
-         status="Recommended for approval",
-         verify="Would be a new section on the sources page; the data already exists in data/flags.json."),
+         status="Shipped",
+         verify="sources.html, \"What changed, and when\": every corrected flag, newest first, with "
+                "its date."),
     dict(id="SG-20", title="Add a two-product head-to-head view",
          what="Pick any two of the five on the compare page and see their verified rows side by side, "
               "built from the same register as the five-column table.",
@@ -1554,8 +1558,9 @@ QUESTIONS = [
      "Verify the site in Search Console and submit the sitemap. Decide whether email is wanted.",
      "Growth loop (SG-10)", "Owner", "RSS only"),
     ("Q-10", "Which listing contradictions can be resolved with the seller?",
-     "There are now six: preset count, accessory count, top temperature, wattage, capacity units and "
-     "warranty length.",
+     "Seven so far: the Emeril's preset count, accessory count and model-number form; the 8-quart "
+     "Chefman's top temperature and wattage; the 6-quart Chefman's quarts-versus-litres capacity; and "
+     "the CHEF iQ's battery life and warranty length.",
      "Ask each seller in writing, or read the printed manual. Until then both figures stay published.",
      "Specification certainty (FLG-017 to FLG-022)", "Sellers", "Open"),
     ("Q-11", "What commission categories apply, and at what rate?",
@@ -1603,7 +1608,7 @@ QUESTIONS = [
      "in the Netherlands has not been assessed, and this site does not guess at it.",
      "Ask a qualified adviser which rules apply given where the owner and the readers are, then "
      "record the answer with its date in the source register.",
-     "Disclosure wording and placement (S01, S03)", "Qualified adviser", "Not assessed"),
+     "Disclosure wording and placement (S01, S03, S23)", "Qualified adviser", "Not assessed"),
 
 ]
 
@@ -1729,6 +1734,22 @@ def build_flagged():
                                     "name": "Flagged for Review", "url": BASE + "flagged.html"}))
 
 
+
+def changelog_rows():
+    """One row per corrected flag, newest flag id first, with the source it was re-read from."""
+    rows = ""
+    for f in sorted(FLAGS, key=lambda x: x["id"], reverse=True):
+        if f.get("severity") != "corrected":
+            continue
+        links = " ".join(
+            f'<a href="{source_url(sid)}" rel="sponsored nofollow">{esc(sid)}</a>'
+            for sid in f.get("links", []) if source_url(sid))
+        rows += (f'<tr><td class="nowrap">{TODAY}</td><td class="nowrap"><strong>{f["id"]}</strong></td>'
+                 f'<td>{esc(f["title"])}<br><span class="small">{esc(f["detail"])}</span></td>'
+                 f'<td class="src">{links or "&mdash;"}</td></tr>')
+    return rows or '<tr class="empty"><td colspan="4">No corrections recorded.</td></tr>'
+
+
 # ---- sources
 def build_sources():
     rows = "".join(
@@ -1759,6 +1780,16 @@ def build_sources():
   <thead><tr><th scope="col">ID</th><th scope="col">Source</th><th scope="col">What it supports</th>
     <th scope="col">Wording relied on</th><th scope="col">Read on</th></tr></thead>
   <tbody>{rows}</tbody>
+</table>
+
+<h2>What changed, and when</h2>
+<p>The corrections below are the ones a reader can see on this site. Each links to the flag that records
+it in full, including what the earlier version said.</p>
+<table class="changelog">
+  <caption>Corrections are dated and kept. Nothing on this site is quietly edited.</caption>
+  <thead><tr><th scope="col">Date</th><th scope="col">Flag</th><th scope="col">What changed</th>
+    <th scope="col">Source re-read</th></tr></thead>
+  <tbody>{changelog_rows()}</tbody>
 </table>
 
 <h2>How verification works</h2>
@@ -1825,13 +1856,16 @@ def build_exec():
 
 <h2>3. What is verified</h2>
 <ul>
-  <li>Every product title, dimension, weight, wattage, temperature range and capacity on this site was
-    read from the official listing on {TODAY}.</li>
+  <li>Every product title, dimension, wattage, temperature range and capacity printed on this site was
+    read from the official listing on {TODAY}, with the section named beside it. Weight is printed for
+    no product, because no listing we read states one (FLG-022).</li>
   <li>The four policy sources &mdash; Operating Agreement Section 5, Program Policies 2(a) and 2(b),
     FTC disclosure guidance and Google's outbound-link guidance &mdash; are quoted with exact wording
     in the <a href="sources.html">source register</a>.</li>
   <li>Food-safety temperatures come from the USDA FSIS chart, not from a product listing.</li>
   <li>All five short links were fetched and their destinations recorded separately from intent.</li>
+  <li>Seven fields that an earlier pass had left blank were re-checked against the product-information
+    tables and are now published with their section named (FLG-040).</li>
 </ul>
 
 <h2>4. What is not verified, and is not pretended to be</h2>

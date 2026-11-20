@@ -117,5 +117,12 @@
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
     "used_for": "Official minimum internal cooking temperatures: poultry 165 F (73.9 C); ground meats 160 F (71.1 C); beef, pork, veal and lamb steaks, chops and roasts 145 F (62.8 C) with a 3-minute rest; fish and shellfish 145 F (62.8 C); leftovers and casseroles 165 F (73.9 C). Any doneness figure on this site must defer to this chart.",
     "checked": "2026-11-20"
+  },
+  {
+    "id": "S23",
+    "name": "FTC — Disclosures 101 for Social Media Influencers",
+    "url": "https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers",
+    "used_for": "Supports the placement rule this site follows: make sure people will see and understand the disclosure, place it so it is hard to miss, and do not bury it at the end of a page or anywhere that requires a click to reveal. Checked verbatim on 2026-11-20.",
+    "checked": "2026-11-20"
   }
 ]

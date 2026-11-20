@@ -602,3 +602,7 @@ figure.photo img{
 table.pair td{font-size:13.5px}
 table.pair th[scope="row"]{width:20%}
 #pairView .btn{flex-direction:column;gap:1px}
+
+/* ---------- change log ---------- */
+table.changelog td:nth-child(3){font-size:13.5px;color:var(--ink-2)}
+table.changelog td:nth-child(1){font-size:12.5px}
