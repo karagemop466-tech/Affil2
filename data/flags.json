@@ -31,7 +31,7 @@
       "S02",
       "S01"
     ],
-    "severity": "policy",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -45,7 +45,7 @@
       "S13",
       "S14"
     ],
-    "severity": "pending-test",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -55,7 +55,7 @@
     "links": [
       "S02"
     ],
-    "severity": "policy",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -76,7 +76,7 @@
       "S02",
       "S10"
     ],
-    "severity": "policy",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -86,7 +86,7 @@
     "links": [
       "S14"
     ],
-    "severity": "conflict",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -96,7 +96,7 @@
     "links": [
       "S11"
     ],
-    "severity": "conflict",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -106,7 +106,7 @@
     "links": [
       "S03"
     ],
-    "severity": "pending-test",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -118,7 +118,7 @@
       "S17",
       "S19"
     ],
-    "severity": "conflict",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -129,7 +129,7 @@
       "S18",
       "S13"
     ],
-    "severity": "conflict",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -142,7 +142,7 @@
       "S17",
       "S19"
     ],
-    "severity": "corrected",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -156,7 +156,7 @@
       "S18",
       "S19"
     ],
-    "severity": "unverified",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -167,7 +167,7 @@
       "S02",
       "S01"
     ],
-    "severity": "policy",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -175,10 +175,9 @@
     "title": "Search-referred purchases may be disqualified (§2(d))",
     "detail": "Commission Income Statement §2(d) disqualifies a purchase where the customer was referred to Amazon by a link generated or displayed on a search engine. The clause concerns the route into Amazon. How it applies to a site found through search and then linking out is not determined. Confirm with Associates support before scaling organic search traffic. Source: https://affiliate-program.amazon.com/help/operating/policies",
     "links": [
-      "S02",
-      "S01"
+      "S02"
     ],
-    "severity": "policy",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -188,7 +187,7 @@
     "links": [
       "S12"
     ],
-    "severity": "corrected",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -198,7 +197,7 @@
     "links": [
       "S12"
     ],
-    "severity": "conflict",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -208,7 +207,7 @@
     "links": [
       "S14"
     ],
-    "severity": "corrected",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -222,7 +221,7 @@
       "S13",
       "S14"
     ],
-    "severity": "corrected",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -232,7 +231,7 @@
     "links": [
       "S11"
     ],
-    "severity": "conflict",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -246,7 +245,7 @@
       "S13",
       "S14"
     ],
-    "severity": "unverified",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -260,7 +259,7 @@
       "S13",
       "S14"
     ],
-    "severity": "corrected",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -270,8 +269,8 @@
     "links": [
       "S01"
     ],
-    "severity": "resolved-earlier",
-    "owner_status": "Fixed earlier this pass; kept in the log so the correction is traceable."
+    "severity": "open",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-025",
@@ -280,8 +279,8 @@
     "links": [
       "S01"
     ],
-    "severity": "resolved-earlier",
-    "owner_status": "Fixed earlier this pass; kept in the log so the correction is traceable."
+    "severity": "open",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-026",
@@ -291,8 +290,8 @@
       "S01",
       "S02"
     ],
-    "severity": "resolved-earlier",
-    "owner_status": "Fixed earlier this pass; kept in the log so the correction is traceable."
+    "severity": "open",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-027",
@@ -301,7 +300,7 @@
     "links": [
       "S02"
     ],
-    "severity": "policy",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -316,23 +315,23 @@
   },
   {
     "id": "FLG-029",
-    "title": "P-01 capacity stated in quarts and liters",
-    "detail": "The listing title says 6 quarts; the product-details capacity field says 6 liters. Six liters is about 6.3 quarts, so the same page carries two different expressions of capacity. Both are shown on the product page; neither is chosen here.",
+    "title": "Product-data automation is blocked until the Associates account is finally accepted",
+    "detail": "The brief asks for automated product research, trend detection and price analysis. Amazon's Creators API onboarding page states that registration is available only to Associates whose account has been reviewed and received final acceptance into the program and who have referred qualified sales, and that only the primary account owner can register. Separately, the PA-API 5 deprecation notice states that PA-API 5 now returns HTTP 403 Forbidden. Both were read verbatim on 2026-11-20. No product-data automation is claimed to be running on this site, and none can run until that acceptance exists. This does not affect the published pages, which use static, sourced values.",
     "links": [
-      "S10"
+      "S20",
+      "S21"
     ],
-    "severity": "conflict",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-030",
-    "title": "Third-party certification is a seller claim on both listings",
-    "detail": "P-01 says cETL approved and P-04 says NIST and NSF under Specification Met. These are statements on the listing, not certificates or test reports. Nothing on this site should be read as independent confirmation of a safety mark.",
+    "title": "No food-safety source was cited before now",
+    "detail": "The thermometer pages discuss doneness. Doneness targets are a food-safety matter and must come from an official source, not from memory or from a manufacturer listing. S22 (USDA FSIS Safe Minimum Internal Temperature Chart) is now registered and should be cited wherever a target temperature is stated. Checked on 2026-11-20: poultry 165 F, ground meats 160 F, whole-muscle cuts 145 F with a 3-minute rest, fish 145 F, leftovers 165 F.",
     "links": [
-      "S10",
-      "S13"
+      "S22"
     ],
-    "severity": "unverified",
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
@@ -364,6 +363,27 @@
       "S03"
     ],
     "severity": "open",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-034",
+    "title": "P-01 capacity stated in quarts and liters",
+    "detail": "The listing title says 6 quarts; the product-details capacity field says 6 liters. Six litres is about 6.3 US quarts, so the same page carries two expressions of one capacity. Both are shown on the product page; neither is chosen here.",
+    "links": [
+      "S10"
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-035",
+    "title": "cETL, NIST and NSF are seller statements, not documents we saw",
+    "detail": "P-01 states cETL approved and P-04 states NIST and NSF under Specification Met. These are words on a listing, not certificates or test reports. Nothing on this site should be read as independent confirmation of a safety or accuracy mark.",
+    "links": [
+      "S10",
+      "S13"
+    ],
+    "severity": "unverified",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   }
 ]

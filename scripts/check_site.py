@@ -165,6 +165,26 @@ for p in prod_pages:
     if len(rows) < 5:
         err(f"{rel}: only {len(rows)} sourced spec rows found")
 
+# ---------------------------------------------------------------- food safety block
+usda = json.loads((ROOT / "data" / "usda-temperatures.json").read_text())
+src_ids_pre = {x["id"] for x in json.loads((ROOT / "data" / "sources.json").read_text())}
+if usda["source_id"] not in src_ids_pre:
+    err(f"usda-temperatures.json cites {usda['source_id']}, which is not in sources.json")
+for p in prod_pages:
+    rel = str(p.relative_to(ROOT))
+    html = p.read_text()
+    is_thermo = "products/p04-" in rel or "products/p05-" in rel
+    has_block = "Safe Minimum Internal Temperature" in html
+    if is_thermo and not has_block:
+        err(f"{rel}: thermometer page is missing the USDA food-safety block")
+    if not is_thermo and has_block:
+        err(f"{rel}: food-safety block on a page that is not a thermometer")
+    if has_block:
+        for food, _ in usda["rows"]:
+            if food.split(" —")[0] not in html:
+                err(f"{rel}: USDA row missing: {food[:40]}")
+
+
 # ---------------------------------------------------------------- data integrity
 raw = json.loads((ROOT / "data" / "products.json").read_text())
 editorial = json.loads((ROOT / "data" / "editorial.json").read_text())

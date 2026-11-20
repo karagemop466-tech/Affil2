@@ -165,32 +165,160 @@ Branch: `arena/990af5de-affil2`. Work is PR #3 (https://github.com/karagemop466-
 - PR #11: https://github.com/karagemop466-tech/Affil2/pull/11 — merged (merge commit d51c04ac301c0c8dc9b9d34142d9391afb9e6c1b).
 - GitHub Pages deploy run 44680641868 for that merge succeeded; Pages API status is `built` at https://karagemop466-tech.github.io/Affil2/.
 
-## Session `5506d56a` — integration pass (2026-11-20)
+---
 
-Branch `arena/5506d56a-affil2`, based on `e1b6750`, rebased onto `05cd053` (PR #12).
+## Session `arena/9397cc0c-affil2` — additive pass (2026-11-20)
 
-Scope: one generated front end over the shared register, plus a stricter gate. No other session's
-records were rewritten.
+**Branch:** `arena/9397cc0c-affil2` (platform-bound; cannot create per-task branches)
+**Base:** `981db91` (main, after PR #9)
 
-| Action | File | Note |
-|---|---|---|
-| Read-only | `data/products.json`, `data/sources.json`, `data/reverification-2026-11-20.json` | consumed as the product register; not modified |
-| Added | `data/editorial.json` | this site's voice: headlines, best-for, trade-offs, FAQ. Keeps annotations out of the shared register |
-| Appended | `data/flags.json` | FLG-029 (P-01 quarts vs liters), FLG-030 (certification is a seller claim), FLG-031 (P-02 accessory count), FLG-032 (no hands-on testing), FLG-033 (no named author). Also added `severity`, `links` and `owner_status` to every flag so the page can show a source per row; no existing `title` or `detail` was altered |
-| Added | `scripts/build_site.py` | generator for all 29 pages, sitemap, feed, robots |
-| Rewrote | `scripts/check_site.py` | adds canonical-per-path, single h1, disclosure above `<main>`, tagged Special Links, JSON-LD parsing, sitemap/feed parity, blank-must-be-unverified, and flag referential integrity |
-| Replaced | `assets/style.css`, `assets/app.js` | storefront layout; the original illustration SVGs from `4bbf49bb` are kept and used |
-| Rewrote | `.github/workflows/pages.yml` | regenerates, fails on generator/commit drift, then gates, then deploys. Also runs on pull requests |
-| Added | `.nojekyll` | so `assets/` is served as-is |
+### What this session did first, and got wrong
 
-Flag renumbering check: every `FLG-nnn` in the generated pages was verified against the register's
-`title`; the earlier draft's hardcoded numbers (which assumed my own numbering) were corrected to
-this register's, e.g. preset conflict is FLG-021, not FLG-014.
+It built a **second, parallel site** (`docs/`, `build.js`, `content/`, `assets/`) before reading the
+board closely enough to notice that `main` already contained a merged, live site from sessions
+`530c2e6c`, `6e40cecc`, `937876a6` and `4bbf49bb`. It then opened PR #10.
 
-Verification run: `python3 scripts/build_site.py` then `python3 scripts/check_site.py` →
-`checked 29 pages, 5 product records, 33 flags, 14 sources — ALL CHECKS PASS`.
+**Resolution:** PR #10 was **closed unmerged** (https://github.com/karagemop466-tech/Affil2/pull/10).
+The parallel site was not merged and no `main` work was discarded. This is recorded rather than
+quietly deleted, because the coordination rule exists precisely to prevent this and it was broken.
 
-Note on process: `main` advanced from `e1b6750` to `05cd053` while this session worked, and three
-of the defects this session was about to fix (title drift, P-03 wattage, malformed feed) were
-independently found and fixed there first. The register from `main` is therefore the record of
-truth, and this pass builds on it instead of competing with it.
+What the duplicate did produce that was genuinely new — and which `main` did not contain — is below.
+
+### What was added (append-only; no existing row edited or removed)
+
+| Added | Where | Why it was missing |
+|-------|-------|--------------------|
+| `S20` Creators API registration/eligibility | `data/sources.json` | The site described a research/automation capability but no source documented the gate on it. |
+| `S21` PA-API 5 deprecation notice | `data/sources.json` | PA-API 5 is the API most affiliate tooling assumes exists. It now returns HTTP 403. Not previously cited anywhere. |
+| `S22` USDA FSIS Safe Minimum Internal Temperature Chart | `data/sources.json` | Thermometer pages discuss doneness with no food-safety authority cited. |
+| `FLG-029` Automation blocked until final acceptance | `data/flags.json` | Follows from S20 + S21. |
+| `FLG-030` No food-safety source cited until now | `data/flags.json` | Follows from S22. |
+| USDA doneness table on both thermometer product pages | `scripts/build_content.py` (`usda_doneness_block()`) | Added in the generator, not by hand-editing generated HTML; scoped to `cat == 'Meat Thermometers'`; verified idempotent across three consecutive generator runs. |
+
+### Verification performed this session (2026-11-20)
+
+| Item | Official source | Result |
+|------|-----------------|--------|
+| Creators API eligibility | https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api | "before you register … you must have an Amazon Associates account that has been reviewed and received final acceptance"; "available only to associates who have referred qualified sales"; "Only the primary account owner … can sign up" |
+| Creators API introduction | https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction | Prerequisite list states "at least 10 qualifying sales within the past 30 days to access the PA API through the Creators API" |
+| PA-API 5 status | https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation | "has been deprecated"; callers receive HTTP `403 Forbidden` / `AccessDeniedException`; migrate to Creators API |
+| USDA temperatures | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | 165 / 160 / 145+3min / 145 / 165 °F, quoted verbatim |
+| Store ID suffix | https://www.amazon.com/b?node=51812349011 | Amazon: "our software automatically adds "-20" to the end of all Store IDs" — corroborates FLG-002 (format only; issuance still unverified) |
+
+### Independent corroboration of existing flags
+
+This session's own link testing agrees with `main` rather than contradicting it:
+
+- `link.amazon/B0c8moW59` resolved to `B0DHZTCNR5` once and to the Amazon homepage on a second attempt — consistent with `main`'s FLG-012 and FLG-011.
+- All five supplied tokens are 9 characters while the observed ASINs are 10 — matches `main`'s FLG-014.
+
+Both observations were reached separately, which raises confidence in them.
+
+### Gate status after this change
+
+- `python3 scripts/build_content.py` — runs clean, idempotent
+- `python3 scripts/check_site.py` — **checked 25 pages, ALL CHECKS PASS**
+- `sitemap.xml` and `feed.xml` — parse as valid XML
+- No new pages added, so the sitemap requires no new entry
+
+### PR and merge record — session `arena/9397cc0c-affil2`
+
+| Field | Value |
+|-------|-------|
+| PR opened | https://github.com/karagemop466-tech/Affil2/pull/13 |
+| PR #10 (duplicate site) | **Closed unmerged** — https://github.com/karagemop466-tech/Affil2/pull/10 |
+| Merge | `gh pr merge 13 --merge` — state **MERGED** |
+| Merge commit | `1c52f8a985b83816bd02a1691adc4bde6b38fa45` |
+| Pages deploy | `pages build and deployment` for `1c52f8a` — **completed / success** |
+| Live URL | https://karagemop466-tech.github.io/Affil2/ |
+| Post-deploy verification | `sources.html` serves S20, S21, S22. `products/p04-thermomaven-1sec.html` and `products/p05-chefiq-sense-gen3.html` serve the USDA doneness table. `flagged.html` and `data/flags.json` on `main` carry 30 flags through FLG-030. |
+
+**Conflicts encountered and how they were resolved.** Rebasing onto current `main` conflicted in `compare.html` and `COORDINATION.md`. Neither side's work was discarded. `compare.html` is generated output, so it was restored from `main` and reproduced byte-identical by re-running the generator (this PR contributes no change to it). `COORDINATION.md` was resolved by keeping both session records, `main`'s first and this session's appended.
+
+**Mistake recorded.** This session hand-edited the generated product pages to add the USDA block on its first attempt. `scripts/build_content.py` regenerated those files and silently wiped the edit. The block was then moved into the generator itself, scoped to the thermometer category, and verified idempotent over three consecutive runs. Generated files must never be hand-edited.
+
+### Still not done, and why
+
+- **Analytics endpoint.** Unchanged. `assets/app.js` still logs the five events to `localStorage` only. Deploying a self-hosted endpoint needs hosting that GitHub Pages cannot provide (existing FLG-010 / Q-08).
+- **Capture form.** No email provider exists, so none was added.
+- **Associates test.** Cannot be performed without access to Associates Central (existing FLG-004).
+
+---
+
+## Session `5506d56a` — one generator over the shared register
+
+Branch `arena/5506d56a-affil2`. Base `e1b6750`, merged forward from `15aee5c` before opening the PR.
+Task board: this session claimed T-10..T-16 and built the single-generator front end. Nothing below
+rewrites another session's records.
+
+### What changed, and what deliberately did not
+
+| File | Change |
+|---|---|
+| `data/products.json`, `data/sources.json`, `data/reverification-2026-11-20.json` | **read-only.** Consumed as the record of truth. `git diff` against `main` on these three files is empty |
+| `data/editorial.json` | **new.** This site's voice — headline, best-for, trade-off, FAQ per product — so annotations live outside the shared register |
+| `data/usda-temperatures.json` | **new.** The FSIS table (S22) as data, so the numbers are rendered, not typed into prose. Ported from the block `9397cc0c` added to the thermometer pages, which this generator would otherwise have overwritten |
+| `data/flags.json` | **appended only.** Added FLG-031 (P-02 accessory count), FLG-032 (no hands-on testing), FLG-033 (no named author), FLG-034 (P-01 quarts vs litres), FLG-035 (certification is a seller statement). Added `severity`, `links` and `owner_status` to every record so each row can cite a source. No existing `title` or `detail` was modified — checked field by field against `main` |
+| `scripts/build_site.py` | **new.** Generates all 29 pages, `sitemap.xml`, `feed.xml`, `robots.txt` |
+| `scripts/build_content.py` | **superseded.** Left on disk, unreferenced by CI. `build_site.py` is now the only generator. Removing it is safe but was not done here, to avoid deleting another session's file |
+| `scripts/check_site.py` | rewritten (below) |
+| `assets/style.css`, `assets/app.js` | rebuilt for the generated markup. The illustrations from `4bbf49bb` are kept and used |
+| `.github/workflows/pages.yml` | regenerate → fail on drift → gate → deploy; also runs on pull requests |
+| `.nojekyll` | added so `assets/` is served as-is |
+
+### Conflict resolution, stated plainly
+
+`main` advanced from `e1b6750` to `15aee5c` (through PR #14) while this session worked. Three of the
+defects this session set out to fix — listing title drift, P-03 wattage, the malformed feed — had
+already been found and fixed there. `main`'s register was therefore adopted rather than duplicated.
+
+Two numeric collisions were resolved in `main`'s favour:
+
+- My FLG-029 (P-01 quarts vs litres) clashed with `main`'s FLG-029 (product-data automation blocked).
+  Mine was renumbered **FLG-034**.
+- My FLG-030 (certification) clashed with `main`'s FLG-030 (food-safety source). Mine became
+  **FLG-035**.
+
+Every `FLG-nnn` written into page copy was then re-checked against the register's `title`, and the
+hardcoded numbers that assumed an older numbering were corrected. A gate rule now fails the build if
+a page cites a flag that is not defined, or if a defined flag is never published.
+
+### The gate, as it now stands
+
+Page level: doctype, `lang`, canonical matching the page's own path, one `<h1>`, the Associates
+statement twice with the first occurrence above `<main>`, nav and footer completeness, no
+root-relative links, no broken internal link or asset, JSON-LD that parses, no template debris.
+
+Compliance level: every `amazon.com` link carries `rel="sponsored nofollow"`; every outbound product
+link carries `tag=shopnow047c-20`; no `$` amount, star rating or review count anywhere.
+
+Data level: a blank field must be marked `unverified`; every flag needs a source that exists in
+`sources.json`; every defined flag must be published and every published flag must be defined;
+thermometer pages must carry the USDA block and air-fryer pages must not.
+
+Build level: every page in `sitemap.xml` and every sitemap entry backed by a file; `feed.xml` parses
+and its items exist; `robots.txt` points at the canonical sitemap; the embedded search index parses
+and its URLs exist. CI additionally regenerates and fails if the committed pages differ from the
+generator output.
+
+### Run
+
+    python3 scripts/build_site.py
+    python3 scripts/check_site.py
+    → checked 29 pages, 5 product records, 35 flags, 17 sources — ALL CHECKS PASS
+
+### PR and deploy
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/15 |
+| Merge | merged into `main`; Pages deploy result recorded below in the next commit |
+| Open items | FLG-001 to FLG-035 published on `flagged.html`; none blocks publication |
+
+### Still not done
+
+- **Analytics endpoint.** Unchanged: `assets/app.js` logs five events to `localStorage` and its
+  `send()` is a no-op. Needs hosting GitHub Pages cannot provide (FLG-010, Q-08).
+- **Associates link test.** Needs Associates Central (FLG-004). Every product page says `PENDING TEST`.
+- **Intended ASINs.** Owner-only (FLG-001).
+- **`scripts/build_content.py`.** Unreferenced now. Delete deliberately, not by accident.

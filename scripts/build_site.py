@@ -19,6 +19,7 @@ TODAY = "2026-11-20"
 SITE = "ShopNow Kitchen"
 
 RAW_PRODUCTS = json.loads((DATA / "products.json").read_text())
+USDA = json.loads((DATA / "usda-temperatures.json").read_text())
 EDITORIAL = json.loads((DATA / "editorial.json").read_text())
 SOURCES = json.loads((DATA / "sources.json").read_text())
 FLAGS = json.loads((DATA / "flags.json").read_text())
@@ -292,6 +293,30 @@ def card(p, up):
   </p>
   <p class="small"><a href="{up}{slug_of(p)}">Specs, trade-offs and questions &rarr;</a></p>
 </article>"""
+
+
+
+def usda_block(p):
+    """Food-safety minimums, quoted from the USDA chart. Only on thermometer pages."""
+    if p["cat"] != "Meat Thermometers":
+        return ""
+    rows = "".join(
+        f'<tr><td>{esc(food)}</td><td>{esc(temp)}</td></tr>' for food, temp in USDA["rows"])
+    return f"""<h2>Doneness targets come from the USDA, not from us</h2>
+<p>This is a thermometer, so the numbers that matter are food-safety numbers. We do not restate them
+  from memory. The USDA FSIS <a href="{USDA["source_url"]}">Safe Minimum Internal Temperature
+  Chart</a> (source {USDA["source_id"]}, checked {USDA["checked"]}) gives these minimums, as measured
+  with a food thermometer:</p>
+<table class="usda">
+  <caption><a href="{USDA["source_url"]}">USDA FSIS &mdash; Safe Minimum Internal Temperature
+    Chart</a> ({USDA["source_id"]})</caption>
+  <thead><tr><th scope="col">Food</th><th scope="col">Minimum internal temperature</th></tr></thead>
+  <tbody>{rows}</tbody>
+</table>
+<p class="small">Read the chart itself before relying on any number here:
+  <a href="{USDA["source_url"]}">fsis.usda.gov</a>. Registered as {USDA["source_id"]} in the
+  <a href="../sources.html">source register</a>.</p>
+"""
 
 
 def spec_table(p):
@@ -597,6 +622,7 @@ def build_product(p):
 <h2>Product-intent confirmation record</h2>
 {intent_table(p)}
 
+{usda_block(p)}
 <h2>What this page does not claim</h2>
 <p>No price, star rating, review count, sales rank, commission rate or "best" verdict appears above.
   Those values are left out on purpose, either because Amazon's policy governs them or because they
@@ -758,7 +784,7 @@ GUIDES = [
             ("6. Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
             6 liters in its capacity field. Six liters is about 6.3 US quarts, so this is almost
             certainly a label slip rather than a different product &mdash; but it is the kind of slip
-            that makes a spec table worth reading rather than skimming. It is flagged as FLG-029."""),
+            that makes a spec table worth reading rather than skimming. It is flagged as FLG-034."""),
          ],
          verdict="""Write down three numbers before you shop: the widest single item you cook, how
          many separate things you cook at once, and your counter depth. Then ignore quart totals that
@@ -1029,7 +1055,7 @@ def build_how():
     side-by-side taste trial, and no measured performance. Nothing on this site implies otherwise
     (FLG-032).</li>
   <li><strong>We have not seen the certificates.</strong> NIST and NSF appear on the listings. We have
-    not been given the documents or an independent test report (FLG-030).</li>
+    not been given the documents or an independent test report (FLG-035).</li>
   <li><strong>We have not confirmed the submitted short links.</strong> Their compliance status is
     unresolved, so we do not call them valid or invalid (FLG-003). The links we publish are ordinary
     tagged amazon.com URLs.</li>
@@ -1486,11 +1512,15 @@ def build_sources():
 <h1>Source register</h1>
 <p class="lede">If a claim is not traceable to a row on this page, it is not a claim this site makes.
   {len(SOURCES)} sources: the public policy documents, the five product listings, and the supplied
-  short links, all read on {TODAY}.</p>
+  short links, each read on the date in its row.</p>
 
 <div class="statrow">
-  <div><span class="statnum">4</span><span class="statlabel">policy and government sources</span></div>
-  <div><span class="statnum">5</span><span class="statlabel">product listings</span></div>
+  <div><span class="statnum">{len([x for x in SOURCES if x['id'].startswith(('S0','S2'))])}</span>
+    <span class="statlabel">policy and government sources</span></div>
+  <div><span class="statnum">{len([x for x in SOURCES if x['id'] in ('S10','S11','S12','S13','S14')])}</span>
+    <span class="statlabel">product listings</span></div>
+  <div><span class="statnum">{len([x for x in SOURCES if x['id'] in ('S15','S16','S17','S18','S19')])}</span>
+    <span class="statlabel">supplied short links</span></div>
   <div><span class="statnum">{len(FLAGS)}</span><span class="statlabel">items flagged for review</span></div>
   <div><span class="statnum">0</span><span class="statlabel">prices or ratings reproduced</span></div>
 </div>
@@ -1586,7 +1616,7 @@ def build_exec():
   <li><strong>The link test.</strong> No tagged link has been clicked inside the enrolled account, so
     every product page still says PENDING TEST (FLG-004).</li>
   <li><strong>Certification.</strong> NIST and NSF appear on the listings. No certificate or test
-    report has been seen (FLG-030).</li>
+    report has been seen (FLG-035).</li>
   <li><strong>Hands-on experience.</strong> None. Nothing on this site implies it was tested
     (FLG-032).</li>
 </ul>
@@ -1599,7 +1629,7 @@ def build_exec():
     <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in the title, seven in Configuration, six named</td></tr>
     <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 °F max in the spec field, 450 °F Hi-Fry in the title</td></tr>
     <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in the spec fields, 1000 W in About this item</td></tr>
-    <tr><td>FLG-029</td><td>Chefman 6 Qt</td><td>6 quarts in the title, 6 liters in the capacity field</td></tr>
+    <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in the title, 6 liters in the capacity field</td></tr>
     <tr><td>FLG-019</td><td>CHEF iQ Sense</td><td>Two-year assurance on the listing, one year in the earlier pass</td></tr>
   </tbody>
 </table>

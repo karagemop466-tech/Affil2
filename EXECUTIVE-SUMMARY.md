@@ -55,14 +55,14 @@ each observed ASIN is a dated snapshot, not a permanent mapping.
 | FLG-009 | Emeril 26 QT | model number appears in more than one form |
 | FLG-018 | Chefman 8 Qt | 200–400 °F in About this item, 450 °F Hi-Fry in the title |
 | FLG-021 | Emeril 26 QT | 24 presets in the title, 25 in About this item |
-| FLG-029 | Chefman 6 Qt | 6 quarts in the title, 6 liters in the capacity field |
+| FLG-034 | Chefman 6 Qt | 6 quarts in the title, 6 liters in the capacity field |
 | FLG-031 | Emeril 26 QT | six accessories in the title, seven in Configuration, six named |
 
 ## Not verified, and published as such
 
 Intended ASIN per product (FLG-001) · whether the tracking ID is live (FLG-002) · whether the
 short-link format is permitted for this placement (FLG-003) · the one-per-product Special Link test
-(FLG-004) · NIST/NSF and cETL certification beyond the listing's own wording (FLG-030) · any
+(FLG-004) · NIST/NSF and cETL certification beyond the listing's own wording (FLG-035) · any
 hands-on experience (FLG-032) · a named author (FLG-033) · weights and several model numbers that
 were not in the fetched listing text (FLG-022).
 
