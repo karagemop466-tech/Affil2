@@ -1,9 +1,9 @@
 # COORDINATION — Affil2 shared task board
 
-Session ID: `530c2e6c`  Branch: `arena/530c2e6c-affil2`  Base: `12d49cdc2523508f8cc6d2d36257b48e6ffc5529` (main)
-Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED — see FLG-002)
+Session ID (this turn): `6e40cecc`  Branch: `arena/6e40cecc-affil2`  Base: `e1b6750e92adaae69e95872700db578f499870ca` (main)
+Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `e1b6750e`). Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED — see FLG-002)
 
-> Single-session run: no other session has claimed any task in this repo (repo was README-only at start, verified `git log`/`ls`). All scopes below are claimed by `530c2e6c` on this branch. No file owned by another session was edited.
+> All task scopes were completed by `530c2e6c` and merged to main. This session (`6e40cecc`) took over the stale T-09 claim (>60 minutes old, no new commits) per the handoff rule and edits only files in its own scope: feed.xml fix and COORDINATION.md integration record. No file owned by another session was edited.
 
 ## Task board
 
@@ -17,7 +17,7 @@ Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED �
 | T-06 | Suggestions / Direction section + Open Questions register + Executive Summary | done | 530c2e6c | suggestions.html, questions.html, executive-summary.html, EXECUTIVE-SUMMARY.md |
 | T-07 | SEO/findability (sitemap, robots, RSS, JSON-LD, search) + click/analytics layer | done | 530c2e6c | sitemap.xml, robots.txt, feed.xml, assets/app.js |
 | T-08 | Flagged for Review page + campaign ledger (empty, provenance) | done | 530c2e6c | flagged.html, campaign-ledger.html, data/campaign-ledger.json |
-| T-09 | Final integration: build check, broken-link check, GitHub Pages, PR + merge | in progress | 530c2e6c | .github/workflows/pages.yml, COORDINATION.md |
+| T-09 | Final integration: build check, broken-link check, GitHub Pages, PR + merge | in progress | 6e40cecc | feed.xml, COORDINATION.md |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -45,14 +45,24 @@ FLG-008 CHEF iQ battery conflict 50h vs 70h on same listing.
 FLG-009 Emeril preset count 24 vs 25 + model number variants on same listing.
 FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
 
+## Verification log additions (2026-11-20, session 6e40cecc, official sources re-fetched)
+| Item | Official source checked | Result |
+|------|------------------------|--------|
+| P-01 B0CDY277D3 | https://www.amazon.com/dp/B0CDY277D3 | Title matches register: "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff..."; breadcrumb Home & Kitchen > ... > Air Fryers |
+| P-05 B0DZFD6R9Z | https://www.amazon.com/dp/B0DZFD6R9Z | Title matches register: "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | ... Gen3"; breadcrumb ... > Meat Thermometers |
+| S03 FTC Endorsement Guides FAQ | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Disclosure must be clear and conspicuous; connection to marketer must be disclosed |
+| S04 Google qualify outbound links | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | rel="sponsored" for paid/affiliate links; multiple values allowed |
+| feed.xml | W3C-expat well-formedness check | Fixed `<language>en-us>` → `<language>en-us</language>`, now valid |
+| check_site.py | 25 pages | ALL CHECKS PASS |
+
 ## Handoff / conflict log
-- 2026-11-20 530c2e6c: claimed all tasks, repo empty, no conflicts.
+- 2026-11-20 530c2e6c: claimed all tasks, repo empty, no conflicts; all tasks merged to main at e1b6750e.
+- 2026-11-20 6e40cecc: took over stale T-09 claim (>60 min old, no new commits); feed.xml language tag fixed; re-verified P-01/P-05 vs official Amazon listings; re-fetched S03/S04; check_site 25 pages ALL CHECKS PASS.
 - PR link + merge result: (to be recorded at T-09 completion)
 
-## T-09 completion (2026-11-20)
-- PR: https://github.com/karagemop466-tech/Affil2/pull/1 — merged (merge commit fdb5d79)
-- GitHub Pages: built, deploy workflow success. Live: https://karagemop466-tech.github.io/Affil2/
-- Final gate: scripts/check_site.py ALL CHECKS PASS (25 pages)
+## T-09 completion (pending)
+- PR: (to be created from arena/6e40cecc-affil2 to main)
+- GitHub Pages: already enabled, source = main, live at https://karagemop466-tech.github.io/Affil2/ — re-deploy on main push after merge
 - Flagged items FLG-001..FLG-010 published on flagged.html; do not block.
 
 ---
