@@ -22,14 +22,17 @@ _SPEED_ROWS = [
     ("Oven-cord thermometer", "about 10 seconds", "At least 1/2&nbsp;in deep; base unit on the counter", "Cannot be calibrated"),
 ]
 _speed = "".join(
-    '<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td></tr>' % r for r in _SPEED_ROWS)
+    '<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td>'
+    '<td class="src"><a href="%s" rel="noopener noreferrer">S24</a></td></tr>' % (r + (USDA_THERMO_URL,))
+    for r in _SPEED_ROWS)
 
 USDA_SPEED_TABLE = (
     '<table class="usda"><caption>Reading speed and calibration, by thermometer type, as published by '
     'the USDA. Source: <a href="%s">FSIS &mdash; Food Thermometers</a> (page last updated Mar 21, 2025), '
     'registered as S24 in the <a href="../sources.html">source register</a>.</caption>'
     '<thead><tr><th scope="col">Type</th><th scope="col">Time to a reading</th>'
-    '<th scope="col">Placement USDA specifies</th><th scope="col">Can it be calibrated?</th></tr></thead>'
+    '<th scope="col">Placement USDA specifies</th><th scope="col">Can it be calibrated?</th>'
+    '<th scope="col">Source</th></tr></thead>'
     '<tbody>%s</tbody></table>' % (USDA_THERMO_URL, _speed))
 
 ICE_STEPS = """<h2>The test, step by step, as the USDA publishes it</h2>

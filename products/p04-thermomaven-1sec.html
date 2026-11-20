@@ -106,21 +106,41 @@
   <caption>Product-intent confirmation record. Intended and observed are separate fields and are
     never merged.</caption>
   <tbody>
-    <tr><th scope="row">Submitted link (as supplied)</th><td>https://link.amazon/B0c8moW59</td></tr>
-    <tr><th scope="row">Short-link token</th><td>B0c8moW59 (not an ASIN)</td></tr>
-    <tr><th scope="row">Intended ASIN</th><td>— blank: not confirmed by the owner</td></tr>
-    <tr><th scope="row">Observed redirect target</th><td>B0DHZTCNR5</td></tr>
-    <tr><th scope="row">What the submitted link actually opened</th><td>Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages; fresh fetch in follow-up verification resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent redirect instability remains under; intended ASIN remains blank under)</td></tr>
+    <tr><th scope="row">Submitted link (as supplied)</th>
+      <td><a href="https://link.amazon/B0c8moW59" rel="noopener noreferrer">https://link.amazon/B0c8moW59</a><br>
+        <span class="small">Supplied short link, recorded exactly as submitted; its compliance
+        status is unresolved and is tracked as
+        <a href="../flagged.html#FLG-003">FLG-003</a> on the <a href="../flagged.html">flag
+        register</a>. No validity claim is made about it.</span></td></tr>
+    <tr><th scope="row">Short-link token</th>
+      <td>B0c8moW59 (not an ASIN) &mdash;
+        <a href="https://link.amazon/B0c8moW59" rel="noopener noreferrer">open the submitted short link</a></td></tr>
+    <tr><th scope="row">Intended ASIN</th>
+      <td>— blank: not confirmed by the owner &mdash; <a href="../flagged.html#FLG-001">FLG-001</a>, kept in a separate
+        field from the observed target below; the two are never merged.</td></tr>
+    <tr><th scope="row">Observed redirect target</th>
+      <td>B0DHZTCNR5 &mdash; <a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">official listing</a> <span class="small">(paid listing)</span>,
+        observed separately from intent (dated snapshot; short-link redirects are not stable, see
+        <a href="../flagged.html#FLG-011">FLG-011</a>).</td></tr>
+    <tr><th scope="row">What the submitted link actually opened</th>
+      <td>Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages; fresh fetch in follow-up verification resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent redirect instability remains under; intended ASIN remains blank under) &mdash;
+        <a href="https://link.amazon/B0c8moW59" rel="noopener noreferrer">re-test the short link yourself</a></td></tr>
     <tr><th scope="row">Official listing URL</th>
-      <td><a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">https://www.amazon.com/dp/B0DHZTCNR5</a></td></tr>
+      <td><a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">https://www.amazon.com/dp/B0DHZTCNR5</a> <span class="small">(paid listing)</span><br><span class="small">The URL above is the canonical official
+        listing, kept unmodified for citation. Buy buttons carry the Associates tag
+        (shopnow047c-20); citations are marked per FLG-042, not tagged.</span></td></tr>
     <tr><th scope="row">Special Link we publish</th>
-      <td><a href="https://www.amazon.com/dp/B0DHZTCNR5?tag=shopnow047c-20" rel="sponsored nofollow">https://www.amazon.com/dp/B0DHZTCNR5?tag=shopnow047c-20</a></td></tr>
+      <td><a href="https://www.amazon.com/dp/B0DHZTCNR5?tag=shopnow047c-20" rel="sponsored nofollow">https://www.amazon.com/dp/B0DHZTCNR5?tag=shopnow047c-20</a>
+        <span class="small">(tagged buy link)</span></td></tr>
     <tr><th scope="row">Model (as published)</th>
-      <td>HT07<br><span class="small">Product information — Item details table (Model Name, Model &amp; Part Number</span></td></tr>
-    <tr><th scope="row">Confirmation date</th><td>2026-11-20</td></tr>
+      <td>HT07<br><span class="small">Product information — Item details table (Model Name, Model &amp; Part Number
+        &mdash; <a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">listing</a> <span class="small">(paid listing)</span></span></td></tr>
+    <tr><th scope="row">Confirmation date</th>
+      <td>2026-11-20 &mdash; <a href="../sources.html">the source-register row for this listing</a></td></tr>
     <tr><th scope="row">Associates test status</th>
-      <td>PENDING — one link per product must be clicked inside the enrolled account and
-        confirmed in the tracking report before traffic is scaled (FLG-004).</td></tr>
+      <td>PENDING &mdash; one link per product must be clicked inside the enrolled account and
+        confirmed in the tracking report before traffic is scaled
+        (<a href="../flagged.html#FLG-004">FLG-004</a>).</td></tr>
   </tbody>
 </table>
 <table class="ledger">

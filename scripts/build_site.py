@@ -1212,7 +1212,7 @@ NOWEIGHT = "— <span class='unverified'>not stated on this listing</span>"
 SRC_LISTINGS = ('<a href="sources.html">S10&ndash;S14</a> <span class="small">'
                 '(register rows for the five official listings)</span>')
 SRC_METHOD = '<a href="how-we-choose.html">how we choose</a> <span class="small">(editorial, not a listing fact)</span>'
-SRC_POLICY = '<a href="flagged.html#FLG-005">FLG-005</a> <span class="small">(withheld by policy)</span>'
+SRC_POLICY = '<a href="flagged.html">withheld by policy</a> <span class="small">(a price or rating is a live listing value, not a site claim)</span>'
 
 
 def spec(p, key, other=NOT_STATED):
@@ -1256,8 +1256,8 @@ PAIR_ROWS = [
     ("Connectivity", lambda p: spec(p, "connectivity", "— n/a, no app"), SRC_LISTINGS),
     ("Model on listing", lambda p: spec(p, "model", "— not on the fetched text"), SRC_LISTINGS),
     ("Warranty", lambda p: spec(p, "warranty", NOT_STATED), SRC_LISTINGS),
-    ("Price", lambda p: "— not shown, by policy"),
-    ("Star rating", lambda p: "— not shown, by policy"),
+    ("Price", lambda p: "— not shown, by policy", SRC_POLICY),
+    ("Star rating", lambda p: "— not shown, by policy", SRC_POLICY),
 ]
 
 
@@ -2379,7 +2379,7 @@ def build_suggestions():
                                      if not x["status"].startswith("Shipped")], payload)
     rows = ""
     for s in SUGGESTIONS:
-        rows += f"""<tr id="{s['id']}" data-sug="{s['id']}">
+        rows += f"""<tr data-sug="{s['id']}" id="{s['id']}">
   <td class="nowrap"><strong>{s['id']}</strong></td>
   <td><strong>{esc(s['title'])}</strong><br><span class="small">{esc(s['what'])}</span></td>
   <td>{esc(s['why'])}</td>
@@ -3032,7 +3032,7 @@ def build_sources():
 
     rows = "".join(
         f"""<tr id="{s['id']}"><td class="nowrap"><strong>{s['id']}</strong></td>
-  <td>{esc(decode_named(s['name']))}<br><a href="{esc(s['url'])}" rel="{rel_of(s['url'])}" class="small">{esc(s['url'])}</a></td>
+  <td>{esc(decode_named(s['name']))}<br>{source_link(s)}</td>
   <td class="quote">{esc(decode_named(s['used_for']))}</td>  <td class="nowrap">{esc(s['checked'])}</td></tr>""" for s in SOURCES)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Sources", None)])}
