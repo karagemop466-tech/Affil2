@@ -46,7 +46,7 @@
 <div class="statrow">
   <div><span class="statnum">5</span><span class="statlabel">products covered</span></div>
   <div><span class="statnum">9</span><span class="statlabel">guides published</span></div>
-  <div><span class="statnum">40</span><span class="statlabel">flags, all public</span></div>
+  <div><span class="statnum">41</span><span class="statlabel">flags, all public</span></div>
   <div><span class="statnum">0</span><span class="statlabel">prices or ratings shown</span></div>
 </div>
 
@@ -88,6 +88,13 @@
   <li>All five short links were fetched and their redirect targets observed separately from intent
     (including B0c8moW59 resolving to B0DHZTCNR5 on re-test while redirect instability stays under
     FLG-011).</li>
+  <li>An independent line-by-line re-verification pass on 2026-11-20 (session ca4af934, T-21) re-fetched
+    all five listing titles &mdash; all five match the register exactly &mdash; and re-read the P-03
+    Product information tables (12.8 pounds item weight, 12.75&nbsp;&times;&nbsp;13.5&nbsp;&times;&nbsp;10
+    inches, 1700&nbsp;W / 120&nbsp;V, 400&nbsp;&deg;F max, part number RJ38-SQSS-8T, 1-Year Limited
+    Warranty) and the P-05 Features &amp; Specs (1000&nbsp;&deg;F upper range, 4.75-inch probe,
+    5 sensors, Wi-Fi and Bluetooth) line by line against this register. No drift was found. The S03
+    FTC, S04 Google and S22 USDA texts were re-read live the same day.</li>
 </ul>
 
 <h2>4. What is not verified, and is not pretended to be</h2>

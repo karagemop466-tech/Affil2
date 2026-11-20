@@ -783,3 +783,40 @@ Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`0b509ab`, pr
 - **Scope (non-overlapping):** COORDINATION.md (this record), EXECUTIVE-SUMMARY.md, data/flags.json + data/sources.json (append-only), scripts/build_site.py, scripts/check_site.py, and generated HTML produced by the generator only. Product/source registers are consumed read-only except for append-only flags and source rows. Owner-gated items (FLG-001/002/003/004/010/028/033) untouched.
 - **Open PRs from other sessions (not touched):** #28 (`59ada9df`), #29 (`bba2deed`), #34 (`82c875a9`), #35 (`36170d15`). Per protocol this session will not merge, close, or edit another session's claimed work; they are listed for the owner on the Flagged for Review page.
 - **Planned work:** (1) line-by-line repo review and independent live re-verification of product/policy registers against official sources, with source links for manual review and append-only flags for any drift; (2) buyer-first polish in the generator (shop voice, disclosure above the fold everywhere, question-shaped guides surfaced, Decision Center, sponsored-link marking, product-intent record presentation, five-event measurement surface, compliance gate in the publishing workflow); (3) full gate + tests, PR to main, merge, Pages verification, completion record here.
+
+## Session `arena/ca4af934-affil2` — T-21 work record (2026-11-20)
+
+### Line-by-line review and independent live re-verification (official sources only)
+
+| Check | Official source (link for manual review) | Result |
+|---|---|---|
+| P-01..P-05 listing titles | https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z | All five live page titles match `data/products.json` strings exactly (compared verbatim) |
+| P-03 Product information (Features & Specs, Measurements, Materials & Care, Item details) | https://www.amazon.com/dp/B08DKYBTPH | Line-by-line: Item Weight 12.8 pounds ✓; 12.75"D x 13.5"W x 10"H ✓; Capacity 8 quarts ✓; Output Wattage & Wattage 1700 watts ✓ (conflict side A of FLG-017); Voltage 120 volts ✓; Min 94 °C / Max 400 °F ✓ (FLG-018 side A); Part Number RJ38-SQSS-8T ✓; Warranty Description 1-Year Limited Warranty ✓; Model Number field prints "Large Air Fryer" as register notes ✓ |
+| P-05 Features & Specs | https://www.amazon.com/dp/B0DZFD6R9Z | Line-by-line: Upper Temperature Range 1000 °F ✓; Immersion Depth 4.75 inches ✓; "5 Sensors, Unlimited Range" ✓; Connectivity "Bluetooth, Wi Fi" ✓; Care "Dishwasher Safe" ✓ |
+| FTC Endorsement Guides FAQ (S03) | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Re-read live; "connection … should be disclosed clearly and conspicuously" wording relied on by the site confirmed |
+| Google Qualify outbound links (S04) | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | Re-read live; rel="sponsored" for paid links, multiple rel values allowed — confirms the site's link marking |
+| USDA FSIS Safe Minimum Internal Temperature Chart (S22) | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Re-read live; 145 °F + 3-min rest, 160 °F ground meats, 165 °F poultry/leftovers match the site's USDA block; chart Last Updated 2025-04-14 |
+| Thanksgiving 2026-11-26 (new seasonal module) | computed: 4th Thursday of November 2026 (Thursdays: 5, 12, 19, 26) | Correct |
+
+**Not re-reached in this pass (recorded honestly, nothing re-marked on their behalf):** the P-01/P-02/P-04 deep spec tables — this session's chunk fetches landed on ad modules (pagination drift between fetcher runs); the values stand on the same-day cited captures by sessions 530c2e6c / 937876a6 / 9f19fe6b (`data/products.json` field provenance, `data/reverification-2026-11-20.json`). S01/S02 remain login-gated (FLG-026). Prices/ratings/buy-box deliberately unrecorded (FLG-005).
+
+### Table audit (every row: source link or explicit blank/flag marker)
+333 rows across 33 pages: 174 carry direct external source links; 84 carry blank/flag/policy markers; 75 are internal registers (design-brief 32, Decision Center 14, Open Questions 7, event-schema tables 9, ledger empty-state 1) or caption-cited single-source data rows (compare 4, USDA doneness 8). Audit criteria and exemptions are recorded in EXECUTIVE-SUMMARY.md.
+
+### Defects found and fixed (generator-level; generated HTML regenerated, never hand-edited)
+1. Double-escaped entities (`&plusmn;` `&mdash;` `&nbsp;` `&deg;`) in four guide `sub`/`intro` strings rendered literally (`amp;plusmn;` visible on guides.html) — replaced with real characters.
+2. Product-intent confirmation record: observed-target, token, model-provenance, observation-note and confirmation-date rows now carry row-level links to the official listing or the supplied short link; intended vs observed fields remain separate (FLG-001).
+3. Compare table caption now carries all five official listing links and states the per-column traceability path.
+4. **New flag FLG-041** (cosmetic, sourced to S12): P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's TurboFry name; rename would change a published URL, so it is left to the owner (rename in one coordinated pass or keep).
+5. Publication polish: front-page seasonal cluster "Thanksgiving week" (USDA doneness panel, S22) and guides-hub topic clusters (Choosing an air fryer / Meat thermometers / Seasonal, with a fail-safe group so no guide can drop out).
+
+### Gates run (2026-11-20, this session)
+- `python3 -B scripts/build_site.py` ×2 → 33 pages, byte-identical output (idempotent)
+- `python3 -B scripts/check_site.py` → checked 33 pages, 5 product records, 41 flags, 19 sources — ALL CHECKS PASS
+- `python3 -B -m unittest discover -s tests -p "test_*.py"` → 3 tests OK
+- `node tests/test_collector.js` → ALL JS COLLECTOR AND CLIENT TESTS PASS
+- feed.xml + sitemap.xml parse; internal link crawl: 33 pages, 0 broken internal links; every page in sitemap; every guide in feed
+- `git diff --check` clean
+
+### Scope note
+README.md was touched only to sync published counts (40→41 flags). No other session's file was edited. Open PRs #28/#29/#34/#35 left untouched (listed for the owner on the Flagged for Review page context and in EXECUTIVE-SUMMARY.md).

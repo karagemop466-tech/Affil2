@@ -1,4 +1,4 @@
-# Executive Summary — ShopNow Kitchen (Verified Update — Session arena/9f19fe6b-affil2)
+# Executive Summary — ShopNow Kitchen (Verified Update — through session arena/ca4af934-affil2, T-21)
 
 Date 2026-11-20 · Tracking ID in use `shopnow047c-20` (issuance unverified, FLG-002)
 Live site https://karagemop466-tech.github.io/Affil2/ · Full version with source links: `executive-summary.html`
@@ -111,3 +111,39 @@ or unpublished flag exists. CI runs regeneration, drift detection, `check_site.p
 - `python3 -B scripts/check_site.py` passed (`checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`).
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
 - `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).
+
+## Verification log (2026-11-20, session arena/ca4af934-affil2 — T-21 independent pass)
+Independent line-by-line re-verification against live official pages (this session's own fetches,
+not inherited):
+
+| Check | Source | Result |
+|---|---|---|
+| P-01..P-05 listing titles | https://www.amazon.com/dp/B0CDY277D3 · /dp/B09B7SB46R · /dp/B08DKYBTPH · /dp/B0DHZTCNR5 · /dp/B0DZFD6R9Z | All five live titles match the register strings exactly |
+| P-03 Product information tables | https://www.amazon.com/dp/B08DKYBTPH | Line-by-line match: Item Weight 12.8 pounds; Dimensions 12.75"D x 13.5"W x 10"H; Capacity 8 quarts; Output Wattage/Wattage 1700 watts; Voltage 120 volts; Max Temperature Setting 400 °F; Part Number RJ38-SQSS-8T; Warranty Description 1-Year Limited Warranty; the 1700 W vs 1000 W conflict (FLG-017) and the 400/450 °F conflict (FLG-018) remain as published |
+| P-05 Features & Specs | https://www.amazon.com/dp/B0DZFD6R9Z | Line-by-line match: Upper Temperature Range 1000 °F; Immersion Depth 4.75 inches; 5 Sensors; Bluetooth + Wi Fi; Dishwasher Safe |
+| FTC Endorsement Guides FAQ (S03) | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Live; disclosure wording relied on ("connection … disclosed clearly and conspicuously") confirmed |
+| Google qualify outbound links (S04) | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | Live; rel="sponsored" for paid links and multiple rel values confirmed |
+| USDA FSIS temperature chart (S22) | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Live; 145 °F + 3-min rest (steaks), 160 °F (ground meats), 165 °F (poultry, leftovers) match the site's USDA table; chart dated 2025-04-14 |
+
+**Not re-reached in this pass (inherited from same-day passes by sessions 530c2e6c / 937876a6 / 9f19fe6b, citations already in `data/products.json`):** the P-01, P-02 and P-04 deep spec tables (this session's chunk fetches landed on ad modules due to pagination drift; the earlier cited captures stand, and nothing was re-marked as verified on their behalf). Prices, ratings and buy-box state remain deliberately unrecorded (FLG-005).
+
+## Table audit (2026-11-20, T-21)
+333 table rows across 33 pages audited: 174 rows carry direct external source links; 84 carry an explicit blank/flag/policy marker (blank values, `PENDING`, "not shown, by policy", FLG- references); the remaining 75 are planning, decision, question, event-schema or ledger rows (internal records with explicit statuses, not product claims) or data rows whose table caption and headers carry the official links (compare view: 4 rows; USDA doneness tables: 8 rows, USDA chart linked in each caption). Every data value row on product pages (spec tables, intent record) now carries a row-level link to the official listing or the supplied short link. Row-level exemptions, all documented: compare-view data rows (traceable via column headers → product pages → row-level sources, plus the five listing links now in the caption), USDA doneness rows (single-source table, USDA chart linked in the caption), the five-event schema tables (the site's own contract, `data/events.json`), and the decision/question/ledger registers (internal records with explicit statuses, not product claims).
+
+## Defects found and fixed by this pass
+1. Double-escaped HTML entities (`&plusmn;`, `&mdash;`, `&nbsp;`, `&deg;`) rendered literally in four guide `sub`/`intro` strings on `guides.html` and guide pages — replaced with real characters (confirmed fixed in generated output).
+2. Product-intent confirmation record rows for the observed redirect target, model provenance, confirmation date, token and observation note lacked row-level links — now each links the official listing or the supplied link (intended vs observed fields remain separate; intended stays blank per FLG-001).
+3. Compare-table caption now carries the five official listing links and states the traceability path per column.
+4. New flag **FLG-041** (cosmetic): the P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's "TurboFry" name. Rename would change a published URL, so it is left to the owner's decision; no data affected.
+
+## Manual review links (all official)
+- Product listings: https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z
+- Supplied short links: https://link.amazon/B04G1MEwY · https://link.amazon/B02NbDxp3 · https://link.amazon/B00hJ57DV · https://link.amazon/B0c8moW59 · https://link.amazon/B0f3GKalj
+- Amazon Associates Operating Agreement: https://affiliate-program.amazon.com/help/operating/agreement (S01) · Program Policies: https://affiliate-program.amazon.com/help/operating/policies (S02) — both login-gated; wording left for manual review (FLG-026 covers URL health)
+- FTC Endorsement Guides FAQ: https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking (S03) · FTC Disclosures 101: https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers (S23)
+- Google qualify outbound links: https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links (S04)
+- Creators API onboarding: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api (S20) · PA-API 5 deprecation: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation (S21)
+- USDA FSIS temperature chart: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart (S22) · thermometer calibration: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/food-thermometers (S24)
+
+## Open parallel pull requests (owner review; untouched by this session)
+PRs #28 (`59ada9df`), #29 (`bba2deed`), #34 (`82c875a9`) and #35 (`36170d15`) were opened by earlier parallel sessions and left open. Per the coordination protocol this session neither merged nor closed another session's claimed work; several of their themes are already covered on `main` (collector stack in PR #31, storefront in PR #30). Review links: https://github.com/karagemop466-tech/Affil2/pulls

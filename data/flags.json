@@ -446,5 +446,15 @@
     ],
     "severity": "corrected",
     "owner_status": "Corrected with exact section citations for each value."
+  },
+  {
+    "id": "FLG-041",
+    "title": "P-03 page slug misspells the listing's TurboFry name",
+    "detail": "The published URL products/p03-chefman-8qt-turbrofry.html spells the product line 'turbrofry', while the live listing title says TurboFry (registered mark on the listing). Renaming the file would change a published URL, so the spelling is kept for now and the decision is left to the owner: rename it in one coordinated pass across generator, sitemap and feed, or keep the slug as a stable identifier. Cosmetic only; no product data is affected.",
+    "links": [
+      "S12"
+    ],
+    "severity": "open",
+    "owner_status": "Owner decision: coordinated rename or keep. Cosmetic; does not block anything."
   }
 ]

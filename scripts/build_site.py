@@ -379,22 +379,30 @@ def spec_table(p):
 
 def intent_table(p):
     intended = p["intended"] or "— blank: not confirmed by the owner (FLG-001)"
+    obs = p["observed"] or "— not observed yet"
+    obs_cell = (f'<a href="{plain(p)}" rel="sponsored nofollow">{esc(obs)}</a>' if p["observed"]
+                else esc(obs))
     return f"""<table class="intent">
   <caption>Product-intent confirmation record. Intended and observed are separate fields and are
     never merged.</caption>
   <tbody>
-    <tr><th scope="row">Submitted link (as supplied)</th><td>{esc(p['submitted'])}</td></tr>
-    <tr><th scope="row">Short-link token</th><td>{esc(p['token'])} (not an ASIN)</td></tr>
+    <tr><th scope="row">Submitted link (as supplied)</th><td><a href="{esc(p['submitted'])}"
+      rel="sponsored nofollow">{esc(p['submitted'])}</a></td></tr>
+    <tr><th scope="row">Short-link token</th><td><a href="{esc(p['submitted'])}"
+      rel="sponsored nofollow">{esc(p['token'])}</a> (not an ASIN)</td></tr>
     <tr><th scope="row">Intended ASIN</th><td>{esc(intended)}</td></tr>
-    <tr><th scope="row">Observed redirect target</th><td>{esc(p['observed'] or '— not observed yet')}</td></tr>
-    <tr><th scope="row">What the submitted link actually opened</th><td>{esc(p['observed_note'])}</td></tr>
+    <tr><th scope="row">Observed redirect target</th><td>{obs_cell}</td></tr>
+    <tr><th scope="row"><a href="{esc(p['submitted'])}"
+      rel="sponsored nofollow">What the submitted link actually opened</a></th><td>{esc(p['observed_note'])}</td></tr>
     <tr><th scope="row">Official listing URL</th>
       <td><a href="{plain(p)}" rel="sponsored nofollow">{plain(p)}</a></td></tr>
     <tr><th scope="row">Special Link we publish</th>
       <td><a href="{aff(p)}" rel="sponsored nofollow">{aff(p)}</a></td></tr>
     <tr><th scope="row">Model (as published)</th>
-      <td>{esc(p['model'] or '— blank, see FLG-022')}<br><span class="small">{esc(p['model_source'])}</span></td></tr>
-    <tr><th scope="row">Confirmation date</th><td>{TODAY}</td></tr>
+      <td>{esc(p['model'] or '— blank, see FLG-022')}<br><span class="small"><a
+        href="{plain(p)}" rel="sponsored nofollow">{esc(p['model_source'])}</a></span></td></tr>
+    <tr><th scope="row">Confirmation date</th><td>{TODAY} &mdash; confirmed against the
+      <a href="{plain(p)}" rel="sponsored nofollow">official listing</a></td></tr>
     <tr><th scope="row">Associates test status</th>
       <td>PENDING &mdash; one link per product must be clicked inside the enrolled account and
         confirmed in the tracking report before traffic is scaled (FLG-004).</td></tr>
@@ -496,6 +504,33 @@ def build_home():
   </div>
   <div class="grid">{ "".join(card(p, "", b) for p, b in zip(featured, ["Best for two", "Biggest single basket", "Best for spot checks"])) }</div>
   <p class="small"><a href="shop.html">See all five products &rarr;</a></p>
+</section>
+
+<section class="split">
+  <div>
+    <p class="kicker">Seasonal &middot; Thanksgiving week</p>
+    <h2>Thanksgiving is Thursday, November 26</h2>
+    <p>Whatever machine is doing the work next week, the questions are the same: what physically
+      fits, how to read a doneness claim, and what cleanup means at nine in the evening. Three
+      guides, timed for the week &mdash; and one for the machine that just arrived.</p>
+    <ul class="linklist">
+      <li><a href="guides/air-fryer-thanksgiving.html">Air fryer at Thanksgiving: what actually fits</a>
+        <span>The 12-inch pizza claim tells you more than the quart figure.</span></li>
+      <li><a href="guides/thermometer-accuracy.html">How to assess thermometer accuracy claims</a>
+        <span>What the &plusmn;0.5&nbsp;&deg;F and NIST lines mean before the turkey depends on them.</span></li>
+      <li><a href="guides/cleanup-counter-space.html">Cleanup and counter-space trade-offs</a>
+        <span>Dishwasher-safe describes a part. It does not describe your evening.</span></li>
+      <li><a href="guides/first-week-air-fryer.html">Your air fryer&rsquo;s first week: what to cook, what to skip</a>
+        <span>New machine this week? Start here.</span></li>
+    </ul>
+  </div>
+  <aside class="panel">
+    <h3>Doneness, from the source</h3>
+    <p>Poultry and leftovers: <strong>165&nbsp;&deg;F</strong>. Steaks, chops and roasts:
+      <strong>145&nbsp;&deg;F</strong>, rested 3 minutes. Those are USDA FSIS minimum internal
+      temperatures &mdash; not a figure from any product listing (S22).</p>
+    <p class="small"><a href="sources.html">See the source register &rarr;</a></p>
+  </aside>
 </section>
 
 <section class="split">
@@ -812,7 +847,9 @@ def build_compare():
   rows, so you can decide. Blank means the listing does not say.</p>
 <table class="compare">
   <caption>Aligned by field, so a value is always compared against the same value. Read from the
-    official listings on {TODAY}.</caption>
+    official listings on {TODAY}: {"".join(f'<a href="{plain(p)}" rel="sponsored nofollow">{p["id"]}</a>' for p in cols[:-1])}
+    and <a href="{plain(cols[-1])}" rel="sponsored nofollow">{cols[-1]["id"]}</a>. Each column header
+    links the product page that cites the exact listing table behind every value in that column.</caption>
   <thead><tr><th scope="col">Field</th>{head}</tr></thead>
   <tbody>
     {row("Category", lambda p: esc(p["cat"]))}
@@ -1042,10 +1079,10 @@ GUIDES = [
          If you smoke or roast for hours and want to leave the room, buy the wireless system. If you
          do both, they are not substitutes for each other."""),
     dict(slug="thermometer-accuracy", title="How to assess thermometer accuracy claims",
-         sub="What &plusmn;0.5 °F, NIST and NSF mean on a listing — and what they do not.",
+         sub="What ±0.5 °F, NIST and NSF mean on a listing — and what they do not.",
          kicker="Buying guide · 5 min read", products=["P-04", "P-05"],
          intro="""Accuracy is the one specification you cannot check by reading harder. A listing can
-         say &plusmn;0.5&nbsp;&deg;F and reference NIST and NSF, and every word of that can be true
+         say ±0.5 °F and reference NIST and NSF, and every word of that can be true
          while telling you less than you think. Here is a calmer way to read it.""",
          sections=[
             ("Separate the claim from the evidence", """&plusmn;0.5&nbsp;&deg;F is a claim about
@@ -1079,7 +1116,7 @@ GUIDES = [
          sub="A 12-inch pizza claim tells you more about usable size than a quart figure does.",
          kicker="Seasonal guide · 4 min read", products=["P-02", "P-01", "P-03"],
          intro="""Thanksgiving is the one day a year when counter space and usable volume both
-         matter at once. The useful question is not how many quarts the appliance has &mdash; it is
+         matter at once. The useful question is not how many quarts the appliance has — it is
          which of the day's jobs it can take off the oven, and which it cannot.""",
          sections=[
             ("What a countertop oven can take off your hands", """Sides and reheats are the realistic
@@ -1131,7 +1168,7 @@ GUIDES = [
          intro="""The fastest way to regret a new appliance is to feed it only frozen fries. A week
          of deliberate experiments teaches you where the heat sits and what this machine will
          actually replace in your routine. The practice below is kitchen experience, not product
-         testing &mdash; no performance claim about any of these machines is made here.""",
+         testing — no performance claim about any of these machines is made here.""",
          sections=[
             ("Days one and two: learn the heat", """Start with something cheap and forgiving &mdash;
             potato wedges or chicken wings. The point is not dinner, it is calibration: a single
@@ -1159,20 +1196,47 @@ GUIDES = [
 ]
 
 
+GUIDE_CLUSTERS = [
+    ("Choosing an air fryer", "Form factor, capacity, cleanup and fit — the decisions that come first.",
+     ["basket-vs-oven", "capacity-checklist", "small-kitchen-air-fryer", "cleanup-counter-space",
+      "multi-function-questions", "first-week-air-fryer"]),
+    ("Meat thermometers", "Speed in your hand versus freedom to walk away — and what accuracy claims mean.",
+     ["instant-vs-wireless", "thermometer-accuracy"]),
+    ("Seasonal", "Timed for the week they belong to.",
+     ["air-fryer-thanksgiving"]),
+]
+
+
 def build_guides_index():
-    items = "".join(
-        f"""<article class="guidecard">
+    def guidecard(g):
+        return f"""<article class="guidecard">
   <p class="kicker">{esc(g['kicker'])}</p>
   <h3><a href="guides/{g['slug']}.html">{esc(g['title'])}</a></h3>
   <p>{esc(g['sub'])}</p>
   <p class="small">Covers {", ".join(BY_ID[x]['brand'] for x in g['products'])}</p>
-</article>""" for g in GUIDES)
+</article>"""
+
+    byslug = {g["slug"]: g for g in GUIDES}
+    grouped = set()
+    cluster_html = ""
+    for name, blurb, slugs in GUIDE_CLUSTERS:
+        cards = "".join(guidecard(byslug[s]) for s in slugs if s in byslug)
+        grouped |= {s for s in slugs if s in byslug}
+        cluster_html += f"""
+  <h2>{esc(name)}</h2>
+  <p class="muted">{esc(blurb)}</p>
+  <div class="grid guides-grid">{cards}</div>"""
+    leftovers = [g for g in GUIDES if g["slug"] not in grouped]
+    if leftovers:  # fail-safe: no guide can ever fall out of the hub
+        cluster_html += f"""
+  <h2>More guides</h2>
+  <div class="grid guides-grid">{"".join(guidecard(g) for g in leftovers)}</div>"""
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", None)])}
 <h1>Guides</h1>
 <p class="lede">Question-shaped, written to be useful before you click anything. Each one ends with a
   verdict you can act on, and links to the products only where the product is the answer.</p>
-<div class="grid guides-grid">{items}</div>
+{cluster_html}
 <div class="panel">
   <h2>How these guides are made</h2>
   <p>Each guide starts from a decision a buyer actually faces, not from a keyword. The facts inside
@@ -2223,6 +2287,13 @@ def build_exec():
   <li>All five short links were fetched and their redirect targets observed separately from intent
     (including B0c8moW59 resolving to B0DHZTCNR5 on re-test while redirect instability stays under
     FLG-011).</li>
+  <li>An independent line-by-line re-verification pass on {TODAY} (session ca4af934, T-21) re-fetched
+    all five listing titles &mdash; all five match the register exactly &mdash; and re-read the P-03
+    Product information tables (12.8 pounds item weight, 12.75&nbsp;&times;&nbsp;13.5&nbsp;&times;&nbsp;10
+    inches, 1700&nbsp;W / 120&nbsp;V, 400&nbsp;&deg;F max, part number RJ38-SQSS-8T, 1-Year Limited
+    Warranty) and the P-05 Features &amp; Specs (1000&nbsp;&deg;F upper range, 4.75-inch probe,
+    5 sensors, Wi-Fi and Bluetooth) line by line against this register. No drift was found. The S03
+    FTC, S04 Google and S22 USDA texts were re-read live the same day.</li>
 </ul>
 
 <h2>4. What is not verified, and is not pretended to be</h2>

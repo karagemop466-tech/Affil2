@@ -16,7 +16,7 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | What to decide next | `suggestions.html` — Decision Center, 32 proposals, rankable |
 | The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
 | What is still unanswered | `questions.html` — Open Questions, 20 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 40 flags, every one sourced |
+| What could not be verified | `flagged.html` — Flagged for Review, 41 flags, every one sourced |
 | Where every fact came from | `sources.html` — Source Register, 19 official sources + dated changelog |
 | AI platform blueprint & gates | `platform.html` — 7-module architecture & Creators API / ML policy limits (SG-31) |
 | Telemetry & collector guide | `measurement.html` — 5-event privacy schema & Search Console checklist (SG-25) |
@@ -40,7 +40,7 @@ generator output, if the gate fails, or if the unit/collector tests fail.
 | `data/products.json` | the shared product register: titles, field values, provenance, status |
 | `data/editorial.json` | this site's voice: headlines, best-for, trade-offs, FAQ |
 | `data/sources.json` | 19 official sources (`S01`–`S04`, `S10`–`S24`) with what each supports and date checked |
-| `data/flags.json` | 40 flags (`FLG-001`–`FLG-040`): severity, detail, owner status, source links |
+| `data/flags.json` | 41 flags (`FLG-001`–`FLG-041`): severity, detail, owner status, source links |
 | `data/events.json` | canonical 5-event privacy-preserving measurement schema and forbidden fields |
 | `data/reverification-2026-11-20.json` | attempt-by-attempt record of the short-link and deep-table tests |
 | `assets/style.css` | storefront stylesheet, including photo-card and diagram styles |
