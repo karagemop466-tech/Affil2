@@ -533,7 +533,8 @@ print("ALL CHECKS PASS")
 # flagged.html (generated from data/flags.json), which is the only place IDs belong.
 READER_PAGES = [ROOT / "index.html", ROOT / "shop.html", ROOT / "compare.html",
                 ROOT / "air-fryers.html", ROOT / "meat-thermometers.html",
-                ROOT / "how-we-choose.html", ROOT / "guides.html"]
+                ROOT / "how-we-choose.html", ROOT / "guides.html",
+                ROOT / "about.html", ROOT / "disclosure.html", ROOT / "search.html"]
 READER_PAGES += sorted((ROOT / "products").glob("*.html"))
 READER_PAGES += sorted((ROOT / "guides").glob("*.html"))
 for page in READER_PAGES:

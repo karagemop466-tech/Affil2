@@ -707,7 +707,7 @@ def build_home():
       <li>No prices, no star ratings, no &ldquo;best&rdquo; ribbon. Those are Amazon&rsquo;s to show,
         and a rating is other people&rsquo;s kitchens, not yours.</li>
     </ol>
-    <p class="small"><a how-we-choose.htmlsrc="/Affil2/how-we-choose.html">How we choose &mdash; and what we refuse to claim &rarr;</a></p>
+    <p class="small"><a href="how-we-choose.html">How we choose &mdash; and what we refuse to claim &rarr;</a></p>
   </aside>
 </section>
 
@@ -1553,12 +1553,11 @@ def build_how():
 <h2>What we have not done</h2>
 <ul>
   <li><strong>We have not cooked with any of these.</strong> There is no hands-on test, no
-    side-by-side taste trial, and no measured performance. Nothing on this site implies otherwise
-    (FLG-032).</li>
+    side-by-side taste trial, and no measured performance. Nothing on this site implies otherwise.</li>
   <li><strong>We have not seen the certificates.</strong> NIST and NSF appear on the listings. We have
-    not been given the documents or an independent test report (FLG-035).</li>
+    not been given the documents or an independent test report, so treat them as the seller&rsquo;s own statement.</li>
   <li><strong>We have not confirmed the submitted short links.</strong> Their compliance status is
-    unresolved, so we do not call them valid or invalid (FLG-003). The links we publish are ordinary
+    unresolved, so we do not call them valid or invalid. The links we publish are ordinary
     tagged amazon.com URLs.</li>
 </ul>
 
@@ -1566,7 +1565,7 @@ def build_how():
 <ul>
   <li><strong>Prices and availability</strong> &mdash; Amazon's Program Policies only allow these when
     Amazon serves the link or the data comes from their API. Ours does not, so the number stays on
-    Amazon (S02).</li>
+    Amazon.</li>
   <li><strong>Star ratings and review counts</strong> &mdash; they summarise other people's kitchens,
     and quoting them invites the reader to treat popularity as suitability.</li>
   <li><strong>A commission rate or a revenue forecast</strong> &mdash; neither can be verified from
@@ -2316,7 +2315,7 @@ phrase that reads like it was produced by filling in a template."""
 </table>
 
 <p class="cta"><a class="btn" href="suggestions.html">Rank SG-17 in the Decision Center</a>
-  <a class="btn ghost" guides.htmlsrc="/Affil2/guides.html">Read the eight live guides</a></p>
+  <a class="btn ghost" href="guides.html">Read the live guides</a></p>
 """
     BUILT.append(page("design-brief.html", f"Design & Traffic Brief — {SITE}",
                       "A copy-paste design prompt, a topic-cluster traffic plan with a seasonal "
@@ -2694,7 +2693,7 @@ def build_disclosure():
   collector (<code>analytics/server.js</code> and Cloudflare Pages Function <code>functions/api/collect.js</code>)
   ships in this repository and activates only when configured via <code>sn_collect_url</code> or
   <code>&lt;meta name="sn-collect-endpoint"&gt;</code> (<a href="measurement.html">Measurement &amp;
-  Collector guide</a>, FLG-010).</p>
+  Collector guide</a>).</p>
 <p>You can clear everything we store by clearing site data for this domain, and you can export it
   first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
 
@@ -2737,11 +2736,12 @@ def build_about():
 
 <h2>Who writes it</h2>
 <p><strong>Editor of record:</strong> not named. Rather than invent a byline, this site states
-  plainly that there is no named human author behind the copy yet and that this is an outstanding item
-  (FLG-033). That is a real gap, not a design choice, and it is honest to say so.</p>
+  plainly that there is no named human author behind the copy yet, and that this is an outstanding
+  item rather than a design choice. If a byline matters to you before you buy, that gap is worth
+  weighing.</p>
 <p><strong>What the writer does:</strong> opens the official listing, reads each value off the page,
   records it with a date and a URL, and raises a flag whenever two parts of the same page disagree.
-  The process is written out on the <a how-we-choose.htmlsrc="/Affil2/how-we-choose.html">How we choose</a> page.</p>
+  The process is written out on the <a href="how-we-choose.html">How we choose</a> page.</p>
 <p><strong>What the writer has not done:</strong> cooked with any of these appliances, measured any of
   them, or seen a certification document. No page on this site claims otherwise.</p>
 
@@ -2761,9 +2761,9 @@ def build_about():
 <p>Two kinds of editorial imagery appear on this site, and both are explicitly labelled. The
   photographs on the storefront pages were <strong>generated for this site</strong>: they show a
   kitchen and appliances of no particular make, and every frame is captioned on the page so nobody
-  mistakes it for the specific product reviewed (FLG-036). Alongside them, original unbranded SVG
+  mistakes it for the specific product reviewed. Alongside them, original unbranded SVG
   form-factor schematics stored in <code>assets/illustrations/</code> illustrate the three appliance
-  shapes covered here. No Amazon product photography is used anywhere (FLG-007).</p>
+  shapes covered here. No Amazon product photography is used anywhere.</p>
 <div class="diagram-row">
   <figure class="diagram-card">
     <img src="assets/illustrations/air-fryer.svg" width="720" height="320" alt="Editorial vector schematic of a basket air fryer — original illustration, not product photography">

@@ -274,7 +274,7 @@
     "submitted": "https://link.amazon/B0c8moW59",
     "token": "B0c8moW59",
     "observed": "B0DHZTCNR5",
-    "observed_status": "Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages (FLG-012); fresh fetch in follow-up verification resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent redirect instability remains under FLG-011; intended ASIN remains blank under FLG-001)",
+    "observed_status": "Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages; fresh fetch in follow-up verification resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent redirect instability remains under; intended ASIN remains blank under)",
     "asin": "B0DHZTCNR5",
     "listing": "https://www.amazon.com/dp/B0DHZTCNR5",
     "title": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black",
@@ -310,7 +310,7 @@
         "note": ""
       },
       "certification": {
-        "v": "NIST and NSF (seller statement in Specification Met; certificates not independently inspected — FLG-035)",
+        "v": "NIST and NSF (seller statement in Specification Met; certificates not independently inspected —)",
         "src": "About this item & Product information — Features & Specs (chunks 3 & 11)",
         "st": "verified",
         "note": ""
@@ -420,7 +420,7 @@
         "v": "Two-year assurance provided by CHEF iQ (About this item) vs 3 Year (Item details Warranty Description)",
         "src": "About this item (chunk 4) vs Product information — Item details Warranty Description (chunk 8)",
         "st": "conflict",
-        "note": "Same listing states two-year assurance in About this item and 3 Year in Item details (prior register said 1-year) (FLG-038, FLG-019)."
+        "note": "Same listing states two-year assurance in About this item and 3 Year in Item details (prior register said 1-year) (,)."
       },
       "care": {
         "v": "Waterproof, dishwasher-safe probes",
