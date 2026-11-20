@@ -681,7 +681,6 @@ table.changelog td:nth-child(1){font-size:12.5px}
   .aisles figure.photo .photo-cap{display:none}
 }
 
-<<<<<<< HEAD
 /* ---------- reader-facing additions (newsroom voice pass) ---------- */
 .spec-wrap{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:26px;align-items:start}
 @media(max-width:900px){.spec-wrap{grid-template-columns:1fr}}
@@ -750,7 +749,6 @@ table.ledger code{font-size:12.5px;background:var(--cream-2);padding:2px 6px;bor
 .records summary::after{content:" \25BE";font-size:10px;opacity:.8}
 .records[open] summary::after{content:" \25B4"}
 @media(max-width:760px){.records div{width:100%}}
-=======
 
 /* ============================================================
    Decision router, guide steps, and the product line a guide ends on.
@@ -831,4 +829,32 @@ header .records div a:hover{background:var(--cream-2);color:var(--accent-d)}
   header .records{order:6;flex-basis:100%}
   header .records div{position:static;width:100%;margin-top:6px;box-shadow:none}
 }
->>>>>>> origin/main
+
+/* ============================================================
+   T-32 imagery and look layer (session 19dbf5e2)
+   A guide's own illustration, and the small polish that makes a long page read like a
+   magazine rather than a dump. Nothing here restyles a rule above it; it only adds.
+   ============================================================ */
+.guide-figure{margin:26px 0 8px}
+.guide-figure img{
+  display:block;width:100%;height:auto;border-radius:var(--radius);
+  border:1px solid var(--line);background:var(--cream-2)
+}
+.guide-figure figcaption{
+  font-size:11.5px;line-height:1.45;color:var(--muted);margin-top:7px
+}
+/* the five per-product renderings: same crop, same light, so cards read as one set */
+.card-media img,.pdp-art img{transition:transform .35s ease}
+.card:hover .card-media img{transform:scale(1.015)}
+@media(prefers-reduced-motion:reduce){.card:hover .card-media img{transform:none}}
+
+/* guides that belong to the current wave look current */
+.guides-grid .guidecard{position:relative}
+.guides-grid{gap:22px}
+.guide-figure + h2{margin-top:1.4em}
+
+/* a long spec table should not feel like a wall on a phone */
+@media(max-width:640px){
+  table.ledger,table.specs-table{font-size:14px}
+  .verdict-box{padding:16px 18px}
+}

@@ -179,7 +179,29 @@ PHOTOS = {
     "thermo": ("assets/photos/thermometers.jpg", 1264, 848,
                "A thin probe thermometer in a sliced roast on a board, with a small wireless "
                "probe hub and a second probe in a joint of meat"),
+    # One rendering per product (T-32). Before these existed, all five products shared two images,
+    # which is the single most "generated site" tell on the storefront. Original artwork only —
+    # no Amazon photography is licensed to this site, and none is used.
+    "p01": ("assets/photos/p01-dual-basket.jpg", 1536, 1024,
+            "A rendering made for this site: a black dual-drawer air fryer with both baskets open, "
+            "each with a viewing window, food steaming inside"),
+    "p02": ("assets/photos/p02-french-door-oven.jpg", 1536, 1024,
+            "A rendering made for this site: a stainless French-door countertop air fryer oven "
+            "with both glass doors open, a rack and a bake pan inside"),
+    "p03": ("assets/photos/p03-single-basket.jpg", 1536, 1024,
+            "A rendering made for this site: a tall matte single-basket air fryer with its drawer "
+            "pulled out beside it and a small touch panel on top"),
+    "p04": ("assets/photos/p04-instant-read.jpg", 1536, 1024,
+            "A rendering made for this site: a folding instant-read thermometer standing beside a "
+            "sliced roast on a board"),
+    "p05": ("assets/photos/p05-wireless-probe.jpg", 1536, 1024,
+            "A rendering made for this site: a small wireless thermometer hub on a shelf with "
+            "three probe cables running into roasts beside a smoker"),
 }
+
+# Which rendering belongs to which product. Cards and product pages use this; categories keep the
+# two wide aisle images, because an aisle is about a shape, not a unit.
+PHOTO_BY_ID = {"P-01": "p01", "P-02": "p02", "P-03": "p03", "P-04": "p04", "P-05": "p05"}
 
 
 def photo(key, up="", cls="", caption=True, eager=False, short=False):
@@ -253,7 +275,8 @@ DASH = [
 ]
 
 
-def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None):
+def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None,
+         og_image=None, og_alt="Illustrative kitchen image, generated for this site"):
     """Render a full page. `path` is repo-relative, e.g. 'products/x.html'."""
     depth = path.count("/")
     up = "../" * depth
@@ -303,9 +326,9 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
 <meta property="og:type" content="website">
 <meta property="og:url" content="{canon}">
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="{BASE}assets/photos/hero-kitchen.jpg">
-<meta property="og:image:alt" content="Illustrative kitchen image, generated for this site">
-<meta name="twitter:image" content="{BASE}assets/photos/hero-kitchen.jpg">
+<meta property="og:image" content="{BASE}{og_image or 'assets/photos/hero-kitchen.jpg'}">
+<meta property="og:image:alt" content="{esc(og_alt)}">
+<meta name="twitter:image" content="{BASE}{og_image or 'assets/photos/hero-kitchen.jpg'}">
 <link rel="stylesheet" href="{up}assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="{SITE} — Feed" href="{up}feed.xml">
 {ld}{extra_head}</head>
@@ -406,7 +429,7 @@ WHY_WE_PICKED = {
 
 
 def card(p, up, badge=""):
-    photo_key = "thermo" if p["cat"] == "Meat Thermometers" else "air"
+    photo_key = PHOTO_BY_ID.get(p["id"], "thermo" if p["cat"] == "Meat Thermometers" else "air")
     chips = "".join(
         f'<div class="chip"><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>' for k, v in p["card"][:3])
     tag = f'<span class="badge">{esc(badge)}</span>' if badge else ""
@@ -701,7 +724,7 @@ def build_home():
   <p class="kicker">{esc(g["kicker"])}</p>
   <h3><a href="guides/{g["slug"]}.html">{esc(g["title"])}</a></h3>
   <p>{esc(g["sub"])}</p>
-</article>''' for g in GUIDES[:3])
+</article>''' for g in GUIDES[-3:])
     body = f"""
 <div class="issue"><b>THE KITCHEN EDIT</b><span></span> VOL. 01 &nbsp; / &nbsp; NOVEMBER 2026</div>
 {review_strip()}
@@ -943,7 +966,7 @@ def build_product(p):
     <h1>{esc(p['headline'])}</h1>
     <p class="lede">{esc(p['blurb'])}</p>
   </div>
-  <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../")}</div>
+  <div class="pdp-art">{photo(PHOTO_BY_ID.get(p["id"], "air"), "../")}</div>
 </div>
 <div class="pdp-buy">
   <div>
@@ -1025,7 +1048,10 @@ def build_product(p):
     BUILT.append(page(slug_of(p), f"{p['headline']} — {p['brand']} | {SITE}",
                       f"{p['brand']} {p['cat'].lower()}: {p['best_for']}. Specs read from the "
                       f"official listing on {TODAY}, conflicts flagged, no price quoted.",
-                      body, jsonld=ld, extra_head=og))
+                      body, jsonld=ld, extra_head=og,
+                      og_image=PHOTOS[PHOTO_BY_ID.get(p["id"], "hero")][0],
+                      og_alt="Illustrative rendering made for this site — not a photograph of "
+                             "the product"))
 
 
 # ---- compare
@@ -1492,6 +1518,31 @@ GUIDES = [
     ]
 from seasonal_guides import GUIDES as _SEASONAL
 GUIDES += _SEASONAL
+from traffic_guides import GUIDES as _TRAFFIC
+GUIDES += _TRAFFIC
+
+# Guide fields the renderer escapes (title, sub, kicker, intro, verdict, section headings) must
+# carry characters, not HTML entities: an escaped "&#8212;" prints literally inside a lede, which is
+# exactly the artefact a reader sees in a hero paragraph. Section bodies and `extra` are raw HTML,
+# so entities stay valid there. Found on the two seasonal guides on 2026-11-20 (see flagged page).
+_ENTITIES = {"&#8220;": "\u201c", "&#8221;": "\u201d", "&#8217;": "\u2019", "&#176;": "\u00b0",
+             "&#8212;": "\u2014", "&#8211;": "\u2013", "&#183;": "\u00b7", "&nbsp;": " "}
+
+
+def _guide_chars(g):
+    def fix(v):
+        for ent, ch in _ENTITIES.items():
+            v = v.replace(ent, ch)
+        return v
+    for k in ("title", "sub", "kicker", "intro", "verdict"):
+        if g.get(k):
+            g[k] = fix(g[k])
+    if g.get("sections"):
+        g["sections"] = [(fix(h), t) for h, t in g["sections"]]
+    return g
+
+
+GUIDES = [_guide_chars(g) for g in GUIDES]
 
 
 
@@ -1539,6 +1590,11 @@ def reading_minutes(g):
 
 def build_guide(g):
     rel = [BY_ID[x] for x in g["products"]]
+    # A guide that ships with its own illustration uses it in shares and in the Article schema,
+    # instead of borrowing the homepage photo like every other page does.
+    import re as _re
+    _m = _re.search(r"(assets/(?:img|photos)/[\w.-]+\.jpg)", g.get("extra", ""))
+    g_img = _m.group(1) if _m else None
     secs = "".join(
         f'<h2><span class="step">{n:02d}</span>{esc(h)}</h2><p>{t}</p>'
         for n, (h, t) in enumerate(g["sections"], 1))
@@ -1572,12 +1628,13 @@ def build_guide(g):
            "dateModified": TODAY, "author": dict(publisher_ld(), **{"@context": "https://schema.org"}),
            "publisher": dict(publisher_ld(), **{"@context": "https://schema.org"}),
            "mainEntityOfPage": BASE + "guides/" + g["slug"] + ".html",
-           "image": BASE + "assets/photos/hero-kitchen.jpg"},
+           "image": BASE + (g_img or "assets/photos/hero-kitchen.jpg")},
           dict(crumbs_ld([("Home", "index.html"), ("Guides", "guides.html"),
                           (g["title"], "guides/" + g["slug"] + ".html")]),
                **{"@context": "https://schema.org"})]
     BUILT.append(page(f"guides/{g['slug']}.html", f"{g['title']} — {SITE}",
-                      g["sub"], body, jsonld=ld))
+                      g["sub"], body, jsonld=ld, og_image=g_img,
+                      og_alt="Illustrative image made for this site — not product photography"))
 
 
 

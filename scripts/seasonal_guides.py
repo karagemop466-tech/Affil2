@@ -44,7 +44,7 @@ GUIDES = [
     dict(slug="holiday-capacity",
          title="Holiday hosting: how much air fryer capacity does a full table actually need?",
          sub="Air fryer capacity is not quarts &#8212; it is layers and minutes. A holiday hosting worksheet with batch math.",
-         kicker="Seasonal guide &#183; Holiday 2026 &#183; 7 min read",
+         kicker="Seasonal guide &#183; Holiday 2026",
          products=["P-01", "P-02", "P-03"],
          intro="Everyone asks how many quarts. The better question is how many batches, and do they "
                "finish before the gravy does? Here is the worksheet we would actually use.",
@@ -69,7 +69,7 @@ GUIDES = [
     dict(slug="holiday-roast-thermometer",
          title="The holiday roast question: when does a wireless thermometer actually earn its keep?",
          sub="Doneness is a temperature, not a timer. USDA safe temperatures, probe placement, and the walk-away test for wireless probes.",
-         kicker="Seasonal guide &#183; Holiday 2026 &#183; 6 min read",
+         kicker="Seasonal guide &#183; Holiday 2026",
          products=["P-04", "P-05"],
          intro="A roast does not care what time it went in. It cares what temperature it reached. "
                "Everything else in the thermometer market is convenience &#8212; and convenience is "
