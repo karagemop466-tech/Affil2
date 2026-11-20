@@ -835,3 +835,8 @@ GitHub reported `mergeable: UNKNOWN` for all four. Each belongs to another sessi
 ### Task status
 
 T-20 | Live re-verification of the five listings + status reconciliation | done | 58c6ca4a | COORDINATION.md
+
+### T-20 release record (session 58c6ca4a)
+
+- PR: https://github.com/karagemop466-tech/Affil2/pull/39 — merged via `gh pr merge --merge`, merge commit `66ccda9`, state MERGED.
+- `Verify site` run on `66ccda9` → success. Pages deploy for `66ccda9` ran as `pages build and deployment`; see the Actions run list for its final conclusion.
