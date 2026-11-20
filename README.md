@@ -16,7 +16,7 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | What to decide next | `suggestions.html` — Decision Center, 32 proposals, rankable |
 | The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
 | What is still unanswered | `questions.html` — Open Questions, 20 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 40 flags, every one sourced |
+| What could not be verified | `flagged.html` — Flagged for Review, 46 flags, every one sourced |
 | Where every fact came from | `sources.html` — Source Register, 19 official sources + dated changelog |
 | AI platform blueprint & gates | `platform.html` — 7-module architecture & Creators API / ML policy limits (SG-31) |
 | Telemetry & collector guide | `measurement.html` — 5-event privacy schema & Search Console checklist (SG-25) |
@@ -40,7 +40,7 @@ generator output, if the gate fails, or if the unit/collector tests fail.
 | `data/products.json` | the shared product register: titles, field values, provenance, status |
 | `data/editorial.json` | this site's voice: headlines, best-for, trade-offs, FAQ |
 | `data/sources.json` | 19 official sources (`S01`–`S04`, `S10`–`S24`) with what each supports and date checked |
-| `data/flags.json` | 40 flags (`FLG-001`–`FLG-040`): severity, detail, owner status, source links |
+| `data/flags.json` | 46 flags (`FLG-001`–`FLG-046`): severity, detail, owner status, source links |
 | `data/events.json` | canonical 5-event privacy-preserving measurement schema and forbidden fields |
 | `data/reverification-2026-11-20.json` | attempt-by-attempt record of the short-link and deep-table tests |
 | `assets/style.css` | storefront stylesheet, including photo-card and diagram styles |
@@ -56,6 +56,22 @@ Cross-session rule: `data/products.json`, `data/sources.json` and `data/flags.js
 records. Annotations are added to `data/editorial.json`; shared records are only edited when live
 verification shows an inaccuracy or newly confirmed value.
 
+## What this pass changed, and what it did not verify
+
+The storefront pass added a front-page router (four ways in, stated as the reader's situation),
+a product line at the end of every guide with one tagged button, and styling for the hero and
+guide markup that had been shipping without CSS rules. It also stopped marking FTC, Google, USDA
+and Amazon policy citations as `rel="sponsored"` — that attribute belongs on the listings we earn
+on, not on the documents a claim is checked against — and removed six image files that nothing
+referenced.
+
+**It verified nothing against a live source.** The environment this pass ran in could reach
+GitHub and the two package registries only; `amazon.com`, `affiliate-program.amazon.com`,
+`ftc.gov`, `developers.google.com` and `fsis.usda.gov` all failed at TLS. Every register value
+therefore still rests on the dated reads recorded against S01–S24 by earlier sessions. That limit
+is itself published as FLG-045 rather than left implicit, and no `verified` status was added
+anywhere on the strength of this pass.
+
 ## Rules the gate enforces
 
 - The Amazon Associates statement appears twice on every page, the first time above `<main>`.
@@ -69,6 +85,13 @@ verification shows an inaccuracy or newly confirmed value.
   `sitemap.xml`; `feed.xml` parses and its items exist.
 - A blank field must be marked `unverified`; a value must name where it was stated.
 - Every flag referenced in HTML or `editorial.json` is defined, and every defined flag is published.
+- `assets/style.css` parses (balanced braces, closed `@media` blocks) and every class the generator
+  emits has a rule, so a page cannot ship unstyled.
+- No image file under `assets/` ships without a page or a generator script referencing it.
+- `rel="sponsored"` appears only on `amazon.com/dp/` listings; policy and government citations
+  must not claim to be paid placements.
+- Every guide ends on a product line with a tagged link, the feed item count matches the guide
+  count, and the front page still offers the router.
 
 ## Measurement & Collector
 

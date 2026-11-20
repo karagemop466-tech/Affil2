@@ -2214,6 +2214,15 @@ def build_flagged():
   <tbody>{rows}</tbody>
 </table>
 
+<h2>What the most recent pass did not verify</h2>
+<p>Not every pass can re-read the sources. The storefront pass that added the front-page router and the
+  product line at the end of each guide ran in an environment with no access to amazon.com, ftc.gov,
+  developers.google.com, fsis.usda.gov or affiliate-program.amazon.com. It therefore asserts no new
+  product or policy fact: the "last verified" dates on this site still refer to the earlier dated reads
+  of <a href="sources.html">S01&ndash;S24</a>. The limit is recorded as <strong>FLG-045</strong> rather
+  than left implicit, and the defects that pass did find &mdash; an unclosed CSS rule, mislabelled
+  citation links, six dead image files, a stale guide count &mdash; are published above with their IDs.</p>
+
 <h2>How to request a change</h2>
 <p>Note the flag ID, say what is wrong, and cite the official page that shows otherwise. Corrections
   are dated and the flag is kept rather than deleted, so the record shows what changed and when. If a

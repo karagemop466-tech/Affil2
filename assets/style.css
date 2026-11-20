@@ -515,6 +515,9 @@ figure.photo img{
 .hero .btn.ghost{background:transparent;color:#fffaf1;border-color:rgba(255,250,241,.55)}
 .hero .btn.ghost:hover{background:rgba(255,250,241,.12);color:#fff}
 .hero .photo-cap{color:#cfd8cf!important;font-size:11px!important}
+.hero .hero-facts{color:#cfd8cf;border-top-color:rgba(255,250,241,.22)}
+.hero .hero-facts strong{color:#f5ce9b}
+.hero .small,.hero .muted{color:#cfd8cf}
 
 /* ---------- hero refinements ---------- */
 .hero-facts{
