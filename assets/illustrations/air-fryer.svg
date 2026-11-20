@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" role="img" aria-labelledby="title desc">
+<title id="title">Editorial illustration of a countertop air fryer</title>
+<desc id="desc">A simplified, unbranded countertop appliance with a basket handle, control dial, and warm steam lines, drawn in green and terracotta.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e8eee7"/><stop offset="1" stop-color="#f0dec8"/></linearGradient><linearGradient id="body" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#435a4e"/><stop offset="1" stop-color="#263b33"/></linearGradient></defs>
+<rect width="720" height="320" rx="28" fill="url(#bg)"/><circle cx="570" cy="70" r="91" fill="#edba65" opacity=".42"/><path d="M88 261h544" stroke="#9a9a7d" stroke-width="3" stroke-linecap="round" opacity=".65"/>
+<path d="M270 72c-12-16-6-30 4-41m53 40c-12-17-5-30 5-42m53 42c-12-17-6-29 5-42" fill="none" stroke="#b84f35" stroke-width="6" stroke-linecap="round" opacity=".72"/>
+<rect x="229" y="92" width="257" height="160" rx="29" fill="url(#body)"/><rect x="254" y="112" width="207" height="103" rx="16" fill="#d7e0d6"/><rect x="270" y="127" width="175" height="73" rx="11" fill="#40564b"/><path d="M287 143h140M287 154h118" stroke="#9cac9c" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+<circle cx="376" cy="230" r="12" fill="#edba65"/><rect x="317" y="248" width="84" height="13" rx="6.5" fill="#1c2926"/><path d="M486 160h55c19 0 34 15 34 34v5c0 19-15 34-34 34h-55" fill="none" stroke="#b84f35" stroke-width="13" stroke-linecap="round"/><path d="M233 248h-18m275 0h18" stroke="#1c2926" stroke-width="8" stroke-linecap="round"/><text x="53" y="74" fill="#285c4b" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="3">COUNTERTOP COOKING</text>
+</svg>
