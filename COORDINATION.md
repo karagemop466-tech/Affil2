@@ -341,3 +341,20 @@ It does not deploy, on purpose. This repository's Pages site is configured as **
 Given that the branch builder publishes whatever lands on `main`, the gate cannot block a merge by
 itself; it makes a breakage loud and immediate instead, which is what a repository without branch
 protection can actually support.
+
+---
+
+## Session `82c875a9` — storefront front end (T-17)
+
+Branch `arena/82c875a9-affil2`, base `1a19c24`. Claiming one task with a file scope that no other
+session holds; nothing in `main` is being rewritten.
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-17 | Storefront rebuild: editorial photography, front page that leads with products, store-style cards, CSS refresh | in progress | 82c875a9 | `assets/photos/*`, `assets/style.css`, `scripts/build_site.py`, `scripts/check_site.py`, `data/editorial.json` (annotations only), generated HTML, `COORDINATION.md` |
+
+Scope note: `data/products.json`, `data/sources.json` and `data/flags.json` are **read-only** for this
+session. Any new flag is appended to `data/flags.json` only if an existing one does not already cover
+the finding; no existing title or detail is modified. `data/editorial.json` gets image/season
+annotations only. Baseline before this session: `build_site.py` + `check_site.py` both clean,
+29 pages, ALL CHECKS PASS.
