@@ -1156,6 +1156,52 @@ GUIDES = [
          verdict="""Calibrate with something cheap, cook your real weeknight meal by day four, and
          give the appliance one standing job from the oven. Skip batters and overloaded baskets
          until the machine is familiar."""),
+    dict(slug="usda-holiday-temperatures", title="USDA doneness temperatures for the holiday bird",
+         sub="The government minimums for the bird, the stuffing and the leftovers, and what a thermometer has to read.",
+         kicker="Food-safety guide · 6 min read", products=["P-04", "P-05"],
+         intro="""A roast is not done when it looks done; it is done when the thickest part hits the number the USDA sets. Those numbers come from one chart, and they are the same whether you are cooking for two or for twelve. A thermometer's whole job is to remove the guesswork from hitting them.""",
+         sections=[
+            ("The chart is the source of record", """The USDA Food Safety and Inspection Service publishes a Safe Minimum Internal Temperature Chart, checked here on 2026-11-20. It sets poultry &mdash; including stuffing and giblets &mdash; at 165 &deg;F, ground meats at 160 &deg;F, and beef, pork, veal and lamb steaks, chops and roasts at 145 &deg;F with a three-minute rest, fish and shellfish at 145 &deg;F, and leftovers and casseroles at 165 &deg;F. Those five numbers are the target, not a suggestion."""),
+            ("Why the tool changes the conversation", """An instant-read thermometer answers one question fast: is it at the number right now. The ThermoMaven here is a 1-second instant-read, stated at &plusmn;0.5 &deg;F accuracy with an upper rating of 572 &deg;F (P-04). A wireless thermometer answers a different question: what is it doing while you are not standing at the oven. The CHEF iQ here runs three probes, is rated heat-safe to 1000 &deg;F, and reports through an app (P-05)."""),
+            ("Match the tool to the cook", """For a single bird and quick checks through the cook, an instant-read is the simpler instrument. For a long roast, a smoker, or several proteins at once, a wireless setup lets you walk away and still know the number. The right tool is the one that lets you hit the chart without standing over the oven for hours."""),
+            ("Two habits that make the numbers real", """Calibrate before the holiday, not during it &mdash; the USDA FSIS guide to food-thermometer calibration is the reference for the ice-water and boiling-point methods (S24). And insert the probe into the thickest part of the meat, avoiding bone, fat and gristle, because a reading from the wrong spot is a reading you cannot act on."""),
+         ],
+         verdict="""Read the USDA minimums first, then pick the thermometer that lets you hit them without standing at the oven. Calibrate before the cook and measure the thickest part, and the number on the display is the one that matters."""),
+    dict(slug="emeril-presets-explained", title="Emeril 26QT: 24 or 25 presets, and why it matters less than fit",
+         sub="The listing prints two preset counts. Here is what a preset actually is, and what to check instead.",
+         kicker="Buying guide · 5 min read", products=["P-02"],
+         intro="""The Emeril 26QT listing states 24 one-touch presets in its title and 25 in its About this item section. Rather than pick a number, this guide explains what a preset is, why the listing disagrees with itself, and what to check before a count moves your decision.""",
+         sections=[
+            ("A preset is not a function", """A function is a cooking mode &mdash; air fry, bake, broil, roast. A preset is a saved temperature and time for one food. Twenty-four presets can still sit behind a handful of modes. The number on the panel is a convenience count, not a measure of how many things the machine can do."""),
+            ("Why the listing says two numbers", """On this listing the count is printed as 24 in the title, the Product Description and the Configuration fields, and as 25 in the About this item section. Both figures come off the same page, so neither is chosen here &mdash; the disagreement is flagged as FLG-021 and printed rather than smoothed over."""),
+            ("What the count does not tell you", """The modes behind the presets are air fry, bake, broil, dehydrate, roast, slow cook, toast and reheat, according to the listing. That is the list that matters. A preset count tells you how many saved buttons there are, not whether the modes you use are good."""),
+            ("Check fit before you check presets", """Before the count, check whether the machine fits your kitchen and your cooking. The 26QT is 26 quarts (24.6 liters), 16.9 inches deep, 15.8 wide and 14.8 tall, rated 75&ndash;500 &deg;F at 120 volts and 1700 watts, and the listing says it rotisseries a 6-pound chicken and bakes a 12-inch pizza. Its item weight is not stated on the listing (FLG-022)."""),
+            ("When a listing contradicts itself", """Where a listing prints two different numbers for the same thing, the manual is the tie-breaker, not the marketing copy. Treat the preset count the same way you would treat any other self-contradiction on the page."""),
+         ],
+         verdict="""Do not decide on 24 or 25. Decide on whether the modes you actually use are good, and on whether a 16.9-inch-deep, 26-quart oven fits your counter. The preset count is the last thing worth arguing about."""),
+    dict(slug="chefman-dual-vs-8qt", title="Chefman dual basket versus the 8-quart: the counter-space decision",
+         sub="Two Chefman air fryers, one brand, two very different counter habits. Neither wins until you measure.",
+         kicker="Buying guide · 5 min read", products=["P-01", "P-03"],
+         intro="""Both are Chefman basket fryers running at 120 volts and 1700 watts. The decision between the 6-quart dual-basket and the 8-quart single basket is really a decision about how you cook and how much counter you are willing to give up.""",
+         sections=[
+            ("Same brand, different machine", """The 6-quart dual-basket unit runs two 3-quart baskets, is rated 200&ndash;450 &deg;F, and measures 13.38 inches deep, 11.81 wide and 10.63 tall, at 13.3 pounds for the 6-quart dual-basket Chefman. The 8-quart runs a single basket, is rated 200&ndash;400 &deg;F with a 450 &deg;F Hi-Fry option in the title, and measures 12.75 inches deep, 13.5 wide and 10 tall, at 12.8 pounds for the 8-quart Chefman."""),
+            ("Two baskets or one", """The dual-basket is built to cook a main and a side together and finish them together, through its Sync Finish feature. The 8-quart is built to take one larger batch in a single flat basket. The choice is about your weeknight pattern, not about which number is bigger."""),
+            ("Measure depth and width, not just quarts", """Depth is the number that usually disqualifies a counter. Both units are around 12 to 13 inches deep, but both need clearance above the vents and room in front. Write the depth and the available space down before you compare the quart figures."""),
+            ("Watch the listing contradictions", """Each listing contradicts itself, and both are printed here rather than resolved. The 8-quart prints 1700 watts in its specs and 1000 watts in its bullets (FLG-017), and 400 &deg;F in its specs against 450 &deg;F Hi-Fry in its title (FLG-018). The dual-basket prints 6 quarts in its title and 6 liters in its measurements field (FLG-034)."""),
+            ("Pick by your weeknight", """If you routinely cook a main and a side at once, the dual basket does the job it is built for. If you cook one big batch at a time and want the simplest operation, the 8-quart fits. Measure the counter first, then choose the layout that matches how you actually cook."""),
+         ],
+         verdict="""Two baskets for a main-and-a-side cook, one big basket for a single-batch cook. Measure the depth and the clearance first, then let the counter decide between the two layouts."""),
+    dict(slug="nist-certification-guarantee", title="Is NIST certification on a listing a guarantee?",
+         sub="A seller can write it on a product page. What it means, what it does not, and how to treat it.",
+         kicker="Thermometer education · 4 min read", products=["P-04"],
+         intro="""The ThermoMaven listing states that it is NIST and NSF certified. That is a real claim to read carefully, because a certification written on a product page is not the same thing as a certificate you have checked. This guide separates the two.""",
+         sections=[
+            ("What the listing claims", """The ThermoMaven listing states NIST and NSF certification, a &plusmn;0.5 &deg;F accuracy, a 1-second response, an upper temperature rating of 572 &deg;F, a 6.5-inch probe, IP67 waterproofing, and a calibration certificate in the box (P-04). Every one of those is a seller statement on the listing."""),
+            ("A listing statement is not the certificate", """The certificates behind a NIST or NSF claim have not been independently inspected here. The claim is a seller statement published on the product page, and it is flagged as FLG-035 precisely so it is not read as an endorsement or a guarantee that has been verified."""),
+            ("What you can actually do with it", """The listing includes a calibration certificate and a wipe-clean body, and the USDA FSIS calibration guide describes the ice-water and boiling-point checks you can run at home (S24). Calibrating the instrument is the step that turns a stated accuracy into a number you can trust on your own cook."""),
+            ("What to ask before you rely on it", """If the certification matters to your decision, ask for the certificate itself and confirm what it covers and when it was issued. A listing phrase is a starting point for a question, not the answer to it."""),
+         ],
+         verdict="""Treat a NIST or NSF line on a listing as a seller claim, not a verified guarantee. The honest move is to ask for the certificate and calibrate the thermometer yourself before you rely on it."""),
 ]
 
 
@@ -1871,11 +1917,11 @@ phrase that reads like it was produced by filling in a template."""
         ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Black Friday is 2026-11-27; must not print prices (SG-13)"),
         ("B · Holiday and seasonal", "Wireless or instant-read for a long smoker cook", "guides/instant-vs-wireless.html", "Live", "Holiday brisket and turkey season"),
         ("C · Thermometer education", "How to read accuracy claims: plus-or-minus 0.5 and NIST", "guides/thermometer-accuracy.html", "Live", "Trust content, supports both thermometer pages"),
-        ("C · Thermometer education", "Is NIST certification on a listing a guarantee", "Not written", "Proposed", "Honest answer: it is a seller statement (FLG-035)"),
-        ("C · Thermometer education", "USDA doneness temperatures for the holiday bird", "Not written", "Proposed", "Reuses S22; strong internal-link target"),
+        ("C · Thermometer education", "Is NIST certification on a listing a guarantee?", "guides/nist-certification-guarantee.html", "Live", "Honest answer: it is a seller statement (FLG-035)"),
+        ("C · Thermometer education", "USDA doneness temperatures for the holiday bird", "guides/usda-holiday-temperatures.html", "Live", "Reuses S22; strong internal-link target"),
         ("D · Multi-function appliances", "Questions to ask before buying a multi-function appliance", "guides/multi-function-questions.html", "Live", "Umbrella guide for the oven category"),
-        ("D · Multi-function appliances", "Emeril 26QT: 24 or 25 presets, and why it matters less than fit", "Not written", "Proposed", "Turns FLG-021 into the article"),
-        ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "Not written", "Proposed", "Compares P-01 and P-03 without crowning a winner"),
+        ("D · Multi-function appliances", "Emeril 26QT: 24 or 25 presets, and why it matters less than fit", "guides/emeril-presets-explained.html", "Live", "Turns FLG-021 into the article"),
+        ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "guides/chefman-dual-vs-8qt.html", "Live", "Compares P-01 and P-03 without crowning a winner"),
     ])
 
     standards_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td></tr>" for a, b in [

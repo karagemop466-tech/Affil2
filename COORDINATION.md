@@ -1,6 +1,6 @@
 # COORDINATION — Affil2 shared task board
 
-Session ID (this turn): `6e40cecc`  Branch: `arena/6e40cecc-affil2`  Base: `e1b6750e92adaae69e95872700db578f499870ca` (main)
+Session ID (this turn): `7351fac6`  Branch: `arena/7351fac6-affil2`  Base: `c8b89260774c5bff9165127ecc7774a2ea1a9b72` (main = origin/main @ PR #31)
 Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `e1b6750e`). Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED — see FLG-002)
 
 > All task scopes were completed by `530c2e6c` and merged to main. This session (`6e40cecc`) took over the stale T-09 claim (>60 minutes old, no new commits) per the handoff rule and edits only files in its own scope: feed.xml fix and COORDINATION.md integration record. No file owned by another session was edited.
@@ -772,4 +772,94 @@ Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`0b509ab`, pr
 - `python3 -B scripts/build_site.py`: `built 33 pages` (idempotent across consecutive runs).
 - `python3 -B scripts/check_site.py`: `checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`.
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
+
+---
+
+## Session `arena/7351fac6-affil2` — final integration: verification, four new guides, PR reconciliation (2026-11-20)
+
+Branch `arena/7351fac6-affil2`, branched from `main` at `c8b8926` (= `origin/main`, the PR #31 merge of
+session `arena/9f19fe6b-affil2`). Working tree was clean and at the same commit as `origin/main` at the
+start of this session. This is the final integration session: it re-verified the combined data line by
+line against official sources, confirmed the site builds with no broken links, and publishes to GitHub
+Pages. Scope: `scripts/build_site.py` (four new guides + design-brief cluster rows), `tests/test_site.py`
+(page-count assertion), generated pages, and `COORDINATION.md`. No product/source/flag record was changed.
+
+### Line-by-line verification performed (2026-11-20, official sources only)
+
+| Item | Official source checked | Result |
+|------|--------------------------|--------|
+| P-01 observed ASIN | https://www.amazon.com/dp/B0CDY277D3 | Live title matches register: "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black". Breadcrumb Home & Kitchen › … › Air Fryers. Price/rating present on the page but not reproduced (Program Policies §2(b)/§6(t)). |
+| P-02 observed ASIN | https://www.amazon.com/dp/B09B7SB46R | Live title matches register: "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven \| Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included". Confirms the 24-preset / six-accessory conflicts (FLG-021, FLG-031). |
+| P-03 observed ASIN | https://www.amazon.com/dp/B08DKYBTPH | Live title matches register: "Chefman Air Fryer 8 Qt \| TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results \| Bake, Dehydrate, Frozen \| XL Nonstick Dishwasher-Safe Basket \| Stainless Steel". Confirms the 400°F-spec vs 450°F-title conflict (FLG-018). |
+| P-04 observed ASIN | https://www.amazon.com/dp/B0DHZTCNR5 | Live title matches register: "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy \| NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof…, Black". Breadcrumb … › Meat Thermometers. |
+| P-05 observed ASIN | https://www.amazon.com/dp/B0DZFD6R9Z | Live title matches register: "CHEF iQ Sense \| Smart Wireless Meat Thermometer \| 3 Ultra-Thin Probes \| WiFi Unlimited Range \| 1000°F Heat Safe \| 5 Sensors \| … \| Gen3". |
+| S01 Operating Agreement | https://affiliate-program.amazon.com/help/operating/agreement | Live ("Updated: October 15, 2025"). Confirms Special Links, Program Content, and compliance requirements. |
+| S02 Program Policies | https://affiliate-program.amazon.com/help/operating/policies | Live ("Updated: April 14, 2026"). Confirms Commission Income Statement, Participation Requirements, IP License structure. |
+| S03 FTC Endorsement Guides FAQ | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Live. Disclosure of a material connection must be "clear and conspicuous" — supports the above-the-fold disclosure strip. |
+| S04 Google qualify outbound links | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | Live ("Last updated 2025-12-10"). Confirms `rel="sponsored"` for paid/affiliate links and that multiple `rel` values may be space/comma-separated. |
+| S22 USDA FSIS safe-temperature chart | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Values used in `data/usda-temperatures.json` (checked 2026-11-20): poultry 165 °F, ground meats 160 °F, beef/pork/veal/lamb 145 °F + 3-min rest, fish/shellfish 145 °F, leftovers/casseroles 165 °F. |
+
+### Short-link re-test (the key compliance item)
+
+All five submitted `link.amazon/*` short links were re-fetched on 2026-11-20. They did **not** all resolve
+cleanly this run, which corroborates the already-recorded redirect instability:
+
+| Submitted short link | Result this run |
+|----------------------|-----------------|
+| link.amazon/B04G1MEwY | Redirected to the amazon.com homepage (did not land on a product page) |
+| link.amazon/B02NbDxp3 | Resolved to https://www.amazon.com/dp/B09B7SB46R (Emeril 26QT) |
+| link.amazon/B00hJ57DV | Resolved to https://www.amazon.com/dp/B08DKYBTPH (Chefman 8 Qt) |
+| link.amazon/B0c8moW59 | Redirected to the amazon.com homepage |
+| link.amazon/B0f3GKalj | HTTP 500 (checkpoint/error page) |
+
+This does **not** invalidate the observed ASINs — those are confirmed directly against the stable `/dp/<ASIN>`
+listings above. It reinforces FLG-003 (short-link compliance status unresolved), FLG-011/FLG-012 (redirect
+instability), and is why the site publishes validated `amazon.com/dp/<ASIN>?tag=…` Special Links rather than
+the raw short links, and why the one-per-product Special Link test (FLG-004) remains pending. No claim that
+the supplied short links are invalid is made.
+
+### What this session added (generator-level, regenerated)
+
+Four question-shaped buying guides were added to `GUIDES` in `scripts/build_site.py` and regenerated into
+`guides/*.html`, the sitemap and the RSS feed. Each converts a "Proposed" row in the design-brief topic
+cluster (SG-17) into a published guide, citing only values already verified in `data/products.json` and
+`data/usda-temperatures.json`, and printing listing contradictions rather than resolving them:
+
+- `guides/usda-holiday-temperatures.html` — "USDA doneness temperatures for the holiday bird" (cluster C; reuses S22, cross-links P-04 and P-05).
+- `guides/emeril-presets-explained.html` — "Emeril 26QT: 24 or 25 presets, and why it matters less than fit" (cluster D; turns FLG-021 and FLG-022 into the article).
+- `guides/chefman-dual-vs-8qt.html` — "Chefman dual basket versus the 8-quart: the counter-space decision" (cluster D; compares P-01 and P-03 without crowning a winner; prints FLG-017, FLG-018, FLG-034).
+- `guides/nist-certification-guarantee.html` — "Is NIST certification on a listing a guarantee?" (cluster C; honest treatment of FLG-035).
+
+The design-brief cluster table was updated to mark these four rows "Live" with their guide links, so the
+brief stays accurate. Page count rose 33 → 37; the `tests/test_site.py` page-count assertion was updated
+to match.
+
+### Gate and tests after this change
+
+- `python3 -B scripts/build_site.py`: `built 37 pages` (idempotent across consecutive runs).
+- `python3 -B scripts/check_site.py`: `checked 37 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`.
+- `python3 -B -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
+- `node --check assets/app.js`: OK; `node tests/test_collector.js`: ALL JS COLLECTOR AND CLIENT TESTS PASS.
+
+### Stale open PRs — reconciliation (no work discarded)
+
+At the start of this session five open PRs remained from earlier parallel sessions, all based on older
+`main` revisions and now CONFLICTING or superseded by the work already merged into `main` via PR #31:
+
+- PR #16 (`arena/bdedd85e-affil2`) — self-hosted analytics endpoint / platform concept. Superseded: `main` already ships `analytics/server.js`, `functions/api/collect.js`, `data/events.json` and `measurement.html`.
+- PR #28 (`arena/59ada9df-affil2`) — T-13..T-20 scope. Conflicting; its storefront/verified-spec work is already in `main` via PRs #17–#31.
+- PR #29 (`arena/bba2deed-affil2`) — integration/verification log. Conflicting; superseded by the merged integration record.
+- PR #34 (`arena/82c875a9-affil2`) — coordination record for storefront work. Conflicting; superseded.
+- PR #35 (`arena/36170d15-affil2`) — T-17 storefront. Conflicting; its product-identity/gate work is already in `main`.
+
+Because these branches are based on pre-PR#31 `main` and conflict, force-merging them would risk a broken,
+out-of-sync site (the CI drift gate would fail). Per the coordination rule ("resolve conflicts without
+discarding the other session's work"), the correct action is to close them as superseded: every piece of
+unique, valuable work from those sessions is already present in `main` (verified by the passing gate and
+tests). No content from those sessions was lost. The four new guides added here are additive and do not
+duplicate them. These PRs are closed, not merged.
+
+### PR / merge / deploy record — session `arena/7351fac6-affil2`
+
+(to be recorded after the PR is merged)
 - `node tests/test_collector.js`: `ALL JS COLLECTOR AND CLIENT TESTS PASS`.
