@@ -25,7 +25,7 @@
   <div class="wrap mast">
     <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
     <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a></div></details></nav>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a></div></details></nav>
     <form class="search" action="search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
       <input id="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
@@ -45,20 +45,22 @@
 
 <div class="statrow">
   <div><span class="statnum">5</span><span class="statlabel">products covered</span></div>
-  <div><span class="statnum">8</span><span class="statlabel">guides published</span></div>
+  <div><span class="statnum">9</span><span class="statlabel">guides published</span></div>
   <div><span class="statnum">40</span><span class="statlabel">flags, all public</span></div>
   <div><span class="statnum">0</span><span class="statlabel">prices or ratings shown</span></div>
 </div>
 
 <h2>1. What exists now</h2>
 <p>A static publication site deployable straight to GitHub Pages: a front page that leads with
-  products, two category pages, five product pages, eight question-shaped guides, a comparison table
+  products, two category pages, five product pages, 9 question-shaped guides, a comparison table
   aligned by field, an on-site search that actually works, JSON-LD on every page, a sitemap, an RSS
   feed, and a disclosure strip under the masthead on every page. Alongside it sit the internal
   records: the <a href="suggestions.html">Decision Center</a>, the
   <a href="questions.html">Open Questions</a> register, the
-  <a href="flagged.html">flag register</a>, the <a href="sources.html">source register</a>, and an
-  intentionally empty <a href="campaign-ledger.html">campaign ledger</a>.</p>
+  <a href="flagged.html">flag register</a>, the <a href="sources.html">source register</a>, the
+  <a href="platform.html">platform architecture</a> matrix, the
+  <a href="measurement.html">measurement &amp; collector guide</a>, and an intentionally empty
+  <a href="campaign-ledger.html">campaign ledger</a>.</p>
 
 <h2>2. The five products, as observed</h2>
 <table class="exec">
@@ -66,21 +68,26 @@
   <thead><tr><th scope="col">ID</th><th scope="col">Brand</th><th scope="col">Category</th>
     <th scope="col">Observed ASIN</th><th scope="col">Model on listing</th>
     <th scope="col">Official listing</th></tr></thead>
-  <tbody><tr><td class="nowrap">P-01</td><td><strong>Chefman</strong></td><td>Air Fryers</td><td>B0CDY277D3</td><td>RJ38-SQPF-3TDB-2W</td><td><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">listing</a></td></tr><tr><td class="nowrap">P-02</td><td><strong>Emeril Lagasse</strong></td><td>Air Fryers</td><td>B09B7SB46R</td><td>4-00675-02X-VN</td><td><a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">listing</a></td></tr><tr><td class="nowrap">P-03</td><td><strong>Chefman</strong></td><td>Air Fryers</td><td>B08DKYBTPH</td><td>RJ38-SQSS-8T</td><td><a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">listing</a></td></tr><tr><td class="nowrap">P-04</td><td><strong>ThermoMaven</strong></td><td>Meat Thermometers</td><td>B0DHZTCNR5</td><td>HT07</td><td><a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">listing</a></td></tr><tr><td class="nowrap">P-05</td><td><strong>CHEF iQ</strong></td><td>Meat Thermometers</td><td>B0DZFD6R9Z</td><td>CQ60-3C-Z1-E</td><td><a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">listing</a></td></tr></tbody>
+  <tbody><tr><td class="nowrap">P-01</td><td><strong>Chefman</strong></td><td>Air Fryers</td><td>B0CDY277D3</td><td>RJ38-SQPF-3TDB-2W</td><td><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">listing</a></td></tr><tr><td class="nowrap">P-02</td><td><strong>Emeril Lagasse</strong></td><td>Air Fryers</td><td>B09B7SB46R</td><td>4-00675-02X-VN (prior listing capture noted 4-00675-02, absent from live page)</td><td><a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">listing</a></td></tr><tr><td class="nowrap">P-03</td><td><strong>Chefman</strong></td><td>Air Fryers</td><td>B08DKYBTPH</td><td>RJ38-SQSS-8T (About this item &amp; Part Number; Item details Model Number field prints 'Large Air Fryer')</td><td><a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">listing</a></td></tr><tr><td class="nowrap">P-04</td><td><strong>ThermoMaven</strong></td><td>Meat Thermometers</td><td>B0DHZTCNR5</td><td>HT07</td><td><a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">listing</a></td></tr><tr><td class="nowrap">P-05</td><td><strong>CHEF iQ</strong></td><td>Meat Thermometers</td><td>B0DZFD6R9Z</td><td>CQ60-3C-Z1-E</td><td><a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">listing</a></td></tr></tbody>
 </table>
 
 <h2>3. What is verified</h2>
 <ul>
-  <li>Every product title, dimension, wattage, temperature range and capacity printed on this site was
-    read from the official listing on 2026-11-20, with the section named beside it. Weight is printed for
-    no product, because no listing we read states one (FLG-022).</li>
-  <li>The four policy sources &mdash; Operating Agreement Section 5, Program Policies 2(a) and 2(b),
-    FTC disclosure guidance and Google's outbound-link guidance &mdash; are quoted with exact wording
-    in the <a href="sources.html">source register</a>.</li>
-  <li>Food-safety temperatures come from the USDA FSIS chart, not from a product listing.</li>
-  <li>All five short links were fetched and their destinations recorded separately from intent.</li>
-  <li>Seven fields that an earlier pass had left blank were re-checked against the product-information
-    tables and are now published with their section named (FLG-040).</li>
+  <li>Every product title, dimension, weight (where stated), wattage, temperature range and capacity
+    on this site was read from the official listing and its Product information tables on 2026-11-20.
+    Deep chunk inspection verified previously blank weights (P-01 13.3 lb, P-03 12.8 lb), models
+    (P-02 4-00675-02X-VN, P-04 HT07, P-05 CQ60-3C-Z1-E), temperatures (P-02 75&ndash;500 &deg;F, P-04
+    572 &deg;F), P-02 power (1700 W), and probe lengths (P-04 6.5 in, P-05 4.75 in) (FLG-040).</li>
+  <li>All official policy sources &mdash; Operating Agreement Section 5 (S01), Program Policies
+    Participation Requirements &sect;2(a)/(b), &sect;5, &sect;6(t)/(v)/(w)/(y), IP License &sect;1,
+    &sect;2(e)/(h)/(i)/(k), &sect;4 Agent Terms, Commission Income Statement &sect;2(d)/(e)/(g) (S02),
+    FTC disclosure guidance (S03, S23), Google outbound-link qualification (S04), and Creators API /
+    PA-API 5 notices (S20, S21) &mdash; are quoted in the <a href="sources.html">source register</a>.</li>
+  <li>Food-safety temperatures and thermometer calibration guidance come from USDA FSIS charts (S22,
+    S24), not from product listings.</li>
+  <li>All five short links were fetched and their redirect targets observed separately from intent
+    (including B0c8moW59 resolving to B0DHZTCNR5 on re-test while redirect instability stays under
+    FLG-011).</li>
 </ul>
 
 <h2>4. What is not verified, and is not pretended to be</h2>
@@ -93,8 +100,10 @@
     tagged amazon.com/dp/ URLs and does not call the short links invalid (FLG-003).</li>
   <li><strong>The link test.</strong> No tagged link has been clicked inside the enrolled account, so
     every product page still says PENDING TEST (FLG-004).</li>
-  <li><strong>Certification.</strong> NIST and NSF appear on the listings. No certificate or test
-    report has been seen (FLG-035).</li>
+  <li><strong>P-02 weight and warranty terms.</strong> Absent from the live listing HTML, so left
+    blank (FLG-022); an unverified Emeril weight figure from earlier editorial prose was removed (FLG-039).</li>
+  <li><strong>Certification.</strong> NIST, NSF, and cETL appear on the listings. No certificate or
+    test report has been seen (FLG-035).</li>
   <li><strong>Hands-on experience.</strong> None. Nothing on this site implies it was tested
     (FLG-032).</li>
 </ul>
@@ -103,22 +112,26 @@
 <table class="exec">
   <thead><tr><th scope="col">Flag</th><th scope="col">Product</th><th scope="col">Contradiction</th></tr></thead>
   <tbody>
-    <tr><td>FLG-021</td><td>Emeril 26 QT</td><td>24 presets in the title, 25 in About this item</td></tr>
-    <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in the title, seven in Configuration, six named</td></tr>
-    <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 °F max in the spec field, 450 °F Hi-Fry in the title</td></tr>
-    <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in the spec fields, 1000 W in About this item</td></tr>
-    <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in the title, 6 liters in the capacity field</td></tr>
-    <tr><td>FLG-019</td><td>CHEF iQ Sense</td><td>Two-year assurance on the listing, one year in the earlier pass</td></tr>
+    <tr><td>FLG-021</td><td>Emeril 26 QT</td><td>24 presets in title/Configuration/Description, 25 in About this item</td></tr>
+    <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in title &amp; Included Components, seven in Configuration &amp; Description</td></tr>
+    <tr><td>FLG-009</td><td>Emeril 26 QT</td><td>4-00675-02X-VN in live Item details vs 4-00675-02 in earlier listing capture</td></tr>
+    <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 &deg;F max in spec field &amp; About this item, 450 &deg;F Hi-Fry in title</td></tr>
+    <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in Features &amp; Specs, 1000 W in About this item</td></tr>
+    <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in title/bullets, 6 liters in Measurements field</td></tr>
+    <tr><td>FLG-008</td><td>CHEF iQ Sense</td><td>50 hours battery in About this item, 70 hours in earlier Product Description capture</td></tr>
+    <tr><td>FLG-038</td><td>CHEF iQ Sense</td><td>Two-year assurance in About this item vs 3 Year in Item details (prior register FLG-019)</td></tr>
   </tbody>
 </table>
 
 <h2>6. What would change the numbers</h2>
-<p>Two credentials, and one decision. Product Advertising API access would make legal price display
-  possible (SG-13), which is the largest single lever on conversion. Search Console verification would
-  make query data available (SG-10), which is the only way to choose the next guide from evidence
-  rather than instinct. A custom domain decision (SG-14, FLG-006) would strengthen brand and
-  indexation. Everything else on the <a href="suggestions.html">Decision Center</a> is either shipped
-  or cosmetic.</p>
+<p>Two credentials, hosting for the collector, and one domain decision. Creators API access
+  (S20, S21) would make legal price and product-photo display possible (SG-13, SG-15, SG-31), which
+  is the largest lever on conversion. Search Console verification would make query data available
+  (SG-10, SG-29, SG-32), which is the only way to choose the next guide from evidence. Hosting the
+  shipped self-hosted analytics endpoint (<a href="measurement.html">SG-25</a>, FLG-010) enables
+  cross-visitor event counts without cookies, and a custom domain (SG-14, FLG-006) strengthens
+  brand and indexation. Everything else on the <a href="suggestions.html">Decision Center</a> is
+  shipped or blocked on owner account verification.</p>
 
 <h2>7. Honest position on revenue</h2>
 <p>No commission rate, click count, conversion rate or revenue figure is presented here, because none
@@ -135,7 +148,7 @@
   <div class="wrap">
     <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
-    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,

@@ -7,7 +7,7 @@
     "faq": [
       [
         "What is the total capacity?",
-        "6 quarts, split into two independent 3-quart baskets, according to the listing title. The product-details capacity field says 6 liters, which is a different figure from 6 quarts, and both are printed on the product page. Flagged as FLG-034."
+        "6 quarts, split into two independent 3-quart baskets, according to the listing title and bullets. The product-details Measurements field says 6 liters, which is about 6.3 US quarts. Flagged as FLG-034."
       ],
       [
         "Does it have a preheat function?",
@@ -15,7 +15,7 @@
       ],
       [
         "What is the maximum temperature?",
-        "450 °F, per the listing's Max Temperature Setting field."
+        "450 °F, per the listing's About this item bullets and Max Temperature Setting field."
       ],
       [
         "Is it dishwasher safe?",
@@ -30,7 +30,7 @@
       ],
       [
         "Will 11.81 in of width plus clearance fit your counter?",
-        "Measured width is 11.81 in and depth 13.38 in. Add rear and above clearance for the vents."
+        "Measured width is 11.81 in, depth 13.38 in, and weight 13.3 pounds. Add rear and above clearance for the vents."
       ],
       [
         "Do you want to watch the food cook?",
@@ -42,15 +42,15 @@
     "brand": "Emeril Lagasse",
     "headline": "A countertop oven that happens to air-fry",
     "best_for": "Households of 4–6 that want one appliance to roast, toast, air-fry and rotisserie",
-    "tradeoff": "16.9 in of depth plus door swing, and the listing contradicts itself on preset count and accessory count",
+    "tradeoff": "16.9 in of depth plus French-door swing, item weight unstated on listing (FLG-022), and the listing contradicts itself on preset count and accessory count",
     "faq": [
       [
         "How many presets does it have?",
-        "The listing is inconsistent: the title and Product Description say 24 one-touch presets, while the About this item bullet says 25 cooking pre-sets. Both are published here and neither is chosen. Flagged as FLG-014."
+        "The listing is inconsistent: the title, Configuration and Product Description say 24 one-touch presets, while the About this item bullet says 25 cooking pre-sets. Both are published here and neither is chosen. Flagged as FLG-021."
       ],
       [
         "How many accessories are included?",
-        "The title says six cooking accessories, the Configuration field says 7 accessories, and Included Components names six: rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool. Flagged as FLG-015."
+        "The title says six cooking accessories, the Configuration field and Product Description say 7 accessories, and Included Components names six: rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool. Flagged as FLG-031."
       ],
       [
         "Will a 12-inch pizza fit?",
@@ -58,7 +58,7 @@
       ],
       [
         "Does it air-fry or is it just a toaster oven?",
-        "The listing has an Air Frying Technology field set to True and describes 360° hot air circulation. It air-fries using oven-style circulation, not a basket."
+        "The listing has an Air Frying Technology field set to True and describes 360° superheated hot air circulation up to 500 °F at 1700 watts. It air-fries using oven-style circulation, not a basket."
       ]
     ],
     "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
@@ -73,7 +73,7 @@
       ],
       [
         "Are you willing to leave it in one place?",
-        "At 26 quarts and 16.9 in deep it is a park-it-and-keep-it appliance rather than something you lift into a cupboard. No weight is printed here because the listing does not state one (FLG-022)."
+        "At 16.9 in deep and 15.8 in wide (with item weight unstated on the listing, FLG-022), this is a park-it-and-keep-it appliance, not something you lift into a cupboard."
       ],
       [
         "Do you need a preset count you can rely on?",
@@ -89,11 +89,11 @@
     "faq": [
       [
         "What is the maximum temperature?",
-        "Conflicting: the Max Temperature Setting spec field says 400 °F, while the listing title advertises a 450 °F Hi-Fry option. Both are published; neither is chosen. Flagged as FLG-016."
+        "Conflicting: the About this item bullet and Max Temperature Setting spec field say 400 °F, while the listing title advertises a 450 °F Hi-Fry option. Both are published; neither is chosen. Flagged as FLG-018."
       ],
       [
         "How many watts?",
-        "The Wattage and Output Wattage spec fields say 1700 watts, but the About this item bullet says 1000 watts. Flagged as FLG-017."
+        "Conflicting: the Features & Specs Output Wattage and Wattage fields say 1700 watts, while the About this item bullet says 1000 watts / 120 volts. Both are shown here and flagged as FLG-017."
       ],
       [
         "Is the basket dishwasher safe?",
@@ -108,15 +108,15 @@
     "qa": [
       [
         "One basket or two — which matches your weeknight?",
-        "One 8-quart basket beats two 3-quart baskets if you cook in batches rather than in parallel."
+        "One 8-quart basket (12.8 lb unit) beats two 3-quart baskets if you cook in batches rather than in parallel."
       ],
       [
         "Is 400 °F top temperature enough?",
-        "The spec field says 400 °F. The title advertises a 450 °F Hi-Fry option. That gap is flagged; ask the seller or check the manual if high-heat crisping matters."
+        "The spec field says 400 °F. The title advertises a 450 °F Hi-Fry option. That gap is flagged as FLG-018; check the manual if high-heat crisping matters."
       ],
       [
         "Do you need to see the food?",
-        "There is no window on this model. You rely on the shake reminder and the timer."
+        "There is no window on this model. You rely on the LED shake reminder and the timer."
       ]
     ]
   },
@@ -128,34 +128,34 @@
     "faq": [
       [
         "How fast is it?",
-        "The listing states a 1 second response time using a thermocouple sensor."
+        "The listing states a 1 second response time using a thermocouple sensor (model HT07)."
       ],
       [
         "Is the NIST and NSF certification verified?",
-        "The listing states NIST and NSF under Specification Met and ships a calibration certificate. This site has not seen the certificate or an independent test report, so treat it as a seller claim."
+        "The listing states NIST and NSF under Specification Met and ships a calibration certificate. This site has not seen the certificate or an independent test report, so treat it as a seller claim (FLG-035)."
       ],
       [
         "What is the highest temperature it reads?",
-        "The listing's own upper-temperature field did not appear in the text we read on 2026-11-20, so this page leaves it blank rather than quoting a figure from elsewhere. Check the listing's Product Details table for the current value (FLG-022)."
+        "572 °F, per the Upper Temperature Rating field in Product information."
       ],
       [
         "Can I put it in the dishwasher?",
-        "The listing's care instruction is wipe clean. Do not assume dishwasher safe."
+        "The listing's care instruction is Wipe Clean. Do not assume dishwasher safe."
       ]
     ],
     "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
     "qa": [
       [
         "Do you check at the grill, or do you want to walk away?",
-        "This is a hand-held instant-read. If you want to leave the room, you want P-05 instead."
+        "This is a hand-held instant-read with a 6.5-inch length/immersion spec. If you want to leave the room, you want P-05 instead."
       ],
       [
         "Do you need a certificate, or is a claim enough?",
-        "The listing includes a calibration certificate in the box. NIST and NSF are listed as specifications met — that is a seller statement, not a test report you can read here."
+        "The listing includes a calibration certificate in the box. NIST and NSF are listed as specifications met — that is a seller statement, not a test report you can read here (FLG-035)."
       ],
       [
         "Will you wipe it rather than wash it?",
-        "The listing's care instruction is wipe clean, even though the title says IP67 waterproof."
+        "The listing's care instruction is Wipe Clean, even though the title says IP67 waterproof."
       ]
     ]
   },
@@ -167,19 +167,19 @@
     "faq": [
       [
         "How long does the battery last?",
-        "The About this item bullet says up to 50 hours on a full charge. The prior pass recorded 70 hours from a different part of the page that no longer shows that figure. Both are flagged; treat 50 hours as the current listing claim. See FLG-008."
+        "The About this item bullet says up to 50 hours on a full charge. An earlier capture recorded 70 hours from Product Description text not visible in current fetched HTML. Both are flagged; treat 50 hours as the current listing claim. See FLG-008."
       ],
       [
         "How many probes come in the box?",
-        "Three, plus the hub. Note the listing also sells 1, 2 and 4 probe versions — check the size selector before buying."
+        "Three 4.75-inch probes, plus the hub (model CQ60-3C-Z1-E). Note the listing also sells 1, 2 and 4 probe options — check the size selector before buying."
       ],
       [
         "Does it work without WiFi?",
-        "The listing says WiFi and Bluetooth. Bluetooth pairing is described in the bullets, but the marketing is built around WiFi range. Do not assume full range without WiFi."
+        "The listing says Wi-Fi and Bluetooth. Bluetooth pairing is described in the bullets, but the marketing is built around Wi-Fi unlimited range. Do not assume full range without Wi-Fi."
       ],
       [
-        "Is it dishwasher safe?",
-        "The listing says the probes are waterproof and dishwasher safe. The hub's care instructions are not stated."
+        "Is it dishwasher safe, and what is the warranty?",
+        "The listing says the probes are waterproof and dishwasher safe (hub care is unstated). On warranty, About this item states a two-year assurance while Item details Warranty Description says 3 Year (FLG-038, FLG-019)."
       ]
     ],
     "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
@@ -198,7 +198,7 @@
       ],
       [
         "Do you need a warranty figure you can rely on?",
-        "The listing says two years in one place and the prior pass recorded one year. Confirm before you rely on it."
+        "The listing states two-year assurance in About this item and 3 Year in Item details (while an earlier register said 1-year). Flagged as FLG-038 / FLG-019; confirm before relying on it."
       ]
     ]
   }

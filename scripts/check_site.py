@@ -14,6 +14,7 @@ import pathlib
 import re
 import sys
 import xml.etree.ElementTree as ET
+from html.parser import HTMLParser
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASE = "https://karagemop466-tech.github.io/Affil2/"
@@ -25,6 +26,47 @@ notes = []
 
 def err(msg):
     errors.append(msg)
+
+
+class TableColumnChecker(HTMLParser):
+    def __init__(self, rel):
+        super().__init__()
+        self.rel = rel
+        self.stack = []
+
+    def handle_starttag(self, tag, attrs):
+        attr_map = dict(attrs)
+        if tag == "table":
+            self.stack.append({"thead_cols": None, "section": None, "row_cols": 0, "row_idx": 0})
+        elif self.stack:
+            cur = self.stack[-1]
+            if tag in ("thead", "tbody"):
+                cur["section"] = tag
+            elif tag == "tr":
+                cur["row_cols"] = 0
+                cur["row_idx"] += 1
+            elif tag in ("th", "td"):
+                try:
+                    span = max(1, int(attr_map.get("colspan", "1")))
+                except ValueError:
+                    span = 1
+                cur["row_cols"] += span
+
+    def handle_endtag(self, tag):
+        if not self.stack:
+            return
+        cur = self.stack[-1]
+        if tag == "tr":
+            if cur["section"] == "thead":
+                cur["thead_cols"] = cur["row_cols"]
+            elif cur["section"] == "tbody" and cur["thead_cols"] is not None:
+                if cur["row_cols"] != cur["thead_cols"]:
+                    err(f"{self.rel}: table row {cur['row_idx']} has {cur['row_cols']} cell(s), "
+                        f"expected {cur['thead_cols']} matching thead")
+        elif tag in ("thead", "tbody"):
+            cur["section"] = None
+        elif tag == "table":
+            self.stack.pop()
 
 
 pages = sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts)
@@ -112,11 +154,24 @@ for p in pages:
         if f">{label}</a>" not in html:
             err(f"{rel}: primary navigation missing '{label}'")
     # --- every page reachable dashboard link group in the footer
-    for target in ("suggestions.html", "questions.html", "flagged.html", "sources.html",
-                   "executive-summary.html", "campaign-ledger.html", "disclosure.html",
-                   "about.html", "sitemap.xml", "feed.xml"):
+    for target in ("suggestions.html", "design-brief.html", "questions.html", "flagged.html",
+                   "sources.html", "platform.html", "measurement.html", "executive-summary.html",
+                   "campaign-ledger.html", "disclosure.html", "about.html",
+                   "sitemap.xml", "feed.xml"):
         if (up + target) not in html:
             err(f"{rel}: footer missing link to {target}")
+
+    # --- og:url matches canonical
+    og_url = re.search(r'<meta property="og:url" content="([^"]+)">', html)
+    if not og_url or og_url.group(1) != BASE + rel:
+        err(f"{rel}: og:url missing or does not match {BASE + rel}")
+
+    # --- table thead/tbody column symmetry
+    TableColumnChecker(rel).feed(html)
+
+    # --- unverified leaked prose check (26.5 lb was absent from B09B7SB46R)
+    if re.search(r"\b26\.5\s*(?:lb|pound)", html, re.I):
+        err(f"{rel}: contains unverified '26.5 lb/pounds' claim absent from live listing")
 
     # --- images: every generated photo must be captioned as illustration, never as the product
     for m in re.finditer(r'<img\b[^>]*src="((?:\.\./)*assets/photos/[^"]+)"[^>]*>', html):
@@ -335,8 +390,8 @@ except ET.ParseError as e:
     feed = None
 if feed is not None:
     items = feed.findall("./channel/item")
-    if len(items) < 8:
-        err(f"feed.xml has {len(items)} items, expected at least 8 guides")
+    if len(items) < 9:
+        err(f"feed.xml has {len(items)} items, expected at least 9 guides")
     for it in items:
         link = it.find("link").text
         if not link.startswith(BASE):
@@ -354,10 +409,17 @@ if "Sitemap: " + BASE + "sitemap.xml" not in robots:
 if "Disallow: /" in robots:
     err("robots.txt blocks the site")
 
-# ---------------------------------------------------------------- no invented weights
-# No listing we read states a product weight, so no page may quote one. The two pages that
-# document the withdrawal are the only place the old figures may appear.
-WEIGHT_RE = re.compile(r"\b\d+(?:\.\d+)?\s?(?:lb|lbs|pounds?)\b", re.I)
+# ---------------------------------------------------------------- weight accuracy & unverified claim guard
+# Only weights verified in data/products.json (e.g. Measurements table P-01 13.3 lb, P-03 12.8 lb)
+# may appear outside flagged.html/sources.html; unverified weights (e.g. 26.5 lb on P-02) fail.
+verified_weights = set()
+for prod in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8")):
+    w_field = (prod.get("fields") or {}).get("weight") or {}
+    if w_field.get("st") == "verified" and w_field.get("v"):
+        for num in re.findall(r"\b\d+(?:\.\d+)?\b", w_field["v"]):
+            verified_weights.add(num)
+
+WEIGHT_RE = re.compile(r"\b(\d+(?:\.\d+)?)\s?(?:lb|lbs|pounds?)\b", re.I)
 WEIGHT_EXEMPT = {"flagged.html", "sources.html"}
 for f in pages:
     rel = f.name if f.parent == ROOT else f"{f.parent.name}/{f.name}"
@@ -365,9 +427,10 @@ for f in pages:
         continue
     txt = re.sub(r"<[^>]+>", " ", f.read_text())
     for m in WEIGHT_RE.finditer(txt):
-        err(f"{rel}: quotes a product weight ({m.group(0).strip()}) that no listing states (FLG-022/FLG-039)")
+        if m.group(1) not in verified_weights:
+            err(f"{rel}: quotes an unverified product weight ({m.group(0).strip()}) not verified in data/products.json (FLG-022/FLG-039)")
     if re.search(r"\b(?:footprint and weight|weight and footprint|weigh(?:s|ing) \w+ ?(?:lb|pounds))", txt, re.I):
-        err(f"{rel}: promises weight information while no weight is published (FLG-022)")
+        err(f"{rel}: promises unverified weight information (FLG-022)")
 
 # ---------------------------------------------------------------- compare pair view
 comp = (ROOT / "compare.html").read_text()
@@ -416,8 +479,38 @@ else:
         target = ROOT / entry["u"]
         if not target.exists():
             err(f"search.html index points at missing page {entry['u']}")
-    if len(idx) < 15:
+    if len(idx) < 20:
         err(f"search.html index has only {len(idx)} entries")
+
+# ---------------------------------------------------------------- editorial & illustrations & telemetry
+ed_text = (ROOT / "data" / "editorial.json").read_text(encoding="utf-8")
+if re.search(r"\b26\.5\s*(?:lb|pound)", ed_text, re.I):
+    err("data/editorial.json contains unverified '26.5 lb/pounds'")
+ed_flags = set(re.findall(r"FLG-\d{3}", ed_text))
+if ed_flags - flag_ids:
+    err(f"data/editorial.json cites undefined flags: {sorted(ed_flags - flag_ids)}")
+
+all_html_text = "\n".join(p.read_text(encoding="utf-8") for p in pages)
+svg_files = sorted((ROOT / "assets" / "illustrations").glob("*.svg"))
+if not svg_files:
+    err("assets/illustrations/: expected editorial SVG files")
+for svg in svg_files:
+    try:
+        ET.fromstring(svg.read_text(encoding="utf-8"))
+    except ET.ParseError as e:
+        err(f"{svg.relative_to(ROOT)} does not parse as XML: {e}")
+    if f"assets/illustrations/{svg.name}" not in all_html_text:
+        err(f"{svg.relative_to(ROOT)} is orphaned (not referenced in any generated HTML page)")
+
+events_data = json.loads((ROOT / "data" / "events.json").read_text(encoding="utf-8"))
+expected_events = {"page_view", "outbound_click", "guide_read", "search", "suggestion_rank"}
+if set(events_data.get("events", {}).keys()) != expected_events:
+    err("data/events.json must define the exact five measurement events")
+app_js = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+for token in ("function send(", "exportEvents", "searchIndex", ".navtoggle",
+              "page_view", "outbound_click", "guide_read", "suggestion_rank"):
+    if token not in app_js:
+        err(f"assets/app.js missing required capability: {token}")
 
 # ---------------------------------------------------------------- report
 print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
