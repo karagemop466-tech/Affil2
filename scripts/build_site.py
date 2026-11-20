@@ -1751,7 +1751,39 @@ def build_verification():
 <thead><tr><th scope="col">Item</th><th scope="col">Observation</th><th scope="col">Status</th></tr></thead>
 <tbody>{review}</tbody></table>
 """
-    body = body.replace('<h2>Corrections made in this pass</h2>', live_section + '<h2>Corrections made in this pass</h2>', 1)
+    # ---- submitted-link re-check (T-31): observations kept apart from the intended/observed ASIN fields
+    lr = _json.loads((DATA / "link-resolution-2026-11-20.json").read_text())
+    reg_titles = {p["id"]: p["title"] for p in _json.loads((DATA / "products.json").read_text())}
+    sr_rows = ""
+    for sl in lr["short_links"]:
+        tries = "; ".join(f"round {t['round']}: {t['final_url']}" for t in sl["attempts"])
+        sr_rows += (f'<tr><th scope="row">{esc(sl["product"])}</th>'
+                    f'<td class="small">{esc(sl["submitted"])}</td>'
+                    f'<td class="small">{esc(sl["earlier_record"])}</td>'
+                    f'<td class="small">{esc(tries)}</td>'
+                    f'<td><span class="token warn">does not reproduce</span></td>'
+                    f'<td class="src">{cite_id(sl["source_row"])}</td></tr>')
+    lp_rows = ""
+    for lp in lr["listing_pages"]:
+        matches = reg_titles[lp["product"]] in lp["title_as_read"]
+        lp_rows += (f'<tr><th scope="row">{esc(lp["product"])}</th><td>{esc(lp["asin_in_url"])}</td>'
+                    f'<td class="small">{esc(lp["title_as_read"])}</td>'
+                    f'<td><span class="token {"ok" if matches else "warn"}">'
+                    f'{"title matches register" if matches else "title differs from register"}</span></td>'
+                    f'<td class="src">{cite_id(lp["source_row"])}</td></tr>')
+    link_section = f"""
+<h2 id="link-recheck">Submitted-link re-check &middot; {esc(lr["generated"])}</h2>
+<p class="lede">Each submitted <code>link.amazon</code> address was fetched again. The final URL is recorded
+  apart from the intended ASIN, which stays blank until the owner confirms it. A link that ends on the
+  Amazon home page is recorded as an observation. It is not a finding that the link is invalid (FLG-003, FLG-051).</p>
+<table><caption>Short links: what this re-check saw, next to what the earlier record said.</caption>
+<thead><tr><th scope="col">Product</th><th scope="col">Submitted link</th><th scope="col">Earlier record</th><th scope="col">This re-check (final URL)</th><th scope="col">Result</th><th scope="col">Source</th></tr></thead>
+<tbody>{sr_rows}</tbody></table>
+<table><caption>Listing pages: ASIN and title as read on the same date. Prices and ratings are deliberately not recorded (Program Policies, S02).</caption>
+<thead><tr><th scope="col">Product</th><th scope="col">ASIN in URL</th><th scope="col">Title as read</th><th scope="col">Check</th><th scope="col">Source</th></tr></thead>
+<tbody>{lp_rows}</tbody></table>
+"""
+    body = body.replace('<h2>Corrections made in this pass</h2>', link_section + live_section + '<h2>Corrections made in this pass</h2>', 1)
 
     BUILT.append(page("verification.html", f"Verification Log — {SITE}",
                       "Line-by-line verification of every register value against official listings and policy pages, with method and status per row.",
@@ -1921,12 +1953,12 @@ SUGGESTIONS = [
               "feed together.",
          why="A subpath on a shared host is indexable but weak for brand and trust.",
          impact="Medium — findability and brand", effort="Small, owner decision",
-         status="Not started — recommended for approval", verify="Currently flagged as FLG-006."),
+         status="Not started — recommended for approval", verify="Currently flagged as FLG-007."),
     dict(id="SG-15", title="Get real product photography through the API",
          what="Use image URLs supplied via the PA or Creators API, which arrive with the licence.",
          why="Illustration is safe but a shopper still wants to see the product.",
          impact="Medium — conversion", effort="Owner action, needs API approval",
-         status="Not started — recommended for approval", verify="Currently flagged as FLG-007."),
+         status="Not started — recommended for approval", verify="Currently flagged as FLG-006."),
     dict(id="SG-16", title="Publish a weekly cadence and hold it",
          what="One guide per week, added to sitemap and feed, with the topic chosen from measured "
               "Search Console queries rather than instinct.",
@@ -2412,7 +2444,7 @@ QUESTIONS = [
      "Choose one: keep labelled renderings, fall back to the line-drawing SVGs, or wait for "
      "API-supplied imagery after Creators API acceptance. Any of the three is defensible; borrowing "
      "someone else's photos is not.",
-     "Product pages, shares and the display-licence question (SG-15, SG-37, FLG-007, FLG-055)",
+     "Product pages, shares and the display-licence question (SG-15, SG-37, FLG-007, FLG-058)",
      "Owner", "Open since this pass"),
     ("Q-26", "What publishing cadence will you actually keep?",
      "Six guides went out in one wave because a wave is cheap. A cadence is a promise, and an "
@@ -2436,6 +2468,14 @@ QUESTIONS = [
      "write the recipes from a published authority with its own citation. Do not let a future session "
      "split the difference silently.",
      "The whole editorial identity of the site (SG-23, Q-16)", "Owner", "Deferred by policy"),
+    ("Q-29", "May osha.gov be admitted to the official-source allowlist?",
+     "The certification guide quotes OSHA's definition of a nationally recognised testing "
+     "laboratory. The build gate lists the hosts an owner has approved as official publishers, and "
+     "states plainly that adding one is a decision rather than a fix, so this session linked the "
+     "document instead of widening the gate for itself.",
+     "Say yes or no. If yes, add the host to OFFICIAL_SOURCE_HOSTS in scripts/check_site.py and "
+     "register the row; if no, the guide keeps the inline link and the register stays closed.",
+     "Whether one guide cites a federal source in the register (FLG-061)", "Owner", "Not decided"),
 ]
 
 
@@ -2569,7 +2609,9 @@ phrase that reads like it was produced by filling in a template."""
         ("A · Air fryer buying", "Is a dual-basket air fryer worth it, or are you just buying two baskets?", "guides/dual-basket-worth-it.html", "Live", "Shipped in the November 2026 wave; compares P-01 and P-03 without crowning a winner"),
         ("B · Holiday and seasonal", "Air fryer at Thanksgiving: what actually fits", "guides/air-fryer-thanksgiving.html", "Live", "Seasonal spike, Nov 2026"),
         ("B · Holiday and seasonal", "Reheating leftovers is a temperature, not a guess", "guides/reheating-to-165.html", "Live", "Carries the USDA chart (S22) and refuses to publish cook times"),
-        ("B · Holiday and seasonal", "Gifting an appliance in December: the five checks", "guides/appliance-gift-checklist.html", "Live", "Written with no price line at all, which is what SG-13 requires (Black Friday is 2026-11-27)"),
+        ("B · Holiday and seasonal", "Gifting an appliance in December: the five checks", "guides/appliance-gift-checklist.html", "Live", "Written with no price line at all, as SG-13 requires; 2026-11-27 is computed from the calendar rule, not asserted (FLG-052)"),
+        ("B · Holiday and seasonal", "Turkey thermometer maths: the USDA minimums", "Not written", "Proposed", "USDA chart is already the source of record (S22)"),
+        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, blocked", "Needs price display (SG-13); the December gift checklist is live in its place"),
         ("B · Holiday and seasonal", "Wireless or instant-read for a long smoker cook", "guides/instant-vs-wireless.html", "Live", "Holiday brisket and turkey season"),
         ("C · Thermometer education", "How to read accuracy claims: plus-or-minus 0.5 and NIST", "guides/thermometer-accuracy.html", "Live", "Trust content, supports both thermometer pages"),
         ("C · Thermometer education", "The 30-second ice-water test USDA publishes", "guides/ice-water-test.html", "Live", "Method quoted from S24, not paraphrased"),
@@ -2667,16 +2709,16 @@ phrase that reads like it was produced by filling in a template."""
 
 <h3>Seasonal calendar</h3>
 <table>
-  <caption>Dates are calendar facts. No event on this page licenses a price, a sale claim or a countdown.</caption>
-  <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Lead time</th><th scope="col">What to do</th></tr></thead>
+  <caption>Every row states its source. Holiday dates are read from OPM's federal holiday tables (S26). Rows marked computed are calendar arithmetic with no cited source, so they are unverified (FLG-052). No event on this page licenses a price, a sale claim or a countdown.</caption>
+  <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Lead time</th><th scope="col">What to do</th><th scope="col">Source</th></tr></thead>
   <tbody>
-    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td></tr>
-    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td></tr>
-    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td></tr>
-    <tr><td>2026-12-02</td><td>First week of Advent</td><td>First week of December</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td></tr>
-    <tr><td>2026-12-25</td><td>Christmas</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td></tr>
-    <tr><td>2027-01-02</td><td>New Year</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td></tr>
-    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td></tr>
+    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
+    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td><td>Unverified: computed as the day after Thanksgiving (FLG-052)</td></tr>
+    <tr><td>2026-11-29</td><td>First Sunday of Advent</td><td>Weekend after Black Friday</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td><td>Unverified: computed as the fourth Sunday before 25 December (FLG-052)</td></tr>
+    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td><td>Unverified: computed as the Monday after Thanksgiving (FLG-052)</td></tr>
+    <tr><td>2026-12-25</td><td>Christmas Day</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
+    <tr><td>2027-01-01</td><td>New Year's Day</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2027 table</a></td></tr>
+    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td><td>Unverified: computed calendar date (FLG-052)</td></tr>
   </tbody>
 </table>
 
@@ -2940,7 +2982,7 @@ def build_exec():
 <h2>4. What is not verified, and is not pretended to be</h2>
 <ul>
   <li><strong>Intent.</strong> Only the owner knows which ASIN each link was meant to point at
-    (FLG-001).</li>
+    (FLG-032).</li>
   <li><strong>The tracking ID.</strong> Whether shopnow047c-20 is live is visible only inside
     Associates Central (FLG-002).</li>
   <li><strong>The short-link format.</strong> Its compliance status is unresolved, so the site uses
@@ -2952,7 +2994,7 @@ def build_exec():
   <li><strong>Certification.</strong> NIST, NSF, and cETL appear on the listings. No certificate or
     test report has been seen (FLG-035).</li>
   <li><strong>Hands-on experience.</strong> None. Nothing on this site implies it was tested
-    (FLG-032).</li>
+    (FLG-001).</li>
 </ul>
 
 <h2>5. The listing conflicts a buyer should know about</h2>
@@ -3385,7 +3427,7 @@ def build_measurement():
   <li><strong>Default on GitHub Pages:</strong> All five events are appended to
     <code>localStorage</code> (<code>sn_events</code>, capped at 500 records) and outbound clicks
     increment <code>sn_clicks</code>. No network request fires while no collector endpoint is set
-    (FLG-010).</li>
+    (FLG-001).</li>
   <li><strong>Activating the self-hosted collector:</strong> Set
     <code>&lt;meta name="sn-collect-endpoint" content="/api/collect"&gt;</code>, define
     <code>window.SN_COLLECT_ENDPOINT</code>, or set <code>localStorage.setItem('sn_collect_url', ...)</code>.
