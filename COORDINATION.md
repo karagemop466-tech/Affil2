@@ -505,3 +505,25 @@ Merge: `gh pr merge 26 --merge` → merge commit `c021fb0`. GitHub Pages deploy 
 
 Process notes: two rebases onto a fast-moving main; conflicts in COORDINATION.md, assets/style.css and generated pages resolved by keeping both sides and regenerating from the merged generator — no hand-edited HTML; committed pages re-verified byte-identical to generator output before push. One `git push --force-with-lease` (this branch only; lease checked). Open and untouched: PR #16 (analytics collector, needs review/owner decision), FLG-001..FLG-035 (all published, none blocks).
 
+
+### Publication record (session `82c875a9`)
+
+| PR | Title | Result |
+|----|-------|--------|
+| [#30](https://github.com/karagemop466-tech/Affil2/pull/30) | Storefront rebuild, working search and pair compare, register re-verified against live listings | merged → `63cb1fb`; Pages **success**, Verify site **success** on that SHA |
+| [#32](https://github.com/karagemop466-tech/Affil2/pull/32) | Remove the last unsupported weight claim, gate against any lb figure in prose | merged → `c916fce`; live page confirmed |
+| [#33](https://github.com/karagemop466-tech/Affil2/pull/33) | P-02 lede stops promising weight content the register cannot supply | merged → `e948aae`; live page confirmed |
+
+Live: https://karagemop466-tech.github.io/Affil2/ — all 30 pages, plus `compare.html` with the working
+pair view, checked on the deployed URL rather than the local build.
+
+**Lesson repeated, and worth writing down.** PR #30 passed the gate, deployed green, and still shipped
+one wrong number: `data/editorial.json` carried "26.5 lb" for the Emeril, and that string is rendered
+into the compare table's catch column and into a product FAQ. I found it by reading the deployed
+`compare.html`, not by running `check_site.py` twice. The gate now fails on any `N lb/lbs/pound` figure
+in page prose, and on any promise of weight information, but the general point stands: the gate proves
+markup and sourcing rules, not that the sentence is true. Read the live page after every deploy.
+
+**Renumbering note for the next session.** `main` gained the Design & Traffic Brief at SG-17 while this
+branch was open. This branch's six proposals are therefore SG-18 to SG-23, and its two shipped items are
+SG-20 (change log) and SG-21 (pair compare). Do not re-use SG-17.
