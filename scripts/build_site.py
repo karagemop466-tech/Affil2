@@ -182,6 +182,7 @@ DASH = [
     ("suggestions.html", "Decision Center"),
     ("design-brief.html", "Design &amp; Traffic Brief"),
     ("questions.html", "Open Questions"),
+    ("verification.html", "Verification Log"),
     ("flagged.html", "Flagged for Review"),
     ("sources.html", "Sources"),
     ("platform.html", "Platform Architecture"),
@@ -563,15 +564,6 @@ def build_home():
     <details><summary>How current is this?</summary><p>Every listing was re-read on {TODAY}. Listings
       change; the date is printed on each product page so you can judge.</p></details>
   </div>
-</section>
-
-<section class="panel">
-  <h2>Working on this site?</h2>
-  <p>Every internal record is reachable from the footer of every page: the
-    <a href="suggestions.html">Decision Center</a> where proposals are ranked before anything is
-    built, the <a href="questions.html">Open Questions</a> register, the
-    <a href="flagged.html">Flagged for Review</a> page, and the
-    <a href="sources.html">source register</a>.</p>
 </section>
 """
     ld = [{"@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": BASE,
@@ -1156,7 +1148,13 @@ GUIDES = [
          verdict="""Calibrate with something cheap, cook your real weeknight meal by day four, and
          give the appliance one standing job from the oven. Skip batters and overloaded baskets
          until the machine is familiar."""),
-]
+
+    ]
+from seasonal_guides import GUIDES as _SEASONAL
+GUIDES += _SEASONAL
+
+
+
 
 
 def build_guides_index():
@@ -1207,6 +1205,7 @@ def build_guide(g):
   <p>{esc(g['verdict'])}</p>
 </div>
 {secs}
+{g.get("extra", "")}
 <h2>The products this guide refers to</h2>
 <ul class="linklist">{items}</ul>
 <p class="small">Every specification quoted above is from the official listing, dated {TODAY}. See the
@@ -1230,6 +1229,61 @@ def build_guide(g):
     BUILT.append(page(f"guides/{g['slug']}.html", f"{g['title']} — {SITE}",
                       g["sub"], body, jsonld=ld))
 
+
+
+# ---- verification log (generated from data/verification.json; session bba2deed)
+def build_verification():
+    import json as _json
+
+    def a(href, text, sponsored=False):
+        rel = ' rel="sponsored nofollow"' if sponsored or "amazon.com" in href else ""
+        return f'<a href="{href}"{rel}>{esc(text)}</a>'
+
+    V = _json.loads((DATA / "verification.json").read_text())
+    legend = "".join(f"<li><strong>{esc(k)}</strong> — {esc(v2)}</li>" for k, v2 in V["method_legend"].items())
+    pol_rows = "".join(
+        f'<tr><th scope="row">{esc(s["id"])}</th><td>{a(s["url"], s["name"])}</td>'
+        f'<td>{esc(s["verified"])}</td><td>{esc(s["status"])}</td></tr>' for s in V["policy_sources"])
+    prod_blocks = ""
+    for prod in V["products"]:
+        rows = ""
+        for r in prod["rows"]:
+            note = f' — {esc(r["note"])}' if r.get("note") else ""
+            rows += (f'<tr><th scope="row">{esc(r["field"])}</th><td>{esc(r["value"])}</td>'
+                     f'<td>{esc(r["status"])}</td><td>{esc(r["method"])}{note}</td>'
+                     f'<td class="src">{a(prod["source_url"], "official listing", True)}</td></tr>')
+        prod_blocks += (f'<h2>{esc(prod["id"])} · observed ASIN {esc(prod["asin_observed"])}</h2>'
+                        f'<table><caption>Every row links to the {a(prod["source_url"], "official listing", True)} ({esc(prod["source_id"])}).</caption>'
+                        f'<thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Status</th>'
+                        f'<th scope="col">How it was checked</th><th scope="col">Source</th></tr></thead>'
+                        f'<tbody>{rows}</tbody></table>')
+    corr = "".join(
+        f'<tr><th scope="row">{esc(c["id"])}</th><td>{esc(c["what"])}</td><td>{esc(c["action"])}</td></tr>'
+        for c in V["corrections"])
+    body = f"""
+{breadcrumb([("Home", "index.html"), ("Verification Log", None)])}
+<p class="kicker">Reference · verified {esc(V["verified_on"])} · sessions 530c2e6c + 937876a6 + bba2deed</p>
+<h1>Verification Log</h1>
+<p class="lede">Every value in the product register, re-checked row by row against the official Amazon listing or an official policy page. This log is generated from <code>data/verification.json</code>. {esc(V["supersedes"])}</p>
+<div class="panel"><h2>Method legend</h2><ul class="tight">{legend}</ul>
+<p class="small">Prices, ratings, review counts and commission rates appear nowhere on this site (Program Policies §2(b); FLG-005). Values that could not be confirmed are left blank and flagged — never inferred.</p></div>
+<h2>Program &amp; policy sources</h2>
+<table><caption>Policy claims checked against official pages. Every row links to its official source.</caption>
+<thead><tr><th scope="col">ID</th><th scope="col">Source (official)</th><th scope="col">Claim checked</th><th scope="col">Status</th></tr></thead>
+<tbody>{pol_rows}</tbody></table>
+{prod_blocks}
+<h2>Corrections made in this pass</h2>
+<table><caption>Register corrections (C-IDs). Findings that survived as open contradictions are on the <a href="flagged.html">Flagged for Review</a> page.</caption>
+<thead><tr><th scope="col">ID</th><th scope="col">What was wrong</th><th scope="col">Action taken</th></tr></thead>
+<tbody>{corr}</tbody></table>
+<div class="panel"><h2>What this log does not claim</h2>
+<p>Values marked <em>corroborated</em> were read from product-information mirrors of the listing's own spec table, not from the listing's Product details block itself (the fetch pass could not extract it reliably). The official listing link is in every table row for manual review. Independent sessions reached the same conclusions about the P-03 wattage, the P-03 temperature nuance and the P-05 warranty — those findings are canonical as FLG-017, FLG-018 and FLG-019.</p>
+<p><a class="btn ghost" href="flagged.html">See Flagged for Review</a> <a class="btn ghost" href="sources.html">See the source register</a> <a class="btn ghost" href="suggestions.html">Decision Center</a></p></div>
+"""
+    BUILT.append(page("verification.html", f"Verification Log — {SITE}",
+                      "Line-by-line verification of every register value against official listings and policy pages, with method and status per row.",
+                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                                    "name": "Verification Log", "url": BASE + "verification.html"}))
 
 # ---- how we choose
 def build_how():
@@ -1308,12 +1362,12 @@ SUGGESTIONS = [
          impact="High — reader trust and time on page", effort="Done",
          status="Shipped", verify="Visible on index.html: hero, three featured products, one nav group."),
     dict(id="SG-02", title="Publish question-shaped guides, then measure arrivals",
-         what="Eight guides built from real buying decisions, each added to the sitemap and the RSS "
+         what="Ten guides built from real buying decisions, each added to the sitemap and the RSS "
               "feed, each ending in a verdict.",
          why="Long-tail question queries are how a small site earns its first organic traffic. A "
              "guide that answers one question beats a listicle.",
          impact="High — organic traffic", effort="Done",
-         status="Shipped", verify="guides.html lists eight; sitemap.xml and feed.xml include all eight."),
+         status="Shipped", verify="guides.html lists ten; sitemap.xml and feed.xml include all ten."),
     dict(id="SG-03", title="Measure clicks before optimising anything",
          what="Five defined events (data/events.json), counted locally with no cookies and no third "
               "party, exportable to CSV, with a self-hosted collector ready in analytics/server.js.",
@@ -2368,6 +2422,7 @@ def build_disclosure():
 
 <h2>What we measure</h2>
 <p>Five events, defined once and used consistently:</p>
+<p><strong>Where they go.</strong> By default the counts stay in your own browser (localStorage) and can be exported as CSV — nothing leaves your device. A self-hosted collector (<code>analytics/server.py</code>) is written, smoke-tested and deliberately switched off in <code>assets/config.js</code> until the owner chooses a host (SG-18 / Q-08). That endpoint never reads IP addresses, writes no access log, stores no identifiers, and keeps only aggregate counts. Either way there are no cookies, no fingerprinting, no referrer capture, and search events carry a result count — never what you typed.</p>
 <table class="events">
   <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
   <tbody>
@@ -2859,6 +2914,7 @@ def main():
     build_guides_index()
     for g in GUIDES:
         build_guide(g)
+    build_verification()
     build_how()
     build_design_brief()
     build_suggestions()
