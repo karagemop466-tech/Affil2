@@ -22,12 +22,12 @@
   {
     "id": "FLG-005",
     "title": "Prices/ratings blank",
-    "detail": "No price, rating, review count, BSR or commission shown. Unverified fields left blank per Program Policies \u00a72(b)."
+    "detail": "No price, rating, review count, BSR or commission shown. Unverified fields left blank per Program Policies §2(b)."
   },
   {
     "id": "FLG-006",
     "title": "Canonical host unset",
-    "detail": "No custom domain chosen. Canonical tags use placeholder host \u2014 update before indexing."
+    "detail": "No custom domain chosen. Canonical tags use placeholder host — update before indexing."
   },
   {
     "id": "FLG-007",
@@ -48,5 +48,35 @@
     "id": "FLG-010",
     "title": "Analytics local-only",
     "detail": "Click counter runs in-browser until a self-hosted endpoint is deployed. See Q-08."
+  },
+  {
+    "id": "FLG-011",
+    "title": "Short-link redirects are not stable across attempts",
+    "detail": "Re-test on 2026-11-20: link.amazon/B00hJ57DV returned HTTP 500, then the Amazon homepage, then /dp/B08DKYBTPH. link.amazon/B0f3GKalj returned the homepage, then /dp/B0DZFD6R9Z. The destination can change between visits. Each 'observed' ASIN is a snapshot, not a stable mapping. Record the final URL and timestamp for each test. See data/reverification-2026-11-20.json."
+  },
+  {
+    "id": "FLG-012",
+    "title": "B0c8moW59 not reproduced",
+    "detail": "The record maps link.amazon/B0c8moW59 to B0DHZTCNR5 (ThermoMaven 1 Sec). In 4 attempts on 2026-11-20 the link returned HTTP 500 once and an Amazon 'Continue shopping' checkpoint three times. B0DHZTCNR5 itself opens as a product page. Owner: open the link in a normal browser session and confirm the final URL."
+  },
+  {
+    "id": "FLG-013",
+    "title": "Record titles differ from the live page titles",
+    "detail": "P-02 (B09B7SB46R): record title 'Emeril Lagasse 26 QT Extra Large Air Fryer, Convection Toaster Oven with French Doors, Stainless Steel'; live page title 'Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven ... 24 One-Touch Preset Options'. P-03 (B08DKYBTPH): record 'Chefman TurboFry Touch Air Fryer, XL 8-Qt...'; live 'Chefman Air Fryer 8 Qt | TurboFry 4-in-1 ...'. P-05 (B0DZFD6R9Z): record includes '[2025 Model]', not in the live title. ASINs match in all three. Titles should be quoted from the live page with a capture date, or marked as paraphrase."
+  },
+  {
+    "id": "FLG-014",
+    "title": "Supplied tokens are 9 characters, not 10-character ASINs",
+    "detail": "All five link.amazon path tokens (B04G1MEwY, B02NbDxp3, B00hJ57DV, B0c8moW59, B0f3GKalj) are 9 characters. Third-party references describe ASINs as 10 characters. An official Amazon definition was not found in this pass, so the length rule is unverified. The tokens cannot be treated as ASINs. Intended-ASIN fields remain blank (FLG-001)."
+  },
+  {
+    "id": "FLG-015",
+    "title": "Program Policies §2(e) and §2(g) bear on short-link status",
+    "detail": "Commission Income Statement §2(e) disqualifies purchases from a 'Redirecting Link' (one that sends users indirectly through an intermediate site without a customer action). §2(g) disqualifies purchases that are not tracked because links are improperly formatted. These clauses are the concrete tests behind FLG-003. Whether the supplied short links meet either one is not determined. The links are NOT claimed to be invalid. Source: https://affiliate-program.amazon.com/help/operating/policies"
+  },
+  {
+    "id": "FLG-016",
+    "title": "Search-referred purchases may be disqualified (§2(d))",
+    "detail": "Commission Income Statement §2(d) disqualifies a purchase where the customer was referred to Amazon by a link generated or displayed on a search engine. The clause concerns the route into Amazon. How it applies to a site found through search and then linking out is not determined. Confirm with Associates support before scaling organic search traffic. Source: https://affiliate-program.amazon.com/help/operating/policies"
   }
 ]
