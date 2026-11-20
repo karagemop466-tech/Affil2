@@ -720,3 +720,16 @@ Auto-merged without conflict; outputs regenerated. Register rows for this sessio
 ### PR / deploy result
 - PR: https://github.com/karagemop466-tech/Affil2/pull/22 (this branch → main). Merge result and Pages verification are recorded in the follow-up record commit after the merge.
 - Superseded/owned-elsewhere work, for the record: analytics collector + measurement surface = PR #16 (open, session bdedd85e); hand-written polish artifacts dropped in favor of generator outputs = see merge log above.
+
+## Session 42617e35 — integration result (recorded after merge)
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/22 |
+| Merge | merged into `main` 2026-11-20T06:00:14Z as merge commit `175375fa37938143f9c2c945f14c45799310eb55` |
+| Pages | Deployed and serving the merged revision — live check of https://karagemop466-tech.github.io/Affil2/guides/first-week-air-fryer.html returns the new guide with disclosure above the fold and sourced product links |
+| Gate at merge | `python3 scripts/check_site.py` → ALL CHECKS PASS (31 pages, 5 product records, 40 flags, 18 sources) |
+| Register rows shipped | SG-24…SG-30 (incl. required SG-27 nav labels · SG-28 shipped RSS feed · SG-29 Search Console · SG-30 reader capture) |
+| Guide shipped | guides/first-week-air-fryer.html (in sitemap + feed) |
+| Flagged / open | FLG-001…FLG-040 as published on flagged.html; analytics collector still owned by open PR #16 (not duplicated here) |
+
