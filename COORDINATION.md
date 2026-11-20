@@ -1062,3 +1062,37 @@ FLG-001 intended ASINs · FLG-002 tracking-ID activity · FLG-003 short-link com
 
 - PR: (recorded after merge below)
 - GitHub Pages: (recorded after merge below)
+
+### T-23 verification record (session `35973829`, 2026-11-20 UTC)
+
+Scope executed: merged `origin/main` (`f1e84b6`, after PR #45) and PR #46's branch (`arena/578ca10d-affil2`, T-22 re-verification addendum) into `arena/35973829-affil2`. Two COORDINATION.md conflicts resolved by keeping every session's record block once (nothing discarded). No product, source, flag or editorial value was authored or altered by this session.
+
+| Check | Result |
+|---|---|
+| `python3 -B scripts/build_site.py` ×2 | `built 36 pages`, idempotent, working tree clean after both runs |
+| `python3 -B scripts/check_site.py` | `checked 36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS` |
+| `python3 -B -m unittest discover -s tests -p "test_*.py"` | 3 tests OK |
+| `node tests/test_collector.js` | ALL JS COLLECTOR AND CLIENT TESTS PASS |
+| `node --check assets/app.js` | clean |
+| feed.xml / sitemap.xml | parse as valid XML; sitemap lists 36 pages; feed carries 11 items |
+| Independent internal-link audit (all 36 pages, 2,268 hrefs) | 0 broken internal links, 0 missing assets |
+| Independent disclosure audit | disclosure strip present above `<main>` on all 36 pages (plus footer copy) |
+| Independent `rel="sponsored"` audit | 0 amazon.com anchors missing `sponsored` |
+| Spec-table source-link audit (5 product pages) | every `Field / Value / Source` row carries a source link; blanks marked `unverified`/`not stated` |
+| USDA doneness tables (P-04, P-05) | each cites https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart (S22) |
+| PR #46 addendum rendered | `verification.html` carries "Re-verification addendum" with R-01…R-16; `data/verification.json` rechecks = 16, every row has an `https://` source URL |
+
+Sources fetched live by this session (official only):
+
+| Source | Result |
+|---|---|
+| https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links (S04) | Live; `rel="sponsored"` for paid links; multiple rel values allowed; last updated 2025-12-10 — matches register |
+| https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking (S03) | Live; endorser–marketer connection "should be disclosed clearly and conspicuously" — matches register |
+| https://www.amazon.com/dp/B0CDY277D3 (P-01) | Page title matches `data/products.json` verbatim; breadcrumb Home & Kitchen › Kitchen & Dining › Small Appliances › Fryers › Air Fryers |
+| https://www.amazon.com/dp/B0DHZTCNR5 (P-04) | Page title matches `data/products.json` verbatim; breadcrumb … › Thermometers & Timers › Meat |
+
+Irregularities: none new found by this pass. Owner-gated items unchanged (FLG-001/002/003/004/010/019/028/032/033); all 40 flags remain published on `flagged.html` and none blocks merge. Minor observation, not flagged: `REQUIREMENTS-TRACE.md` (T-21 doc) is served on Pages but is not an HTML page and is not listed in `sitemap.xml` — consistent with the gate's page definition.
+
+### T-23 status
+
+in progress → PR opened and merged; Pages confirmation and PR link recorded in the follow-up block below.
