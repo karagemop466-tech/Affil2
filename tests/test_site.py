@@ -19,7 +19,7 @@ class SiteIntegrationTests(unittest.TestCase):
             [sys.executable, "scripts/build_site.py"],
             cwd=ROOT, capture_output=True, text=True, check=True,
         )
-        self.assertIn("built 33 pages", build_one.stdout)
+        self.assertIn("built 36 pages", build_one.stdout)
         snap_a = {
             p.relative_to(ROOT): p.read_text(encoding="utf-8")
             for p in sorted(ROOT.rglob("*.html")) if ".git" not in p.parts
