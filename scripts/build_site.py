@@ -565,15 +565,6 @@ def build_home():
       change; the date is printed on each product page so you can judge.</p></details>
   </div>
 </section>
-
-<section class="panel">
-  <h2>Working on this site?</h2>
-  <p>Every internal record is reachable from the footer of every page: the
-    <a href="suggestions.html">Decision Center</a> where proposals are ranked before anything is
-    built, the <a href="questions.html">Open Questions</a> register, the
-    <a href="flagged.html">Flagged for Review</a> page, and the
-    <a href="sources.html">source register</a>.</p>
-</section>
 """
     ld = [{"@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": BASE,
            "publisher": dict(publisher_ld(), **{"@context": "https://schema.org"})},
