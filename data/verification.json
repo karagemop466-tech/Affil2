@@ -467,6 +467,11 @@
       "id": "C-07",
       "what": "COORDINATION.md session-530c2e6c log cross-referenced FLG-010/011/012 for Emeril/CHEF-iQ conflicts; canonical data/flags.json numbers those FLG-008/009 (FLG-010 = analytics local-only)",
       "action": "COORDINATION.md corrected to the canonical flag numbering; new findings appended as FLG-017..FLG-019."
+    },
+    {
+      "id": "C-08",
+      "what": "The P-01 and P-03 weight rows in this log still read 'unverified — blank' from an earlier shallow fetch, while data/products.json and the product pages publish 13.3 pounds and 12.8 pounds verified from the official Measurements tables (FLG-022).",
+      "action": "Stale rows left in place (additive-only rule for this pass); contradiction published as FLG-052 on flagged.html for the verification-log owner to correct. Register values unchanged."
     }
   ],
   "rechecks": [
