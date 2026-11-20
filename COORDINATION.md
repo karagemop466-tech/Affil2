@@ -1055,18 +1055,18 @@ FLG-001 intended ASINs · FLG-002 tracking-ID activity · FLG-003 short-link com
 
 Branch `arena/d95938bb-affil2`, base `66ccda9` (main, after PR #39). Session status `active`.
 
-**Task T-21 — verified polish pass, then final integration.** Scope (files this session edits, nothing else):
+**Task T-21 — verified storefront polish, then final integration.** Scope (files this session edits, nothing else):
 
 | Area | Files |
 |---|---|
 | Product identity on cards and tables | `data/products.json` (additive `short` field only), `scripts/build_site.py` |
-| Guide repairs | `scripts/seasonal_guides.py`, `scripts/build_site.py` (GUIDES copy), `assets/img/*` references |
-| Site-wide link integrity | `scripts/check_site.py` (new gate rules only) |
+| Guide repairs and images | `scripts/seasonal_guides.py`, `scripts/build_site.py` (GUIDES copy), `assets/img/*` |
+| Link integrity gate | `scripts/check_site.py` (new rules only) |
 | Generated output | all `*.html`, `sitemap.xml`, `feed.xml` (regenerated, never hand-edited) |
 | Records | `COORDINATION.md`, `EXECUTIVE-SUMMARY.md`, `README.md`, `data/flags.json` (append only), `data/sources.json` (append only) |
 
-**Not in scope, left untouched:** `data/editorial.json`, `data/verification.json`, `data/reverification-2026-11-20.json`, `analytics/*`, `functions/*`, `assets/app.js`, `assets/style.css`, `.github/workflows/pages.yml`. Open PRs #16, #28, #34, #35 belong to other sessions and are not merged or modified here.
+**Not in scope, left untouched:** `data/editorial.json`, `data/verification.json`, `data/reverification-2026-11-20.json`, `analytics/*`, `functions/*`, `assets/app.js`, `assets/style.css`, `.github/workflows/pages.yml`. Open PRs #16, #28, #34, #35 belong to other sessions and are neither merged nor modified here.
 
-**Verification method this session.** Official Amazon listing pages fetched through the page tool (not scripted scraping) and read to the chunk that carries each `Product information` table; every claim added to a page carries the listing URL and the fetch date. Policy claims are quoted from the official URLs already in `data/sources.json` and were re-fetched where reachable. Nothing is inferred; anything not confirmed stays blank and is flagged.
+**Verification method.** Official Amazon listing pages are read through the page tool (not scripted scraping) down to the chunk that carries each `Product information` table; every claim printed on a page carries the listing URL and the fetch date. Policy claims quote the official URLs already in `data/sources.json` and are re-fetched where reachable. Nothing is inferred: anything not confirmed stays blank and is flagged.
 
-**Known limitation, recorded up front.** `link.amazon` is not reachable from this sandbox (TLS handshake fails; outbound allow-list is github.com/api.github.com/codeload/npm/PyPI plus the page tool). Short-link resolution is therefore re-read through the page tool only, and any instability stays under FLG-011/FLG-012. Live Pages status is confirmed through the GitHub API, not by fetching the Pages host.
+**Known limitation, stated up front.** `link.amazon` is not reachable from this sandbox (TLS handshake fails; the outbound allow-list is github.com / api.github.com / codeload / npm / PyPI plus the page-fetch tool). Short-link resolution is re-read through the page tool only and instability stays under FLG-011/FLG-012. Live Pages status is confirmed through the GitHub API, not by fetching the Pages host.
