@@ -1157,7 +1157,12 @@ GUIDES = [
          verdict="""Calibrate with something cheap, cook your real weeknight meal by day four, and
          give the appliance one standing job from the oven. Skip batters and overloaded baskets
          until the machine is familiar."""),
-]
+
+    ]
+from seasonal_guides import GUIDES as _SEASONAL
+GUIDES += _SEASONAL
+
+
 
 
 
