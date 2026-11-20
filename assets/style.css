@@ -694,3 +694,20 @@ table.ledger code{font-size:12.5px;background:var(--cream-2);padding:2px 6px;bor
 .badge-row span[data-tone="warn"]{background:#fbefd6;color:#8a5a06}
 .card .why{font-size:13.5px;color:var(--ink-2);line-height:1.5;margin:10px 0 6px}
 .card .badge-row{margin:10px 0 0}
+
+/* ---------- shortlist picker (compare.html) ---------- */
+.picker{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 24px;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px;margin:18px 0 8px;box-shadow:var(--shadow)
+}
+.picker fieldset{border:0;margin:0;padding:0;min-width:0}
+.picker legend{font-family:var(--serif);font-size:17px;font-weight:700;margin:0 0 8px;padding:0}
+.picker label{display:flex;gap:8px;align-items:flex-start;font-size:14.5px;line-height:1.4;margin:0 0 7px;cursor:pointer}
+.picker input[type=radio]{margin-top:3px;accent-color:var(--accent)}
+.picker .btn{grid-column:1/-1;justify-self:start}
+.picker #picker-help{grid-column:1/-1;margin:0}
+.picker-result{margin:14px 0 0}
+.picker-result ol{margin:8px 0 6px;padding-left:20px}
+.picker-result li{margin:0 0 6px}
+.picker-result a{font-weight:600}

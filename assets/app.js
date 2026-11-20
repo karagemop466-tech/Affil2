@@ -394,6 +394,55 @@
           if (out) out.textContent = 'Saved locally at ' + new Date().toISOString() + '. Export it with your ranking.';
         });
       }
+      // ---------- shortlist picker (compare.html) ----------
+      // Weights live in #pickerWeights so the reasoning is auditable in the HTML, not buried
+      // in this file. Nothing here reads price, rating, or any unpublished signal.
+      var picker = document.getElementById('picker');
+      var resultBox = document.getElementById('pickerResult');
+      var weightsEl = document.getElementById('pickerWeights');
+      var namesEl = document.getElementById('pairData');
+      if (picker && resultBox && weightsEl) {
+        var weights = {};
+        var cats = {};
+        var names = {};
+        try {
+          var parsed = JSON.parse(weightsEl.textContent) || {};
+          weights = parsed.weights || {};
+          cats = parsed.category || {};
+          names = JSON.parse(namesEl ? namesEl.textContent : '{}') || {};
+        } catch (_) { weights = {}; }
+        picker.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var scores = {};
+          var catPicked = picker.querySelector('input[name="category"]:checked');
+          var catWanted = catPicked ? catPicked.value : 'either';
+          ['household', 'style', 'space'].forEach(function (group) {
+            var picked = picker.querySelector('input[name="' + group + '"]:checked');
+            if (!picked) return;
+            Object.keys(weights).forEach(function (id) {
+              if (catWanted !== 'either' && cats[id] !== catWanted) return;
+              scores[id] = (scores[id] || 0) + ((weights[id] && weights[id][picked.value]) || 0);
+            });
+          });
+          var ranked = Object.keys(scores).sort(function (a, b) { return scores[b] - scores[a]; });
+          var top = ranked.slice(0, 2);
+          var rows = '';
+          top.forEach(function (id, i) {
+            var label = (names[id] && names[id].name) || id;
+            var url = (names[id] && names[id].url) || '';
+            rows += '<li><strong>' + (i === 0 ? 'Start here: ' : 'Also worth a look: ') +
+              '</strong><a href="' + url + '">' + label + '</a></li>';
+          });
+          resultBox.innerHTML = '<p>Based only on the three answers above:</p><ol>' + rows +
+            '</ol><p class="small">This is a shortlist, not a verdict. Every product page shows ' +
+            'the full specification table and the caveat that matters, and the comparison table ' +
+            'above lets you check any two side by side.</p>';
+          if (typeof track === 'function') {
+            try { track('search', { qlen: 0, hits: top.length }); } catch (_) {}
+            // shortlist used; counts only, no free text and no identifiers
+          }
+        });
+      }
     }
   } catch (e) {}
 })();

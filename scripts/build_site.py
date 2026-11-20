@@ -1044,6 +1044,38 @@ def build_compare():
 <noscript><p class="small">The two-at-a-time view needs JavaScript. The full table above carries the
   same rows.</p></noscript>
 
+<h2>Three questions, then a shortlist</h2>
+<p class="muted">Answer what matters to your kitchen and this narrows the five to the one or two
+  worth reading in detail. It uses only the specifications published above &mdash; no ratings, no
+  price, no guessing about what other people liked.</p>
+<form id="picker" class="picker" aria-describedby="picker-help">
+  <fieldset>
+    <legend>What are you shopping for?</legend>
+    <label><input type="radio" name="category" value="air" checked> An air fryer</label>
+    <label><input type="radio" name="category" value="thermo"> A meat thermometer</label>
+    <label><input type="radio" name="category" value="either"> Either &mdash; show me both</label>
+  </fieldset>
+  <fieldset>
+    <legend>What are you cooking for?</legend>
+    <label><input type="radio" name="household" value="two" checked> One or two people</label>
+    <label><input type="radio" name="household" value="family"> Four or more</label>
+  </fieldset>
+  <fieldset>
+    <legend>How do you cook on a weeknight?</legend>
+    <label><input type="radio" name="style" value="parallel" checked> A main and a side at once</label>
+    <label><input type="radio" name="style" value="batch"> One thing, in batches</label>
+    <label><input type="radio" name="style" value="oven"> Roast, toast and bake as well as fry</label>
+  </fieldset>
+  <fieldset>
+    <legend>How much counter depth can you give up?</legend>
+    <label><input type="radio" name="space" value="shallow" checked> Under 14 inches</label>
+    <label><input type="radio" name="space" value="deep"> 17 inches or more</label>
+  </fieldset>
+  <p id="picker-help" class="small">Nothing is sent anywhere. The result is computed in this page.</p>
+  <button type="submit" class="btn">Show my shortlist</button>
+</form>
+<div id="pickerResult" class="picker-result" aria-live="polite"></div>
+
 <h2>How to read this table</h2>
 <ol>
   <li><strong>Filter by form first.</strong> Two baskets, one basket, or an oven &mdash; that decision
@@ -1065,7 +1097,20 @@ def build_compare():
             "rows": [[label, fn(p)] for label, fn in PAIR_ROWS],
         }
     pair_json = json.dumps(pair_data, ensure_ascii=False).replace("</", "<\\/")
-    extra = (f'<script type="application/json" id="pairData">{pair_json}</script>')
+    # The shortlist logic is data, not prose: household size, cooking style and counter depth,
+    # each mapped to the ids that actually satisfy it. No product is ever recommended on a
+    # factor we have not published (no price, no rating, no "popularity").
+    picker = {
+        "P-01": {"two": 3, "family": 1, "parallel": 3, "batch": 0, "oven": 0, "shallow": 2, "deep": 1},
+        "P-02": {"two": 0, "family": 3, "parallel": 0, "batch": 1, "oven": 3, "shallow": 0, "deep": 3},
+        "P-03": {"two": 1, "family": 2, "parallel": 0, "batch": 3, "oven": 0, "shallow": 1, "deep": 2},
+        "P-04": {"two": 2, "family": 2, "parallel": 1, "batch": 2, "oven": 1, "shallow": 3, "deep": 2},
+        "P-05": {"two": 2, "family": 2, "parallel": 1, "batch": 2, "oven": 2, "shallow": 3, "deep": 2},
+    }
+    cats = {p["id"]: ("air" if p["cat"] == "Air Fryers" else "thermo") for p in PRODUCTS}
+    pick_json = json.dumps({"weights": picker, "category": cats}, ensure_ascii=False)
+    extra = (f'<script type="application/json" id="pairData">{pair_json}</script>'
+             f'<script type="application/json" id="pickerWeights">{pick_json}</script>')
     BUILT.append(page("compare.html", f"Compare all five — {SITE}",
                       "Side-by-side table of all five products, aligned by field, with prices and "
                       "ratings deliberately omitted and conflicts left visible.",
