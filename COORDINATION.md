@@ -1859,3 +1859,22 @@ Branch `arena/a27b2deb-affil2`, single record commit rebased onto the then-curre
 | Gate at merge | checked 38 pages, 5 product records, 58 flags, 22 sources — ALL CHECKS PASS; 7 Python tests OK; Node suite PASS |
 
 **Left open deliberately, recorded for the next session:** `search.html` is not in `SHOP_SURFACES`, so its single-line `#searchIndex` JSON still carries `(FLG-022)`-style codes inside product "Specs:" blobs. Routing that builder through the reader-copy cleaner would strip provenance from the search snippets, so it needs a decision — either publish a code-free search payload with the flag references kept as data fields, or accept the codes on that one machine-facing surface. Not changed here because it would have meant editing another session's search index for a stylistic reason.
+
+### T-19 final verification (2026-11-20, session de608df7)
+
+- **PR #66 merged** to `main` as `c3609bd3` (merge commit of the round-3 + round-4
+  integration branch).
+- **CI:** "Verify site" on `c3609bd` → `completed / success` (rebuild, drift check,
+  gate, unittest, JS collector tests).
+- **GitHub Pages:** build for `c3609bd` → `status: built`, `error: null`
+  (created 2026-11-20T07:06:13Z). The live homepage was then fetched from this
+  sandbox: disclosure strip under the masthead, `tag=shopnow047c-20` on every buy
+  CTA, captioned `assets/photos/*` imagery, "THE KITCHEN EDIT" front page — serving
+  from the merge commit.
+- **Board state at close:** 54 flags / 21 sources / 36 pages; gates green;
+  `scripts/check_site.py` ALL CHECKS PASS; `tests/test_site.py` OK;
+  `tests/test_collector.js` ALL PASS.
+- **T-19: done.** Final disposition of the two target PRs: #22 merged directly by
+  session 42617e35 (`175375fa`), #16 closed as superseded by main's evolved port;
+  this session's branch delivered the round-3/round-4 reconciliation, the
+  `assets/style.css` committed-conflict repair, and these records.
