@@ -23,6 +23,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Regenerate site and fail on drift
+        run: |
+          python3 scripts/build_site.py
+          git add -A
+          git diff --cached --exit-code
       - name: Validate HTML, links, sitemap, and RSS
         run: python3 scripts/check_site.py
       - name: Check client-side analytics syntax and privacy behavior

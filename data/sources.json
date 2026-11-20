@@ -117,5 +117,26 @@
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
     "used_for": "Official minimum internal cooking temperatures: poultry 165 F (73.9 C); ground meats 160 F (71.1 C); beef, pork, veal and lamb steaks, chops and roasts 145 F (62.8 C) with a 3-minute rest; fish and shellfish 145 F (62.8 C); leftovers and casseroles 165 F (73.9 C). Any doneness figure on this site must defer to this chart.",
     "checked": "2026-11-20"
+  },
+  {
+    "id": "S23",
+    "name": "GitHub Docs — GitHub Pages data collection",
+    "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection",
+    "used_for": "Host-level privacy disclosure: GitHub Pages logs visitor IP addresses for security purposes. This is separate from the site's browser-local counters.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S24",
+    "name": "Google Search Console Help — Verify your site ownership",
+    "url": "https://support.google.com/webmasters/answer/9008080?hl=en",
+    "used_for": "Official instructions for adding a Search Console property and verifying ownership; account verification is an owner-level setup step, not a prerequisite for serving the existing GitHub Pages site.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S25",
+    "name": "GitHub Pages API — project publishing configuration",
+    "url": "https://api.github.com/repos/karagemop466-tech/Affil2/pages",
+    "used_for": "GitHub Pages API response checked 2026-11-20: project URL is https://karagemop466-tech.github.io/Affil2/, CNAME is null, status is built, and HTTPS is enforced. This describes the current deployment, not a custom-domain choice.",
+    "checked": "2026-11-20"
   }
 ]

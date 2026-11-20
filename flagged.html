@@ -90,10 +90,10 @@
   <td>No price, rating, review count, BSR or commission shown. Unverified fields left blank per Program Policies §2(b).</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
   <td class="src"><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="sponsored nofollow">S02</a></td></tr><tr><td class="nowrap"><strong>FLG-006</strong></td>
-  <td>Canonical host unset<br><span class="small pill-sev open">open</span></td>
-  <td>No custom domain chosen. Canonical tags use placeholder host — update before indexing.</td>
-  <td>Published on the Flagged for Review page. Does not block publication.</td>
-  <td class="src"><a href="https://affiliate-program.amazon.com/help/operating/agreement" rel="sponsored nofollow">S01</a></td></tr><tr><td class="nowrap"><strong>FLG-007</strong></td>
+  <td>Custom-domain choice open; current GitHub Pages host is canonical<br><span class="small pill-sev open">open</span></td>
+  <td>All canonical tags use the live project URL https://karagemop466-tech.github.io/Affil2/. GitHub Pages API reports status built, CNAME null, and HTTPS enforced (S25). The current host is not a placeholder or an indexing blocker. A separate custom domain is an optional owner decision; Search Console setup is separate.</td>
+  <td>Published on the Flagged for Review page. Current Pages URL is live; only the optional custom-domain decision remains.</td>
+  <td class="src"><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" rel="sponsored nofollow">S23</a> <a href="https://api.github.com/repos/karagemop466-tech/Affil2/pages" rel="sponsored nofollow">S25</a></td></tr><tr><td class="nowrap"><strong>FLG-007</strong></td>
   <td>No licensed product photos<br><span class="small pill-sev open">open</span></td>
   <td>No Amazon product images used. Visuals are original SVG/CSS illustrations, not product photos.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
@@ -106,10 +106,10 @@
   <td>Preset count 24 vs 25 and model numbers 4-00675-02 vs 4-00675-02X-VN appear on the same listing. Both published.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
   <td class="src"><a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">S11</a></td></tr><tr><td class="nowrap"><strong>FLG-010</strong></td>
-  <td>Analytics local-only<br><span class="small pill-sev open">open</span></td>
-  <td>Click counter runs in-browser until a self-hosted endpoint is deployed. See Q-08.</td>
-  <td>Published on the Flagged for Review page. Does not block publication.</td>
-  <td class="src"><a href="https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking" rel="sponsored nofollow">S03</a></td></tr><tr><td class="nowrap"><strong>FLG-011</strong></td>
+  <td>Analytics are browser-local, not site-wide<br><span class="small pill-sev open">open</span></td>
+  <td>Five events are counted as aggregate values in each browser only; search text and event-by-event history are not stored. No remote event endpoint is deployed. GitHub Pages is static hosting; server-side event collection requires a separate host and privacy decision (Q-08).</td>
+  <td>Published on the Flagged for Review page. No endpoint is configured; no site-wide or conversion data is claimed.</td>
+  <td class="src"><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection" rel="sponsored nofollow">S23</a></td></tr><tr><td class="nowrap"><strong>FLG-011</strong></td>
   <td>Short-link redirects are not stable across attempts<br><span class="small pill-sev open">open</span></td>
   <td>Re-test on 2026-11-20: link.amazon/B00hJ57DV returned HTTP 500, then the Amazon homepage, then /dp/B08DKYBTPH. link.amazon/B0f3GKalj returned the homepage, then /dp/B0DZFD6R9Z. The destination can change between visits. Each 'observed' ASIN is a snapshot, not a stable mapping. Record the final URL and timestamp for each test. See data/reverification-2026-11-20.json.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
@@ -178,10 +178,10 @@
   <td>Program Policies §6(w) says you will not use a link-shortening service in a way that makes it unclear that you are linking to an Amazon site. The supplied short links are the owner's links; compliance is not decided here. Review with FLG-003 and FLG-004.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
   <td class="src"><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="sponsored nofollow">S02</a></td></tr><tr><td class="nowrap"><strong>FLG-028</strong></td>
-  <td>Requested sources S07 and S24 not in this repo<br><span class="small pill-sev open">open</span></td>
-  <td>The task brief references S07 and S24. They are not in data/sources.json and were not found in the repository, so they are not cited.</td>
-  <td>Published on the Flagged for Review page. Does not block publication.</td>
-  <td class="src"><a href="https://affiliate-program.amazon.com/help/operating/agreement" rel="sponsored nofollow">S01</a></td></tr><tr><td class="nowrap"><strong>FLG-029</strong></td>
+  <td>S07 remains unidentified; S24 is now registered<br><span class="small pill-sev open">open</span></td>
+  <td>The earlier coordination note referenced source IDs S07 and S24, but did not identify S07. S24 is now the official Google Search Console ownership-verification guide. No source has been invented for S07; identify it from the original request if it is still needed.</td>
+  <td>Published on the Flagged for Review page. S07 remains an explicit discovery question.</td>
+  <td class="src"><a href="https://support.google.com/webmasters/answer/9008080?hl=en" rel="sponsored nofollow">S24</a></td></tr><tr><td class="nowrap"><strong>FLG-029</strong></td>
   <td>Product-data automation is blocked until the Associates account is finally accepted<br><span class="small pill-sev open">open</span></td>
   <td>The brief asks for automated product research, trend detection and price analysis. Amazon's Creators API onboarding page states that registration is available only to Associates whose account has been reviewed and received final acceptance into the program and who have referred qualified sales, and that only the primary account owner can register. Separately, the PA-API 5 deprecation notice states that PA-API 5 now returns HTTP 403 Forbidden. Both were read verbatim on 2026-11-20. No product-data automation is claimed to be running on this site, and none can run until that acceptance exists. This does not affect the published pages, which use static, sourced values.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>

@@ -80,7 +80,8 @@
       "Will 11.81 inches of width fit your counter, with clearance above?",
       "Do you want to see the food, or do you prefer a single larger basket?"
     ],
-    "blurb": "Two baskets you can watch through the windows, timed to finish together. The question is not whether it fries — it is whether two 3-quart baskets fit the way you actually cook."
+    "blurb": "Two baskets you can watch through the windows, timed to finish together. The question is not whether it fries — it is whether two 3-quart baskets fit the way you actually cook.",
+    "intended": null
   },
   {
     "id": "P-02",
@@ -169,7 +170,8 @@
       "Do you need rotisserie or pizza capacity, or is that unused space?",
       "Will you move it, or leave it in one spot?"
     ],
-    "blurb": "A countertop oven that air-fries. The trade-off is footprint and weight: this is a 26-quart appliance, not a compact basket fryer."
+    "blurb": "A countertop oven that air-fries. The trade-off is footprint and weight: this is a 26-quart appliance, not a compact basket fryer.",
+    "intended": null
   },
   {
     "id": "P-03",
@@ -258,7 +260,8 @@
       "Is 400 °F top temperature enough for what you cook?",
       "Do you want presets, or do you prefer manual control?"
     ],
-    "blurb": "One big basket, four presets, no windows. Simpler than dual-basket — and the right choice if you cook one thing at a time for a household."
+    "blurb": "One big basket, four presets, no windows. Simpler than dual-basket — and the right choice if you cook one thing at a time for a household.",
+    "intended": null
   },
   {
     "id": "P-04",
@@ -341,7 +344,8 @@
       "Will you calibrate it, and how often?",
       "Do you need a certificate, or is the listing claim enough?"
     ],
-    "blurb": "The instant-read you keep by the grill. Speed and accuracy are the whole point — everything else is secondary."
+    "blurb": "The instant-read you keep by the grill. Speed and accuracy are the whole point — everything else is secondary.",
+    "intended": null
   },
   {
     "id": "P-05",
@@ -430,6 +434,7 @@
       "Are you comfortable relying on an app and WiFi for doneness?",
       "Will you charge and clean three probes after every cook?"
     ],
-    "blurb": "Three proteins, three donenesses, no standing by the grill. The cost of that freedom is an app, a hub, and charging."
+    "blurb": "Three proteins, three donenesses, no standing by the grill. The cost of that freedom is an app, a hub, and charging.",
+    "intended": null
   }
 ]

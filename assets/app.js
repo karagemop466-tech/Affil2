@@ -1,9 +1,8 @@
 /*
- * First-party, browser-local measurement for the static GitHub Pages site.
- * The five defined events are aggregate counters only; no query text, URL,
- * timestamp, referrer, IP, or event-by-event trail is saved here.
- * A remote endpoint is intentionally not configured: GitHub Pages cannot
- * receive event writes. Amazon orders remain report-only in the campaign ledger.
+ * Browser-local measurement for the static GitHub Pages publication.
+ * Five named events are stored as aggregate counters only. No raw search text,
+ * event timeline, page path, referrer, timestamp, IP address, or decision text is
+ * included in the measurement record. Nothing is sent to a server.
  */
 (function () {
   'use strict';
@@ -12,6 +11,7 @@
   var CLICKS_KEY = 'sn_clicks';
   var EVENTS = ['page_view', 'outbound_click', 'guide_read', 'search', 'suggestion_rank'];
   var PRODUCT_ID = /^P-\d{2}$/;
+  var SUGGESTION_ID = /^SG-\d{2}$/;
 
   function blankMetrics() {
     var counts = {};
@@ -46,9 +46,9 @@
   }
 
   var storedMetrics = readJSON(METRICS_KEY, null);
-  var isFirstRun = !storedMetrics || storedMetrics.version !== 1 || !storedMetrics.counts;
+  var firstRun = !storedMetrics || storedMetrics.version !== 1 || !storedMetrics.counts;
   var metrics = blankMetrics();
-  if (!isFirstRun) {
+  if (!firstRun) {
     EVENTS.forEach(function (name) {
       var count = Number(storedMetrics.counts[name]);
       metrics.counts[name] = Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
@@ -57,28 +57,27 @@
 
   var clicks = cleanClicks(readJSON(CLICKS_KEY, {}));
 
-  // Migrate only aggregate counts from the older event log, then erase its
-  // per-event timestamps, paths and search text. Product clicks are counted
-  // from the existing aggregate key to avoid duplicating old click events.
+  // Remove the earlier event-by-event log (which could contain a query or URL).
+  // Only migrate event names to counts; never copy its event details forward.
   try {
     var legacyEvents = JSON.parse(localStorage.getItem('sn_events') || '[]');
-    if (isFirstRun && Array.isArray(legacyEvents)) {
+    if (firstRun && Array.isArray(legacyEvents)) {
       legacyEvents.forEach(function (event) {
         if (event && EVENTS.indexOf(event.e) !== -1 && event.e !== 'outbound_click') {
           metrics.counts[event.e] += 1;
         }
       });
     }
-    localStorage.removeItem('sn_events');
-  } catch (_) { /* local storage may be unavailable */ }
-  if (isFirstRun) metrics.counts.outbound_click = sumClicks(clicks);
+  } catch (_) { /* old storage may be malformed */ }
+  try { localStorage.removeItem('sn_events'); } catch (_) { /* optional storage */ }
+  if (firstRun) metrics.counts.outbound_click = sumClicks(clicks);
 
   function saveMetrics() {
-    try { localStorage.setItem(METRICS_KEY, JSON.stringify(metrics)); } catch (_) { /* optional */ }
+    try { localStorage.setItem(METRICS_KEY, JSON.stringify(metrics)); } catch (_) { /* optional storage */ }
   }
 
   function saveClicks() {
-    try { localStorage.setItem(CLICKS_KEY, JSON.stringify(clicks)); } catch (_) { /* optional */ }
+    try { localStorage.setItem(CLICKS_KEY, JSON.stringify(clicks)); } catch (_) { /* optional storage */ }
   }
 
   function record(name) {
@@ -92,35 +91,35 @@
     if (counter) counter.textContent = String(sumClicks(clicks));
   }
 
+  function csvCell(value) {
+    var text = String(value == null ? '' : value);
+    if (/^[\s]*[=+\-@]/.test(text)) text = "'" + text;
+    return '"' + text.replace(/"/g, '""') + '"';
+  }
+
+  function download(filename, content) {
+    var url = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }));
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(function () { URL.revokeObjectURL(url); }, 0);
+  }
+
+  function csv(rows) {
+    return rows.map(function (row) {
+      return row.map(csvCell).join(',');
+    }).join('\n');
+  }
+
   record('page_view');
   if (/\/guides\/[^/]+\.html$/.test(window.location.pathname)) record('guide_read');
-  if (/\/search\.html$/.test(window.location.pathname)) {
-    var directSearch = document.documentElement.hasAttribute('data-search-request');
-    var searchQuery = new URLSearchParams(window.location.search).get('q');
-    if (directSearch || (searchQuery && searchQuery.trim())) record('search');
-  }
-  window.ShopNowMetrics = {
-    recordSearch: function () { record('search'); }
-  };
-
-  // Keep header searches on the static page itself. The one-time query is
-  // passed in a URL fragment (not sent to the host) and removed on arrival.
-  document.querySelectorAll('header form[role="search"]').forEach(function (form) {
-    form.addEventListener('submit', function (event) {
-      var input = form.querySelector('input[name="q"]');
-      var query = input ? input.value.trim().slice(0, 120) : '';
-      if (!query) return;
-      event.preventDefault();
-      var destination = new URL(form.getAttribute('action') || 'search.html', window.location.href);
-      destination.search = '';
-      destination.hash = 'q=' + encodeURIComponent(query);
-      window.location.assign(destination.href);
-    });
-  });
-
   saveMetrics();
   updateLocalClickCount();
 
+  // Product clicks are delegated so a click on nested button text is counted too.
   document.addEventListener('click', function (event) {
     var target = event.target;
     var anchor = target && target.closest ? target.closest('[data-outbound]') : null;
@@ -134,36 +133,170 @@
     updateLocalClickCount();
   });
 
-  var exportButton = document.getElementById('exportClicks');
-  if (exportButton) {
-    exportButton.addEventListener('click', function () {
-      var rows = ['product,clicks'];
-      Object.keys(clicks).sort().forEach(function (product) {
-        rows.push(product + ',' + clicks[product]);
+  // Header searches pass a one-time fragment, which browsers do not send in the
+  // HTTP request. The search page clears the fragment after reading it.
+  document.querySelectorAll('header form[role="search"]').forEach(function (form) {
+    form.addEventListener('submit', function (event) {
+      var input = form.querySelector('input[name="q"]');
+      var query = input ? input.value.trim().slice(0, 120) : '';
+      if (!query) return;
+      event.preventDefault();
+      var destination = new URL(form.getAttribute('action') || 'search.html', window.location.href);
+      destination.search = '';
+      destination.hash = 'q=' + encodeURIComponent(query);
+      window.location.assign(destination.href);
+    });
+  });
+
+  // Client-side search: all untrusted strings are rendered with textContent.
+  // No user query is interpolated into HTML or written to local storage.
+  var searchForm = document.querySelector('form.searchpage');
+  var searchInput = document.getElementById('sq');
+  var searchIndexNode = document.getElementById('searchIndex');
+  var results = document.getElementById('results');
+  if (searchForm && searchInput && searchIndexNode && results) {
+    var searchIndex = [];
+    try {
+      var parsedIndex = JSON.parse(searchIndexNode.textContent || '[]');
+      if (Array.isArray(parsedIndex)) searchIndex = parsedIndex;
+    } catch (_) { searchIndex = []; }
+
+    function showMessage(text) {
+      var message = document.createElement('p');
+      message.textContent = text;
+      results.replaceChildren(message);
+    }
+
+    function renderSearch(query) {
+      results.replaceChildren();
+      var terms = query.toLocaleLowerCase().split(/\s+/).filter(Boolean);
+      if (!terms.length) {
+        showMessage('Enter a product, feature, or question to search this publication.');
+        return 0;
+      }
+
+      var matches = searchIndex.filter(function (entry) {
+        var searchable = [entry.t || '', entry.d || '', entry.k || ''].join(' ').toLocaleLowerCase();
+        return terms.every(function (term) { return searchable.includes(term); });
       });
-      download('clicks.csv', rows.join('\n'));
+      if (!matches.length) {
+        showMessage('No matches. Try a broader topic such as basket, capacity, or thermometer.');
+        return 0;
+      }
+
+      var sitePath = new URL('.', window.location.href).pathname;
+      var cards = [];
+      matches.forEach(function (entry) {
+        var destination;
+        try { destination = new URL(entry.u, window.location.href); } catch (_) { return; }
+        if (destination.origin !== window.location.origin || !destination.pathname.startsWith(sitePath)) return;
+        var card = document.createElement('article');
+        card.className = 'hit';
+        var category = document.createElement('p');
+        category.className = 'where';
+        category.textContent = entry.k || 'ShopNow Kitchen';
+        var heading = document.createElement('h3');
+        var link = document.createElement('a');
+        link.href = entry.u;
+        link.textContent = entry.t || entry.u;
+        heading.appendChild(link);
+        card.appendChild(category);
+        card.appendChild(heading);
+        if (entry.d) {
+          var summary = document.createElement('p');
+          summary.textContent = String(entry.d)
+            .replace(/&mdash;/g, '—').replace(/&ndash;/g, '–')
+            .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&')
+            .replace(/&plusmn;/g, '±').replace(/&deg;/g, '°');
+          card.appendChild(summary);
+        }
+        cards.push(card);
+      });
+      if (!cards.length) {
+        showMessage('No matches. Try a broader topic such as basket, capacity, or thermometer.');
+        return 0;
+      }
+      var count = cards.length;
+      var summary = document.createElement('p');
+      summary.className = 'small';
+      summary.textContent = count === 1 ? 'One match.' : count + ' matches.';
+      results.appendChild(summary);
+      cards.forEach(function (card) { results.appendChild(card); });
+      return count;
+    }
+
+    function cleanSearchUrl() {
+      try { window.history.replaceState(null, '', window.location.pathname); } catch (_) { /* optional */ }
+    }
+
+    var fragment = new URLSearchParams(window.location.hash.slice(1));
+    var legacyParams = new URLSearchParams(window.location.search);
+    var queryFromUrl = fragment.get('q');
+    var legacyQuery = legacyParams.get('q');
+    var initialQuery = (queryFromUrl || legacyQuery || '').trim().slice(0, 120);
+    if (initialQuery) {
+      searchInput.value = initialQuery;
+      renderSearch(initialQuery);
+      record('search');
+      cleanSearchUrl();
+    } else {
+      showMessage('Enter a product, feature, or question to search this publication.');
+    }
+
+    searchForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var query = searchInput.value.trim().slice(0, 120);
+      if (!query) {
+        showMessage('Enter a product, feature, or question to search this publication.');
+        return;
+      }
+      renderSearch(query);
+      record('search');
+      cleanSearchUrl();
     });
   }
 
+  var exportClicks = document.getElementById('exportClicks');
+  if (exportClicks) {
+    exportClicks.addEventListener('click', function () {
+      var rows = [['product', 'clicks']];
+      Object.keys(clicks).sort().forEach(function (product) {
+        rows.push([product, clicks[product]]);
+      });
+      download('clicks.csv', csv(rows));
+    });
+  }
+
+  var exportEvents = document.getElementById('exportEvents');
+  if (exportEvents) {
+    exportEvents.addEventListener('click', function () {
+      var rows = [['event', 'count']];
+      EVENTS.forEach(function (name) { rows.push([name, metrics.counts[name]]); });
+      download('event-counts.csv', csv(rows));
+    });
+  }
+
+  // Suggestion order and the explicitly saved decision worksheet are local
+  // reader choices, not part of the aggregate event record.
   var rank = readJSON('sn_rank', []);
   if (!Array.isArray(rank)) rank = [];
-
-  function renderRank() {
-    document.querySelectorAll('#sugTable tbody tr').forEach(function (row) {
-      var label = row.querySelector('.rank');
-      if (!label) return;
-      var position = rank.indexOf(row.getAttribute('data-sug'));
-      label.textContent = position >= 0 ? '#' + (position + 1) : '';
-    });
-  }
-
   var suggestionTable = document.getElementById('sugTable');
   if (suggestionTable) {
-    var suggestionRows = Array.prototype.slice.call(
-      suggestionTable.querySelectorAll('tbody tr[data-sug]')
-    );
-    if (!rank.length) {
-      rank = suggestionRows.map(function (row) { return row.getAttribute('data-sug'); });
+    var rows = Array.prototype.slice.call(document.querySelectorAll('#sugTable tbody tr[data-sug]'));
+    var availableIds = rows.map(function (row) { return row.getAttribute('data-sug'); })
+      .filter(function (id) { return SUGGESTION_ID.test(id); });
+    rank = rank.filter(function (id, index, all) {
+      return SUGGESTION_ID.test(id) && availableIds.indexOf(id) !== -1 && all.indexOf(id) === index;
+    });
+    availableIds.forEach(function (id) { if (rank.indexOf(id) === -1) rank.push(id); });
+
+    function renderRank() {
+      rows.forEach(function (row) {
+        var label = row.querySelector('.rank');
+        if (!label) return;
+        var position = rank.indexOf(row.getAttribute('data-sug'));
+        label.textContent = position >= 0 ? '#' + (position + 1) : '';
+      });
     }
 
     document.querySelectorAll('[data-up],[data-down]').forEach(function (button) {
@@ -182,15 +315,12 @@
     });
 
     renderRank();
-
     var exportRank = document.getElementById('exportRank');
     if (exportRank) {
       exportRank.addEventListener('click', function () {
-        var rows = ['rank,suggestion'];
-        rank.forEach(function (suggestion, index) {
-          rows.push((index + 1) + ',' + suggestion);
-        });
-        download('ranking.csv', rows.join('\n'));
+        var csvRows = [['rank', 'suggestion']];
+        rank.forEach(function (id, index) { csvRows.push([index + 1, id]); });
+        download('ranking.csv', csv(csvRows));
       });
     }
 
@@ -216,55 +346,29 @@
         var savedNote = document.getElementById('decisionSaved');
         if (savedNote) savedNote.textContent = 'A decision saved in this browser is loaded below.';
       }
-
       decisionForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        var chosen = decisionForm.elements.namedItem('chosen');
-        var why = decisionForm.elements.namedItem('why');
-        var measure = decisionForm.elements.namedItem('measure');
-        var decision = {
-          chosen: chosen ? chosen.value : '',
-          why: why ? why.value : '',
-          measure: measure ? measure.value : '',
-          savedAt: new Date().toISOString()
-        };
+        var decision = {};
+        ['chosen', 'why', 'measure'].forEach(function (name) {
+          var field = decisionForm.elements.namedItem(name);
+          decision[name] = field ? field.value : '';
+        });
         try { localStorage.setItem('sn_decision', JSON.stringify(decision)); } catch (_) { /* optional */ }
         var confirmation = document.getElementById('decisionSaved');
-        if (confirmation) confirmation.textContent = 'Saved in this browser only. Export the decision CSV to keep a separate copy.';
+        if (confirmation) confirmation.textContent = 'Saved in this browser only. Export your decision to keep a copy.';
       });
 
       var exportDecision = document.getElementById('exportDecision');
       if (exportDecision) {
         exportDecision.addEventListener('click', function () {
-          var fields = [
-            ['field', 'value'],
-            ['chosen', decisionForm.elements.namedItem('chosen').value],
-            ['why', decisionForm.elements.namedItem('why').value],
-            ['measure', decisionForm.elements.namedItem('measure').value]
-          ];
-          var csv = fields.map(function (row) {
-            return row.map(csvCell).join(',');
-          }).join('\n');
-          download('decision.csv', csv);
+          var csvRows = [['field', 'value']];
+          ['chosen', 'why', 'measure'].forEach(function (name) {
+            var field = decisionForm.elements.namedItem(name);
+            csvRows.push([name, field ? field.value : '']);
+          });
+          download('decision.csv', csv(csvRows));
         });
       }
     }
-  }
-
-  function csvCell(value) {
-    var text = String(value == null ? '' : value);
-    if (/^[\s]*[=+\-@]/.test(text)) text = "'" + text;
-    return '"' + text.replace(/"/g, '""') + '"';
-  }
-
-  function download(filename, content) {
-    var url = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }));
-    var link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(function () { URL.revokeObjectURL(url); }, 0);
   }
 })();

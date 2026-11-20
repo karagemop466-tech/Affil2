@@ -59,42 +59,48 @@
   the price column on the comparison table says "not shown, by policy" rather than being empty.</p>
 
 <h2>What we measure</h2>
-<p>Five events, defined once and used consistently:</p>
+<p>The five events below are counted locally in this browser. The measurement record stores aggregate
+  counts only; it does not retain raw search terms, a page-by-page event timeline, timestamps, referrers,
+  IP addresses, or decision text.</p>
 <table class="events">
-  <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
+  <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">What is counted</th></tr></thead>
   <tbody>
-    <tr><td><code>page_view</code></td><td>Any page loads</td><td>Which pages are reached at all</td></tr>
-    <tr><td><code>outbound_click</code></td><td>A tagged Amazon link is clicked</td>
-      <td>Which product a reader actually leaves for</td></tr>
-    <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td></tr>
-    <tr><td><code>search</code></td><td>A search query returns results</td>
-      <td>What readers look for and do not find</td></tr>
-    <tr><td><code>suggestion_rank</code></td><td>A proposal is reordered on the Decision Center</td>
-      <td>Which direction is actually preferred</td></tr>
+    <tr><td><code>page_view</code></td><td>A page loads</td><td>One aggregate increment; no page path is attached</td></tr>
+    <tr><td><code>outbound_click</code></td><td>A tagged product link is clicked</td>
+      <td>An aggregate total and product ID only</td></tr>
+    <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>A guide-load count, not proof that its text was read</td></tr>
+    <tr><td><code>search</code></td><td>A non-empty search is submitted and evaluated</td>
+      <td>One aggregate increment; the query and result text are not stored</td></tr>
+    <tr><td><code>suggestion_rank</code></td><td>A proposal is moved in the Decision Center</td>
+      <td>One aggregate increment; the chosen order is stored separately in this browser</td></tr>
   </tbody>
 </table>
-<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
-  carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
-  pixel and no tag manager on this site. A self-hosted endpoint could replace local storage later,
-  and the event names are fixed so that swap would not require editing any page &mdash; but until
-  that endpoint exists, nothing leaves your device.</p>
-<p>You can clear everything we store by clearing site data for this domain, and you can export it
-  first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
+<p>These counters are not site-wide analytics and are not sent to us. They persist in this browser's
+  local storage until the site's data is cleared, and can be exported as counts:
+  <button type="button" id="exportEvents" class="ghostbtn">Export aggregate event counts (CSV)</button>.</p>
+<p>The suggestion ranking and decision worksheet are separate local browser data. The worksheet may
+  contain text you choose to enter; it is not transmitted, and you can export or clear it from the
+  Decision Center. No server-side analytics endpoint is deployed. GitHub Pages is a static host; its
+  <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection">host documentation</a>
+  says visitor IP addresses are logged for security purposes. That host-level logging is separate
+  from the counters described here.</p>
+<p>With JavaScript enabled, the built-in header search carries a one-time query in a URL fragment,
+  which browsers do not send in the HTTP request, and clears it after the results load. A legacy URL
+  containing <code>?q=</code> or the no-JavaScript form fallback may include the query in the request
+  URL and ordinary host logs. Do not include sensitive personal information in a search.</p>
 
 <h2>Product-intent records</h2>
 <p>For each of the five submitted links, the <em>intended</em> ASIN and the <em>observed</em> redirect
-  target are stored in separate fields on the product page and are never merged. Merging them would
-  assert an intention only the owner can confirm. Each product page also carries the date the values
-  were read and a link to the official listing.</p>
+  target are stored in separate fields on the product page and are never merged. The observed target
+  is a dated observation, not confirmation of the owner's intended product or a guarantee of a stable
+  redirect. Each product page links to the direct listing used as its reference.</p>
 
 <h2>Cookies, and what we do not use</h2>
 <ul>
-  <li>No advertising cookies, no retargeting, no social pixels.</li>
-  <li>No fonts or scripts loaded from a third-party CDN &mdash; the page loads from this domain
-    only.</li>
-  <li>No account, no login, no email capture on this site.</li>
-  <li>Clicking a product link takes you to Amazon, where Amazon's own privacy policy applies and
-    Amazon's own cookies are set.</li>
+  <li>No advertising cookies, retargeting, social pixels, or fingerprinting.</li>
+  <li>No third-party analytics script, pixel, or tag manager.</li>
+  <li>No account, login, or email capture on this site.</li>
+  <li>Clicking an Amazon link leaves this site; Amazon's privacy practices then apply.</li>
 </ul>
 
 </main>

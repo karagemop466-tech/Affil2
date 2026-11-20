@@ -60,12 +60,15 @@
 </table>
 
 <h2>What is measured today, and where</h2>
-<p>Five events are defined and counted in the reader's browser: <code>page_view</code>,
+<p>Five events are counted as aggregate totals in the reader's browser: <code>page_view</code>,
   <code>outbound_click</code>, <code>guide_read</code>, <code>search</code> and
-  <code>suggestion_rank</code>. They are stored in local storage, never transmitted, and can be
-  exported to CSV from the <a href="disclosure.html">disclosure page</a>. That is useful for
-  understanding your own session; it is not a substitute for a server-side report, and this page does
-  not pretend otherwise.</p>
+  <code>suggestion_rank</code>. No raw search term or event-by-event timeline is stored, and nothing is
+  transmitted to a server. These counts describe only this browser, not site-wide traffic, and are
+  not a substitute for an authorized first-party report.</p>
+<p>Local outbound product clicks in this browser: <span id="localClicks">0</span>.
+  <button type="button" id="exportClicks" class="ghostbtn">Export local click counts (CSV)</button>
+  These are convenience counters, not Associate reports, orders, or conversions. The export is for
+  this browser only.</p>
 
 <h2>The rules this ledger follows</h2>
 <ol>

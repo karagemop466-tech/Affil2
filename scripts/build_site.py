@@ -67,9 +67,10 @@ def normalise(p, ed):
     p["tradeoff"] = ed["tradeoff"]
     p["commerce_note"] = ed["evidence_note"]
     p["listing_title"] = p["title"]
-    p["intended"] = None
-    if not p.get("observed"):
-        p["observed"] = p["asin"]
+    # `asin` and `listing` describe the direct Amazon page; `observed` is only
+    # populated when the submitted short link was actually observed reaching it.
+    # Never substitute the direct listing ID for an unconfirmed short-link target.
+    p["intended"] = p.get("intended")
     p["observed_checked"] = TODAY
     p["observed_note"] = p["observed_status"]
     p["blurb"] = p["blurb"] or ed["headline"]
@@ -113,12 +114,13 @@ def esc(s):
     return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
 def aff(p):
-    """The tagged Special Link we publish."""
-    return f"https://www.amazon.com/dp/{p['observed']}?tag={TRACKING_ID}"
+    """Tagged link to the direct listing reference; Associates testing is still pending."""
+    listing = p["listing"].rstrip("/")
+    return f"{listing}?tag={TRACKING_ID}"
 
 def plain(p):
-    """Untagged official listing, for verification."""
-    return f"https://www.amazon.com/dp/{p['observed']}"
+    """Untagged direct listing reference, separate from short-link observations."""
+    return p["listing"]
 
 def slug_of(p):
     return f"products/{p['slug']}.html"
@@ -301,16 +303,19 @@ def usda_block(p):
     if p["cat"] != "Meat Thermometers":
         return ""
     rows = "".join(
-        f'<tr><td>{esc(food)}</td><td>{esc(temp)}</td></tr>' for food, temp in USDA["rows"])
+        f'<tr><td>{esc(food)}</td><td>{esc(temp)}</td>'
+        f'<td><a href="{USDA["source_url"]}">USDA FSIS source</a></td></tr>'
+        for food, temp in USDA["rows"])
     return f"""<h2>Doneness targets come from the USDA, not from us</h2>
-<p>This is a thermometer, so the numbers that matter are food-safety numbers. We do not restate them
-  from memory. The USDA FSIS <a href="{USDA["source_url"]}">Safe Minimum Internal Temperature
-  Chart</a> (source {USDA["source_id"]}, checked {USDA["checked"]}) gives these minimums, as measured
-  with a food thermometer:</p>
+<p>This is a thermometer, so the numbers that matter are food-safety numbers. The USDA FSIS
+  <a href="{USDA["source_url"]}">Safe Minimum Internal Temperature Chart</a> (source
+  {USDA["source_id"]}, checked {USDA["checked"]}) gives these minimums, as measured with a food
+  thermometer:</p>
 <table class="usda">
   <caption><a href="{USDA["source_url"]}">USDA FSIS &mdash; Safe Minimum Internal Temperature
     Chart</a> ({USDA["source_id"]})</caption>
-  <thead><tr><th scope="col">Food</th><th scope="col">Minimum internal temperature</th></tr></thead>
+  <thead><tr><th scope="col">Food</th><th scope="col">Minimum internal temperature</th>
+    <th scope="col">Official source</th></tr></thead>
   <tbody>{rows}</tbody>
 </table>
 <p class="small">Read the chart itself before relying on any number here:
@@ -343,15 +348,16 @@ def spec_table(p):
 
 
 def intent_table(p):
-    intended = p["intended"] or "— blank: not confirmed by the owner (FLG-001)"
+    intended = p.get("intended") or "— blank: not confirmed by the owner (FLG-001)"
+    observed = p.get("observed") or "— not confirmed from the supplied short link (FLG-012)"
     return f"""<table class="intent">
-  <caption>Product-intent confirmation record. Intended and observed are separate fields and are
-    never merged.</caption>
+  <caption>Product-intent confirmation record. Intended ASIN, observed redirect target, and direct
+    listing reference are separate; an unresolved redirect is not filled from the direct listing.</caption>
   <tbody>
     <tr><th scope="row">Submitted link (as supplied)</th><td>{esc(p['submitted'])}</td></tr>
     <tr><th scope="row">Short-link token</th><td>{esc(p['token'])} (not an ASIN)</td></tr>
     <tr><th scope="row">Intended ASIN</th><td>{esc(intended)}</td></tr>
-    <tr><th scope="row">Observed redirect target</th><td>{esc(p['observed'])}</td></tr>
+    <tr><th scope="row">Observed redirect target</th><td>{esc(observed)}</td></tr>
     <tr><th scope="row">What the submitted link actually opened</th><td>{esc(p['observed_note'])}</td></tr>
     <tr><th scope="row">Official listing URL</th>
       <td><a href="{plain(p)}" rel="sponsored nofollow">{plain(p)}</a></td></tr>
@@ -402,20 +408,21 @@ BUILT = []
 
 # ---- home
 def build_home():
-    featured = [BY_ID["P-01"], BY_ID["P-03"], BY_ID["P-04"]]
+    featured = PRODUCTS
     body = f"""
 <section class="hero">
   <div class="hero-copy">
-    <p class="kicker">Issue 01 · updated {TODAY}</p>
-    <h1>Buy the air fryer that fits your counter, not the one with the loudest listing.</h1>
-    <p class="lede">Five appliances. Two categories. Every number below is read off the official
-      Amazon listing and dated, every conflict is printed instead of smoothed over, and no price or
-      star rating is quoted. Start with the decision you actually have to make.</p>
+    <p class="kicker">ShopNow Kitchen · a counter-side buying guide</p>
+    <h1>Which air fryer fits your counter — and which thermometer fits your cooking style?</h1>
+    <p class="lede">Start with the things that change your day: room to open a drawer or door, the
+      way you cook a weeknight meal, and whether you want a quick temperature check or a reading you
+      can monitor during a cook. Five submitted listings, two categories, and no hands-on product tests.</p>
     <p class="cta">
-      <a class="btn" href="guides.html">Find my air fryer</a>
-      <a class="btn ghost" href="compare.html">Compare all five</a>
+      <a class="btn" href="air-fryers.html">Compare air fryers</a>
+      <a class="btn ghost" href="meat-thermometers.html">Compare thermometers</a>
+      <a class="btn ghost" href="compare.html">See all five</a>
     </p>
-    <p class="small">Two baskets or one? Instant-read or wireless? Those are the real questions.</p>
+    <p class="small">Listing details are dated and sourced; unresolved conflicts stay open rather than guessed.</p>
   </div>
   <div class="hero-art" aria-hidden="true">
     <div class="hero-tile">{AIRFRYER_GLYPH}</div>
@@ -424,67 +431,65 @@ def build_home():
 </section>
 
 <section>
-  <h2>The three that earn a recommendation</h2>
-  <p class="muted">Not the whole market &mdash; just the five links we were asked to cover. These are
-    the three we would start with, and the reason is written on each card.</p>
+  <h2>The five products in this edition</h2>
+  <p class="muted">A small selection drawn from the links supplied for this project, not a market ranking.
+    Open a product page for listing details, fit questions, and the unresolved items we have not filled in.</p>
   <div class="grid">
     {"".join(card(p, "") for p in featured)}
   </div>
-  <p class="small"><a href="shop.html">See all five products &rarr;</a></p>
+  <p class="small"><a href="shop.html">Browse the product index &rarr;</a></p>
 </section>
 
 <section class="split">
   <div>
-    <h2>Start with your question</h2>
+    <h2>Start with a buyer question</h2>
     <ul class="linklist">
-      <li><a href="guides/basket-vs-oven.html">Basket or oven-style: what should you compare?</a>
-        <span>Footprint, doors, and how you load it.</span></li>
-      <li><a href="guides/capacity-checklist.html">A no-hype checklist for comparing capacity</a>
-        <span>Quarts are not servings.</span></li>
-      <li><a href="guides/cleanup-counter-space.html">Cleanup and counter-space trade-offs</a>
-        <span>Dishwasher-safe is not the same as easy.</span></li>
-      <li><a href="guides/instant-vs-wireless.html">Instant-read or wireless thermometer?</a>
-        <span>Speed at the grill versus leaving the room.</span></li>
-      <li><a href="guides/thermometer-accuracy.html">How to read accuracy claims</a>
-        <span>What &plusmn;0.5&nbsp;&deg;F and NIST actually mean.</span></li>
+      <li><a href="guides/basket-vs-oven.html">Basket or oven-style air fryer: what should you compare?</a>
+        <span>Footprint, doors, drawers, and the way you load it.</span></li>
+      <li><a href="guides/capacity-checklist.html">How should you compare air-fryer capacity?</a>
+        <span>Check the interior shape and your regular meals, not a guessed serving count.</span></li>
+      <li><a href="guides/cleanup-counter-space.html">What should you check about cleanup and counter space?</a>
+        <span>Read the care instructions and measure the place it will live.</span></li>
+      <li><a href="guides/instant-vs-wireless.html">Instant-read or wireless thermometer: which workflow fits?</a>
+        <span>Choose by when and where you want a reading.</span></li>
+      <li><a href="guides/thermometer-accuracy.html">How do you assess a thermometer accuracy claim?</a>
+        <span>Separate a seller-stated tolerance from a test you can inspect.</span></li>
     </ul>
   </div>
   <aside class="panel">
-    <h3>Why you can trust the numbers</h3>
+    <h3>Before you add it to the counter</h3>
     <ol class="tight">
-      <li>Every specification is read from the official listing and stamped with a date.</li>
-      <li>When a listing contradicts itself, both figures are printed. Nothing is averaged.</li>
-      <li>Prices and ratings are never copied &mdash; Amazon policy on price display, and it keeps
-        us honest.</li>
-      <li>We have not cooked with these units. The site says so instead of implying otherwise.</li>
+      <li>Measure width, depth, height, and the path a door or drawer needs.</li>
+      <li>Write down a meal or cooking task you want the appliance to handle.</li>
+      <li>Check the live listing and the maker's manual for the details that matter to that task.</li>
+      <li>If two listing sections disagree, read the open note before deciding which figure to use.</li>
     </ol>
-    <p class="small"><a href="how-we-choose.html">How we choose and what we won't claim &rarr;</a></p>
+    <p class="small"><a href="how-we-choose.html">What these pages can and cannot tell you &rarr;</a></p>
   </aside>
 </section>
 
 <section class="panel scallop">
-  <h2>Every product at a glance</h2>
-  <p class="muted">The table a buyer needs: what it is, who it suits, and the one caveat that matters.
-    Price and rating columns are deliberately absent.</p>
+  <h2>All five, side by side</h2>
+  <p class="muted">Use this as a first comparison, then follow the product-page source links and fit questions.
+    It is not a lab test or a ranking.</p>
   {overview_table()}
 </section>
 
 <section>
-  <h2>What readers ask us most</h2>
+  <h2>A few questions worth asking</h2>
   <div class="faq">
-    <details><summary>Do you show prices?</summary><p>No. Amazon's Program Policies allow a site to
-      show price and availability only when Amazon serves the link or the data comes through the
-      Product Advertising or Creators API. This site does neither, so prices stay on Amazon where
-      they are always current. That is also why nothing here is ever out of date on price.</p></details>
-    <details><summary>Which one would you buy?</summary><p>It depends on one thing: do you cook two
-      things at once. If yes, the dual-basket Chefman. If you cook in batches and want the biggest
-      single basket, the 8-quart Chefman. If you want an oven that air-fries, the Emeril &mdash; and
-      only if you have 16.9 inches of depth.</p></details>
-    <details><summary>Are the star ratings on Amazon reliable?</summary><p>They are real, and they are
-      not shown here &mdash; partly policy, partly because a rating summarises other people's
-      kitchens. The specification table is more useful for your counter.</p></details>
-    <details><summary>How current is this?</summary><p>Every listing was re-read on {TODAY}. Listings
-      change; the date is printed on each product page so you can judge.</p></details>
+    <details><summary>Can I see today's price here?</summary><p>No. This publication does not display
+      prices or availability. Follow a clearly labelled listing link and check the current details
+      on Amazon before buying.</p></details>
+    <details><summary>What should I compare first?</summary><p>Measure the space and clearances, then
+      match the interior or thermometer workflow to a meal you cook often. Features matter after those
+      practical fit questions.</p></details>
+    <details><summary>Are these hands-on reviews?</summary><p>No. The product pages summarize seller-stated
+      listing details and questions to check in the maker's instructions. No appliance or thermometer
+      was independently tested for this site.</p></details>
+    <details><summary>How current are the listing details?</summary><p>The product pages display the
+      date the source pages were checked. Listings change; revisit the linked listing and manual for
+      current details.</p></details>
   </div>
 </section>
 
@@ -562,7 +567,7 @@ def build_category(catfile, cat, headline, intro, guides_, picks):
 <h1>{esc(headline)}</h1>
 <p class="lede">{intro}</p>
 {box_items}
-<h2>Which one, in one line each</h2>
+<h2>The fit question, one line each</h2>
 <ul class="verdicts">
 {verdict_items}
 </ul>
@@ -580,13 +585,19 @@ def build_category(catfile, cat, headline, intro, guides_, picks):
 # ---- product page
 def build_product(p):
     others = [x for x in PRODUCTS if x["id"] != p["id"] and x["cat"] == p["cat"]]
+    # The retailer ID describes the directly checked listing, not a short-link redirect.
     og = ('<meta property="product:retailer_item_id" content="'
-          + p["observed"] + '">')
+          + p["asin"] + '">') if p.get("asin") else ""
+    observation_note = ""
+    if not p.get("observed"):
+        observation_note = ('<p class="small">The supplied short link did not reproduce this direct '
+                            'listing in the latest recorded check; the listing reference is separate '
+                            'from a confirmed redirect (FLG-012).</p>')
     body = f"""
 {breadcrumb([("Home", "index.html"), (p['cat'], p['catfile']), (p['brand'], None)], "../")}
 <div class="pdp-head">
   <div>
-    <p class="kicker">{esc(p['cat'])} · {p['id']} · verified {TODAY}</p>
+    <p class="kicker">{esc(p['cat'])} · {p['id']} · listing reference checked {TODAY}</p>
     <h1>{esc(p['headline'])}</h1>
     <p class="lede">{esc(p['blurb'])}</p>
   </div>
@@ -600,9 +611,9 @@ def build_product(p):
   <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
      data-event="outbound_click">Check the live price on Amazon (paid link)</a>
 </div>
-<p class="small">We do not print the price here &mdash; Amazon's Program Policies only permit a site
-  to show price and availability when Amazon serves the link or the data comes through their API.
-  The button opens the official listing, tagged with our Associate ID.</p>
+<p class="small">This paid link opens the direct listing reference, tagged with the supplied Associates ID.
+  The tagged link has not yet been tested in the enrolled account.</p>
+{observation_note}
 
 <h2>Is this the right one for you?</h2>
 <div class="qa">
@@ -660,9 +671,23 @@ def build_product(p):
 # ---- compare
 def build_compare():
     cols = PRODUCTS
-    def row(label, fn):
-        cells = "".join(f"<td>{fn(p)}</td>" for p in cols)
-        return f'<tr><th scope="row">{label}</th>{cells}</tr>'
+    def row(label, fn, source="listing"):
+        cells = []
+        for p in cols:
+            value = fn(p)
+            if source == "policy":
+                cite = (f'<div class="srcline">Policy source: '
+                        f'<a href="{source_url("S02")}">Amazon Program Policies §2(b), §6(t)</a></div>')
+            elif source == "editorial":
+                cite = (f'<div class="srcline">Editorial fit note based on listed facts — verify '
+                        f'on the listing: <a href="{plain(p)}" rel="sponsored nofollow">Amazon listing</a></div>')
+            elif source == "listing":
+                cite = (f'<div class="srcline">Listing source: '
+                        f'<a href="{plain(p)}" rel="sponsored nofollow">Amazon listing</a></div>')
+            else:
+                cite = ""
+            cells.append(f"<td>{value}{cite}</td>")
+        return f'<tr><th scope="row">{label}</th>{"".join(cells)}</tr>'
 
     def spec(p, key, other="— <span class=\"unverified\">not stated on the listing</span>"):
         f = p["fields"].get(key)
@@ -674,6 +699,7 @@ def build_compare():
         return txt
 
     NOCAP = "— <span class=\"unverified\">n/a, not a capacity appliance</span>"
+    NOTSTATED = "— <span class=\"unverified\">not stated in the fetched listing text</span>"
 
     head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
                    f'<br><span class="th-sub">{p["id"]} · {esc(p["headline"])}</span></th>' for p in cols)
@@ -684,23 +710,22 @@ def build_compare():
   size or how you cook would be guessing. This table gives you the same facts we have, in the same
   rows, so you can decide. Blank means the listing does not say.</p>
 <table class="compare">
-  <caption>Aligned by field, so a value is always compared against the same value. Read from the
-    official listings on {TODAY}.</caption>
+  <caption>Listing facts link to their official source in each product column. "Best for" and "The catch" are editorial fit notes, not seller claims. Checked {TODAY}.</caption>
   <thead><tr><th scope="col">Field</th>{head}</tr></thead>
   <tbody>
     {row("Category", lambda p: esc(p["cat"]))}
-    {row("Best for", lambda p: esc(p["best_for"]))}
-    {row("The catch", lambda p: esc(p["tradeoff"]))}
+    {row("Best for", lambda p: esc(p["best_for"]), source="editorial")}
+    {row("The catch", lambda p: esc(p["tradeoff"]), source="editorial")}
     {row("Capacity", lambda p: spec(p, "capacity", NOCAP))}
-    {row("Temperature range", lambda p: spec(p, "temperature", NOCAP))}
+    {row("Temperature range", lambda p: spec(p, "temperature", NOTSTATED))}
     {row("Power / battery", lambda p: spec(p, "power", "see battery row"))}
-    {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOCAP))}
-    {row("Weight", lambda p: spec(p, "weight", NOCAP))}
-    {row("Model on listing", lambda p: spec(p, "model", "— not on the fetched text"))}
-    {row("Price", lambda p: "— not shown, by policy")}
-    {row("Star rating", lambda p: "— not shown, by policy")}
-    {row("Official listing", lambda p: f'<a href="{plain(p)}" rel="sponsored nofollow">untagged</a>')}
-    {row("Buy link", lambda p: f'<a href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p["id"]}" data-event="outbound_click">Amazon (paid link)</a>')}
+    {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOTSTATED))}
+    {row("Weight", lambda p: spec(p, "weight", NOTSTATED))}
+    {row("Model on listing", lambda p: spec(p, "model", NOTSTATED))}
+    {row("Price", lambda p: "— not shown, by policy", source="policy")}
+    {row("Star rating", lambda p: "— not shown, by policy", source="policy")}
+    {row("Official listing", lambda p: f'<a href="{plain(p)}" rel="sponsored nofollow">untagged listing source</a>', source=None)}
+    {row("Buy link", lambda p: f'<a href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p["id"]}" data-event="outbound_click">Amazon (paid link)</a>', source=None)}
   </tbody>
 </table>
 <h2>How to read this table</h2>
@@ -725,225 +750,190 @@ def build_compare():
 # ---- guides
 GUIDES = [
     dict(slug="basket-vs-oven", title="Basket or oven-style air fryer: what should you compare?",
-         sub="Form factor decides footprint, loading, and what fits. Start there, not with wattage.",
+         sub="Drawer versus door affects access, placement, and how you load food. Measure before comparing features.",
          kicker="Buying guide · 6 min read", products=["P-01", "P-02", "P-03"],
-         intro="""The single biggest fork in the road is not brand, capacity or wattage. It is whether
-         you want a drawer you pull out or a door you open. That choice decides how the appliance
-         sits on your counter, how you load it, how you clean it, and whether you will still be using
-         it in a year.""",
+         intro="""A useful first question is how the appliance opens: a drawer to pull, or a door to swing. That
+         affects where it can sit and how you load it. Shape alone does not say which one will cook
+         better for your meals.""",
          sections=[
-            ("What actually differs", """A basket fryer is a deep drawer over a heating element and a
-            fan. You pull the drawer, dump food in, push it back. An oven-style unit is a box with
-            racks and a door, and it does the same job with more usable flat area and much more
-            vertical clearance. The basket wins on speed and simplicity; the oven wins on volume and
-            on foods that need to lie flat."""),
-            ("Measure the footprint, including the swing", """The oven-style Emeril here is 16.9 inches
-            deep. The two basket units are 13.4 and 12.75 inches deep. Depth is what usually
-            disqualifies a counter, because the wall behind and the air gap above both have to be
-            accounted for. A French-door oven also needs room in front for the doors to open, which
-            is easy to forget when you are measuring a gap between a toaster and a coffee maker."""),
-            ("Think about how you load it, and how you clean it", """Pulling a drawer out towards you is
-            one movement. Opening two doors, sliding a rack out, and lifting a tray is several. The
-            basket units are lighter and easier to move; the 26-quart oven weighs 26.5 pounds and is
-            realistically going to stay where you put it. If you clean in the sink, a removable
-            nonstick basket is simpler than a stainless cavity and racks."""),
-            ("Where each one wins", """Choose the dual-basket unit if you routinely cook a main and a
-            side together and want them to finish together. Choose the single 8-quart basket if you
-            cook one thing at a time in quantity and want the simplest possible operation. Choose the
-            oven if you also want to roast, toast, and rotisserie, and you have the counter depth and
-            the appetite for a 26.5-pound appliance that stays put."""),
+            ("What actually differs", """A basket model uses a removable drawer or basket; an oven-style model has a door and may include
+            racks or trays. Check the exact configuration on the listing and manual. Compare the access
+            route, removable parts, and where you will set down hot food; we have not tested cooking
+            speed or results."""),
+            ("Measure the footprint, including the swing", """The current records list P-02 at 16.9 inches deep, P-01 at 13.38 inches, and P-03 at 12.75 inches.
+            Recheck those values on each live listing and use the maker's manual for clearance. Include
+            the wall behind it, space above it, handles, and the path a door or drawer needs."""),
+            ("Think about how you load it, and how you clean it", """A drawer and a door-and-rack layout involve different loading and unloading steps. Check which
+            pieces are removable and how the manual says to clean them. If you plan to store the unit
+            between uses, check the listing's weight and the storage space needed for its accessories."""),
+            ("Map the layout to your meals", """If you often cook two things at once, check whether separate
+            baskets and their timing controls suit that routine. If one larger cooking area matters
+            more, compare the listed basket dimensions. If you want oven modes or accessories, confirm
+            exactly what the current listing and manual include."""),
          ],
-         verdict="""Measure your counter depth first, then decide between a drawer and a door. If
-         both fit, pick by what you cook: two things at once means two baskets, one big tray of
-         something means a single basket or an oven."""),
+         verdict="""Measure the usable space and clearances, then compare how each model opens and what fits inside.
+         Use a regular meal to decide whether one area, separate baskets, or listed oven accessories
+         matter to you."""),
     dict(slug="capacity-checklist", title="A no-hype checklist for comparing air fryer capacity",
-         sub="Quarts describe a cavity, not a meal. Six checks before any number convinces you.",
+         sub="A capacity label describes volume, not a serving count. Check the usable shape and the food you make.",
          kicker="Buying guide · 5 min read", products=["P-01", "P-02", "P-03"],
-         intro="""Capacity numbers are the easiest thing to compare and the least useful thing to
-         decide on. A quart is a volume, and volume tells you nothing about whether a whole chicken
-         fits, whether chips can sit in one layer, or whether two baskets are better than one big
-         one. Here is what to check instead.""",
+         intro="""Capacity is one clue, but a volume label alone does not show the shape of the cooking area or how
+         your usual food will fit. Check the interior layout, maker's fit examples, and the appliance's
+         outside dimensions before deciding what the number means for your kitchen.""",
          sections=[
             ("1. Total versus usable", """Six quarts split into two three-quart baskets is not the same
             as one six-quart basket. The split gives you two separate cooks; the single basket gives
             you one bigger flat area. Neither is better in the abstract &mdash; they suit different
             meals."""),
-            ("2. Flat area, not volume", """Crisping depends on surface contact and airflow. A deep
-            basket that holds a lot of volume can still only crisp one layer of food. Ask how much
-            fits in a single layer, not how much fits at all."""),
-            ("3. What the listing says fits", """Listings often state concrete fits: a 12-inch pizza,
-            a 6-pound chicken. Those are more actionable than a quart figure. The Emeril listing
-            states it fits a 12-inch pizza and can rotisserie a 6-pound chicken, which tells you more
-            about its usable size than the 26-quart headline does."""),
+            ("2. Flat area, not volume", """A volume figure does not tell you the usable width or arrangement of a basket or tray. Look for
+            interior dimensions or maker-stated fit examples; if the listing does not give them, leave
+            the fit question open rather than inferring from the quart figure."""),
+            ("3. What the listing says fits", """A model's listing may give a fit example. The current P-02 listing mentions a 12-inch pizza and
+            rotisserie for a 6-pound chicken. Treat those as seller-stated examples, check the live
+            listing and manual, and do not assume they describe every food or rack position."""),
             ("4. Physical size on the counter", """A bigger cavity usually means a bigger box. Compare
             dimensions before you talk yourself into capacity you do not have room for. The 26-quart
             oven is 16.9 inches deep; the 8-quart basket is 12.75."""),
-            ("5. Your household, honestly", """Two people who cook one protein and one vegetable need
-            two small zones, not 26 quarts. Four people who batch-cook need volume. Write down what
-            you cooked last week before you decide."""),
-            ("6. Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
-            6 liters in its capacity field. Six liters is about 6.3 US quarts, so this is almost
-            certainly a label slip rather than a different product &mdash; but it is the kind of slip
-            that makes a spec table worth reading rather than skimming. It is flagged as FLG-034."""),
+            ("5. Your household, honestly", """Do not convert the label into a guessed number of diners. Write down a meal you cook often, the
+            largest ingredient or dish, and whether you would rather cook in one area, separate zones,
+            or batches."""),
+            ("6. Watch the units", """The P-01 listing uses different units in its title and capacity field: 6 quarts and 6 liters.
+            Both statements are retained in the record; this site does not decide which unit to prefer.
+            See FLG-034."""),
          ],
-         verdict="""Write down three numbers before you shop: the widest single item you cook, how
-         many separate things you cook at once, and your counter depth. Then ignore quart totals that
-         do not help with those three."""),
+         verdict="""Write down the largest item you expect to cook, how many different foods you prepare at once, and
+         your usable counter space. Compare those needs with the maker's listed dimensions and layout."""),
     dict(slug="cleanup-counter-space", title="How to assess cleanup and counter-space trade-offs",
-         sub="Dishwasher-safe describes a part. It does not describe your evening.",
+         sub="Dishwasher-safe applies to named parts. Read the care instructions and plan where they will dry.",
          kicker="Buying guide · 5 min read", products=["P-01", "P-02", "P-03"],
-         intro="""Nobody buys an air fryer for the washing up, and almost everybody under-estimates it.
-         The appliance you keep using is the one whose cleanup fits the way you already load a
-         dishwasher. Counter space works the same way: it is a permanent cost you pay every day, not
-         a one-off at checkout.""",
+         intro="""Cleanup and storage are easy to overlook when comparing feature lists. Check which parts touch
+         food, what the manual says about cleaning, and whether the appliance has a usable place on your
+         counter or in a cupboard.""",
          sections=[
-            ("Count the parts that touch food", """A single basket with a flat tray is two pieces. A
-            dual-basket unit with two removable baskets and two trays is four. A French-door oven adds
-            racks, a bake pan, a drip tray and a crisper basket. More parts is more sink."""),
-            ("Check what the listing actually promises", """The 8-quart Chefman listing says the
-            non-stick basket and the flat frying tray are both top-rack dishwasher safe. The
-            dual-basket Chefman says the removable non-stick coated baskets are dishwasher safe. The
-            oven does not make a dishwasher claim about its cavity, and it would not be realistic if
-            it did."""),
-            ("Weight decides where it lives", """At 26.5 pounds the Emeril is a fixture. The two basket
-            units are around 13 pounds, which is heavy but movable. If you plan to put the appliance
-            away between uses, weight is the number that decides whether that actually happens."""),
-            ("Measure depth, swing and clearance together", """Depth alone is not enough. Add the air
-            gap behind, the headroom needed above the vents, and &mdash; for a door-style oven &mdash;
-            the space the doors occupy when open. Write all four numbers down before you move
-            anything on the counter."""),
-            ("The one-question test", """Ask where the appliance will sit when it is not in use. If
-            the answer is "in a cupboard", check the weight and the door swing again. Most appliances
-            that end up in cupboards end up there permanently."""),
+            ("Count the parts that touch food", """Count the removable food-contact parts named in each listing and manual: baskets, trays, racks,
+            pans, or drip trays. Check where they will dry and how they will be stored. Do not assume
+            an accessory pictured on a page is included unless the listing says so."""),
+            ("Check what the listing actually promises", """The current P-03 listing states that the basket and flat tray are top-rack dishwasher safe; the
+            P-01 listing states that its removable baskets are dishwasher safe. Check the live listing
+            and manual for each part and do not infer a care instruction for a surface the maker does
+            not mention."""),
+            ("Weight decides where it lives", """If you plan to put the appliance away between uses, check its listed weight and the storage space
+            needed for accessories. The P-01 weight is not confirmed in the fetched listing record; do
+            not infer it from the other basket models."""),
+            ("Measure depth, swing and clearance together", """Compare the appliance's listed dimensions with your usable counter space, then follow the maker's
+            manual for ventilation clearances. Include room for a door to open or a drawer to slide out."""),
+            ("The one-question test", """Ask where the appliance will sit when not in use. If you plan to store it, check the weight,
+            handling instructions, door or drawer access, and space for accessories."""),
          ],
-         verdict="""Pick the appliance whose cleaning you will actually do on a Tuesday night, in the
-         space you actually have, at the weight you can actually lift."""),
+         verdict="""Compare the removable parts and care instructions, then measure the counter or storage space
+         before choosing a layout."""),
     dict(slug="multi-function-questions", title="Questions to ask before buying a multi-function kitchen appliance",
-         sub="Every extra preset is a control, a part and a failure point. Which three will you use?",
+         sub="A long feature list is useful only if it matches tasks you do. Which three would you use?",
          kicker="Buying guide · 5 min read", products=["P-02", "P-03"],
-         intro="""Multi-function appliances sell on the functions you might use. The honest test is
-         narrower: name the three you will use every week, and check that those three are good. The
-         rest is storage, controls and cleaning you did not ask for.""",
+         intro="""Start with the meals or tasks you repeat. For each one, check whether the product listing and
+         manual explain the mode and accessories you would need. Count the storage and cleaning steps
+         before treating a long list of functions as useful.""",
          sections=[
-            ("Name your three functions", """Air fry, roast, reheat &mdash; those are the three most
-            people actually use. If a function is not on your list, it should not move the decision,
-            no matter how many presets it adds to the panel."""),
-            ("Distinguish functions from presets", """A function is a cooking mode. A preset is a
-            saved temperature and time for one food. Twenty-four presets can still be three functions.
-            The Emeril listing is a good example: it advertises 24 one-touch presets, and the modes
-            behind them are air fry, bake, broil, dehydrate, roast, slow cook, toast and reheat."""),
+            ("Name your three functions", """Write down the three modes you expect to use in your own kitchen. Then check whether each one is
+            named in the current listing and described in the manual. Do not assume a preset is a
+            separate cooking function."""),
+            ("Distinguish functions from presets", """A function label and a preset count are different kinds of listing detail. Check what each preset
+            does in the manual rather than assuming a larger count means more useful modes. The P-02
+            listing has a preset-count conflict; see FLG-009."""),
             ("Check whether accessories are included or extra", """Rotisserie spits, crisper baskets
             and bake pans are often the difference between a function being usable and being a
             promise. The Emeril listing names six included components: rack, bake pan, drip tray,
             crisper basket, rotisserie spit, fetch tool. Its title says six accessories and its
             configuration field says seven &mdash; flagged as FLG-031."""),
-            ("Ask what breaks first", """More functions means more sensors, more moving parts and more
-            to clean. A four-preset basket fryer has almost nothing to go wrong. A 26-quart oven with
-            a rotisserie motor has considerably more."""),
-            ("Check the manual before you trust a preset count", """Where a listing contradicts itself
-            &mdash; 24 presets in the title, 25 in the bullet, 400&nbsp;&deg;F in the spec field and
-            450&nbsp;&deg;F in the title &mdash; the manual is the tie-breaker, not the marketing
-            copy."""),
+            ("Count accessories and cleanup steps", """List the accessories the seller says are included,
+            verify them in the current listing, and check their care instructions. If a function needs
+            a part that is not listed, leave that detail open instead of assuming it comes in the box."""),
+            ("Check the manual before you trust a preset count", """Where a listing contradicts itself, record both statements and check the model's instructions or
+            ask the maker. This site's open P-02 and P-03 conflicts remain flagged rather than resolved
+            by choosing a convenient value."""),
          ],
-         verdict="""Write the three functions you will use weekly. If the appliance is not clearly
-         good at those three, the rest of the feature list is decoration."""),
+         verdict="""Write down the tasks you want the appliance to handle, then verify the mode and any required
+         accessory in the maker's instructions before deciding."""),
     dict(slug="instant-vs-wireless", title="Instant-read or wireless thermometer: which do you actually need?",
-         sub="Speed in your hand versus the freedom to walk away. Two different products.",
+         sub="Compare a quick spot check with a leave-in monitoring workflow, subject to each model's instructions.",
          kicker="Buying guide · 6 min read", products=["P-04", "P-05"],
-         intro="""These two thermometers are not competitors. One is a tool you hold for one second;
-         the other is a monitoring system you leave in the meat for hours. Buying the wrong one is
-         the most common mistake in this category, and it has nothing to do with accuracy.""",
+         intro="""These are different workflows. An instant-read tool is used when you pause to take a reading; a
+         wireless probe is designed to stay in during a cook only as its maker's instructions allow.
+         Compare setup, connectivity, probe care, and charging before choosing.""",
          sections=[
-            ("What an instant-read is for", """Spot checks. You open the grill, stab the thickest part,
-            read a number, and decide. It is fast, it needs no app, and it works when the WiFi does
-            not. The ThermoMaven here claims a 1-second response, &plusmn;0.5&nbsp;&deg;F, and a
-            572&nbsp;&deg;F upper range, and it ships with a calibration certificate."""),
-            ("What a wireless system is for", """Long cooks you do not want to babysit. You insert
-            probes, close the lid, and watch from inside the house. The CHEF iQ here uses three
-            probes into one hub with WiFi range, and adds guided cooking and rest timers in the
-            app."""),
-            ("The honest cost of wireless", """An app, a hub, a charge, and a dependency. If any of
-            those three is a problem for you, a wireless thermometer is the wrong purchase even
-            though it is the more capable one. The listing says up to 50 hours per charge on the
-            hub."""),
-            ("Accuracy claims are claims", """&plusmn;0.5&nbsp;&deg;F and the NIST and NSF references
-            are statements made on the listing, not independent test results. Both units here are
-            sold on accuracy; neither listing links a test report. This site has not tested either
-            one."""),
-            ("What number actually matters for safety", """USDA's Food Safety and Inspection Service
-            publishes minimum internal temperatures: 145&nbsp;&deg;F with a three-minute rest for
-            beef, pork, veal and lamb steaks, chops and roasts; 160&nbsp;&deg;F for ground meats;
-            165&nbsp;&deg;F for all poultry, leftovers and casseroles; 145&nbsp;&deg;F for fish and
-            shellfish. Both thermometers here read well past those numbers. Precision beyond a degree
-            is a cooking preference, not a safety requirement."""),
+            ("What an instant-read is for", """An instant-read thermometer is for a reading taken at the time you choose to check. The P-04
+            listing states a 1-second response claim, an accuracy tolerance, and a calibration
+            certificate in the box. These are seller statements, not results from our own test; check
+            the current listing and the instructions."""),
+            ("What a wireless system is for", """The P-05 listing describes three probes, a hub, and app connectivity. Check the current listing
+            and manual for connection limits, compatible devices, cooking instructions, and what
+            happens if the connection is lost."""),
+            ("The honest cost of wireless", """A wireless setup may involve an app, a hub, and charging. The P-05 battery statements conflict
+            in the listing (FLG-008); check current instructions and do not rely on either duration
+            until the conflict is resolved."""),
+            ("Accuracy claims are claims", """The P-04 listing includes an accuracy tolerance and references NIST and NSF. We have not seen
+            supporting certification documents or an independent test report for either thermometer;
+            treat those words as seller claims, not our test result."""),
+            ("What number actually matters for safety", """Use the USDA FSIS chart linked on this page for food-safety targets and follow the thermometer
+            maker's instructions for probe placement. Do not treat a thermometer listing as food-safety
+            guidance or infer performance from its maximum temperature rating."""),
          ],
-         verdict="""If you cook steaks and chicken breasts and want a number now, buy the instant-read.
-         If you smoke or roast for hours and want to leave the room, buy the wireless system. If you
-         do both, they are not substitutes for each other."""),
+         verdict="""Choose by the workflow you need: a spot-check reading or a leave-in probe supported by the maker's
+         instructions. If you need both workflows, compare the separate products on their own terms."""),
     dict(slug="thermometer-accuracy", title="How to assess thermometer accuracy claims",
-         sub="What &plusmn;0.5 °F, NIST and NSF mean on a listing — and what they do not.",
+         sub="Separate a seller-stated accuracy tolerance from a test report, calibration procedure, and certification document.",
          kicker="Buying guide · 5 min read", products=["P-04", "P-05"],
-         intro="""Accuracy is the one specification you cannot check by reading harder. A listing can
-         say &plusmn;0.5&nbsp;&deg;F and reference NIST and NSF, and every word of that can be true
-         while telling you less than you think. Here is a calmer way to read it.""",
+         intro="""A listing's accuracy tolerance is a seller-stated claim, not independent test data. Check what
+         range and conditions it covers, whether supporting documentation is available, and how the
+         maker says to check or calibrate the instrument.""",
          sections=[
-            ("Separate the claim from the evidence", """&plusmn;0.5&nbsp;&deg;F is a claim about
-            tolerance. NIST and NSF appearing in a specification-met field is a claim about
-            certification. Neither is a test report, and no listing here links one. That does not make
-            them false &mdash; it makes them unaudited by us, which is a different statement."""),
-            ("Know what the certifications cover", """NIST is a standards body; a reference to it
-            usually means traceability of calibration rather than a consumer-product approval. NSF
-            covers public health and sanitation standards for food equipment. A listing that says
-            "NIST and NSF certified" without saying what was certified leaves both open. The
-            ThermoMaven listing ships a calibration certificate in the box, which is the most concrete
-            artefact on offer here."""),
-            ("Look for a calibration path", """A thermometer you can verify is worth more than one you
-            have to trust. The ice-water test &mdash; a slurry of ice and water, which sits at
-            32&nbsp;&deg;F at sea level &mdash; will tell you whether a unit is reading plausibly. A
-            unit that ships with a certificate and a stated calibration method is easier to keep
-            honest."""),
-            ("Check resolution separately from accuracy", """Resolution is how many digits the display
-            shows; accuracy is how close the number is to the truth. A 0.1&deg; display with
-            &plusmn;0.5&nbsp;&deg;F accuracy is not a 0.1&deg; instrument. The ThermoMaven listing
-            states both, which makes the distinction visible."""),
-            ("Match the tool to the number you need", """USDA's minimum internal temperatures are
-            published in whole degrees: 145, 160, 165. If you are cooking to those targets, a
-            thermometer that is within a degree is comfortably sufficient. Precision beyond that is
-            about repeatability and preference, not safety."""),
+            ("Separate the claim from the evidence", """Read an accuracy tolerance separately from response time, resolution, and calibration. The P-04
+            listing states a tolerance, but this site has not independently measured it or seen a test
+            report. The P-05 listing does not provide an equivalent result in the material recorded here."""),
+            ("Ask what a certification statement covers", """The P-04 seller listing uses the words NIST and
+            NSF, and states that a calibration certificate is included. We have not inspected a
+            certificate or verified what the seller's certification wording applies to. Ask the maker
+            for the scope and supporting documentation before treating the wording as independent proof."""),
+            ("Read the calibration instructions", """Check the maker's instructions for calibration or
+            verification steps, conditions, and what to do if a reading is outside tolerance. A
+            certificate mentioned in a listing is not the same as a procedure we have independently
+            checked."""),
+            ("Check resolution separately from accuracy", """Do not treat the number of displayed digits or a fast response-time claim as evidence of accuracy.
+            Compare those fields separately and check the exact conditions attached to the stated
+            tolerance."""),
+            ("Use an official food-safety source", """For cooking targets, use the USDA FSIS chart linked on
+            this page. A seller's accuracy number is not a food-safety target; follow the chart and the
+            thermometer maker's instructions for placement and use."""),
          ],
-         verdict="""Read the claim, then look for the certificate. If there is no certificate you can
-         see, treat the number as a claim and verify it yourself with an ice-water test."""),
+         verdict="""Read the exact tolerance and conditions, look for the maker's supporting documentation, and use
+         official food-safety guidance for cooking targets. We have not independently tested either model."""),
     dict(slug="air-fryer-thanksgiving", title="Air fryer at Thanksgiving: what actually fits",
-         sub="A 12-inch pizza claim tells you more about usable size than a quart figure does.",
+         sub="Use the listed fit examples as checks for a particular meal; do not extrapolate them to other foods.",
          kicker="Seasonal guide · 4 min read", products=["P-02", "P-01", "P-03"],
-         intro="""Thanksgiving is the one day a year when counter space and usable volume both
-         matter at once. The useful question is not how many quarts the appliance has &mdash; it is
-         which of the day's jobs it can take off the oven, and which it cannot.""",
+         intro="""Planning a holiday meal? List the dishes that need oven space, then check which tasks a
+         countertop appliance's current listing and manual actually support. These are planning prompts,
+         not a claim about what is popular or a tested serving recommendation.""",
          sections=[
-            ("What a countertop oven can take off your hands", """Sides and reheats are the realistic
-            wins: a tray of roasted vegetables, dinner rolls, a reheat of something that came out of
-            the oven too early. The Emeril listing states it fits a 12-inch pizza and can rotisserie a
-            6-pound chicken, which is a concrete statement about usable interior size."""),
-            ("What it cannot", """A whole turkey is not going in any of these. Be sceptical of any
-            countertop appliance marketing that implies otherwise. The Emeril's stated rotisserie
-            capacity is a 6-pound chicken, which is a bird, not a feast bird."""),
-            ("Where a basket fryer earns its counter space", """Small batches that need to be hot and
-            crisp at the moment they hit the table: sprouts, potatoes, a last-minute tray of
-            something. The dual-basket Chefman lets you run two of those at once and finish them
-            together, which is more useful on the day than a bigger single basket."""),
-            ("Check the circuit before the menu", """Two 1700-watt appliances on one kitchen circuit
-            plus an oven is a tripped breaker, not a crispier sprout. Wattage is worth knowing before
-            the day, which is why it is in the specification table &mdash; and why the 8-quart
-            Chefman's contradictory 1700&nbsp;W / 1000&nbsp;W figures are flagged as FLG-017."""),
+            ("What a countertop oven can take off your hands", """The current P-02 listing gives fit examples including a 12-inch pizza and a 6-pound rotisserie
+            chicken. Check the current listing and manual before mapping those examples to a holiday
+            dish; they are seller statements, not our capacity test."""),
+            ("Do not extrapolate a fit example", """A listed 6-pound chicken fit does not confirm that a
+            whole turkey or another dish will fit. Measure your food and check the usable interior and
+            manual before planning a meal around it."""),
+            ("Check your batch plan", """If you are considering the P-01 dual-basket layout, check the
+            listing's separate-basket and timing claims against the number of dishes you want to cook.
+            We have not tested how quickly a particular holiday side cooks in this unit."""),
+            ("Check power and setup", """Verify the current listing's voltage and wattage, and follow the
+            appliance manual and your home's electrical guidance. The P-03 listing has conflicting
+            power values (FLG-017), so this page does not choose one."""),
          ],
-         verdict="""Use the countertop appliance for sides and reheats, keep the bird in the oven, and
-         check what else is on the circuit before you plug in a second 1700-watt unit."""),
+         verdict="""Plan around verified dimensions and maker-stated fit examples. Confirm clearance, instructions,
+         and any power details in the live listing and manual before the meal."""),
     dict(slug="small-kitchen-air-fryer", title="Air fryer for a small kitchen: the three measurements that decide it",
-         sub="Depth, door swing and where it lives when it is not in use.",
+         sub="Measure depth, access, and the storage spot before comparing features.",
          kicker="Buying guide · 4 min read", products=["P-03", "P-01", "P-02"],
-         intro="""In a small kitchen the constraint is never features. It is the 13 inches between
-         the kettle and the wall. Three measurements settle almost every decision, and none of them
-         is capacity.""",
+         intro="""In a small kitchen, measure the actual counter or cupboard space first. Check the appliance's
+         depth, how it opens, and where it will be stored before comparing feature lists.""",
          sections=[
             ("1. Depth, plus the air gap", """Depth is the first disqualifier. Both Chefman basket
             units are under 14 inches deep; the oven-style Emeril is 16.9. Add the clearance the
@@ -951,15 +941,15 @@ GUIDES = [
             ("2. Door swing or drawer pull", """A drawer needs room in front for you to stand and pull.
             French doors need room in front for two doors to open and stay open. In a narrow galley
             that difference decides whether the appliance is usable at all."""),
-            ("3. Where it lives between uses", """If it goes in a cupboard, weight decides whether that
-            happens twice or never. The 8-quart Chefman is 12.8 pounds; the Emeril is 26.5. Neither
-            is a one-hand lift, but only one of them is realistically movable."""),
-            ("What to give up first", """Windows, presets, and a second basket are all things you can
-            live without. Depth and weight are not. If the counter is tight, a single-basket unit
-            with no window is the honest choice, and it is also the cheapest of the three here."""),
+            ("3. Where it lives between uses", """If you plan to put the appliance away, compare the listed weight, handling instructions, and
+            storage space. The P-03 listing states 12.8 pounds and the P-02 listing 26.5 pounds; check
+            those values on the current pages before buying."""),
+            ("Choose the trade-offs you can live with", """A window, presets, and separate baskets are
+            features to compare against your routine. If none is important to you, do not let its
+            presence decide the purchase. Check dimensions and handling for every model you consider."""),
          ],
-         verdict="""Measure depth, measure the space in front, and weigh whether it will go in a
-         cupboard. Pick the unit that survives all three; then look at features."""),
+         verdict="""Measure the counter and door/drawer access, then check storage and the maker's clearance
+         instructions. Compare features only after the physical fit is clear."""),
 ]
 
 
@@ -1003,7 +993,7 @@ def build_guide(g):
         f'<span>{esc(p["best_for"])}</span></li>' for p in rel)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (g['title'][:40] + "…", None)], "../")}
-<p class="kicker">{esc(g['kicker'])} · verified {TODAY}</p>
+<p class="kicker">{esc(g['kicker'])} · listing references checked {TODAY}</p>
 <h1>{esc(g['title'])}</h1>
 <p class="lede">{esc(g['intro'])}</p>
 <div class="verdict-box">
@@ -1309,31 +1299,28 @@ def build_suggestions():
 
 # ---- questions
 QUESTIONS = [
-    ("Q-01", "Which ASIN did you intend for each of the five links?",
-     "We can see where each short link lands today, but not what you meant to promote.",
-     "Ask the owner for the intended ASIN per product. Compare against the observed target on each "
-     "product page.",
-     "Special Link validation (FLG-004)", "Owner", "Not obtained"),
+    ("Q-01", "Which product and ASIN did you intend each supplied link to represent?",
+     "Intent is owner-only. Observed short-link results are not a guarantee of a stable destination; P-04 was not reproduced in the latest recorded check.",
+     "Confirm the intended product and ASIN for each submitted URL. Keep that answer separate from the dated redirect observation and direct listing reference.",
+     "Special Link validation (FLG-001, FLG-012)", "Owner", "Not obtained"),
     ("Q-02", "Is the Associate ID shopnow047c-20 issued, active and approved?",
      "Only Associates Central can answer this. No public page shows account status.",
      "Sign in to Associates Central and check Account Settings, then look for any click in the "
      "tracking report.",
      "Whether any of this earns anything (FLG-010)", "Owner", "Not verifiable externally"),
-    ("Q-03", "Are link.amazon short links permitted on a website?",
-     "The submitted links use that domain. Public documentation does not settle it, and guessing "
-     "would be worse than a blank.",
-     "Contact Associates support with the exact URLs and ask for a written answer. Until then use "
-     "tagged amazon.com/dp/ links, which the Operating Agreement describes.",
-     "Link format decision (FLG-003)", "Amazon support", "Unresolved"),
+    ("Q-03", "Do the supplied link.amazon URLs meet Associates link requirements?",
+     "Amazon's policies describe conditions for redirecting and improperly formatted links, but this site has not determined whether each submitted URL meets them.",
+     "Ask Associates support about the exact URLs and keep the answer with the dated redirect tests. Do not label a supplied short link invalid based on a failed or checkpointed attempt.",
+     "Link-format decision (FLG-003, FLG-015)", "Amazon support", "Unresolved"),
     ("Q-04", "Did the one-per-product link test pass?",
      "A tag that is not recorded earns nothing, and you cannot see that from outside the account.",
      "Click one tagged link per product while signed in. Check each appears in the tracking report "
      "with the right ASIN.",
      "Scaling traffic (FLG-004)", "Owner", "Pending test"),
-    ("Q-05", "Do you want a custom domain?",
-     "Canonicals, sitemap and feed all currently point at the github.io subpath.",
-     "Decide yes or no. If yes, the domain has to be chosen before indexing is worth encouraging.",
-     "Indexing and brand (FLG-006, SG-14)", "Owner", "Not decided"),
+    ("Q-05", "Should the live GitHub Pages URL remain canonical, or would you prefer a custom domain?",
+     "The Pages project URL is live and already used by the canonical tags. The GitHub Pages API reports no custom CNAME; the current host is not a placeholder (FLG-006).",
+     "This is an optional brand/domain choice. If a custom domain is selected, configure it and update canonicals, sitemap, and feed together. Search Console ownership is a separate setup step.",
+     "Optional domain migration, not indexing on the current host (SG-14)", "Owner", "Current host live; custom-domain choice open"),
     ("Q-06", "Who is the editor of record?",
      "FTC guidance treats an implied experience claim as a problem. A byline needs a real person "
      "behind it.",
@@ -1345,20 +1332,18 @@ QUESTIONS = [
      "Check what is realistic per week. One guide a week is the working assumption; confirm or "
      "revise.",
      "Content planning (SG-16)", "Owner", "Assumed, not confirmed"),
-    ("Q-08", "Where would a self-hosted analytics endpoint live?",
-     "Events are counted in the browser only, so there is no cross-visitor data at all.",
-     "Choose a host, a retention period and a privacy statement before collecting anything "
-     "server-side.",
-     "Any real measurement (FLG-010)", "Owner", "No endpoint"),
-    ("Q-09", "Which reader-capture channel, if any?",
-     "An RSS feed exists. Email capture and Search Console both need accounts.",
-     "Verify the site in Search Console and submit the sitemap. Decide whether email is wanted.",
-     "Growth loop (SG-10)", "Owner", "RSS only"),
-    ("Q-10", "Which listing contradictions can be resolved with the seller?",
-     "There are now six: preset count, accessory count, top temperature, wattage, capacity units and "
-     "warranty length.",
-     "Ask each seller in writing, or read the printed manual. Until then both figures stay published.",
-     "Specification certainty (FLG-017 to FLG-022)", "Sellers", "Open"),
+    ("Q-08", "Where would a privacy-reviewed site-wide analytics endpoint live, if one is wanted?",
+     "Current events are browser-local aggregate counts. They do not provide cross-visitor totals, and GitHub Pages does not accept event writes.",
+     "Choose a host, data-minimization plan, and retention window before collecting any server-side events. No endpoint is configured now.",
+     "Site-wide measurement (FLG-010)", "Owner", "No endpoint"),
+    ("Q-09", "Do you want to verify a Search Console property or add an email reader-capture channel?",
+     "The RSS feed is available. No Search Console property has been verified and no email provider has been chosen.",
+     "Use the official Search Console ownership instructions (S24) if an owner chooses to verify the property; separately decide whether email capture and a privacy notice are wanted.",
+     "Owner-approved reader-capture and Search Console setup (SG-10)", "Owner", "RSS only; other choices open"),
+    ("Q-10", "Which listing contradictions can be resolved with the maker?",
+     "The open records include conflicting preset/accessory counts, temperature and power, capacity units, and warranty wording.",
+     "Check the current listing and maker's manual, or contact the maker about the exact wording. Until resolved, both statements remain visible and neither is chosen.",
+     "Specification certainty (FLG-017 to FLG-022, FLG-031, FLG-034)", "Makers", "Open"),
     ("Q-11", "What commission categories apply, and at what rate?",
      "Rates live in the Commission Income Statement inside the account and change by category.",
      "Read the Commission Income Statement in Associates Central. Do not publish a rate until it is "
@@ -1414,12 +1399,14 @@ def build_questions():
   <tbody>{rows}</tbody>
 </table>
 
-<h2>What we do know, and where it came from</h2>
+<h2>What the records support</h2>
 <ul>
-  <li><strong>The five short links resolve to five specific ASINs.</strong> Observed on {TODAY}, and
-    recorded separately from intent on each product page.</li>
-  <li><strong>Every specification on this site was read off an official listing</strong> on {TODAY}.
-    The <a href="sources.html">source register</a> links every one.</li>
+  <li><strong>Short-link observations are recorded separately from direct listing references and intent.</strong>
+    One supplied link (P-04) returned a checkpoint rather than a product page on the latest recorded
+    check; do not treat the direct listing as proof of that redirect.</li>
+  <li><strong>Published product facts link to the official listing used as their source</strong> on
+    {TODAY}. Values that were not in the fetched text stay blank, and conflicts stay flagged. See the
+    <a href="sources.html">source register</a>.</li>
   <li><strong>The compliance rules are public and quoted.</strong> Amazon's Operating Agreement
     Section 5, Program Policies 2(a) and 2(b), FTC disclosure guidance and Google's outbound-link
     guidance are all linked with the exact wording used.</li>
@@ -1511,8 +1498,8 @@ def build_sources():
 {breadcrumb([("Home", "index.html"), ("Sources", None)])}
 <h1>Source register</h1>
 <p class="lede">If a claim is not traceable to a row on this page, it is not a claim this site makes.
-  {len(SOURCES)} sources: the public policy documents, the five product listings, and the supplied
-  short links, each read on the date in its row.</p>
+  {len(SOURCES)} dated sources cover program policy, platform and government guidance, the five product
+  listings, and the supplied short-link observations.</p>
 
 <div class="statrow">
   <div><span class="statnum">{len([x for x in SOURCES if x['id'].startswith(('S0','S2'))])}</span>
@@ -1548,8 +1535,7 @@ def build_sources():
   erasing them.</p>
 """
     BUILT.append(page("sources.html", f"Sources — {SITE}",
-                      "Ten sources, all official, all dated, with the exact wording each claim "
-                      "relies on.",
+                      f"{len(SOURCES)} dated sources, with the point each one supports.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Sources", "url": BASE + "sources.html"}))
 
@@ -1558,7 +1544,7 @@ def build_sources():
 def build_exec():
     rows = "".join(
         f"<tr><td class=\"nowrap\">{p['id']}</td><td><strong>{esc(p['brand'])}</strong></td>"
-        f"<td>{esc(p['cat'])}</td><td>{esc(p['observed'])}</td>"
+        f"<td>{esc(p['cat'])}</td><td>{esc(p['observed'] or '— not confirmed (FLG-012)')}</td>"
         f"<td>{esc(p['model'] or '—')}</td>"
         f"<td><a href=\"{plain(p)}\" rel=\"sponsored nofollow\">listing</a></td></tr>" for p in PRODUCTS)
     body = f"""
@@ -1578,31 +1564,33 @@ def build_exec():
 <h2>1. What exists now</h2>
 <p>A static publication site deployable straight to GitHub Pages: a front page that leads with
   products, two category pages, five product pages, eight question-shaped guides, a comparison table
-  aligned by field, an on-site search that actually works, JSON-LD on every page, a sitemap, an RSS
+  aligned by field, an on-site browser search that renders results as text, JSON-LD on every page,
+  a sitemap, an RSS
   feed, and a disclosure strip under the masthead on every page. Alongside it sit the internal
   records: the <a href="suggestions.html">Decision Center</a>, the
   <a href="questions.html">Open Questions</a> register, the
   <a href="flagged.html">flag register</a>, the <a href="sources.html">source register</a>, and an
   intentionally empty <a href="campaign-ledger.html">campaign ledger</a>.</p>
 
-<h2>2. The five products, as observed</h2>
+<h2>2. The five product records and current listing references</h2>
 <table class="exec">
-  <caption>Observed destinations, read {TODAY}. Intended ASINs remain blank (FLG-001).</caption>
+  <caption>Observed short-link targets are shown only where reproduced. P-04 is unconfirmed; its direct
+    listing reference is not represented as an observed redirect. Intended ASINs remain blank (FLG-001).</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Brand</th><th scope="col">Category</th>
-    <th scope="col">Observed ASIN</th><th scope="col">Model on listing</th>
-    <th scope="col">Official listing</th></tr></thead>
+    <th scope="col">Observed short-link target</th><th scope="col">Model on listing</th>
+    <th scope="col">Direct listing reference</th></tr></thead>
   <tbody>{rows}</tbody>
 </table>
 
-<h2>3. What is verified</h2>
+<h2>3. What the source record supports</h2>
 <ul>
-  <li>Every product title, dimension, weight, wattage, temperature range and capacity on this site was
-    read from the official listing on {TODAY}.</li>
-  <li>The four policy sources &mdash; Operating Agreement Section 5, Program Policies 2(a) and 2(b),
-    FTC disclosure guidance and Google's outbound-link guidance &mdash; are quoted with exact wording
-    in the <a href="sources.html">source register</a>.</li>
-  <li>Food-safety temperatures come from the USDA FSIS chart, not from a product listing.</li>
-  <li>All five short links were fetched and their destinations recorded separately from intent.</li>
+  <li>Each published listing fact has an official source link and a check date. Details missing from
+    the fetched text remain blank; conflicting statements remain flagged.</li>
+  <li>The program-policy, FTC, Google, GitHub Pages, and USDA references are linked in the
+    <a href="sources.html">source register</a>.</li>
+  <li>Food-safety temperatures are linked to the USDA FSIS chart, not attributed to a product listing.</li>
+  <li>Short-link redirect behavior is not guaranteed by a single observation. P-04 was not reproduced
+    in the latest recorded check; compliance status remains unresolved.</li>
 </ul>
 
 <h2>4. What is not verified, and is not pretended to be</h2>
@@ -1621,33 +1609,33 @@ def build_exec():
     (FLG-032).</li>
 </ul>
 
-<h2>5. The six listing conflicts a buyer should know about</h2>
+<h2>5. Listing conflicts that affect a buying decision</h2>
 <table class="exec">
-  <thead><tr><th scope="col">Flag</th><th scope="col">Product</th><th scope="col">Contradiction</th></tr></thead>
+  <thead><tr><th scope="col">Flag</th><th scope="col">Product</th><th scope="col">Contradiction</th>
+    <th scope="col">Official source</th></tr></thead>
   <tbody>
-    <tr><td>FLG-021</td><td>Emeril 26 QT</td><td>24 presets in the title, 25 in About this item</td></tr>
-    <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in the title, seven in Configuration, six named</td></tr>
-    <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 °F max in the spec field, 450 °F Hi-Fry in the title</td></tr>
-    <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in the spec fields, 1000 W in About this item</td></tr>
-    <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in the title, 6 liters in the capacity field</td></tr>
-    <tr><td>FLG-019</td><td>CHEF iQ Sense</td><td>Two-year assurance on the listing, one year in the earlier pass</td></tr>
+    <tr><td>FLG-021</td><td>Emeril 26 QT</td><td>24 presets in the title, 25 in About this item</td><td><a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">Amazon listing</a></td></tr>
+    <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in the title, seven in Configuration, six named</td><td><a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">Amazon listing</a></td></tr>
+    <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 °F max in the spec field, 450 °F Hi-Fry in the title</td><td><a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">Amazon listing</a></td></tr>
+    <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in the spec fields, 1000 W in About this item</td><td><a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">Amazon listing</a></td></tr>
+    <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in the title, 6 liters in the capacity field</td><td><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">Amazon listing</a></td></tr>
+    <tr><td>FLG-019</td><td>CHEF iQ Sense</td><td>Current and earlier warranty statements differ</td><td><a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">Amazon listing</a></td></tr>
   </tbody>
 </table>
 
-<h2>6. What would change the numbers</h2>
-<p>Two credentials, and one decision. Product Advertising API access would make legal price display
-  possible (SG-13), which is the largest single lever on conversion. Search Console verification would
-  make query data available (SG-10), which is the only way to choose the next guide from evidence
-  rather than instinct. A custom domain decision (SG-14, FLG-006) would strengthen brand and
-  indexation. Everything else on the <a href="suggestions.html">Decision Center</a> is either shipped
-  or cosmetic.</p>
+<h2>6. Owner-level setup still open</h2>
+<p>Associates Central access is needed to confirm the tracking ID and test one tagged link per product
+  (Q-02, Q-04). Search Console setup and any reader-capture choice remain open (Q-09); this site has
+  not accessed Search Console data. GitHub Pages cannot receive event writes, so site-wide counters
+  require a separately chosen host and privacy policy (Q-08). The current Pages URL is canonical;
+  choosing a custom domain is optional. No traffic, conversion, or revenue effect is forecast.</p>
 
 <h2>7. Honest position on revenue</h2>
-<p>No commission rate, click count, conversion rate or revenue figure is presented here, because none
-  can be obtained from an authorised first-party report yet. The
-  <a href="campaign-ledger.html">campaign ledger</a> is empty by design and its schema is defined.
-  When the tracking report produces a row, that row goes in with a date and a source. Until then the
-  honest number is zero, and it is stated as zero rather than dressed up.</p>
+<p>No commission rate, site-wide click count, order total, conversion rate or revenue figure is
+  presented, because no authorized first-party report has been supplied. The
+  <a href="campaign-ledger.html">campaign ledger</a> is empty by design. An empty ledger means no
+  report was entered; it does not mean there were zero visits, clicks, or orders. Any future row must
+  carry its report date and source, and no forecast will be substituted for missing data.</p>
 
 <p class="cta"><a class="btn" href="suggestions.html">Review the decisions</a>
   <a class="btn ghost" href="flagged.html">Check what we could not verify</a></p>
@@ -1688,12 +1676,15 @@ def build_ledger():
 </table>
 
 <h2>What is measured today, and where</h2>
-<p>Five events are defined and counted in the reader's browser: <code>page_view</code>,
+<p>Five events are counted as aggregate totals in the reader's browser: <code>page_view</code>,
   <code>outbound_click</code>, <code>guide_read</code>, <code>search</code> and
-  <code>suggestion_rank</code>. They are stored in local storage, never transmitted, and can be
-  exported to CSV from the <a href="disclosure.html">disclosure page</a>. That is useful for
-  understanding your own session; it is not a substitute for a server-side report, and this page does
-  not pretend otherwise.</p>
+  <code>suggestion_rank</code>. No raw search term or event-by-event timeline is stored, and nothing is
+  transmitted to a server. These counts describe only this browser, not site-wide traffic, and are
+  not a substitute for an authorized first-party report.</p>
+<p>Local outbound product clicks in this browser: <span id="localClicks">0</span>.
+  <button type="button" id="exportClicks" class="ghostbtn">Export local click counts (CSV)</button>
+  These are convenience counters, not Associate reports, orders, or conversions. The export is for
+  this browser only.</p>
 
 <h2>The rules this ledger follows</h2>
 <ol>
@@ -1741,42 +1732,48 @@ def build_disclosure():
   the price column on the comparison table says "not shown, by policy" rather than being empty.</p>
 
 <h2>What we measure</h2>
-<p>Five events, defined once and used consistently:</p>
+<p>The five events below are counted locally in this browser. The measurement record stores aggregate
+  counts only; it does not retain raw search terms, a page-by-page event timeline, timestamps, referrers,
+  IP addresses, or decision text.</p>
 <table class="events">
-  <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
+  <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">What is counted</th></tr></thead>
   <tbody>
-    <tr><td><code>page_view</code></td><td>Any page loads</td><td>Which pages are reached at all</td></tr>
-    <tr><td><code>outbound_click</code></td><td>A tagged Amazon link is clicked</td>
-      <td>Which product a reader actually leaves for</td></tr>
-    <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td></tr>
-    <tr><td><code>search</code></td><td>A search query returns results</td>
-      <td>What readers look for and do not find</td></tr>
-    <tr><td><code>suggestion_rank</code></td><td>A proposal is reordered on the Decision Center</td>
-      <td>Which direction is actually preferred</td></tr>
+    <tr><td><code>page_view</code></td><td>A page loads</td><td>One aggregate increment; no page path is attached</td></tr>
+    <tr><td><code>outbound_click</code></td><td>A tagged product link is clicked</td>
+      <td>An aggregate total and product ID only</td></tr>
+    <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>A guide-load count, not proof that its text was read</td></tr>
+    <tr><td><code>search</code></td><td>A non-empty search is submitted and evaluated</td>
+      <td>One aggregate increment; the query and result text are not stored</td></tr>
+    <tr><td><code>suggestion_rank</code></td><td>A proposal is moved in the Decision Center</td>
+      <td>One aggregate increment; the chosen order is stored separately in this browser</td></tr>
   </tbody>
 </table>
-<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
-  carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
-  pixel and no tag manager on this site. A self-hosted endpoint could replace local storage later,
-  and the event names are fixed so that swap would not require editing any page &mdash; but until
-  that endpoint exists, nothing leaves your device.</p>
-<p>You can clear everything we store by clearing site data for this domain, and you can export it
-  first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
+<p>These counters are not site-wide analytics and are not sent to us. They persist in this browser's
+  local storage until the site's data is cleared, and can be exported as counts:
+  <button type="button" id="exportEvents" class="ghostbtn">Export aggregate event counts (CSV)</button>.</p>
+<p>The suggestion ranking and decision worksheet are separate local browser data. The worksheet may
+  contain text you choose to enter; it is not transmitted, and you can export or clear it from the
+  Decision Center. No server-side analytics endpoint is deployed. GitHub Pages is a static host; its
+  <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/about-github-pages#data-collection">host documentation</a>
+  says visitor IP addresses are logged for security purposes. That host-level logging is separate
+  from the counters described here.</p>
+<p>With JavaScript enabled, the built-in header search carries a one-time query in a URL fragment,
+  which browsers do not send in the HTTP request, and clears it after the results load. A legacy URL
+  containing <code>?q=</code> or the no-JavaScript form fallback may include the query in the request
+  URL and ordinary host logs. Do not include sensitive personal information in a search.</p>
 
 <h2>Product-intent records</h2>
 <p>For each of the five submitted links, the <em>intended</em> ASIN and the <em>observed</em> redirect
-  target are stored in separate fields on the product page and are never merged. Merging them would
-  assert an intention only the owner can confirm. Each product page also carries the date the values
-  were read and a link to the official listing.</p>
+  target are stored in separate fields on the product page and are never merged. The observed target
+  is a dated observation, not confirmation of the owner's intended product or a guarantee of a stable
+  redirect. Each product page links to the direct listing used as its reference.</p>
 
 <h2>Cookies, and what we do not use</h2>
 <ul>
-  <li>No advertising cookies, no retargeting, no social pixels.</li>
-  <li>No fonts or scripts loaded from a third-party CDN &mdash; the page loads from this domain
-    only.</li>
-  <li>No account, no login, no email capture on this site.</li>
-  <li>Clicking a product link takes you to Amazon, where Amazon's own privacy policy applies and
-    Amazon's own cookies are set.</li>
+  <li>No advertising cookies, retargeting, social pixels, or fingerprinting.</li>
+  <li>No third-party analytics script, pixel, or tag manager.</li>
+  <li>No account, login, or email capture on this site.</li>
+  <li>Clicking an Amazon link leaves this site; Amazon's privacy practices then apply.</li>
 </ul>
 """
     BUILT.append(page("disclosure.html", f"Disclosure & Privacy — {SITE}",
@@ -1870,11 +1867,13 @@ def build_search():
                    "What has to be answered before a decision can be made", "page"),
                   ("Flagged for Review", "flagged.html",
                    "Every conflict and unverified value with its source", "page"),
-                  ("Sources", "sources.html", "The ten official sources behind every claim", "page"),
+                  ("Sources", "sources.html", "Dated official sources behind every published claim", "page"),
                   ("Disclosure and privacy", "disclosure.html",
                    "Affiliate disclosure, price policy, and the five measured events", "page")]:
         index.append({"t": extra[0], "u": extra[1], "d": extra[2], "k": extra[3]})
-    idx = json.dumps(index, ensure_ascii=False)
+    # Prevent a title in the JSON index from closing its script element.
+    idx = (json.dumps(index, ensure_ascii=False)
+           .replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026"))
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Search", None)])}
 <h1>Search</h1>
@@ -1883,18 +1882,18 @@ def build_search():
   <input id="sq" name="q" type="search" placeholder="Try: two baskets, 450, wireless, capacity">
   <button type="submit">Search</button>
 </form>
-<p class="small" id="searchMeta">Searching across {len(index)} pages on this site. Nothing is sent to
-  a server &mdash; the index is embedded below and matched in your browser.</p>
+<p class="small" id="searchMeta">Search runs in this browser. With JavaScript enabled, the query stays in a URL fragment
+  and is cleared after results load; it is not saved in the local measurement counters.</p>
 <div id="results" class="results" aria-live="polite"></div>
 <script type="application/json" id="searchIndex">{idx}</script>
-<h2>Popular starting points</h2>
+<h2>Start with a buyer question</h2>
 <div class="grid">
   <article class="card"><h3><a href="guides/basket-vs-oven.html">Basket or oven-style?</a></h3>
-    <p>The first decision, and the one that eliminates the most options.</p></article>
+    <p>Compare footprint, access, and the way you load it.</p></article>
   <article class="card"><h3><a href="guides/instant-vs-wireless.html">Instant-read or wireless?</a></h3>
-    <p>Two different tools, not two competing ones.</p></article>
+    <p>Choose by when and where you want a temperature reading.</p></article>
   <article class="card"><h3><a href="compare.html">Compare all five</a></h3>
-    <p>One table, aligned by field, prices omitted.</p></article>
+    <p>Seller-stated details, source links, and unresolved conflicts.</p></article>
 </div>
 """
     BUILT.append(page("search.html", f"Search — {SITE}",
@@ -1951,8 +1950,8 @@ def main():
     build_category(
         "air-fryers.html", "Air Fryers",
         "Air fryers: two baskets, one big basket, or a whole oven",
-        "Three air fryers, three genuinely different answers to the same question: how do you cook? "
-        "A dual-basket drawer, a single 8-quart basket, and a 26-quart countertop oven that air-fries.",
+        "Compare three layouts: a two-basket drawer, a single basket, and a French-door countertop oven. "
+        "The product pages link to the seller-stated dimensions, fit examples, and unresolved conflicts.",
         [("guides/basket-vs-oven.html", "Basket or oven-style: what to compare first",
           "Footprint, doors, and how you load it."),
          ("guides/capacity-checklist.html", "A checklist for comparing capacity",
@@ -1960,19 +1959,19 @@ def main():
          ("guides/cleanup-counter-space.html", "Cleanup and counter-space trade-offs",
           "Dishwasher-safe is not the same as easy."),
          ("guides/small-kitchen-air-fryer.html", "Air fryer for a small kitchen",
-          "Three measurements that decide it."),
-         ("guides/air-fryer-thanksgiving.html", "Air fryer at Thanksgiving",
-          "What actually fits, and what does not.")],
+          "Measure depth, access, and the storage spot."),
+         ("guides/air-fryer-thanksgiving.html", "Planning a holiday meal with an air fryer",
+          "Use listing fit examples without extrapolating.")],
         ["P-01", "P-03", "P-02"])
     build_category(
         "meat-thermometers.html", "Meat Thermometers",
         "Meat thermometers: instant-read or walk-away",
-        "Two thermometers doing two different jobs. One gives you a number in a second; the other "
-        "lets you leave the room for six hours. Buying the wrong one is the most common mistake here.",
-        [("guides/instant-vs-wireless.html", "Instant-read or wireless: which do you need?",
-          "Speed in your hand versus freedom to walk away."),
-         ("guides/thermometer-accuracy.html", "How to read accuracy claims",
-          "What ±0.5 °F and NIST actually mean.")],
+        "The product records describe a hand-held instant-read model and a separate wireless probe "
+        "system. Compare setup, connectivity, care instructions, and the claims made on each listing.",
+        [("guides/instant-vs-wireless.html", "Instant-read or wireless: which workflow fits?",
+          "Compare when and how you take a reading."),
+         ("guides/thermometer-accuracy.html", "How to assess thermometer accuracy claims",
+          "Separate seller-stated tolerance from independent test evidence.")],
         ["P-04", "P-05"])
     for p in PRODUCTS:
         build_product(p)

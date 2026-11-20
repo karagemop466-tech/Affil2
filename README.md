@@ -14,14 +14,15 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | The short version | `EXECUTIVE-SUMMARY.md` |
 | What to decide next | `suggestions.html` — Decision Center, 16 proposals, rankable |
 | What is still unanswered | `questions.html` — Open Questions, 14 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 33 items |
-| Where every fact came from | `sources.html` — source register |
+| What could not be verified | `flagged.html` — Flagged for Review, 35 items |
+| Where every fact came from | `sources.html` — 20 dated official sources |
 | How the site is built | `scripts/build_site.py` |
 
 ## Rebuild and check
 
     python3 scripts/build_site.py   # writes all pages, sitemap.xml, feed.xml, robots.txt
     python3 scripts/check_site.py   # compliance and integrity gate; exits 1 on any problem
+    node scripts/test_analytics.js  # five-event counters + privacy-safe search behavior
 
 Every HTML page is generated. Do not hand-edit a page: change `data/*.json` or the copy in
 `scripts/build_site.py`, rebuild, and commit both. CI fails if the committed pages drift from the
@@ -55,11 +56,16 @@ content is wrong.
   `sitemap.xml`; `feed.xml` parses and its items exist.
 - A blank field must be marked `unverified`; a value must name where it was stated.
 - Every flag referenced in HTML is defined, and every defined flag is published.
+- Every comparison row and USDA temperature row links its own official source.
+- Outbound product links carry the Associates tag and a visible `(paid link)` label.
+- Short-link observations stay blank when unresolved; a direct listing ASIN is never substituted.
 
 ## Measurement
 
-Five events — `page_view`, `outbound_click`, `guide_read`, `search`, `suggestion_rank` — counted in
-localStorage only. No cookies, no third-party requests, no analytics script. Readers can export
-their own event log and click counts as CSV. A self-hosted collector is one function away in
-`assets/app.js` (`send()`), and the privacy statement that must ship with it is drafted in
-`disclosure.html` (FLG-010).
+Five events — `page_view`, `outbound_click`, `guide_read`, `search`, `suggestion_rank` — are
+aggregate counters in localStorage only. No cookies, no third-party requests, no analytics script,
+and no event-by-event log: the header search passes its query in a URL fragment, renders results
+with `textContent`, and never persists the query text (older query-bearing logs are erased on load).
+Readers can export their own aggregate counts and click counts as CSV. GitHub Pages cannot receive
+event writes, so site-wide measurement remains an open, owner-level decision (FLG-010, Q-08);
+`disclosure.html` documents the current behavior.

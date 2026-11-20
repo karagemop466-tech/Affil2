@@ -60,13 +60,14 @@
   },
   {
     "id": "FLG-006",
-    "title": "Canonical host unset",
-    "detail": "No custom domain chosen. Canonical tags use placeholder host — update before indexing.",
+    "title": "Custom-domain choice open; current GitHub Pages host is canonical",
+    "detail": "All canonical tags use the live project URL https://karagemop466-tech.github.io/Affil2/. GitHub Pages API reports status built, CNAME null, and HTTPS enforced (S25). The current host is not a placeholder or an indexing blocker. A separate custom domain is an optional owner decision; Search Console setup is separate.",
     "links": [
-      "S01"
+      "S23",
+      "S25"
     ],
     "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "owner_status": "Published on the Flagged for Review page. Current Pages URL is live; only the optional custom-domain decision remains."
   },
   {
     "id": "FLG-007",
@@ -101,13 +102,13 @@
   },
   {
     "id": "FLG-010",
-    "title": "Analytics local-only",
-    "detail": "Click counter runs in-browser until a self-hosted endpoint is deployed. See Q-08.",
+    "title": "Analytics are browser-local, not site-wide",
+    "detail": "Five events are counted as aggregate values in each browser only; search text and event-by-event history are not stored. No remote event endpoint is deployed. GitHub Pages is static hosting; server-side event collection requires a separate host and privacy decision (Q-08).",
     "links": [
-      "S03"
+      "S23"
     ],
     "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "owner_status": "Published on the Flagged for Review page. No endpoint is configured; no site-wide or conversion data is claimed."
   },
   {
     "id": "FLG-011",
@@ -305,13 +306,13 @@
   },
   {
     "id": "FLG-028",
-    "title": "Requested sources S07 and S24 not in this repo",
-    "detail": "The task brief references S07 and S24. They are not in data/sources.json and were not found in the repository, so they are not cited.",
+    "title": "S07 remains unidentified; S24 is now registered",
+    "detail": "The earlier coordination note referenced source IDs S07 and S24, but did not identify S07. S24 is now the official Google Search Console ownership-verification guide. No source has been invented for S07; identify it from the original request if it is still needed.",
     "links": [
-      "S01"
+      "S24"
     ],
     "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "owner_status": "Published on the Flagged for Review page. S07 remains an explicit discovery question."
   },
   {
     "id": "FLG-029",
