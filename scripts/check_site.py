@@ -31,6 +31,39 @@ for p in (root/"products").glob("*.html"):
     t=p.read_text()
     if "Intended ASIN" not in t or "Observed redirect target" not in t: errors.append(f"{p.name}: intent fields missing")
     if "PENDING" not in t: errors.append(f"{p.name}: test status missing")
+# XML well-formedness for feed and sitemap
+import xml.dom.minidom as _mx
+for x in ["feed.xml", "sitemap.xml"]:
+    try:
+        _mx.parse(str(root / x))
+    except Exception as ex:
+        errors.append(f"{x}: not well-formed XML ({ex})")
+# stale values: allowed only when the surrounding text marks them as a correction/conflict
+STALE = [
+    (r"Verified 2026", None),
+    (r"Last verified", None),
+    (r"4-00675-02X-VN", None),
+    (r"HT07", None),
+    (r"CQ60", None),
+    (r"26\.5 ?lb", None),
+    (r"70 ?hours?", None),
+    (r"\b572\s?°F", None),
+    (r"4\.75", None),
+    (r"\[2025 Model\]", None),
+    (r"Chefman TurboFry Touch", None),
+]
+ALLOW = re.compile(r"record title|record ['’“\"]|quoted|register|corrected|correction|conflict|FLG-|not confirmed|unverified|blank|previously|not found|said|listed", re.I)
+for p in pages:
+    t = p.read_text(); rel = str(p.relative_to(root))
+    if rel.startswith("products/p03"):
+        for m in re.finditer(r"1700 ?W", t):
+            if not ALLOW.search(t[max(0, m.start() - 160): m.end() + 160]):
+                errors.append(f"{rel}: P-03 shows 1700 W outside a correction note")
+    for pat, _ in STALE:
+        for m in re.finditer(pat, t):
+            ctx = t[max(0, m.start() - 160): m.end() + 160]
+            if not ALLOW.search(ctx):
+                errors.append(f"{rel}: stale value {m.group(0)!r}")
 print(f"checked {len(pages)} pages")
 if errors:
     print("\n".join(errors)); sys.exit(1)
