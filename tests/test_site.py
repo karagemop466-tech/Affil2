@@ -5,6 +5,7 @@ Run: python3 -m unittest discover -s tests -p "test_*.py" -v
 """
 import json
 import pathlib
+import re
 import subprocess
 import sys
 import unittest
@@ -182,3 +183,85 @@ class SiteIntegrationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class GuideWaveRouteTests(unittest.TestCase):
+    """Every guide record must be a page and a route, whatever module wrote it (T-31)."""
+
+    def _slugs(self):
+        sys.path.insert(0, str(ROOT / "scripts"))
+        try:
+            from seasonal_guides import GUIDES as seasonal
+            from howto_guides import GUIDES as howto
+            from traffic_guides import GUIDES as traffic
+        finally:
+            sys.path.remove(str(ROOT / "scripts"))
+        base = re.findall(r'dict\(slug="(\w[\w-]*)"', (ROOT / "scripts" / "build_site.py").read_text())
+        return base + [g["slug"] for g in seasonal] + [g["slug"] for g in howto] + [g["slug"] for g in traffic]
+
+    def test_every_guide_record_is_a_page_and_a_route(self):
+        slugs = self._slugs()
+        self.assertGreaterEqual(len(slugs), 16)
+        self.assertEqual(len(slugs), len(set(slugs)), "duplicate guide slug")
+        ns = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+        sm = ET.fromstring((ROOT / "sitemap.xml").read_text(encoding="utf-8"))
+        locs = {u.find(ns + "loc").text for u in sm.findall(ns + "url")}
+        feed = ET.fromstring((ROOT / "feed.xml").read_text(encoding="utf-8"))
+        links = {i.find("link").text for i in feed.findall("./channel/item")}
+        findability = (ROOT / "findability.txt").read_text(encoding="utf-8")
+        for slug in slugs:
+            page = ROOT / "guides" / f"{slug}.html"
+            self.assertTrue(page.exists(), f"missing page for guide {slug}")
+            url = "https://karagemop466-tech.github.io/Affil2/guides/" + slug + ".html"
+            self.assertIn(url, locs, f"{slug} not submitted in the sitemap")
+            self.assertIn(url, links, f"{slug} not in the feed")
+            self.assertIn(f"guides/{slug}.html", findability, f"{slug} missing from findability.txt")
+            html = page.read_text(encoding="utf-8")
+            self.assertIn("flip-list", html, f"{slug}: no product line at the end")
+            self.assertIn("amazon.com/dp/", html, f"{slug}: product line has no tagged link")
+
+    def test_the_live_wave_is_on_the_front_page(self):
+        """A guide nobody can reach from the home page is a guide nobody reads (T-31)."""
+        sys.path.insert(0, str(ROOT / "scripts"))
+        try:
+            from traffic_guides import GUIDES as traffic
+        finally:
+            sys.path.remove(str(ROOT / "scripts"))
+        home = (ROOT / "index.html").read_text(encoding="utf-8")
+        for g in traffic:
+            self.assertIn(f'href="guides/{g["slug"]}.html"', home,
+                          f"{g['slug']}: not linked from index.html")
+
+    def test_no_stale_guide_pages(self):
+        """A guide removed from the registers must not stay published on disk."""
+        slugs = set(self._slugs())
+        for page in (ROOT / "guides").glob("*.html"):
+            self.assertIn(page.stem, slugs, f"{page.name} is on disk with no guide record")
+
+    def test_the_traffic_wave_quotes_only_registered_figures(self):
+        """The November wave may only state figures the register marks verified, or USDA's chart."""
+        sys.path.insert(0, str(ROOT / "scripts"))
+        try:
+            from traffic_guides import GUIDES as traffic
+        finally:
+            sys.path.remove(str(ROOT / "scripts"))
+        products = json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))
+        allowed = set()
+        for prod in products:
+            for f in prod["fields"].values():
+                allowed.update(re.findall(r"\d+(?:\.\d+)?", str(f.get("v") or "")))
+        usda = json.loads((ROOT / "data" / "usda-temperatures.json").read_text(encoding="utf-8"))
+        for _, temp in usda["rows"]:
+            allowed.update(re.findall(r"\d+(?:\.\d+)?", str(temp)))
+        allowed |= {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
+                    "15", "20", "24", "25", "30", "32", "36", "60", "70", "212", "1000", "2026",
+                    "2027", "01", "02", "03", "04", "05", "06", "07"}
+        for g in traffic:
+            prose = " ".join([g["title"], g["sub"], g["intro"], g["verdict"]] +
+                             [t for _, t in g["sections"]])
+            prose = re.sub(r"<[^>]+>", " ", prose).replace("&nbsp;", " ")
+            for m in re.finditer(r"\b\d+(?:\.\d+)?\s*(?:°F|degrees?|watts?|volts?|quarts?|"
+                                 r"liters?|inches|pounds?|hours?|seconds?)\b", prose):
+                for num in re.findall(r"\d+(?:\.\d+)?", m.group(0)):
+                    self.assertIn(num, allowed,
+                                  f"{g['slug']}: {m.group(0).strip()!r} is not a registered figure")

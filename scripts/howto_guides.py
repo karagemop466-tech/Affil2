@@ -111,14 +111,19 @@ GUIDES = [
             listings here do not agree with each other on that point, which is why the listing matters
             more than the habit: ThermoMaven's Materials &amp; Care field says <em>Wipe Clean</em> while
             the same page claims IP67 waterproof, and the CHEF iQ Sense page states waterproof,
-            dishwasher-safe probes. Read the care field on your unit before you dunk anything.""",),
+            dishwasher-safe probes. Read the care field on your unit before you dunk anything.
+            One caution when you go looking for the sensing area on a spec sheet: both listings give
+            a length figure under a field that mixes &ldquo;Immersion Depth&rdquo; with &ldquo;Item
+            Length&rdquo; (6.5 inches on the ThermoMaven, 4.75 inches on the CHEF iQ), which is not the
+            same number as where the sensor ends. Treat the manual as the authority on immersion
+            depth and use the listing figure only to check the probe is long enough for what you cook.""",),
          ],
          verdict="""Run the ice-water test before the first cook that matters: 32 °F after
          30 seconds in a properly stirred slurry means the cold end of your thermometer is honest,
          and if the unit cannot be adjusted, USDA's advice is to replace it. Anything tighter than that
          — a ±0.5 °F claim, a certificate mentioned in the box list — is a
          statement on a listing until your own glass says otherwise.""",
-         extra=ICE_STEPS + "\n" + USDA_SPEED_TABLE + "\n" + CLUSTER_LINKS % (
+         extra='<figure class="guide-figure"><img src="../assets/img/guide-ice-water.jpg" alt="A tall glass of crushed ice and water with a folding digital thermometer inserted, condensation on the glass" width="1536" height="1024" loading="lazy"><figcaption>Illustrative image, generated for this site &#8212; the ice-water method is described below, and this is not a photograph of either product.</figcaption></figure>' + "\n" + ICE_STEPS + "\n" + USDA_SPEED_TABLE + "\n" + CLUSTER_LINKS % (
              'The claim this test checks is written up in '
              '<a href="thermometer-accuracy.html">how to read accuracy claims</a>, and the choice of tool '
              'in <a href="instant-vs-wireless.html">instant-read versus wireless</a>. Both products '
@@ -175,6 +180,16 @@ GUIDES = [
             Weight is what decides whether the appliance lives on the counter: 13.3 pounds and 12.8 pounds
             for the two Chefmans, and for the Emeril the listing simply does not state an item weight, so
             ours stays blank.""",),
+            ("What a preset count is, and what it is not", """A preset is a stored pairing of a
+            temperature and a run time. It adds no heat, no capacity and no method; it saves two
+            button presses on a dish you repeat. That is the whole of it, which is why a count is a
+            weak thing to compare: the 8-quart Chefman names four presets in its structured field
+            (French fries, chicken, meat, fish) while the Emeril prints 24 in its title and
+            description and 25 in the About-this-item bullets, on the same page, on the same day we
+            read it. If you want the shortcuts that matter, look for the controls that fix a mistake
+            rather than the ones that name a food: a +2-minute button, stated on the dual-basket
+            listing, and an LED shake reminder, stated on the 8-quart. A frozen-chicken mode answers
+            a question your dinner rarely asks."""),
             ("Four checks that cost one minute", """(1) Find the number in the structured table before
             you accept it from a bullet. (2) If two fields disagree, ask the seller before ordering, not
             after. (3) Read what Included Components actually lists, because accessory counts and
