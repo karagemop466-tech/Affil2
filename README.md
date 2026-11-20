@@ -4,6 +4,7 @@ Publication-style Amazon affiliate site: air fryers + meat thermometers compared
 
 - Live site: GitHub Pages from `main` (see `.github/workflows/pages.yml`)
 - Start: `index.html` · Executive summary: `EXECUTIVE-SUMMARY.md` · Task board: `COORDINATION.md`
+- Surfaces: `measurement.html` (events, collector, privacy) · `platform.html` (automation design, gate by gate)
 - Data: `data/products.json`, `data/sources.json`, `data/flags.json`, `data/events.json`
 - Rebuild generated pages: `python3 scripts/build_content.py`
 - Check: `python3 scripts/check_site.py`

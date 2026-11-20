@@ -24,6 +24,11 @@ A static, GitHub Pages buyer-guide site for 5 submitted links: 3 air fryers (P-0
 - GitHub Pages cannot run a server-side function, so no collector is deployed and the live site records nothing server-side. The browser client probes once and stays inert when nothing answers (FLG-033, Q-08).
 - The campaign ledger stays empty until an authorised Associates report fills it. No conversion score and no revenue forecast are published.
 
+## The platform concept
+- `platform.html` specifies the machinery behind the publication, stage by stage: Discover → Verify → Analyse → Draft → Gate → Publish → Learn, with a human gate at the end of every stage.
+- Six modules, each with its scope and its blocker: **Research** (capture and diff official listings — partly built, done by hand), **Market and commission analysis** (blocked on Creators API enrolment and the owner decision SG-12), **Content generation** (designed and gated; a model may propose, a person publishes), **Link management** (tag and sponsored enforcement live; Special Link validation still manual, FLG-003 / FLG-004), **Click and conversion tracking** (built, not deployed, FLG-033), **Optimization** (designed, blocked until there is a denominator).
+- The page separates what runs today from what is designed, so it is a specification and never a claim that automation exists.
+
 ## Compliance in the publish path
 - `scripts/check_site.py` is the publishing gate: disclosure on every page above the fold, `(paid link)` label, `rel="sponsored"` on every Amazon link, the Associates tracking tag on every Amazon **product** link, no prices, no star ratings, no review counts, no Amazon-hosted imagery, canonical and description on every page, internal links resolve, sitemap covers every page, intent and observation fields stay separate.
 - `.github/workflows/pages.yml` now runs the generator, fails if the committed pages differ from the generator, runs the gate, runs the collector tests and runs the site tests — and only deploys if all of it passes.

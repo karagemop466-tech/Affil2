@@ -164,6 +164,25 @@ class StructureTests(unittest.TestCase):
             text = page.read_text(encoding="utf-8")
             self.assertIn("measurement.html", text, "%s: no link to the measurement page" % page.name)
 
+    def test_platform_page_exists_and_is_linked(self):
+        """The platform concept is a required surface, so it is reachable everywhere."""
+        self.assertTrue((ROOT / "platform.html").exists())
+        for page in pages():
+            text = page.read_text(encoding="utf-8")
+            self.assertIn("platform.html", text, "%s: no link to the platform concept" % page.name)
+
+    def test_platform_page_separates_shipped_from_designed(self):
+        """The platform page must not read as a claim that automation exists."""
+        text = (ROOT / "platform.html").read_text(encoding="utf-8")
+        self.assertIn("concept, not a product", text)
+        for module in ("Research", "commission analysis", "Content generation",
+                       "Link management", "Click and conversion tracking", "Optimization"):
+            self.assertIn(module, text, "platform page does not cover %s" % module)
+        # It must name the blocker for each module rather than claiming completion.
+        self.assertIn("FLG-033", text)
+        self.assertIn("FLG-004", text)
+        self.assertIn("FLG-003", text)
+
 
 class MeasurementTests(unittest.TestCase):
     def test_event_schema_matches_the_collector(self):

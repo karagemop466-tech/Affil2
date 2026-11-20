@@ -283,3 +283,50 @@ GitHub Pages cannot host a server-side function, so the endpoint is shipped in
 this repository in two deployable forms (a Cloudflare Pages Function and a
 dependency-free Node server) and is **inert** until someone points the site at
 one. The site keeps working, and keeps collecting nothing, until then.
+
+### T-13 / T-14 completion (2026-11-20, session bdedd85e)
+
+**What shipped**
+
+| Area | File(s) | State |
+|---|---|---|
+| Collector, Cloudflare Pages Function | `functions/api/collect.js` | shipped, not deployed |
+| Collector, standalone Node server | `analytics/server.js` | shipped, not deployed |
+| Browser client | `assets/js/collect.js` | shipped, inert until a collector answers |
+| Event schema | `data/events.json` | shipped, enforced in code by the collector |
+| Measurement surface | `measurement.html` | published, linked from every page |
+| Platform concept | `platform.html` | published, linked from every page |
+| Gate hardening | `scripts/check_site.py` | 8 new rules |
+| Generator changes | `scripts/build_content.py` | tracking tag on every Amazon product link, `rel="sponsored"` on every `link.amazon` link, collector script and dashboard links on every page |
+| Publish workflow | `.github/workflows/pages.yml` | `verify` job: rebuild → drift check → gate → collector tests → site tests; `deploy` needs `verify` |
+| Tests | `tests/collector.test.js`, `tests/test_site.py` | 13 + 22 checks |
+| Registers | `data/flags.json` | FLG-033 appended, FLG-010 amended to point at it |
+
+**Verification**
+
+- `python3 scripts/build_content.py` — runs clean and is idempotent: a second run produces byte-identical pages.
+- `python3 scripts/check_site.py` — **checked 27 pages, ALL CHECKS PASS**.
+- `node tests/collector.test.js` — **13 checks passed**.
+- `python3 -m unittest discover -s tests -p "test_*.py"` — **22 tests, OK**.
+- Collector exercised end to end against a local server: `GET` → `200 {"status":"ok"}`, beacon-style `POST` → `204`, and a payload carrying `email`/`ip` stored neither. Against the static site `/api/collect` → `404`, so the client stays inert exactly as designed.
+- HTML structure check over all 27 pages: 0 unclosed tags, 0 template artifacts.
+- Local HTTP smoke test: every page and asset returns `200`.
+
+**Rules added to the publishing gate**
+
+1. Every Amazon **product** link carries the Associates tracking tag.
+2. Every `link.amazon` short link carries `rel="sponsored"`.
+3. No Amazon-hosted imagery.
+4. Canonical link and meta description on every page.
+5. Broader star-rating and review-count patterns.
+6. The collector client is loaded on every page.
+7. `data/events.json` and the collector agree on the event list.
+8. `measurement.html` exists and is in the sitemap.
+
+**Left open, on the board, not blocking**
+
+- FLG-033 — the collector ships but is not deployed, because GitHub Pages cannot run a server-side function. Owner action: deploy one implementation, point the site at it, and choose a retention period.
+- FLG-003 / FLG-004 — short-link compliance and the one-per-product Special Link test remain unresolved and are not claimed either way.
+- FLG-001 / FLG-002 — intended ASINs and tracking-ID activity remain unconfirmed; the campaign ledger stays empty.
+
+**Nothing from `main` was discarded.** `data/products.json`, `data/sources.json`, `data/reverification-2026-11-20.json`, `data/campaign-ledger.json`, `assets/style.css`, `assets/illustrations/*`, `scripts/build_content.py`'s product and spec rendering, and every page's editorial copy are as `main` had them. The only shared files this session changed are the ones listed in the claim: the workflow, the gate, the generator, the sitemap, the robots file, `data/flags.json` (append only), `disclosure.html`, `questions.html`, `suggestions.html`, `executive-summary.html`, `README.md` and `EXECUTIVE-SUMMARY.md` — all edited surgically, never rewritten.

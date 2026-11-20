@@ -241,6 +241,26 @@ def ensure_nav_links(text, prefix=""):
     return text
 
 
+def ensure_dashboard_links(text, prefix=""):
+    """The footer dashboard row lists every record surface on every page.
+
+    Only the dashboard paragraph is touched. The primary nav keeps its own
+    list and is not extended by this step.
+    """
+    platform = '<a href="%splatform.html">Platform concept</a>' % prefix
+    if platform in text:
+        return text
+
+    def add_to_dash(m):
+        row = m.group(0)
+        return row.replace(
+            '<a href="%smeasurement.html">Measurement</a>' % prefix,
+            '<a href="%smeasurement.html">Measurement</a> &middot; %s' % (prefix, platform),
+        )
+
+    return re.sub(r'<p class="dash">.*?</p>', add_to_dash, text, count=1, flags=re.S)
+
+
 def ensure_collect_script(text, prefix=""):
     """Make sure the page loads the self-hosted event collector.
 
@@ -363,6 +383,7 @@ def main():
         t = tag_amazon_links(t)
         t = ensure_collect_script(t, pre)
         t = ensure_nav_links(t, pre)
+        t = ensure_dashboard_links(t, pre)
         if t != n_before:
             path.write_text(t)
             changed.append(str(path.relative_to(ROOT)))
