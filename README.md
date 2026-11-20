@@ -12,9 +12,9 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | If you want | Read |
 |---|---|
 | The short version | `EXECUTIVE-SUMMARY.md` |
-| What to decide next | `suggestions.html` — Decision Center, 16 proposals, rankable |
+| What to decide next | `suggestions.html` — Decision Center, 21 proposals, rankable |
 | What is still unanswered | `questions.html` — Open Questions, 14 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 33 items |
+| What could not be verified | `flagged.html` — Flagged for Review, 37 items |
 | Where every fact came from | `sources.html` — source register |
 | How the site is built | `scripts/build_site.py` |
 
@@ -36,6 +36,7 @@ generator output, and again if the gate fails.
 | `data/sources.json` | every source with what it supports and the date checked |
 | `data/flags.json` | the flag register: severity, detail, resolution, source links |
 | `data/reverification-2026-11-20.json` | attempt-by-attempt record of the short-link tests |
+| `scripts/analytics_server.py` | optional, self-hosted collector for the five events (not deployed) |
 | `assets/style.css` | storefront stylesheet |
 | `assets/app.js` | five measured events, search, ranking, CSV export |
 | `scripts/` | generator and gate |
@@ -54,15 +55,35 @@ content is wrong.
 - Every page has one `<h1>`, a canonical matching its path, JSON-LD that parses, and an entry in
   `sitemap.xml`; `feed.xml` parses and its items exist.
 - A blank field must be marked `unverified`; a value must name where it was stated.
+- Every nonblank product-intent field stays separate: intended ASIN, observed redirect target and
+  official listing are distinct fields and the gate fails if they are merged or the intended ASIN is
+  filled in.
+- Every comparison-table product cell links to its source; every Decision Center row cites an
+  evidence source; the submitted short link is never rendered as a clickable URL.
+- `README.md`'s flag count must equal `data/flags.json`.
+- The optional collector must contain the same five events and nothing else.
 - Every flag referenced in HTML is defined, and every defined flag is published.
 
 ## Measurement
 
-Five events — `page_view`, `outbound_click`, `guide_read`, `search`, `suggestion_rank` — counted in
-localStorage only. No cookies, no third-party requests, no analytics script. Readers can export
-their own event log and click counts as CSV. A self-hosted collector is one function away in
-`assets/app.js` (`send()`), and the privacy statement that must ship with it is drafted in
-`disclosure.html` (FLG-010).
+Five events — `page_view`, `outbound_click`, `guide_read`, `search`, `suggestion_rank` — are counted
+in localStorage only. No cookies, no third-party requests, no analytics script ships with the site.
+The `search` event records that a search ran and how many results it returned, never the query
+words. Readers can export their own event log (Disclosure page) and click counts as CSV.
+
+`scripts/analytics_server.py` is an optional, self-hosted collector for the same five events. It
+stores per-day aggregate counts only — no identifier, cookie, IP address, user agent or raw search
+term — and it is not deployed or wired to any page. If it is ever deployed behind HTTPS at a
+same-origin route, the disclosure must be updated before any event is sent (SG-30).
+
+Hosting note: this site is served by GitHub Pages, which documents IP-address logging for security
+purposes; the disclosure distinguishes that from the site's local browser events. Whether Pages is
+the right host for a commercial-affiliate publication is an open question tracked as FLG-036/SG-27.
+
+## Deprecated
+
+`scripts/build_content.py` is a deprecated shim that delegates to `scripts/build_site.py`; it does
+nothing else and should not be extended.
 
 ## CI
 

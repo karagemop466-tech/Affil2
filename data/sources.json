@@ -117,5 +117,85 @@
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
     "used_for": "Official minimum internal cooking temperatures: poultry 165 F (73.9 C); ground meats 160 F (71.1 C); beef, pork, veal and lamb steaks, chops and roasts 145 F (62.8 C) with a 3-minute rest; fish and shellfish 145 F (62.8 C); leftovers and casseroles 165 F (73.9 C). Any doneness figure on this site must defer to this chart.",
     "checked": "2026-11-20"
+  },
+  {
+    "id": "S23",
+    "name": "GitHub Docs — GitHub Pages limits",
+    "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits",
+    "used_for": "GitHub states Pages is not intended for or allowed as free web hosting for an online business, e-commerce site, or other site primarily directed at facilitating commercial transactions or commercial SaaS. Because this project is an affiliate publication with outbound purchase links, hosting suitability is an unresolved policy question; this source is a reason to assess, not a finding that the site violates policy.",
+    "checked": "2026-11-20",
+    "review_scope": "Full page fetched."
+  },
+  {
+    "id": "S24",
+    "name": "Google Search Console — About Search Console",
+    "url": "https://search.google.com/search-console/about",
+    "used_for": "Google describes Search Console as a service for monitoring search performance, submitting sitemaps, inspecting URLs and receiving site alerts. This supports the proposed owner-led measurement workflow, not a traffic or ranking guarantee.",
+    "checked": "2026-11-20",
+    "review_scope": "Full page fetched."
+  },
+  {
+    "id": "S25",
+    "name": "Google Search Console Help — Performance report (Search results)",
+    "url": "https://support.google.com/webmasters/answer/7576553?hl=en",
+    "used_for": "The Performance report exposes search queries, clicks, impressions, CTR and position; it is the official source for measuring arrival queries before selecting a new guide topic.",
+    "checked": "2026-11-20",
+    "review_scope": "Partial fetch (chunk 0 of 2); relied only on the displayed report metrics."
+  },
+  {
+    "id": "S26",
+    "name": "Google Search Console Help — Verify site ownership",
+    "url": "https://support.google.com/webmasters/answer/9008080?hl=en",
+    "used_for": "Search Console verification requires proving site ownership with one of Google’s listed verification methods; this account-specific step cannot be completed from public repository access alone.",
+    "checked": "2026-11-20",
+    "review_scope": "Partial fetch (chunk 0 of 6); relied only on the displayed ownership-verification overview."
+  },
+  {
+    "id": "S27",
+    "name": "GitHub Docs — Configuring a custom domain for GitHub Pages",
+    "url": "https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site",
+    "used_for": "GitHub documents custom domains for Pages and the DNS/repository settings required; a domain still must be selected and controlled by the owner.",
+    "checked": "2026-11-20",
+    "review_scope": "Full page fetched."
+  },
+  {
+    "id": "S28",
+    "name": "RSS Advisory Board — RSS 2.0 Specification",
+    "url": "https://www.rssboard.org/rss-specification",
+    "used_for": "Current RSS 2.0 specification: RSS is an XML syndication format with required channel title, link and description elements; used as the feed format reference.",
+    "checked": "2026-11-20",
+    "review_scope": "Partial fetch (chunk 0 of 4); relied only on the displayed RSS 2.0 channel requirements."
+  },
+  {
+    "id": "S29",
+    "name": "FTC — CAN-SPAM Act: A Compliance Guide for Business",
+    "url": "https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business",
+    "used_for": "Official FTC guidance on commercial email requirements, including accurate headers, non-deceptive subject lines, a postal address, an opt-out method and honoring opt-outs; reader capture is not implemented until provider and compliance work are decided.",
+    "checked": "2026-11-20",
+    "review_scope": "Partial fetch (chunk 0 of 3); relied only on the displayed CAN-SPAM checklist."
+  },
+  {
+    "id": "S30",
+    "name": "Google Search Central — Creating helpful, reliable, people-first content",
+    "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
+    "used_for": "Google recommends people-first, useful, reliable content and self-assessment about original information, authorship and how content was created; this is guidance, not a ranking guarantee.",
+    "checked": "2026-11-20",
+    "review_scope": "Partial fetch (chunk 0 of 4); relied only on the people-first/content self-assessment excerpt."
+  },
+  {
+    "id": "S31",
+    "name": "GitHub Docs — What is GitHub Pages?",
+    "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages",
+    "used_for": "GitHub describes Pages as static-site hosting and states that visitor IP addresses are logged and stored for security purposes. The privacy notice now distinguishes GitHub’s hosting/security logs from the site’s local-only event log.",
+    "checked": "2026-11-20",
+    "review_scope": "Full page fetched."
+  },
+  {
+    "id": "S32",
+    "name": "Google Search Central — SEO Starter Guide",
+    "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide",
+    "used_for": "The guide is an official reference for basic crawlability, descriptive page titles, links and site structure. Consult it for implementation guidance; it does not promise indexing or rankings.",
+    "checked": "2026-11-20",
+    "review_scope": "Partial fetch (chunk 0 of 6); claims here are limited to the guide’s scope, not a full-document review."
   }
 ]

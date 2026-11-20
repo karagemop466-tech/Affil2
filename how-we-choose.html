@@ -42,9 +42,11 @@
 
 <h2>What "verified" means here</h2>
 <p>It means one person opened the official Amazon listing for the product on 2026-11-20 and read the
-  value off the page. Each product page carries the date, and every specification row links to the
-  listing it came from. It does <strong>not</strong> mean we tested the product, and it does not mean
-  the listing is correct &mdash; only that we read what it says and recorded it accurately.</p>
+  value off the page. Each product page carries the date and a link for every specification row,
+  and blank values are printed as blanks rather than filled in. It does <strong>not</strong> mean we
+  tested the product, it does not mean the listing is correct, and it does not mean a complete live
+  page was captured &mdash; only that available official text was read and recorded, and that
+  unsupported values are left blank.</p>
 
 <h2>What we have not done</h2>
 <ul>
@@ -74,8 +76,10 @@
 <h2>How conflicts are handled</h2>
 <p>When a listing contradicts itself, we print both figures in the specification table and give the
   contradiction an ID on the <a href="flagged.html">Flagged for Review</a> page. There are currently
-  several: preset counts, accessory counts, top temperature, wattage, capacity units and warranty
-  length. We do not average them, pick the flattering one, or quietly drop the awkward one.</p>
+  several: preset counts (FLG-021), accessory counts (FLG-031), top temperature (FLG-018) and
+  capacity units (FLG-034). Wattage and warranty length turned out to be errors in an earlier register,
+  corrected against the retrieved listing text (FLG-017, FLG-019). We do not average figures, pick the
+  flattering one, or quietly drop the awkward one.</p>
 
 <h2>How the money works</h2>
 <p>Outbound product links carry our Amazon Associate tag and are marked
@@ -96,11 +100,12 @@
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
     <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
-    <p class="small">Prices and availability are not shown on this site; check the live listing for
+    <p class="small">Prices and availability are not reproduced here; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
       Inc. or its affiliates. This site is not endorsed by Amazon. Artwork is original illustration,
-      not product photography. Nothing here is a hands-on product test — every specification is read
-      from the official listing and dated. Last verified 2026-11-20.</p>
+      not product photography. No hands-on product testing is claimed. Product statements are tied to
+      the dated source shown on the page; unconfirmed values are left blank. Listing text can change.
+      Last checked 2026-11-20.</p>
     <p class="small">© 2026 ShopNow Kitchen. <a href="flagged.html">Flagged for Review</a> lists everything
       we could not verify.</p>
   </div>

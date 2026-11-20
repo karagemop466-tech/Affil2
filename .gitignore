@@ -1,0 +1,3 @@
+__pycache__/
+*.pyc
+scripts/analytics-state.json

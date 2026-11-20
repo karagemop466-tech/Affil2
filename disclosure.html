@@ -73,11 +73,14 @@
       <td>Which direction is actually preferred</td></tr>
   </tbody>
 </table>
-<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
-  carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
-  pixel and no tag manager on this site. A self-hosted endpoint could replace local storage later,
-  and the event names are fixed so that swap would not require editing any page &mdash; but until
-  that endpoint exists, nothing leaves your device.</p>
+<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no fingerprinting is used, and this site loads no analytics script, pixel or tag manager. The <code>search</code> event records that a search ran and how many results it returned &mdash; never the words you typed. Nothing is transmitted off your device by this site as it ships.</p>
+<div class="panel">
+  <h2>Two qualifications, stated plainly</h2>
+  <ul>
+    <li><strong>Hosting logs.</strong> This site is served by GitHub Pages. GitHub's documentation states that Pages logs the IP addresses of visitors for security purposes, and those logs are operated by GitHub &mdash; this site has no access to them. See S31 in the <a href="sources.html">source register</a> and FLG-037 on the <a href="flagged.html">Flagged for Review</a> page.</li>
+    <li><strong>Optional collector.</strong> The repository contains an optional, self-hosted collector (<code>scripts/analytics_server.py</code>) implementing the same five events. It stores only per-day aggregate counts &mdash; no identifier, cookie, IP address, user agent or raw search term &mdash; and it is not deployed and not enabled on this site. If it is ever deployed behind HTTPS at a same-origin route, this page will be updated before any event is sent.</li>
+  </ul>
+</div>
 <p>You can clear everything we store by clearing site data for this domain, and you can export it
   first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
 
@@ -93,6 +96,7 @@
   <li>No fonts or scripts loaded from a third-party CDN &mdash; the page loads from this domain
     only.</li>
   <li>No account, no login, no email capture on this site.</li>
+  <li>No cookies are set by this site. (GitHub's Pages hosting keeps its own security logs; see above.)</li>
   <li>Clicking a product link takes you to Amazon, where Amazon's own privacy policy applies and
     Amazon's own cookies are set.</li>
 </ul>
@@ -104,11 +108,12 @@
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
     <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
-    <p class="small">Prices and availability are not shown on this site; check the live listing for
+    <p class="small">Prices and availability are not reproduced here; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
       Inc. or its affiliates. This site is not endorsed by Amazon. Artwork is original illustration,
-      not product photography. Nothing here is a hands-on product test — every specification is read
-      from the official listing and dated. Last verified 2026-11-20.</p>
+      not product photography. No hands-on product testing is claimed. Product statements are tied to
+      the dated source shown on the page; unconfirmed values are left blank. Listing text can change.
+      Last checked 2026-11-20.</p>
     <p class="small">© 2026 ShopNow Kitchen. <a href="flagged.html">Flagged for Review</a> lists everything
       we could not verify.</p>
   </div>

@@ -9,6 +9,7 @@ place or not at all. Run:  python3 scripts/build_site.py
 import json
 import pathlib
 import re
+from urllib.parse import urlparse
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
@@ -40,26 +41,36 @@ FIELD_ORDER = ["capacity", "temperature", "power", "dimensions", "weight", "pres
                "certification", "included", "care", "warranty", "features"]
 
 
+SOURCE_BY_ID = {s["id"]: s for s in SOURCES}
+
+
 def source_url(sid):
-    for s in SOURCES:
-        if s["id"] == sid:
-            return s["url"]
-    return ""
+    record = SOURCE_BY_ID.get(sid)
+    return record["url"] if record else ""
+
+
+def source_link(sid, label=None):
+    """Render a source citation; only actual product links are marked sponsored."""
+    record = SOURCE_BY_ID.get(sid)
+    if not record:
+        return '<span class="unverified">source not registered</span>'
+    url = record["url"]
+    parsed = urlparse(url)
+    if parsed.hostname == "link.amazon":
+        return f'<span>{esc(label or sid)}</span>'
+    product_link = (parsed.hostname == "www.amazon.com" and re.match(r"^/dp/[A-Z0-9]{10}(?:/|$)", parsed.path))
+    rel = ' rel="sponsored nofollow"' if product_link else ' rel="noopener noreferrer"'
+    return f'<a href="{esc(url)}"{rel}>{esc(label or sid)}</a>'
 
 
 def find_source(field_key, product):
-    """Link a spec row to the official page the other session recorded it from."""
-    for f in FLAGS:
-        pass
-    # the register names the listing for the product; field-level detail comes from `src`
-    for s in SOURCES:
-        if s["id"] == f"S{10 + PRODUCTS.index(product)}":
-            return s["url"]
-    return product["listing"]
+    """Return the registered official source for one product field."""
+    field = product["fields"].get(field_key, {})
+    return source_url(field.get("source_id") or product["official_listing_source_id"])
 
 
 def normalise(p, ed):
-    """Fold the shared register (read-only) plus this site's editorial copy into one record."""
+    """Combine the product register and editorial copy without inferring product identity."""
     p = dict(p)
     p["brand"] = ed["brand"]
     p["headline"] = ed["headline"]
@@ -67,11 +78,13 @@ def normalise(p, ed):
     p["tradeoff"] = ed["tradeoff"]
     p["commerce_note"] = ed["evidence_note"]
     p["listing_title"] = p["title"]
-    p["intended"] = None
-    if not p.get("observed"):
-        p["observed"] = p["asin"]
-    p["observed_checked"] = TODAY
+    p["intended"] = p["intended_asin"]
+    p["observed"] = p["observed_redirect_target"]
+    p["observed_checked"] = p["observed_redirect_checked"]
     p["observed_note"] = p["observed_status"]
+    p["listing_asin"] = p["official_listing_asin"]
+    p["listing_url"] = p["official_listing_url"]
+    p["listing_checked"] = p["official_listing_checked"]
     p["blurb"] = p["blurb"] or ed["headline"]
     p["model"] = p["fields"]["model"]["v"]
     p["model_source"] = p["fields"]["model"]["src"]
@@ -79,8 +92,7 @@ def normalise(p, ed):
     p["questions"] = [(q, a) for q, a in ed["qa"]]
     if p.get("power_line") is None:
         pw = p["fields"].get("power") or {}
-        p["power_line"] = pw.get("v") or "not stated on the listing"
-    # spec rows in a stable order, with a real source link and the register's own status
+        p["power_line"] = pw.get("v") or "not stated in the retrieved listing text"
     rows = []
     seen = set()
     for key in FIELD_ORDER + [k for k in p["fields"] if k not in FIELD_ORDER]:
@@ -88,17 +100,19 @@ def normalise(p, ed):
         if not f or key in seen:
             continue
         seen.add(key)
+        sid = f.get("source_id") or p["official_listing_source_id"]
         rows.append({
+            "key": key,
             "label": FIELD_LABEL.get(key, key.replace("_", " ").title()),
             "value": f["v"],
             "status": f["st"],
             "from": f["src"],
             "note": f.get("note", ""),
-            "url": p["listing"],
+            "source_id": sid,
+            "url": source_url(sid),
         })
     p["spec_rows"] = rows
     return p
-
 
 PRODUCTS = [normalise(p, EDITORIAL[p["id"]]) for p in RAW_PRODUCTS]
 BY_ID = {p["id"]: p for p in PRODUCTS}
@@ -113,12 +127,13 @@ def esc(s):
     return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
 def aff(p):
-    """The tagged Special Link we publish."""
-    return f"https://www.amazon.com/dp/{p['observed']}?tag={TRACKING_ID}"
+    """Tagged Special Link based on the registered official listing, not redirect inference."""
+    return f"{p['official_listing_url']}?tag={TRACKING_ID}"
+
 
 def plain(p):
     """Untagged official listing, for verification."""
-    return f"https://www.amazon.com/dp/{p['observed']}"
+    return p["official_listing_url"]
 
 def slug_of(p):
     return f"products/{p['slug']}.html"
@@ -234,11 +249,12 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
     <nav aria-label="Footer">{footnav}</nav>
     <p class="dash">Records and dashboards: {dash} ·
       <a href="{up}sitemap.xml">Sitemap</a> · <a href="{up}feed.xml">RSS</a></p>
-    <p class="small">Prices and availability are not shown on this site; check the live listing for
+    <p class="small">Prices and availability are not reproduced here; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
       Inc. or its affiliates. This site is not endorsed by Amazon. Artwork is original illustration,
-      not product photography. Nothing here is a hands-on product test — every specification is read
-      from the official listing and dated. Last verified {TODAY}.</p>
+      not product photography. No hands-on product testing is claimed. Product statements are tied to
+      the dated source shown on the page; unconfirmed values are left blank. Listing text can change.
+      Last checked {TODAY}.</p>
     <p class="small">© 2026 {SITE}. <a href="{up}flagged.html">Flagged for Review</a> lists everything
       we could not verify.</p>
   </div>
@@ -323,46 +339,51 @@ def spec_table(p):
     out = []
     for r in p["spec_rows"]:
         if r["value"] is None or r["status"] == "unverified":
-            value = ('<span class="unverified">left blank &mdash; not in the listing text we '
-                     'fetched</span>')
+            value = '<span class="unverified">left blank — not confirmed in the retrieved listing text</span>'
         else:
             value = esc(r["value"])
             if r["status"] == "conflict":
-                value += ' <span class="token conflict">conflicting figures &mdash; both shown</span>'
+                value += ' <span class="token conflict">conflicting statements — both shown</span>'
+            elif r["status"] == "seller_claim":
+                value += ' <span class="token conflict">seller-stated; not independently confirmed</span>'
+        if r["note"]:
+            value += f'<div class="small">{esc(r["note"])}</div>'
         out.append(
             f'<tr><th scope="row">{esc(r["label"])}</th><td>{value}'
             f'<div class="srcline">Stated in: {esc(r["from"])}</div></td>'
-            f'<td class="src"><a href="{r["url"]}" rel="sponsored nofollow">listing</a></td></tr>')
+            f'<td class="src">{source_link(r["source_id"], r["source_id"] + " · listing")}</td></tr>')
     return f"""<table class="specs-table">
-  <caption>Every value below was read from the official listing on {TODAY}. A blank cell means the
-    value was not in the text we fetched &mdash; nothing here is inferred.</caption>
-  <thead><tr><th scope="col">Field</th><th scope="col">Value as stated on the listing</th>
+  <caption>Each nonblank value is attributed to the dated official listing text cited in its row. A blank means the value was not confirmed in the retrieved text; nothing is inferred.</caption>
+  <thead><tr><th scope="col">Field</th><th scope="col">What the listing states</th>
     <th scope="col">Source</th></tr></thead>
   <tbody>{"".join(out)}</tbody>
 </table>"""
 
 
 def intent_table(p):
-    intended = p["intended"] or "— blank: not confirmed by the owner (FLG-001)"
+    intended = p["intended"] or '— blank; not confirmed by the owner (FLG-001)'
+    observed = p["observed"] or '— no product destination observed; checkpoint page only (FLG-012)'
+    submitted_source = p["submitted_link_source_id"]
+    listing_source = p["official_listing_source_id"]
+    observed_source = p["observed_redirect_source_id"]
+    intended_date = p["intended_confirmation_date"] or '— blank; no owner confirmation'
+    intended_source = p["intended_confirmation_source_id"]
+    intended_source_cell = source_link(intended_source, intended_source) if intended_source else '<span class="unverified">No source; owner confirmation is pending (FLG-001).</span>'
     return f"""<table class="intent">
-  <caption>Product-intent confirmation record. Intended and observed are separate fields and are
-    never merged.</caption>
+  <caption>Three identities are kept separate: submitted short-link token, any redirect actually observed, and the official listing used for the product record. An official listing is not proof of the owner’s intended ASIN.</caption>
+  <thead><tr><th scope="col">Record</th><th scope="col">Value</th><th scope="col">Source / status</th></tr></thead>
   <tbody>
-    <tr><th scope="row">Submitted link (as supplied)</th><td>{esc(p['submitted'])}</td></tr>
-    <tr><th scope="row">Short-link token</th><td>{esc(p['token'])} (not an ASIN)</td></tr>
-    <tr><th scope="row">Intended ASIN</th><td>{esc(intended)}</td></tr>
-    <tr><th scope="row">Observed redirect target</th><td>{esc(p['observed'])}</td></tr>
-    <tr><th scope="row">What the submitted link actually opened</th><td>{esc(p['observed_note'])}</td></tr>
-    <tr><th scope="row">Official listing URL</th>
-      <td><a href="{plain(p)}" rel="sponsored nofollow">{plain(p)}</a></td></tr>
-    <tr><th scope="row">Special Link we publish</th>
-      <td><a href="{aff(p)}" rel="sponsored nofollow">{aff(p)}</a></td></tr>
-    <tr><th scope="row">Model (as published)</th>
-      <td>{esc(p['model'] or '— blank, see FLG-022')}<br><span class="small">{esc(p['model_source'])}</span></td></tr>
-    <tr><th scope="row">Confirmation date</th><td>{TODAY}</td></tr>
-    <tr><th scope="row">Associates test status</th>
-      <td>PENDING &mdash; one link per product must be clicked inside the enrolled account and
-        confirmed in the tracking report before traffic is scaled (FLG-004).</td></tr>
+    <tr><th scope="row">Submitted link (as supplied)</th><td>{esc(p['submitted_url'])}</td><td>{source_link(submitted_source, submitted_source + ' · supplied-link record')}</td></tr>
+    <tr><th scope="row">Short-link token</th><td>{esc(p['short_link_token'])} (kept as a token; not used as a product ID)</td><td>{source_link(submitted_source, submitted_source)}</td></tr>
+    <tr><th scope="row">Intended ASIN</th><td>{esc(intended)}</td><td>{intended_source_cell}</td></tr>
+    <tr><th scope="row">Intended-ASIN confirmation date</th><td>{esc(intended_date)}</td><td><span class="unverified">Owner confirmation not obtained.</span></td></tr>
+    <tr><th scope="row">Observed redirect target</th><td>{esc(observed)}</td><td>{source_link(observed_source, observed_source + ' · redirect observation')}</td></tr>
+    <tr><th scope="row">Redirect observation checked</th><td>{esc(p['observed_checked'])}</td><td>{source_link(observed_source, observed_source)}</td></tr>
+    <tr><th scope="row">Official listing ASIN</th><td>{esc(p['official_listing_asin'])}</td><td>{source_link(listing_source, listing_source + ' · official listing')}</td></tr>
+    <tr><th scope="row">Official listing URL</th><td><a href="{esc(p['official_listing_url'])}" rel="sponsored nofollow">{esc(p['official_listing_url'])}</a></td><td>{source_link(listing_source, listing_source)}</td></tr>
+    <tr><th scope="row">Official listing checked</th><td>{esc(p['official_listing_checked'])}</td><td>{source_link(listing_source, listing_source)}</td></tr>
+    <tr><th scope="row">Published Amazon Special Link</th><td><a href="{esc(aff(p))}" rel="sponsored nofollow">{esc(aff(p))}</a><br><span class="small">Uses the official listing above and tracking ID shopnow047c-20; issuance/activity not verified (FLG-002).</span></td><td>{source_link(listing_source, listing_source + ' · listing target')}</td></tr>
+    <tr><th scope="row">Associates click test</th><td>PENDING — one link per product must be tested inside the enrolled account and confirmed in its report before scaling (FLG-004).</td><td>{source_link('S02', 'S02 · program policies')}</td></tr>
   </tbody>
 </table>"""
 
@@ -387,8 +408,8 @@ def breadcrumb(items, up=""):
 
 def publisher_ld():
     return {"@type": "Organization", "name": SITE, "url": BASE,
-            "description": "An independent kitchen-appliance buying guide that reads specifications "
-                           "from official Amazon listings and never prints prices."}
+            "description": "A kitchen-appliance buying publication that links product statements to "
+                           "dated listing sources and distinguishes sourced facts from editorial guidance."}
 
 
 def crumbs_ld(trail):
@@ -452,7 +473,7 @@ def build_home():
   <aside class="panel">
     <h3>Why you can trust the numbers</h3>
     <ol class="tight">
-      <li>Every specification is read from the official listing and stamped with a date.</li>
+      <li>Every nonblank value is dated and linked to the official listing section it was read from; blanks are printed as blanks.</li>
       <li>When a listing contradicts itself, both figures are printed. Nothing is averaged.</li>
       <li>Prices and ratings are never copied &mdash; Amazon policy on price display, and it keeps
         us honest.</li>
@@ -519,7 +540,7 @@ def overview_table():
                  f"<td class=\"nowrap\"><a href=\"{aff(p)}\" rel=\"sponsored nofollow\" "
                  f"data-outbound=\"{p['id']}\" data-event=\"outbound_click\">Amazon (paid link)</a></td></tr>")
     return f"""<table class="overview">
-  <caption>Five submitted links, verified {TODAY}. Ranking is by category, not by preference.</caption>
+  <caption>Five submitted links, official listings checked {TODAY}. Ranking is by category, not by preference.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Product</th><th scope="col">Category</th>
     <th scope="col">Best for</th><th scope="col">The catch</th><th scope="col">Listing</th></tr></thead>
   <tbody>{rows}</tbody>
@@ -581,12 +602,12 @@ def build_category(catfile, cat, headline, intro, guides_, picks):
 def build_product(p):
     others = [x for x in PRODUCTS if x["id"] != p["id"] and x["cat"] == p["cat"]]
     og = ('<meta property="product:retailer_item_id" content="'
-          + p["observed"] + '">')
+          + esc(p["official_listing_asin"]) + '">')
     body = f"""
 {breadcrumb([("Home", "index.html"), (p['cat'], p['catfile']), (p['brand'], None)], "../")}
 <div class="pdp-head">
   <div>
-    <p class="kicker">{esc(p['cat'])} · {p['id']} · verified {TODAY}</p>
+    <p class="kicker">{esc(p['cat'])} · {p['id']} · official listing checked {p['listing_checked']}</p>
     <h1>{esc(p['headline'])}</h1>
     <p class="lede">{esc(p['blurb'])}</p>
   </div>
@@ -652,75 +673,72 @@ def build_product(p):
              **{"@context": "https://schema.org"}),
     ]
     BUILT.append(page(slug_of(p), f"{p['headline']} — {p['brand']} | {SITE}",
-                      f"{p['brand']} {p['cat'].lower()}: {p['best_for']}. Specs read from the "
-                      f"official listing on {TODAY}, conflicts flagged, no price quoted.",
+                      f"{p['brand']} {p['cat'].lower()}: {p['best_for']}. Selected listing statements "
+                      f"are dated and source-linked; unconfirmed facts are left blank.",
                       body, jsonld=ld, extra_head=og))
 
 
 # ---- compare
 def build_compare():
     cols = PRODUCTS
-    def row(label, fn):
-        cells = "".join(f"<td>{fn(p)}</td>" for p in cols)
-        return f'<tr><th scope="row">{label}</th>{cells}</tr>'
 
-    def spec(p, key, other="— <span class=\"unverified\">not stated on the listing</span>"):
+    def row(label, fn, field=None, policy_source=None):
+        cells = []
+        for p in cols:
+            sid = policy_source or (p["fields"].get(field, {}).get("source_id") if field else None) or p["official_listing_source_id"]
+            cells.append(f'<td>{fn(p)}<span class="cell-source">Source: {source_link(sid, sid)}</span></td>')
+        return f'<tr><th scope="row">{label}</th>{"".join(cells)}</tr>'
+
+    def spec(p, key, other="— <span class=\"unverified\">not confirmed in retrieved listing text</span>"):
         f = p["fields"].get(key)
-        if not f or f["v"] is None:
+        if not f or f["v"] is None or f["st"] == "unverified":
             return other
         txt = esc(f["v"])
         if f["st"] == "conflict":
-            txt += ' <span class="token conflict">see flags</span>'
+            txt += ' <span class="token conflict">see flag; both statements shown</span>'
+        elif f["st"] == "seller_claim":
+            txt += ' <span class="token conflict">seller-stated, not independently confirmed</span>'
         return txt
 
-    NOCAP = "— <span class=\"unverified\">n/a, not a capacity appliance</span>"
+    NOCAP = "— <span class=\"unverified\">not applicable to this product type</span>"
 
     head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
                    f'<br><span class="th-sub">{p["id"]} · {esc(p["headline"])}</span></th>' for p in cols)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Compare", None)])}
-<h1>Compare &mdash; without crowning a winner</h1>
-<p class="lede">A comparison that names a "best" without knowing your counter depth, your household
-  size or how you cook would be guessing. This table gives you the same facts we have, in the same
-  rows, so you can decide. Blank means the listing does not say.</p>
+<h1>Compare the five products &mdash; start with how you cook</h1>
+<p class="lede">A comparison that names a “best” without knowing your counter depth, household or routine would be a guess. The buyer questions below turn the listing details into trade-offs; every cell links to the official listing or governing policy that supplies its evidence. Blank means the relevant value was not confirmed in the retrieved text.</p>
 <table class="compare">
-  <caption>Aligned by field, so a value is always compared against the same value. Read from the
-    official listings on {TODAY}.</caption>
-  <thead><tr><th scope="col">Field</th>{head}</tr></thead>
+  <caption>Product statements and editorial notes, aligned by field. Every cell has an evidence link; source links go to the official product listing or the relevant Amazon policy.</caption>
+  <thead><tr><th scope="col">Buyer question / field</th>{head}</tr></thead>
   <tbody>
-    {row("Category", lambda p: esc(p["cat"]))}
-    {row("Best for", lambda p: esc(p["best_for"]))}
-    {row("The catch", lambda p: esc(p["tradeoff"]))}
-    {row("Capacity", lambda p: spec(p, "capacity", NOCAP))}
-    {row("Temperature range", lambda p: spec(p, "temperature", NOCAP))}
-    {row("Power / battery", lambda p: spec(p, "power", "see battery row"))}
-    {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOCAP))}
-    {row("Weight", lambda p: spec(p, "weight", NOCAP))}
-    {row("Model on listing", lambda p: spec(p, "model", "— not on the fetched text"))}
-    {row("Price", lambda p: "— not shown, by policy")}
-    {row("Star rating", lambda p: "— not shown, by policy")}
-    {row("Official listing", lambda p: f'<a href="{plain(p)}" rel="sponsored nofollow">untagged</a>')}
-    {row("Buy link", lambda p: f'<a href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p["id"]}" data-event="outbound_click">Amazon (paid link)</a>')}
+    {row("Who might this suit?", lambda p: esc(p["best_for"]))}
+    {row("What is the trade-off?", lambda p: esc(p["tradeoff"]))}
+    {row("How much capacity is stated?", lambda p: spec(p, "capacity", NOCAP), "capacity")}
+    {row("What temperature range is stated?", lambda p: spec(p, "temperature", NOCAP), "temperature")}
+    {row("Power / battery statement", lambda p: spec(p, "power", "— not confirmed in retrieved listing text"), "power")}
+    {row("Dimensions (D × W × H)", lambda p: spec(p, "dimensions", NOCAP), "dimensions")}
+    {row("Weight", lambda p: spec(p, "weight", "— not confirmed in retrieved listing text"), "weight")}
+    {row("Model on listing", lambda p: spec(p, "model", "— not confirmed in retrieved listing text"), "model")}
+    {row("What is the current price?", lambda p: '— check Amazon; not reproduced here', policy_source="S02")}
+    {row("What is the star rating?", lambda p: '— check Amazon; not reproduced here', policy_source="S02")}
+    {row("Official product listing", lambda p: f'<a href="{esc(plain(p))}" rel="sponsored nofollow">Open listing</a>')}
+    {row("Tagged Amazon link", lambda p: f'<a href="{esc(aff(p))}" rel="sponsored nofollow" data-outbound="{p["id"]}" data-event="outbound_click">View listing (paid link)</a>')}
   </tbody>
 </table>
-<h2>How to read this table</h2>
+<h2>Use the table without guessing</h2>
 <ol>
-  <li><strong>Filter by form first.</strong> Two baskets, one basket, or an oven &mdash; that decision
-    eliminates more options than any spec.</li>
-  <li><strong>Measure before you compare.</strong> Write down your counter depth and width, then
-    strike out anything that does not fit with clearance.</li>
-  <li><strong>Treat the catch column as the tie-breaker.</strong> Every product has one; pick the one
-    you can live with.</li>
+  <li><strong>Choose a form first.</strong> Two baskets, one basket, or an oven decides how you load, serve and clean.</li>
+  <li><strong>Measure before you compare.</strong> Check width, depth, clearance and door swing against the current manual.</li>
+  <li><strong>Read the cited listing for a decision-critical detail.</strong> Product pages change; a blank here means this pass did not confirm it, not that the feature is absent.</li>
+  <li><strong>Keep seller claims separate from independent evidence.</strong> No product was tested for this publication.</li>
 </ol>
-<p class="small">Where a listing contradicts itself, the conflicting figures both appear in the
-  cell and the flag ID is on the <a href="flagged.html">Flagged for Review</a> page.</p>
+<p class="small">Where a listing has conflicting statements, both are shown and the flag is linked on the <a href="flagged.html">Flagged for Review</a> page.</p>
 """
     BUILT.append(page("compare.html", f"Compare all five — {SITE}",
-                      "Side-by-side table of all five products, aligned by field, with prices and "
-                      "ratings deliberately omitted and conflicts left visible.",
+                      "Compare air fryers and meat thermometers by the buyer question that matters; each product cell links to its source, with unsupported values left blank.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Compare", "url": BASE + "compare.html"}))
-
 
 # ---- guides
 GUIDES = [
@@ -744,14 +762,15 @@ GUIDES = [
             is easy to forget when you are measuring a gap between a toaster and a coffee maker."""),
             ("Think about how you load it, and how you clean it", """Pulling a drawer out towards you is
             one movement. Opening two doors, sliding a rack out, and lifting a tray is several. The
-            basket units are lighter and easier to move; the 26-quart oven weighs 26.5 pounds and is
-            realistically going to stay where you put it. If you clean in the sink, a removable
+            basket units are easier to shift; the oven is realistically going to stay where you put
+            it — its exact weight is not confirmed in the retrieved listing text. If you clean in the
+            sink, a removable
             nonstick basket is simpler than a stainless cavity and racks."""),
             ("Where each one wins", """Choose the dual-basket unit if you routinely cook a main and a
             side together and want them to finish together. Choose the single 8-quart basket if you
             cook one thing at a time in quantity and want the simplest possible operation. Choose the
             oven if you also want to roast, toast, and rotisserie, and you have the counter depth and
-            the appetite for a 26.5-pound appliance that stays put."""),
+            the appetite for an oven-sized appliance that stays put."""),
          ],
          verdict="""Measure your counter depth first, then decide between a drawer and a door. If
          both fit, pick by what you cook: two things at once means two baskets, one big tray of
@@ -782,9 +801,9 @@ GUIDES = [
             two small zones, not 26 quarts. Four people who batch-cook need volume. Write down what
             you cooked last week before you decide."""),
             ("6. Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
-            6 liters in its capacity field. Six liters is about 6.3 US quarts, so this is almost
-            certainly a label slip rather than a different product &mdash; but it is the kind of slip
-            that makes a spec table worth reading rather than skimming. It is flagged as FLG-034."""),
+            6 liters in its Product Details table. Both statements are kept as written — no unit
+            conversion is applied here, and neither is chosen — but it is the kind of slip that
+            makes a spec table worth reading rather than skimming. It is flagged as FLG-034."""),
          ],
          verdict="""Write down three numbers before you shop: the widest single item you cook, how
          many separate things you cook at once, and your counter depth. Then ignore quart totals that
@@ -805,9 +824,10 @@ GUIDES = [
             dual-basket Chefman says the removable non-stick coated baskets are dishwasher safe. The
             oven does not make a dishwasher claim about its cavity, and it would not be realistic if
             it did."""),
-            ("Weight decides where it lives", """At 26.5 pounds the Emeril is a fixture. The two basket
-            units are around 13 pounds, which is heavy but movable. If you plan to put the appliance
-            away between uses, weight is the number that decides whether that actually happens."""),
+            ("Weight decides where it lives", """The oven is a fixture in most kitchens; the basket units
+            are smaller and easier to shift. Exact weights are not confirmed in the retrieved listing
+            text, so this guide does not print them — check the current listing or manual before
+            buying, and let the number you find decide whether it goes in a cupboard."""),
             ("Measure depth, swing and clearance together", """Depth alone is not enough. Add the air
             gap behind, the headroom needed above the vents, and &mdash; for a door-style oven &mdash;
             the space the doors occupy when open. Write all four numbers down before you move
@@ -856,8 +876,9 @@ GUIDES = [
          sections=[
             ("What an instant-read is for", """Spot checks. You open the grill, stab the thickest part,
             read a number, and decide. It is fast, it needs no app, and it works when the WiFi does
-            not. The ThermoMaven here claims a 1-second response, &plusmn;0.5&nbsp;&deg;F, and a
-            572&nbsp;&deg;F upper range, and it ships with a calibration certificate."""),
+            not. The ThermoMaven listing states a 1-second response and &plusmn;0.5&nbsp;&deg;F stated
+            accuracy; its upper temperature is left blank here because it was not confirmed in the
+            retrieved listing text. A calibration certificate is listed in the box contents."""),
             ("What a wireless system is for", """Long cooks you do not want to babysit. You insert
             probes, close the lid, and watch from inside the house. The CHEF iQ here uses three
             probes into one hub with WiFi range, and adds guided cooking and rest timers in the
@@ -931,13 +952,15 @@ GUIDES = [
             crisp at the moment they hit the table: sprouts, potatoes, a last-minute tray of
             something. The dual-basket Chefman lets you run two of those at once and finish them
             together, which is more useful on the day than a bigger single basket."""),
-            ("Check the circuit before the menu", """Two 1700-watt appliances on one kitchen circuit
-            plus an oven is a tripped breaker, not a crispier sprout. Wattage is worth knowing before
-            the day, which is why it is in the specification table &mdash; and why the 8-quart
-            Chefman's contradictory 1700&nbsp;W / 1000&nbsp;W figures are flagged as FLG-017."""),
+            ("Check the circuit before the menu", """A 1700-watt appliance on one kitchen circuit plus a
+            running oven is a tripped breaker waiting to happen, not a crispier sprout. Wattage is
+            worth knowing before the day, which is why it is in the specification table: the
+            dual-basket Chefman states 120&nbsp;V / 1700&nbsp;W and the 8-quart Chefman states
+            120&nbsp;V / 1000&nbsp;W in the retrieved listing text (FLG-017 was an earlier-register
+            correction, not a current same-page conflict)."""),
          ],
          verdict="""Use the countertop appliance for sides and reheats, keep the bird in the oven, and
-         check what else is on the circuit before you plug in a second 1700-watt unit."""),
+         check what else is on the circuit before you plug in another high-draw appliance."""),
     dict(slug="small-kitchen-air-fryer", title="Air fryer for a small kitchen: the three measurements that decide it",
          sub="Depth, door swing and where it lives when it is not in use.",
          kicker="Buying guide · 4 min read", products=["P-03", "P-01", "P-02"],
@@ -952,8 +975,9 @@ GUIDES = [
             French doors need room in front for two doors to open and stay open. In a narrow galley
             that difference decides whether the appliance is usable at all."""),
             ("3. Where it lives between uses", """If it goes in a cupboard, weight decides whether that
-            happens twice or never. The 8-quart Chefman is 12.8 pounds; the Emeril is 26.5. Neither
-            is a one-hand lift, but only one of them is realistically movable."""),
+            happens twice or never. The exact weights are not confirmed in the retrieved listing text,
+            so this guide does not print them — check the current listing or manual and be honest
+            about whether you will actually carry it in and out."""),
             ("What to give up first", """Windows, presets, and a second basket are all things you can
             live without. Depth and weight are not. If the counter is tight, a single-basket unit
             with no window is the honest choice, and it is also the cheapest of the three here."""),
@@ -1003,7 +1027,7 @@ def build_guide(g):
         f'<span>{esc(p["best_for"])}</span></li>' for p in rel)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (g['title'][:40] + "…", None)], "../")}
-<p class="kicker">{esc(g['kicker'])} · verified {TODAY}</p>
+<p class="kicker">{esc(g['kicker'])} · listing checked {TODAY}</p>
 <h1>{esc(g['title'])}</h1>
 <p class="lede">{esc(g['intro'])}</p>
 <div class="verdict-box">
@@ -1045,9 +1069,11 @@ def build_how():
 
 <h2>What "verified" means here</h2>
 <p>It means one person opened the official Amazon listing for the product on {TODAY} and read the
-  value off the page. Each product page carries the date, and every specification row links to the
-  listing it came from. It does <strong>not</strong> mean we tested the product, and it does not mean
-  the listing is correct &mdash; only that we read what it says and recorded it accurately.</p>
+  value off the page. Each product page carries the date and a link for every specification row,
+  and blank values are printed as blanks rather than filled in. It does <strong>not</strong> mean we
+  tested the product, it does not mean the listing is correct, and it does not mean a complete live
+  page was captured &mdash; only that available official text was read and recorded, and that
+  unsupported values are left blank.</p>
 
 <h2>What we have not done</h2>
 <ul>
@@ -1077,8 +1103,10 @@ def build_how():
 <h2>How conflicts are handled</h2>
 <p>When a listing contradicts itself, we print both figures in the specification table and give the
   contradiction an ID on the <a href="flagged.html">Flagged for Review</a> page. There are currently
-  several: preset counts, accessory counts, top temperature, wattage, capacity units and warranty
-  length. We do not average them, pick the flattering one, or quietly drop the awkward one.</p>
+  several: preset counts (FLG-021), accessory counts (FLG-031), top temperature (FLG-018) and
+  capacity units (FLG-034). Wattage and warranty length turned out to be errors in an earlier register,
+  corrected against the retrieved listing text (FLG-017, FLG-019). We do not average figures, pick the
+  flattering one, or quietly drop the awkward one.</p>
 
 <h2>How the money works</h2>
 <p>Outbound product links carry our Amazon Associate tag and are marked
@@ -1108,13 +1136,11 @@ SUGGESTIONS = [
              "methodology essay. Verification still exists, one click away.",
          impact="High — reader trust and time on page", effort="Done",
          status="Shipped", verify="Visible on index.html: hero, three featured products, one nav group."),
-    dict(id="SG-02", title="Publish question-shaped guides, then measure arrivals",
-         what="Eight guides built from real buying decisions, each added to the sitemap and the RSS "
-              "feed, each ending in a verdict.",
-         why="Long-tail question queries are how a small site earns its first organic traffic. A "
-             "guide that answers one question beats a listicle.",
-         impact="High — organic traffic", effort="Done",
-         status="Shipped", verify="guides.html lists eight; sitemap.xml and feed.xml include all eight."),
+    dict(id="SG-02", title="Publish buyer-question guides and review their results",
+         what="Eight guides answer specific purchase questions and appear in the sitemap and RSS feed.",
+         why="Question-shaped guides make the editorial purpose clear; search demand and performance remain unmeasured until Search Console is verified.",
+         impact="High — useful information", effort="Done",
+         status="Shipped; results unmeasured", verify="guides.html, sitemap.xml and feed.xml show the current set; see SG-28 for query measurement."),
     dict(id="SG-03", title="Measure clicks before optimising anything",
          what="Five defined events, counted locally with no cookies and no third party, exportable "
               "to CSV by the reader or the owner.",
@@ -1146,13 +1172,11 @@ SUGGESTIONS = [
          why="A tag that is not being recorded earns nothing, and you cannot tell from outside.",
          impact="Required — revenue", effort="Owner action", status="Blocked on the owner",
          verify="Product pages still say PENDING TEST. Cannot be completed without account access."),
-    dict(id="SG-08", title="One indexable host with a sitemap, feed and structured data",
-         what="Canonical tags, sitemap.xml, robots.txt, an RSS feed, JSON-LD on every page, and a "
-              "working on-site search.",
-         why="A crawler needs one canonical address per page and a reason to rank it. Duplicate "
-             "hosts and dead search pages waste both.",
-         impact="High — findability", effort="Done", status="Shipped",
-         verify="sitemap.xml lists every page; three JSON-LD blocks on product pages; search.html reads a generated index."),
+    dict(id="SG-08", title="Keep one canonical set with a sitemap, feed and local search",
+         what="Canonical tags, sitemap.xml, robots.txt, an RSS feed, JSON-LD and browser-side search are generated together.",
+         why="These are discoverability basics, not a promise of indexing or ranking; confirm the final host before encouraging crawlers.",
+         impact="High — findability", effort="Done", status="Built; host suitability under review",
+         verify="sitemap.xml, feed.xml, canonical tags and embedded search index pass scripts/check_site.py; hosting decision is SG-27."),
     dict(id="SG-09", title="Make it read like a publication: authorship, brand, imagery, seasons",
          what="Named editorial standards page, consistent masthead and type, original illustration "
               "instead of stock or Amazon photography, and seasonal guides.",
@@ -1174,44 +1198,96 @@ SUGGESTIONS = [
              "not.",
          impact="High — honesty", effort="Done", status="Shipped, intentionally empty",
          verify="campaign-ledger.html renders zero rows and says why."),
-    dict(id="SG-12", title="Gate any automation behind a human compliance check",
-         what="Automate research, drafting and link formatting. Never auto-publish. Every new page "
-              "passes the build gate before it can ship.",
-         why="The request asked for automation and for compliance. The only way both are true is a "
-             "gate.",
-         impact="Medium — scale without risk", effort="Done", status="Shipped",
-         verify="scripts/check_site.py runs on every build and fails on disclosure, sponsorship, price and link errors."),
-    dict(id="SG-13", title="Add a price display through the Product Advertising API",
-         what="If the owner obtains PA or Creators API credentials, prices and availability could be "
-              "shown with the attribution Amazon requires.",
-         why="It is the single biggest missing piece for a shopping site, and the only compliant way "
-             "to add it.",
-         impact="High — conversion", effort="Owner action, needs API approval",
-         status="Not started — recommended for approval",
-         verify="Blocked: no API credentials. Program Policies 2(b) is the constraint."),
-    dict(id="SG-14", title="Add a custom domain",
-         what="Move from the github.io subpath to a real domain and update canonicals, sitemap and "
-              "feed together.",
-         why="A subpath on a shared host is indexable but weak for brand and trust.",
-         impact="Medium — findability and brand", effort="Small, owner decision",
-         status="Not started — recommended for approval", verify="Currently flagged as FLG-006."),
-    dict(id="SG-15", title="Get real product photography through the API",
-         what="Use image URLs supplied via the PA or Creators API, which arrive with the licence.",
-         why="Illustration is safe but a shopper still wants to see the product.",
-         impact="Medium — conversion", effort="Owner action, needs API approval",
-         status="Not started — recommended for approval", verify="Currently flagged as FLG-007."),
-    dict(id="SG-16", title="Publish a weekly cadence and hold it",
-         what="One guide per week, added to sitemap and feed, with the topic chosen from measured "
-              "Search Console queries rather than instinct.",
-         why="Cadence compounds; sporadic bursts do not.",
-         impact="Medium — organic growth", effort="Ongoing", status="Blocked on Search Console",
-         verify="Requires Search Console access (SG-10)."),
+    dict(id="SG-12", title="Keep publication behind the accuracy and compliance gate",
+         what="Generate pages from the shared register; run the structural, source, disclosure, sponsorship and data checks before publishing.",
+         why="A passing gate catches defined classes of error; it does not substitute for account review or legal approval.",
+         impact="High — accuracy and compliance", effort="Done", status="Shipped; hosting policy still open",
+         verify="Run scripts/build_site.py and scripts/check_site.py; required branch protection is not assumed."),
+    dict(id="SG-13", title="Keep prices off-site unless an allowed Amazon-served/API method is approved",
+         what="If price display is ever chosen, confirm the current policy and account eligibility, then implement only through a permitted Amazon-served element or approved API.",
+         why="This site has no API access or live price feed; a copied listing price could become stale and is not reproduced.",
+         impact="High — commerce accuracy", effort="Owner action; account eligibility",
+         status="Not started — no approved data source",
+         verify="Check Program Policies and Creators API eligibility with the enrolled account before implementation."),
+    dict(id="SG-14", title="Choose the canonical domain after the hosting decision",
+         what="After resolving SG-27, select a domain and update canonicals, sitemap, feed and Search Console together.",
+         why="One chosen canonical address avoids split signals; a custom domain alone does not resolve the Pages suitability question.",
+         impact="Medium — findability and brand", effort="Owner decision + DNS",
+         status="Blocked on SG-27", verify="Confirm the host and DNS ownership first; see FLG-006 and FLG-036."),
+    dict(id="SG-15", title="Use product imagery only after its permitted use is confirmed",
+         what="If an approved Amazon tool supplies images, review the current licensing and display rules before adding them; otherwise keep the original generic illustrations.",
+         why="The repository contains no licensed product photography, and an API image is not an automatic blanket licence.",
+         impact="Medium — shopper context", effort="Owner action; needs approved source",
+         status="Not started — image permissions not confirmed", verify="Check current Amazon tool terms and record the permitted use before adding assets."),
+    dict(id="SG-16", title="Publish a cadence only after query evidence exists",
+         what="Choose a sustainable guide schedule, then use Search Console queries and reader questions to select topics.",
+         why="A publishing calendar is useful only when it serves real reader needs; no traffic or query data has been supplied.",
+         impact="Medium — editorial growth", effort="Ongoing", status="Blocked on Search Console",
+         verify="Review the Search Console report before setting the schedule (SG-28)."),
+    dict(id="SG-27", title="Resolve hosting fit before directing purchase traffic",
+         what="Review GitHub Pages’ stated limits against this affiliate publication; if fit is uncertain, ask GitHub or move to a host intended for commercial publishing.",
+         why="Pages is configured and built, but its published limits raise a commercial-hosting suitability question. This is a question to resolve, not a finding of violation.",
+         impact="Critical — continuity and policy", effort="Owner decision + host review",
+         status="Review before promotion",
+         verify="Record a policy basis for the chosen host or complete a tested migration; a successful build is not policy approval."),
+    dict(id="SG-28", title="Verify Search Console and let query evidence shape the next guide",
+         what="Verify site ownership, submit the sitemap, then review queries, clicks and impressions before expanding the guide set.",
+         why="The repository cannot see search demand or impressions; selecting topics now would be a hypothesis, not a measured result.",
+         impact="High — findability", effort="Owner account action",
+         status="Blocked on owner verification",
+         verify="Confirm the property in Search Console and record the first report date and metrics (no forecasts)."),
+    dict(id="SG-29", title="Confirm product intent and test each Special Link in Associates Central",
+         what="For each product, record the owner-confirmed intended ASIN, confirmation date and source separately from the listing and any redirect; test one tagged link in the enrolled account.",
+         why="Redirect snapshots do not establish intent or tracking activity; P-04’s submitted link did not produce an observed product destination in this check.",
+         impact="Required before scaling — attribution", effort="Owner account action",
+         status="Pending owner confirmation and test",
+         verify="Keep the five ASIN confirmations and the five test results in an authorized first-party record; do not infer success from a click."),
+    dict(id="SG-30", title="Choose endpoint hosting and retention before sending events off-device",
+         what="The optional self-hosted collector is drafted; choose its host, same-origin route, access controls, retention and privacy notice before configuring the browser to send anything.",
+         why="The static Pages site cannot run this collector. LocalStorage is the only active measurement until a separately hosted endpoint is deliberately configured.",
+         impact="Medium — measurement with privacy", effort="Owner infrastructure decision",
+         status="Code drafted; deployment not configured",
+         verify="Deploy behind HTTPS, test the five-event allow-list and daily aggregates, confirm no client identifier/IP is stored, then review retention and notice."),
+    dict(id="SG-31", title="Re-read the five listings end to end and refresh review scope",
+         what="A full-transcript pass over each official listing — not excerpts — recording new fields and conflicts, updating each source's review scope, and re-dating the register.",
+         why="Amazon pages are dynamic, and the retrieved text used here was excerpt-level; blanks and discrepancies can only be resolved by a complete read of each current page.",
+         impact="Medium — fact coverage", effort="1–2 hours, no account required",
+         status="Ready to run",
+         verify="Every S10–S19 row states its review scope; product blanks re-tested; register dates and the build gate advance together."),
 ]
+
+SUGGESTION_SOURCES = {
+    "SG-01": ["S10", "S11", "S12", "S13", "S14", "S30"],
+    "SG-02": ["S25", "S30", "S32"],
+    "SG-03": ["S31"],
+    "SG-04": ["S01", "S03"],
+    "SG-05": ["S03", "S04"],
+    "SG-06": ["S10", "S11", "S12", "S13", "S14", "S15", "S16", "S17", "S18", "S19"],
+    "SG-07": ["S01", "S02"],
+    "SG-08": ["S24", "S28", "S32"],
+    "SG-09": ["S30"],
+    "SG-10": ["S24", "S25", "S26", "S29"],
+    "SG-11": ["S02"],
+    "SG-12": ["S02", "S20", "S21"],
+    "SG-13": ["S02", "S20", "S21"],
+    "SG-14": ["S23", "S27", "S31"],
+    "SG-15": ["S02", "S20", "S21"],
+    "SG-16": ["S25", "S30", "S32"],
+    "SG-27": ["S23", "S27", "S31"],
+    "SG-28": ["S24", "S25", "S26"],
+    "SG-29": ["S01", "S02", "S10", "S11", "S12", "S13", "S14"],
+    "SG-30": ["S03", "S31"],
+    "SG-31": ["S10", "S11", "S12", "S13", "S14", "S15", "S16", "S17", "S18", "S19"]
+}
+for proposal in SUGGESTIONS:
+    proposal["sources"] = SUGGESTION_SOURCES[proposal["id"]]
+
 
 
 def build_suggestions():
     rows = ""
     for s in SUGGESTIONS:
+        citations = " ".join(source_link(sid, sid) for sid in s["sources"])
         rows += f"""<tr data-sug="{s['id']}">
   <td class="nowrap"><strong>{s['id']}</strong></td>
   <td><strong>{esc(s['title'])}</strong><br><span class="small">{esc(s['what'])}</span></td>
@@ -1220,6 +1296,7 @@ def build_suggestions():
   <td>{esc(s['effort'])}</td>
   <td><span class="pill {s['status'].split()[0].lower().strip(',.')}">{esc(s['status'])}</span></td>
   <td class="small">{esc(s['verify'])}</td>
+  <td class="small evidence">{citations}</td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="{s['id']}" aria-label="Move {s['id']} up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="{s['id']}" aria-label="Move {s['id']} down">&darr;</button>
@@ -1247,10 +1324,10 @@ def build_suggestions():
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>Sixteen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>Twenty-one proposals. Every row cites official evidence or context; shipped work and open decisions are both shown. Ranking records your preference, not an automatic implementation.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
-    <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
+    <th scope="col">How to check it</th><th scope="col">Evidence</th><th scope="col">Your rank</th></tr></thead>
   <tbody>{rows}</tbody>
 </table>
 <p class="cta">
@@ -1263,15 +1340,11 @@ def build_suggestions():
   actually changes something.</p>
 <table class="shortlist">
   <caption>Open decisions only.</caption>
-  <thead><tr><th scope="col">ID</th><th scope="col">Decision needed</th><th scope="col">Who can do it</th></tr></thead>
-  <tbody>
-    <tr><td>SG-07</td><td>Test one Special Link per product in the enrolled account</td><td>Owner (account access)</td></tr>
-    <tr><td>SG-10</td><td>Verify Search Console and decide on email capture</td><td>Owner (account access)</td></tr>
-    <tr><td>SG-13</td><td>Apply for Product Advertising API access so prices can be shown legally</td><td>Owner (approval)</td></tr>
-    <tr><td>SG-14</td><td>Choose and attach a custom domain</td><td>Owner (decision)</td></tr>
-    <tr><td>SG-15</td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
-    <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
-  </tbody>
+  <thead><tr><th scope="col">ID</th><th scope="col">Decision needed</th><th scope="col">Who can act</th><th scope="col">Evidence</th></tr></thead>
+  <tbody>""" + "".join(
+      f'<tr><td>{sid}</td><td>{esc(next(x["title"] for x in SUGGESTIONS if x["id"] == sid))}</td>'
+      f'<td>Owner / account holder</td><td class="evidence">' + " ".join(source_link(src, src) for src in SUGGESTION_SOURCES[sid]) + '</td></tr>'
+      for sid in ("SG-07", "SG-10", "SG-13", "SG-14", "SG-15", "SG-16", "SG-27", "SG-28", "SG-29", "SG-30", "SG-31")) + """</tbody>
 </table>
 
 <h2>Record a decision</h2>
@@ -1301,8 +1374,7 @@ def build_suggestions():
 </ul>
 """
     BUILT.append(page("suggestions.html", f"Decision Center — {SITE}",
-                      "Sixteen proposals for this site, with honest status, ranked before anything "
-                      "is built. Review the shortlist and choose a path.",
+                      "Twenty-one proposals for this site, with honest status and source links. Review the shortlist and decide what should happen next.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Decision Center", "url": BASE + "suggestions.html"}))
 
@@ -1355,10 +1427,9 @@ QUESTIONS = [
      "Verify the site in Search Console and submit the sitemap. Decide whether email is wanted.",
      "Growth loop (SG-10)", "Owner", "RSS only"),
     ("Q-10", "Which listing contradictions can be resolved with the seller?",
-     "There are now six: preset count, accessory count, top temperature, wattage, capacity units and "
-     "warranty length.",
+     "Four are current listing conflicts: preset count, accessory count, top temperature and capacity units. The earlier wattage and warranty entries were corrected, not current conflicts.",
      "Ask each seller in writing, or read the printed manual. Until then both figures stay published.",
-     "Specification certainty (FLG-017 to FLG-022)", "Sellers", "Open"),
+     "Specification certainty (FLG-017, FLG-018, FLG-021, FLG-022, FLG-031, FLG-034)", "Sellers", "Open"),
     ("Q-11", "What commission categories apply, and at what rate?",
      "Rates live in the Commission Income Statement inside the account and change by category.",
      "Read the Commission Income Statement in Associates Central. Do not publish a rate until it is "
@@ -1501,10 +1572,19 @@ def build_flagged():
 
 
 # ---- sources
+def url_cell(url):
+    parsed = urlparse(url)
+    if parsed.hostname == "link.amazon":
+        return f'<span class="small">{esc(url)}</span><div class="small">Kept as plain text: the short-link destination is unverified and Amazon shorteners must not obscure where a reader lands (S02 §6(w)).</div>'
+    if parsed.hostname == "www.amazon.com":
+        return f'<a href="{esc(url)}" rel="sponsored nofollow" class="small">{esc(url)}</a>'
+    return f'<a href="{esc(url)}" rel="noopener noreferrer" class="small">{esc(url)}</a>'
+
+
 def build_sources():
     rows = "".join(
         f"""<tr><td class="nowrap"><strong>{s['id']}</strong></td>
-  <td>{esc(s['name'])}<br><a href="{esc(s['url'])}" rel="sponsored nofollow" class="small">{esc(s['url'])}</a></td>
+  <td>{esc(s['name'])}<br>{url_cell(s['url'])}</td>
   <td class="quote">{esc(s['used_for'])}</td>
   <td class="nowrap">{esc(s['checked'])}</td></tr>""" for s in SOURCES)
     body = f"""
@@ -1548,7 +1628,7 @@ def build_sources():
   erasing them.</p>
 """
     BUILT.append(page("sources.html", f"Sources — {SITE}",
-                      "Ten sources, all official, all dated, with the exact wording each claim "
+                      f"{len(SOURCES)} sources, all official, all dated, with the exact wording each claim "
                       "relies on.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Sources", "url": BASE + "sources.html"}))
@@ -1556,108 +1636,80 @@ def build_sources():
 
 # ---- executive summary
 def build_exec():
-    rows = "".join(
-        f"<tr><td class=\"nowrap\">{p['id']}</td><td><strong>{esc(p['brand'])}</strong></td>"
-        f"<td>{esc(p['cat'])}</td><td>{esc(p['observed'])}</td>"
-        f"<td>{esc(p['model'] or '—')}</td>"
-        f"<td><a href=\"{plain(p)}\" rel=\"sponsored nofollow\">listing</a></td></tr>" for p in PRODUCTS)
+    rows = []
+    for p in PRODUCTS:
+        observed = p["observed"] or "— no product destination observed (FLG-012)"
+        intent = p["intended"] or "— not confirmed by owner (FLG-001)"
+        rows.append(
+            f'<tr><td>{p["id"]}</td><td>{esc(p["brand"])}</td><td>{esc(p["cat"])}</td>'
+            f'<td>{esc(intent)}</td><td>{esc(observed)}</td>'
+            f'<td><a href="{esc(p["official_listing_url"])}" rel="sponsored nofollow">'
+            f'{esc(p["official_listing_asin"])} · official listing</a></td>'
+            f'<td class="evidence">{source_link(p["official_listing_source_id"], p["official_listing_source_id"])} '
+            f'{source_link(p["observed_redirect_source_id"], p["observed_redirect_source_id"] + " · submitted-link check")}</td></tr>')
+
+    conflicts = []
+    for p in PRODUCTS:
+        for key, field in p["fields"].items():
+            if field["st"] == "conflict":
+                conflicts.append(
+                    f'<tr><td>{esc(p["id"])}</td><td>{esc(FIELD_LABEL.get(key, key.replace("_", " ").title()))}</td>'
+                    f'<td>{esc(str(field["v"]))}<br><span class="small">{esc(field.get("note", ""))}</span></td>'
+                    f'<td>{source_link(field.get("source_id") or p["official_listing_source_id"], field.get("source_id") or p["official_listing_source_id"])}</td></tr>')
+
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Executive Summary", None)])}
 <h1>Executive summary</h1>
-<p class="lede">Five submitted links. Two categories. One site that publishes specifications read from
-  official listings, prints every contradiction, and refuses to quote a price it is not licensed to
-  quote.</p>
+<p class="lede">Five buyer-facing product pages, two categories, question-led guides, a comparison table and a decision center. Product statements are tied to the dated source shown beside them; editorial guidance is not a lab test or a claim of hands-on experience.</p>
 
 <div class="statrow">
-  <div><span class="statnum">5</span><span class="statlabel">products covered</span></div>
-  <div><span class="statnum">8</span><span class="statlabel">guides published</span></div>
-  <div><span class="statnum">{len(FLAGS)}</span><span class="statlabel">flags, all public</span></div>
-  <div><span class="statnum">0</span><span class="statlabel">prices or ratings shown</span></div>
+  <div><span class="statnum">{len(PRODUCTS)}</span><span class="statlabel">products covered</span></div>
+  <div><span class="statnum">{len(GUIDES)}</span><span class="statlabel">guides published</span></div>
+  <div><span class="statnum">{len(FLAGS)}</span><span class="statlabel">review flags, including historical corrections</span></div>
+  <div><span class="statnum">0</span><span class="statlabel">prices or ratings reproduced</span></div>
 </div>
 
-<h2>1. What exists now</h2>
-<p>A static publication site deployable straight to GitHub Pages: a front page that leads with
-  products, two category pages, five product pages, eight question-shaped guides, a comparison table
-  aligned by field, an on-site search that actually works, JSON-LD on every page, a sitemap, an RSS
-  feed, and a disclosure strip under the masthead on every page. Alongside it sit the internal
-  records: the <a href="suggestions.html">Decision Center</a>, the
-  <a href="questions.html">Open Questions</a> register, the
-  <a href="flagged.html">flag register</a>, the <a href="sources.html">source register</a>, and an
-  intentionally empty <a href="campaign-ledger.html">campaign ledger</a>.</p>
+<h2>What exists</h2>
+<p>A static publication with five product records, source-linked specifications, a buyer-oriented compare page, guides, local browser search, sitemap and RSS feed. The campaign ledger has no rows because no authorized first-party report was supplied. The repository also includes an optional self-hosted event collector, but it is not configured or deployed.</p>
 
-<h2>2. The five products, as observed</h2>
+<h2>Product identity: three separate records</h2>
+<p>The submitted short-link token, any redirect destination actually observed, and the official listing used to build each product page are stored separately. Intended ASINs remain blank until the owner confirms them. The official listing is not a substitute for that confirmation.</p>
 <table class="exec">
-  <caption>Observed destinations, read {TODAY}. Intended ASINs remain blank (FLG-001).</caption>
-  <thead><tr><th scope="col">ID</th><th scope="col">Brand</th><th scope="col">Category</th>
-    <th scope="col">Observed ASIN</th><th scope="col">Model on listing</th>
-    <th scope="col">Official listing</th></tr></thead>
-  <tbody>{rows}</tbody>
+  <caption>Product identities and source references, checked 2026-11-20. All five intended ASINs are unconfirmed; P-04 has no observed redirect destination.</caption>
+  <thead><tr><th scope="col">ID</th><th scope="col">Brand</th><th scope="col">Category</th><th scope="col">Intended ASIN</th><th scope="col">Observed redirect target</th><th scope="col">Official listing</th><th scope="col">Evidence</th></tr></thead>
+  <tbody>{"".join(rows)}</tbody>
 </table>
 
-<h2>3. What is verified</h2>
-<ul>
-  <li>Every product title, dimension, weight, wattage, temperature range and capacity on this site was
-    read from the official listing on {TODAY}.</li>
-  <li>The four policy sources &mdash; Operating Agreement Section 5, Program Policies 2(a) and 2(b),
-    FTC disclosure guidance and Google's outbound-link guidance &mdash; are quoted with exact wording
-    in the <a href="sources.html">source register</a>.</li>
-  <li>Food-safety temperatures come from the USDA FSIS chart, not from a product listing.</li>
-  <li>All five short links were fetched and their destinations recorded separately from intent.</li>
-</ul>
-
-<h2>4. What is not verified, and is not pretended to be</h2>
-<ul>
-  <li><strong>Intent.</strong> Only the owner knows which ASIN each link was meant to point at
-    (FLG-001).</li>
-  <li><strong>The tracking ID.</strong> Whether shopnow047c-20 is live is visible only inside
-    Associates Central (FLG-002).</li>
-  <li><strong>The short-link format.</strong> Its compliance status is unresolved, so the site uses
-    tagged amazon.com/dp/ URLs and does not call the short links invalid (FLG-003).</li>
-  <li><strong>The link test.</strong> No tagged link has been clicked inside the enrolled account, so
-    every product page still says PENDING TEST (FLG-004).</li>
-  <li><strong>Certification.</strong> NIST and NSF appear on the listings. No certificate or test
-    report has been seen (FLG-035).</li>
-  <li><strong>Hands-on experience.</strong> None. Nothing on this site implies it was tested
-    (FLG-032).</li>
-</ul>
-
-<h2>5. The six listing conflicts a buyer should know about</h2>
+<h2>Current listing conflicts</h2>
+<p>The current product records preserve the following discrepancies instead of choosing a convenient value. Historical corrections and values not reproduced in the retrieved text stay in the flag register but are not presented as current same-page conflicts.</p>
 <table class="exec">
-  <thead><tr><th scope="col">Flag</th><th scope="col">Product</th><th scope="col">Contradiction</th></tr></thead>
-  <tbody>
-    <tr><td>FLG-021</td><td>Emeril 26 QT</td><td>24 presets in the title, 25 in About this item</td></tr>
-    <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in the title, seven in Configuration, six named</td></tr>
-    <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 °F max in the spec field, 450 °F Hi-Fry in the title</td></tr>
-    <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in the spec fields, 1000 W in About this item</td></tr>
-    <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in the title, 6 liters in the capacity field</td></tr>
-    <tr><td>FLG-019</td><td>CHEF iQ Sense</td><td>Two-year assurance on the listing, one year in the earlier pass</td></tr>
-  </tbody>
+  <thead><tr><th scope="col">Product</th><th scope="col">Field</th><th scope="col">Statements captured</th><th scope="col">Official source</th></tr></thead>
+  <tbody>{"".join(conflicts)}</tbody>
 </table>
 
-<h2>6. What would change the numbers</h2>
-<p>Two credentials, and one decision. Product Advertising API access would make legal price display
-  possible (SG-13), which is the largest single lever on conversion. Search Console verification would
-  make query data available (SG-10), which is the only way to choose the next guide from evidence
-  rather than instinct. A custom domain decision (SG-14, FLG-006) would strengthen brand and
-  indexation. Everything else on the <a href="suggestions.html">Decision Center</a> is either shipped
-  or cosmetic.</p>
+<h2>What is not verified</h2>
+<ul>
+  <li><strong>Owner intent.</strong> Intended ASIN and its confirmation date/source are blank for all five products (FLG-001).</li>
+  <li><strong>Associates account and tracking.</strong> The tracking ID’s issuance/activity and the one-per-product Special Link test require the enrolled account (FLG-002, FLG-004).</li>
+  <li><strong>Short-link compliance.</strong> It remains unresolved; the site does not call the submitted links valid or invalid (FLG-003). Four previous recorded attempts resolved to a product page; P-04 returned a checkpoint, not a product destination (FLG-011, FLG-012).</li>
+  <li><strong>Independent testing and certificates.</strong> No product was tested; seller-stated certifications have not been independently verified (FLG-032, FLG-035).</li>
+  <li><strong>Full live-page transcript.</strong> Amazon listings are dynamic. This pass reviewed available excerpts, not a complete line-by-line capture of each live page; unsupported values remain blank and the source rows identify the page and review scope (FLG-023).</li>
+</ul>
 
-<h2>7. Honest position on revenue</h2>
-<p>No commission rate, click count, conversion rate or revenue figure is presented here, because none
-  can be obtained from an authorised first-party report yet. The
-  <a href="campaign-ledger.html">campaign ledger</a> is empty by design and its schema is defined.
-  When the tracking report produces a row, that row goes in with a date and a source. Until then the
-  honest number is zero, and it is stated as zero rather than dressed up.</p>
+<h2>Hosting and discovery are open decisions</h2>
+<p>GitHub’s Pages limits documentation raises a question about free hosting for sites directed at commercial transactions. This publication is an affiliate storefront, so its hosting fit must be assessed before promotion. That is an unresolved policy issue, not a conclusion that a violation occurred (FLG-036). GitHub’s Pages documentation also says it logs visitor IP addresses for security; the disclosure distinguishes that host-side logging from the site’s local browser events (FLG-037).</p>
+<p>Review SG-27 (hosting), SG-28 (Search Console), SG-29 (owner confirmation and Special Link testing) and SG-30 (whether and where to deploy the aggregate event collector). None is automatically implemented from this page.</p>
 
-<p class="cta"><a class="btn" href="suggestions.html">Review the decisions</a>
-  <a class="btn ghost" href="flagged.html">Check what we could not verify</a></p>
+<h2>Privacy-preserving measurement and honest reporting</h2>
+<p>The browser records five event types locally and offers an export. No event is sent to the collector unless a separate endpoint is explicitly configured. The optional collector accepts only the five event types and aggregates daily counts without user IDs, cookies, raw IP addresses or search terms; it is not deployed. The campaign ledger remains empty until an authorized Amazon report provides data. No conversion score, earnings claim or revenue forecast is calculated.</p>
+
+<p class="cta"><a class="btn" href="suggestions.html">Review the Decision Center</a>
+  <a class="btn ghost" href="flagged.html">Read the review flags</a></p>
 """
     BUILT.append(page("executive-summary.html", f"Executive Summary — {SITE}",
-                      "What was built, what is verified against official sources, what is not, and "
-                      "which decisions would change the numbers.",
+                      "What the publication contains, what the source record confirms, what remains unknown, and which owner decisions are still open.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Executive Summary", "url": BASE + "executive-summary.html"}))
-
 
 # ---- ledger
 def build_ledger():
@@ -1755,11 +1807,14 @@ def build_disclosure():
       <td>Which direction is actually preferred</td></tr>
   </tbody>
 </table>
-<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
-  carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
-  pixel and no tag manager on this site. A self-hosted endpoint could replace local storage later,
-  and the event names are fixed so that swap would not require editing any page &mdash; but until
-  that endpoint exists, nothing leaves your device.</p>
+<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no fingerprinting is used, and this site loads no analytics script, pixel or tag manager. The <code>search</code> event records that a search ran and how many results it returned &mdash; never the words you typed. Nothing is transmitted off your device by this site as it ships.</p>
+<div class="panel">
+  <h2>Two qualifications, stated plainly</h2>
+  <ul>
+    <li><strong>Hosting logs.</strong> This site is served by GitHub Pages. GitHub's documentation states that Pages logs the IP addresses of visitors for security purposes, and those logs are operated by GitHub &mdash; this site has no access to them. See S31 in the <a href="sources.html">source register</a> and FLG-037 on the <a href="flagged.html">Flagged for Review</a> page.</li>
+    <li><strong>Optional collector.</strong> The repository contains an optional, self-hosted collector (<code>scripts/analytics_server.py</code>) implementing the same five events. It stores only per-day aggregate counts &mdash; no identifier, cookie, IP address, user agent or raw search term &mdash; and it is not deployed and not enabled on this site. If it is ever deployed behind HTTPS at a same-origin route, this page will be updated before any event is sent.</li>
+  </ul>
+</div>
 <p>You can clear everything we store by clearing site data for this domain, and you can export it
   first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
 
@@ -1775,6 +1830,7 @@ def build_disclosure():
   <li>No fonts or scripts loaded from a third-party CDN &mdash; the page loads from this domain
     only.</li>
   <li>No account, no login, no email capture on this site.</li>
+  <li>No cookies are set by this site. (GitHub's Pages hosting keeps its own security logs; see above.)</li>
   <li>Clicking a product link takes you to Amazon, where Amazon's own privacy policy applies and
     Amazon's own cookies are set.</li>
 </ul>
@@ -1870,7 +1926,7 @@ def build_search():
                    "What has to be answered before a decision can be made", "page"),
                   ("Flagged for Review", "flagged.html",
                    "Every conflict and unverified value with its source", "page"),
-                  ("Sources", "sources.html", "The ten official sources behind every claim", "page"),
+                  ("Sources", "sources.html", "The source register: official sources, one row each", "page"),
                   ("Disclosure and privacy", "disclosure.html",
                    "Affiliate disclosure, price policy, and the five measured events", "page")]:
         index.append({"t": extra[0], "u": extra[1], "d": extra[2], "k": extra[3]})

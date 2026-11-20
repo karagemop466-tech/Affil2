@@ -81,23 +81,23 @@
   },
   {
     "id": "FLG-008",
-    "title": "CHEF iQ battery conflict",
-    "detail": "Same listing states 50 hours (About this Item) and 70 hours (Product Description). Both published; neither chosen.",
+    "title": "Earlier battery figure not re-confirmed on the current listing capture",
+    "detail": "The current About this item text fetched on 2026-11-20 states up to 50 hours per charge. An earlier capture of another section recorded 70 hours, which this pass did not reproduce. The product page now presents 50 hours as the current listing statement and records the earlier figure only as a dated, unresolved discrepancy; neither is an independently tested runtime.",
     "links": [
       "S14"
     ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "severity": "unverified",
+    "owner_status": "Current listing claim shown as stated; earlier 70-hour capture retained for review, not treated as current."
   },
   {
     "id": "FLG-009",
-    "title": "Emeril listing conflicts",
-    "detail": "Preset count 24 vs 25 and model numbers 4-00675-02 vs 4-00675-02X-VN appear on the same listing. Both published.",
+    "title": "P-02 model number not re-confirmed in the current text capture",
+    "detail": "Earlier records captured model numbers 4-00675-02 and 4-00675-02X-VN. Neither appeared in the retrieved listing text used for the 2026-11-20 refresh. The product page therefore leaves the model blank; the earlier variants are historical notes, not a current confirmed listing conflict.",
     "links": [
       "S11"
     ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "severity": "unverified",
+    "owner_status": "Model left blank pending direct confirmation from the current listing or manual."
   },
   {
     "id": "FLG-010",
@@ -147,8 +147,8 @@
   },
   {
     "id": "FLG-014",
-    "title": "Supplied tokens are 9 characters, not 10-character ASINs",
-    "detail": "All five link.amazon path tokens (B04G1MEwY, B02NbDxp3, B00hJ57DV, B0c8moW59, B0f3GKalj) are 9 characters. Third-party references describe ASINs as 10 characters. An official Amazon definition was not found in this pass, so the length rule is unverified. The tokens cannot be treated as ASINs. Intended-ASIN fields remain blank (FLG-001).",
+    "title": "Short-link token is not treated as a product ASIN",
+    "detail": "The supplied values are tokens in link.amazon URLs, not verified product identifiers. Token length or appearance does not establish an ASIN, destination, or compliance status. Product identity is recorded separately from the official listing ASIN and from any observed redirect target.",
     "links": [
       "S15",
       "S16",
@@ -157,7 +157,7 @@
       "S19"
     ],
     "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "owner_status": "Tokens retained exactly as supplied; no claim that any submitted short link is invalid."
   },
   {
     "id": "FLG-015",
@@ -182,13 +182,13 @@
   },
   {
     "id": "FLG-017",
-    "title": "P-03 power corrected",
-    "detail": "The register said 1700 W. The listing (About this item) says 1000 W / 120 V for model RJ38-SQSS-8T. Corrected on all pages.",
+    "title": "Earlier P-03 wattage entry corrected; not a current listing conflict",
+    "detail": "An earlier register carried 1700 W for P-03. The current About this item excerpt fetched on 2026-11-20 states 1000 W / 120 V, and the 1700 W figure was not reproduced in the excerpt used for this pass. The product record now carries the current captured statement only; a prior-register error is not presented as a live product contradiction.",
     "links": [
       "S12"
     ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "severity": "corrected",
+    "owner_status": "Current product page shows 1000 W / 120 V as stated in the retrieved listing excerpt; historical correction retained."
   },
   {
     "id": "FLG-018",
@@ -202,13 +202,13 @@
   },
   {
     "id": "FLG-019",
-    "title": "P-05 warranty corrected",
-    "detail": "The register said a 1-year limited warranty. The listing (About this item) says a two-year assurance from CHEF iQ. Corrected.",
+    "title": "P-05 warranty entry corrected from the earlier register",
+    "detail": "The current About this item text fetched on 2026-11-20 states a two-year assurance. The earlier register recorded one year; that was a prior-record error, not a current same-page conflict. The product page now shows the current listing statement and does not characterize warranty length as contradictory.",
     "links": [
       "S14"
     ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "severity": "corrected",
+    "owner_status": "Current listing statement displayed; prior-register correction retained for traceability."
   },
   {
     "id": "FLG-020",
@@ -227,12 +227,12 @@
   {
     "id": "FLG-021",
     "title": "P-02 preset count conflict",
-    "detail": "The listing title says 24 One-Touch Preset Options; About this item says 25 cooking pre-sets. Both are published; neither is chosen.",
+    "detail": "The current page title says 24 one-touch preset options; an About this item bullet says 25 cooking pre-sets. Both current statements are shown with their locations; neither is selected as the definitive count.",
     "links": [
       "S11"
     ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "severity": "conflict",
+    "owner_status": "Both current listing statements shown; check the manual or seller if the exact count matters."
   },
   {
     "id": "FLG-022",
@@ -305,13 +305,13 @@
   },
   {
     "id": "FLG-028",
-    "title": "Requested sources S07 and S24 not in this repo",
-    "detail": "The task brief references S07 and S24. They are not in data/sources.json and were not found in the repository, so they are not cited.",
+    "title": "Legacy source IDs do not match the current source register",
+    "detail": "An earlier handoff note referred to source IDs S07 and S24 as missing. S24 is now assigned to Google Search Console’s overview; S07 remains unassigned and no current product claim depends on it. The current product listing and submitted-link records use S10–S19. This flag is retained to explain the historical numbering gap, not to imply a missing buyer-facing product fact.",
     "links": [
-      "S01"
+      "S24"
     ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "severity": "corrected",
+    "owner_status": "Current sources are linked by their present IDs; S07 is not used by current product records."
   },
   {
     "id": "FLG-029",
@@ -326,23 +326,23 @@
   },
   {
     "id": "FLG-030",
-    "title": "No food-safety source was cited before now",
-    "detail": "The thermometer pages discuss doneness. Doneness targets are a food-safety matter and must come from an official source, not from memory or from a manufacturer listing. S22 (USDA FSIS Safe Minimum Internal Temperature Chart) is now registered and should be cited wherever a target temperature is stated. Checked on 2026-11-20: poultry 165 F, ground meats 160 F, whole-muscle cuts 145 F with a 3-minute rest, fish 145 F, leftovers 165 F.",
+    "title": "USDA food-safety source added to thermometer guidance",
+    "detail": "The USDA FSIS Safe Minimum Internal Temperature Chart is now in the source register and cited on both thermometer pages. The earlier absence is corrected; the public guide defers doneness recommendations to the USDA chart.",
     "links": [
       "S22"
     ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "severity": "corrected",
+    "owner_status": "Resolved in the generated thermometer pages; USDA source retained."
   },
   {
     "id": "FLG-031",
     "title": "P-02 accessory count: six or seven",
-    "detail": "The listing title says six cooking accessories included; the Configuration field says 7; Included Components lists six named items. Both figures are published on the product page and neither is chosen here.",
+    "detail": "The P-02 page title says six cooking accessories, Configuration says seven, and Included Components names six items (rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool). These listing statements are preserved without selecting a count.",
     "links": [
       "S11"
     ],
     "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "owner_status": "Listing discrepancy remains visible; confirm with the manual or seller if the full contents matter."
   },
   {
     "id": "FLG-032",
@@ -358,22 +358,22 @@
   {
     "id": "FLG-033",
     "title": "No named author or editorial owner",
-    "detail": "The site has no named byline, no editor of record and no organisation behind it that a reader could check. Search engines and readers both treat that as a trust signal. An author page with a real name and a stated method is recommended before traffic is scaled.",
+    "detail": "The publication has no named editor or author. No byline or biography has been invented. A real owner/editor may be added only when the responsible person and their role are confirmed.",
     "links": [
-      "S03"
+      "S30"
     ],
     "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "owner_status": "Requires a real person’s confirmation; not inferred from repository metadata."
   },
   {
     "id": "FLG-034",
     "title": "P-01 capacity stated in quarts and liters",
-    "detail": "The listing title says 6 quarts; the product-details capacity field says 6 liters. Six litres is about 6.3 US quarts, so the same page carries two expressions of one capacity. Both are shown on the product page; neither is chosen here.",
+    "detail": "The P-01 About this item text says 6 quarts combined with two 3-quart baskets; its Product Details table says 6 liters. Both current listing statements are displayed without converting units or choosing one.",
     "links": [
       "S10"
     ],
     "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+    "owner_status": "Both listing statements remain visible; ask the seller or check the current manual if the exact stated capacity matters."
   },
   {
     "id": "FLG-035",
@@ -385,5 +385,26 @@
     ],
     "severity": "unverified",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-036",
+    "title": "GitHub Pages hosting suitability for this affiliate publication is unresolved",
+    "detail": "GitHub’s Pages limits documentation says the service is not intended for or allowed as free hosting for an online business, e-commerce site, or a site primarily directed at facilitating commercial transactions. This project uses affiliate links and describes itself as a publication with potential qualifying-purchase commissions. That makes hosting fit a question to resolve before promotion or scaling; this flag does not conclude that the current site violates GitHub policy.",
+    "links": [
+      "S23",
+      "S31"
+    ],
+    "severity": "policy",
+    "owner_status": "Current Pages configuration is legacy/main/root (API checked 2026-11-20); owner should assess classification or migrate before promotion. No violation finding is made."
+  },
+  {
+    "id": "FLG-037",
+    "title": "Hosting provider logs visitor IP addresses for security",
+    "detail": "GitHub’s GitHub Pages documentation states that visitor IP addresses are logged and stored for security purposes. The site’s prior text incorrectly said no request carries data to a third party. The generated disclosure now distinguishes the host’s security logs from local-only browser analytics; the owner should review whether any additional privacy notice or hosting decision is needed.",
+    "links": [
+      "S31"
+    ],
+    "severity": "open",
+    "owner_status": "Disclosure corrected to name GitHub’s host-side IP logging; legal/privacy review remains an owner decision."
   }
 ]

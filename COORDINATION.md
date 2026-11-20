@@ -1,9 +1,9 @@
 # COORDINATION — Affil2 shared task board
 
-Session ID (this turn): `6e40cecc`  Branch: `arena/6e40cecc-affil2`  Base: `e1b6750e92adaae69e95872700db578f499870ca` (main)
-Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `e1b6750e`). Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED — see FLG-002)
+Session ID (this turn): `36170d15`  Branch: `arena/36170d15-affil2`  Claim base: `eacaeca2` (main); rebased onto `829398c` (main, includes PR #19). Claim commit `53d7405`.
+Prior session: `6e40cecc` (branch `arena/6e40cecc-affil2`, merged). Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED — see FLG-002)
 
-> All task scopes were completed by `530c2e6c` and merged to main. This session (`6e40cecc`) took over the stale T-09 claim (>60 minutes old, no new commits) per the handoff rule and edits only files in its own scope: feed.xml fix and COORDINATION.md integration record. No file owned by another session was edited.
+> This session (`36170d15`) owns the T-17 final accuracy and decision-center pass only. It edits `data/products.json`, `data/editorial.json`, `data/sources.json`, `data/flags.json`, `scripts/build_site.py`, `scripts/build_content.py`, `scripts/check_site.py`, `scripts/analytics_server.py`, `assets/app.js`, generated HTML/XML, `assets/style.css` (if needed), `README.md`, `EXECUTIVE-SUMMARY.md` and this file. Nothing about accounts, deployments or first-party reports is claimed unless verified inside an authorized interface.
 
 ## Task board
 
@@ -21,7 +21,7 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-10 | Rebuild product data from verified listings; add scripts/build_content.py (generated tables); fix compare column shift; remove unverified 'Verified' labels; fix S01/S02 URLs; extend check_site.py to catch stale values; re-check P-03 specs; reconcile flags (new IDs FLG-017+) | done | 937876a6 | data/products.json, data/sources.json, data/flags.json (appends only), scripts/build_content.py, scripts/check_site.py, generated HTML (products/*, compare, index, category, guides, sources, flagged, executive-summary), EXECUTIVE-SUMMARY.md, feed.xml |
 | T-11 | Publication styling + decision-support improvements | done | 4bbf49bb | assets/style.css, assets/illustrations/*.svg, suggestions.html, questions.html, search.html, COORDINATION.md |
 | T-12 | Final integrate original illustrations in generated product cards | done | 4bbf49bb | scripts/build_content.py, generated product-card pages (index, categories, guides), compare.html, COORDINATION.md |
-| T-17 | Current-session final accuracy and decision-center pass: separate intended/listing/observed product IDs, remove stale or unsupported claims, cite decision-table rows, add SG-27..SG-30, complete local event coverage, and strengthen the gate | in progress | 36170d15 | COORDINATION.md, data/products.json, data/editorial.json, data/sources.json, scripts/build_site.py, scripts/check_site.py, assets/app.js, scripts/analytics_server.py, generated HTML/XML, README.md, EXECUTIVE-SUMMARY.md |
+| T-17 | Current-session final accuracy and decision-center pass: separate intended/listing/observed product IDs, remove stale or unsupported claims, cite decision-table rows, add SG-27..SG-31, complete local event coverage, and strengthen the gate | done | 36170d15 | COORDINATION.md, data/products.json, data/editorial.json, data/sources.json, data/flags.json, scripts/build_site.py, scripts/build_content.py (deprecation shim), scripts/check_site.py, assets/app.js, scripts/analytics_server.py, generated HTML/XML, README.md, EXECUTIVE-SUMMARY.md |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -342,3 +342,41 @@ It does not deploy, on purpose. This repository's Pages site is configured as **
 Given that the branch builder publishes whatever lands on `main`, the gate cannot block a merge by
 itself; it makes a breakage loud and immediate instead, which is what a repository without branch
 protection can actually support.
+
+---
+
+## Correction to the 2026-11-20 verification table above (session 36170d15)
+
+The five-row table in "Verification log" reflects an earlier snapshot and is superseded: P-04's `B0c8moW59` short link returned a checkpoint page on every attempt in this session's checks — **no product destination was observed for P-04** (FLG-012). Four other short links resolved to the product pages listed (FLG-011 records redirect instability; observations are dated snapshots). The table's "FlG-010/011/FLG-012" flag references use renumbered legacy IDs. Official listings remain the source for product data; they are not evidence of intended ASINs.
+
+## T-17 completion (2026-11-20, session 36170d15)
+
+Scope delivered on branch `arena/36170d15-affil2`:
+
+**Data**
+- `data/products.json`: every record now stores `submitted_url`, `short_link_token`, `intended_asin` (null, FLG-001), `intended_confirmation_date` (null), `intended_confirmation_source_id` (null), `observed_redirect_target` (null for P-04; dated snapshots otherwise, FLG-011/FLG-012), `observed_redirect_checked`, `observed_redirect_source_id`, `official_listing_asin`, `official_listing_url`, `official_listing_source_id`, `official_listing_checked`, `submitted_link_source_id`. Every field carries `source_id` matching the official listing source. P-01 capacity conflict (6 qt/6 L, FLG-034), P-02 presets (24/25, FLG-021), accessory counts (FLG-031), P-03 top temperature (FLG-018) preserved as `conflict`; P-02 model/temperature/power/weight, P-03 weight, P-04 upper temperature left blank as `unverified`; P-04 certification marked `seller_claim` (FLG-035); P-05 battery shown as stated (50 h current About this item; earlier 70 h capture not reproduced — FLG-008 corrected, retained for traceability).
+- `data/editorial.json`: P-01 capacity FAQ (both listing statements; no unit conversion), P-03 FAQ (current captured statement is 1000 W / 120 V; 1700 W not reproduced — FLG-017 corrected), P-04 FAQ (upper temperature blank; FLG-022), P-05 FAQ/QA (50 h current; two-year assurance current; FLG-008/FLG-019), P-02 FAQ (preset/accessory statements kept; model blank pending confirmation).
+- `data/sources.json`: 25 → 27 records. Added S23 (GitHub Pages limits), S24 (Search Console overview), S25–S26 (Search Console performance/ownership), S27 (Pages custom domains), S28 (RSS 2.0 spec), S29 (FTC CAN-SPAM), S30 (Google helpful content), S31 (Pages overview/host-side IP logging), S32 (Google SEO Starter Guide). Each notes its review scope.
+- `data/flags.json`: 35 → 37. FLG-017 and FLG-019 reclassified as corrected (earlier-register errors, not current conflicts); FLG-008/FLG-009/FLG-014/FLG-021/FLG-028/FLG-030/FLG-031/FLG-033/FLG-034 reworded to current evidence; **FLG-036** (GitHub Pages commercial-hosting suitability question — open policy review, not a violation finding) and **FLG-037** (GitHub host-side IP-address logging — disclosure updated; owner privacy review pending) appended.
+
+**Generator / gate / JS / collector**
+- `scripts/build_site.py`: product pages and compare table now cite the official listing source per row/cell (`source_link`, only real product links marked `sponsored nofollow`); intent record renders submitted link as plain text (never clickable) and keeps intended/observed/listing identities separate; compare cells each cite their source; Decision Center rows (21 proposals, SG-01..SG-31) each carry an Evidence column of official sources; SG-27..SG-31 appended (hosting fit, Search Console verification, intent confirmation + Special Link test, endpoint hosting decision, full-transcript re-read); every guide claim that asserted unverified weights/temperatures/wattage was rewritten to point at the blank or the flag; exec summary and disclosure rewritten to current evidence (host-side IP logging vs local browser events; optional collector not deployed); search index entries describe actual review scope.
+- `scripts/check_site.py`: fails on — missing submitted-link/token/intended/observed/official-listing record fields; `link.amazon` rendered as an anchor anywhere; unsourced spec rows; compare cells without evidence; Decision Center rows without evidence or without SG-27..SG-31; proposal table < 20 rows; `app.js` missing any of the five events or the `exportEvents` handler; the optional collector missing the allow-list; README flag count drifting from `flags.json`; P-04 legacy "Observed ASIN" phrasing in the summary. Blank-value/unverified-status invariants and ASIN shape checks for intended/observed/official fields. Verified failing cases by hand before this commit.
+- `assets/app.js`: implements all five events including `search` (records that a search ran and the number of hits, never the query; browser-side matching over the embedded index now renders results) and `exportEvents` (CSV of the local log). `node --check` passed.
+- `scripts/analytics_server.py` (new): optional self-hosted collector, stdlib only; binds 127.0.0.1; allow-lists the five events; stores per-day aggregate counts only (no IP/UA/identifier/query); `/stats` behind `ANALYTICS_TOKEN`; silent access log; retention window; verified locally end to end (204/422/413/401/200 cases). **Not deployed; no page references it; disclosure says so.**
+- `scripts/build_content.py`: deprecated shim delegating to `build_site.py`.
+- `assets/style.css`: reused existing `.results .hit` classes; no change required.
+
+**Docs**
+- `README.md`: 21 proposals / 37 flags; measurement section describes local-only events, the optional undeployed collector, host-side IP logging, Pages suitability review; deprecated-shim note; expanded rule list.
+- `EXECUTIVE-SUMMARY.md`: rewritten to current evidence — three separate identities table (P-04 observed = none), current conflicts only (FLG-018/FLG-021/FLG-031/FLG-034), corrections section (FLG-008/017/019/009/028), hosting and measurement status stated as open decisions, stale "deployment is live everywhere/all tasks complete" claims removed.
+- `COORDINATION.md`: top metadata refreshed; verification-table correction added; T-17 marked done.
+
+**Verification**
+- `python3 scripts/build_site.py` — 29 pages + sitemap.xml + feed.xml + robots.txt generated.
+- `python3 scripts/check_site.py` — ALL CHECKS PASS (29 pages, 5 products, 37 flags, 27 sources).
+- `node --check assets/app.js` — OK. `python3 scripts/analytics_server.py --check` — OK; live localhost smoke test passed.
+- Pages serving from `main` (checked via GitHub API 2026-11-20): source `main` `/`, HTTPS enforced. **This branch is not deployed until merged to `main`.**
+
+**Open for owner (unchanged, none invented)**
+Intended ASINs (FLG-001) · tracking-ID status (FLG-002) · short-link compliance (FLG-003) · one-per-product Special Link test (FLG-004, SG-29) · commission rates (Q-11) · Search Console verification (SG-28) · API access/price display decision (SG-13) · imagery licensing (SG-15) · custom domain after hosting decision (SG-14/SG-27) · Pages suitability review (FLG-036/SG-27) · host-side IP log privacy review (FLG-037) · named editor (FLG-033). The campaign ledger is empty and stays empty until an authorized first-party report exists.

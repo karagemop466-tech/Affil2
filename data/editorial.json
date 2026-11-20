@@ -3,11 +3,11 @@
     "brand": "Chefman",
     "headline": "Two baskets, two windows, one finish time",
     "best_for": "Cooked-for-two households that want a main and a side done at once",
-    "tradeoff": "Two small baskets instead of one big one; 450 °F max, and the listing's own capacity field says 6 liters",
+    "tradeoff": "Two 3-quart baskets instead of one larger basket; the listing gives two different total-capacity statements (FLG-034).",
     "faq": [
       [
         "What is the total capacity?",
-        "6 quarts, split into two independent 3-quart baskets, according to the listing title. The product-details capacity field says 6 liters, which is about 6.3 quarts. Flagged as FLG-018."
+        "The listing says 6 quarts combined in the About this item text and 6 liters in Product Details. Both are shown without conversion or choosing one (FLG-034)."
       ],
       [
         "Does it have a preheat function?",
@@ -42,15 +42,15 @@
     "brand": "Emeril Lagasse",
     "headline": "A countertop oven that happens to air-fry",
     "best_for": "Households of 4–6 that want one appliance to roast, toast, air-fry and rotisserie",
-    "tradeoff": "16.9 in of depth plus door swing, 26.5 lb, and the listing contradicts itself on preset count and accessory count",
+    "tradeoff": "A deeper oven-style footprint plus French-door swing; the listing also disagrees on preset and accessory counts.",
     "faq": [
       [
         "How many presets does it have?",
-        "The listing is inconsistent: the title and Product Description say 24 one-touch presets, while the About this item bullet says 25 cooking pre-sets. Both are published here and neither is chosen. Flagged as FLG-014."
+        "The page title says 24 one-touch preset options; an About this item bullet says 25 cooking pre-sets. Those are the two current statements captured here; neither is selected (FLG-021)."
       ],
       [
         "How many accessories are included?",
-        "The title says six cooking accessories, the Configuration field says 7 accessories, and Included Components names six: rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool. Flagged as FLG-015."
+        "The page title says six accessories; Configuration says seven; Included Components names six items: rack, bake pan, drip tray, crisper basket, rotisserie spit and fetch tool (FLG-031)."
       ],
       [
         "Will a 12-inch pizza fit?",
@@ -73,11 +73,11 @@
       ],
       [
         "Are you willing to leave it in one place?",
-        "At 26.5 lb this is a park-it-and-keep-it appliance, not something you lift into a cupboard."
+        "The listing’s stated capacity is 26 quarts and its listed dimensions are 16.9 in deep. The retrieved text used here did not confirm weight, so it is left blank."
       ],
       [
         "Do you need a preset count you can rely on?",
-        "The listing says 24 in one place and 25 in another. If a specific preset matters to you, check the current listing before buying."
+        "The page title says 24; an About this item bullet says 25. If a particular preset matters, check the current listing or manual before buying (FLG-021)."
       ]
     ]
   },
@@ -85,7 +85,7 @@
     "brand": "Chefman",
     "headline": "One basket, no windows, four buttons",
     "best_for": "Households cooking one thing at a time who want maximum basket for the footprint",
-    "tradeoff": "No window, single zone, and the listing contradicts itself on top temperature and wattage",
+    "tradeoff": "One basket with no viewing window; the listing gives a 200–400 °F range in one section and advertises a 450 °F Hi-Fry option in its title (FLG-018).",
     "faq": [
       [
         "What is the maximum temperature?",
@@ -93,7 +93,7 @@
       ],
       [
         "How many watts?",
-        "The Wattage and Output Wattage spec fields say 1700 watts, but the About this item bullet says 1000 watts. Flagged as FLG-017."
+        "The current About this item excerpt states 1000 watts / 120 volts. The earlier 1700-watt entry in the register was not reproduced in this capture, so it is not presented as a current listing conflict (FLG-017)."
       ],
       [
         "Is the basket dishwasher safe?",
@@ -136,7 +136,7 @@
       ],
       [
         "What is the highest temperature it reads?",
-        "572 °F, per the Upper Temperature Range field."
+        "The upper temperature was not visible in the retrieved listing text used for this page. The field is left blank rather than carrying forward an earlier unconfirmed number (FLG-022)."
       ],
       [
         "Can I put it in the dishwasher?",
@@ -163,11 +163,11 @@
     "brand": "CHEF iQ",
     "headline": "Three probes, no standing at the grill",
     "best_for": "Smoker and multi-protein cooks who want to monitor from inside the house",
-    "tradeoff": "The listing contradicts itself on battery life and warranty length, and it depends on an app plus WiFi",
+    "tradeoff": "It depends on an app and Wi-Fi. The current listing says up to 50 hours per charge; an earlier capture recorded 70 hours that was not reproduced this time (FLG-008).",
     "faq": [
       [
         "How long does the battery last?",
-        "The About this item bullet says up to 50 hours on a full charge. The prior pass recorded 70 hours from a different part of the page that no longer shows that figure. Both are flagged; treat 50 hours as the current listing claim. See FLG-008."
+        "The current About this item text says up to 50 hours on a full charge. An earlier capture of a different section recorded 70 hours; it was not reproduced in the current check, so treat 50 hours as the only current listing statement captured here (FLG-008)."
       ],
       [
         "How many probes come in the box?",
@@ -179,7 +179,7 @@
       ],
       [
         "Is it dishwasher safe?",
-        "The listing says the probes are waterproof and dishwasher safe. The hub's care instructions are not stated."
+        "The current About this item text says the probes are waterproof and dishwasher-safe. The hub’s care instructions are not stated in the excerpt reviewed."
       ]
     ],
     "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
@@ -198,7 +198,7 @@
       ],
       [
         "Do you need a warranty figure you can rely on?",
-        "The listing says two years in one place and the prior pass recorded one year. Confirm before you rely on it."
+        "The current About this item text states two-year assurance. No separate warranty document was reviewed; do not conflate this current statement with an earlier register correction (FLG-019)."
       ]
     ]
   }

@@ -151,19 +151,72 @@ if len(prod_pages) != 5:
 for p in prod_pages:
     html = p.read_text()
     rel = str(p.relative_to(ROOT))
-    for field in ("Intended ASIN", "Observed redirect target", "Special Link we publish",
-                  "Confirmation date", "Associates test status"):
+    # intent record keeps submitted token, observed redirect and official listing separate
+    for field in ("Submitted link (as supplied)", "Short-link token", "Intended ASIN",
+                  "Intended-ASIN confirmation date", "Observed redirect target",
+                  "Redirect observation checked", "Official listing ASIN",
+                  "Official listing URL", "Official listing checked",
+                  "Published Amazon Special Link", "Associates click test"):
         if field not in html:
             err(f"{rel}: product-intent record missing '{field}'")
     if "PENDING" not in html:
         err(f"{rel}: Special Link test status missing")
     if "authorization" in html.lower():
         err(f"{rel}: stray text")
-    # each spec row must link to a source
-    rows = re.findall(r'<tr><th scope="row">[^<]+</th><td>.*?</td>\s*<td class="src">.*?</td></tr>',
-                      html, re.S)
+    # submitted short link must not be clickable (it is an observed token, not an endorsed route)
+    if re.search(r'<a[^>]+link\.amazon', html):
+        err(f"{rel}: submitted link.amazon URL rendered as a link; keep it as plain text")
+    # each spec row must carry a working source link
+    rows = re.findall(r'<tr><th scope="row">[^<]+</th><td>.*?</td>\s*<td class="src"><a href="https://[^"]+"', html, re.S)
     if len(rows) < 5:
-        err(f"{rel}: only {len(rows)} sourced spec rows found")
+        err(f"{rel}: only {len(rows)} source-linked spec rows found")
+
+# ---------------------------------------------------------------- compare + decision center
+compare = (ROOT / "compare.html").read_text()
+rows_with_source = len(re.findall(r'<span class="cell-source">Source: <a href="https://', compare))
+if rows_with_source < 12:
+    err(f"compare.html: only {rows_with_source} source-linked cells; every product cell must cite evidence")
+if "Intended ASIN" in compare:
+    err("compare.html: must not expose the intent record outside product pages")
+
+suggest = (ROOT / "suggestions.html").read_text()
+for sid in ("SG-27", "SG-28", "SG-29", "SG-30"):
+    if f'<strong>{sid}</strong>' not in suggest:
+        err(f"suggestions.html: {sid} missing")
+evidence_cells = len(re.findall(r'class="small evidence"', suggest))
+if evidence_cells < 20:
+    err(f"suggestions.html: {evidence_cells} evidence cells; every proposal row must cite a source")
+if re.search(r'<td class="small evidence">\s*</td>', suggest):
+    err("suggestions.html: empty evidence cell")
+m = re.search(r'<table id="sugTable".*?</table>', suggest, re.S)
+if not m or len(re.findall(r"<tr data-sug=", m.group(0))) < 20:
+    err("suggestions.html: proposal table has fewer than 20 rows")
+
+# ---------------------------------------------------------------- disclosure + events
+disc = (ROOT / "disclosure.html").read_text()
+for phrase in ("local storage", "IP", "GitHub", "exportEvents", "no cookie", "search"):
+    if phrase.lower() not in disc.lower():
+        err(f"disclosure.html: measurement/hosting notice missing {phrase!r}")
+
+js = (ROOT / "assets" / "app.js").read_text()
+for event in ("page_view", "outbound_click", "guide_read", "search", "suggestion_rank"):
+    if event not in js:
+        err(f"assets/app.js: event {event} is not implemented")
+for handler in ("exportEvents", "sn_events"):
+    if handler not in js:
+        err(f"assets/app.js: {handler} handler missing")
+
+collector = ROOT / "scripts" / "analytics_server.py"
+if not collector.exists():
+    err("scripts/analytics_server.py (optional self-hosted collector) is missing")
+else:
+    ccol = collector.read_text()
+    for event in ("page_view", "outbound_click", "guide_read", "search", "suggestion_rank"):
+        if event not in ccol:
+            err(f"scripts/analytics_server.py: event {event} not in the allow-list")
+    for banned in ("x-forwarded-for", "request.headers"):
+        if banned in ccol.lower():
+            notes.append("scripts/analytics_server.py: collector mentions client identifiers; confirm it does not store them")
 
 # ---------------------------------------------------------------- food safety block
 usda = json.loads((ROOT / "data" / "usda-temperatures.json").read_text())
@@ -193,32 +246,50 @@ sources = json.loads((ROOT / "data" / "sources.json").read_text())
 
 if len(raw) != 5:
     err(f"products.json holds {len(raw)} products, expected 5")
-seen = set()
+src_ids_data = {s["id"] for s in sources}
 for d in raw:
-    for key in ("id", "slug", "submitted", "token", "observed", "asin", "title", "listing",
-                "fields", "cat", "catfile", "questions"):
+    for key in ("id", "slug", "submitted_url", "short_link_token", "intended_asin",
+                "intended_confirmation_date", "intended_confirmation_source_id",
+                "observed_redirect_target", "observed_redirect_checked",
+                "observed_redirect_source_id", "observed_status",
+                "official_listing_asin", "official_listing_url", "official_listing_checked",
+                "official_listing_source_id", "submitted_link_source_id",
+                "title", "fields", "cat", "catfile", "questions"):
         if key not in d:
             err(f"products.json {d.get('id','?')}: missing key {key}")
-    target = d.get("observed") or d.get("asin")
-    if not target:
-        err(f"products.json {d['id']}: no observed ASIN recorded")
-        continue
-    if target in seen:
-        err(f"products.json: duplicate observed ASIN {target}")
-    seen.add(target)
-    if not re.fullmatch(r"B0[A-Z0-9]{8}", target):
-        err(f"products.json {d['id']}: observed ASIN {target} is not a valid ASIN shape")
-    if target in d["submitted"]:
-        err(f"products.json {d['id']}: the submitted short link should not embed the ASIN")
-    if "intended" in d and d["intended"]:
+    if d.get("intended_asin"):
         err(f"products.json {d['id']}: intended ASIN must stay blank until the owner confirms it")
+    if d.get("intended_confirmation_date") is not None:
+        err(f"products.json {d['id']}: intended-ASIN confirmation date must stay blank until the owner confirms it")
+    for key in ("official_listing_asin", "observed_redirect_target", "intended_asin"):
+        value = d.get(key)
+        if value is not None and not re.fullmatch(r"B0[A-Z0-9]{8}", str(value).strip()):
+            err(f"products.json {d['id']}: {key} {value!r} is not a valid ASIN shape")
+    oa = d.get("official_listing_asin")
+    if oa and oa not in d.get("official_listing_url", ""):
+        err(f"products.json {d['id']}: official_listing_url does not contain {oa}")
+    tok = d.get("short_link_token", "")
+    if tok and tok not in d.get("submitted_url", ""):
+        err(f"products.json {d['id']}: short_link_token {tok!r} does not appear in submitted_url")
+    for key in ("official_listing_source_id", "submitted_link_source_id",
+                "observed_redirect_source_id"):
+        sid = d.get(key)
+        if sid and sid not in src_ids_data:
+            err(f"products.json {d['id']}: {key} {sid} is not in sources.json")
+    if d.get("observed_redirect_target") is None and "checkpoint" not in (d.get("observed_status") or "").lower() \
+       and "block" not in (d.get("observed_status") or "").lower():
+        err(f"products.json {d['id']}: observed redirect is blank but observed_status does not say why")
     if d["id"] not in editorial:
         err(f"editorial.json missing a record for {d['id']}")
     for key, f in d["fields"].items():
         if not f.get("src"):
             err(f"products.json {d['id']}.{key}: no provenance string")
+        if f.get("source_id") and f["source_id"] not in src_ids_data:
+            err(f"products.json {d['id']}.{key}: source_id {f['source_id']} is not in sources.json")
         if f["v"] is None and f["st"] != "unverified":
             err(f"products.json {d['id']}.{key}: blank value must be marked unverified")
+        if f["v"] is not None and f["st"] == "unverified":
+            err(f"products.json {d['id']}.{key}: unverified status must carry a blank value")
         if re.search(r"\$\s?\d", str(f["v"])):
             err(f"products.json {d['id']}.{key}: contains a price")
 
@@ -248,6 +319,24 @@ if missing:
 unused = flag_ids - flag_refs
 if unused:
     err(f"flags defined but never published on a page: {sorted(unused)}")
+
+# ---------------------------------------------------------------- docs consistency
+readme = ROOT / "README.md"
+if readme.exists():
+    for m in re.finditer(r"(\d+)\s+flags", readme.read_text()):
+        if int(m.group(1)) != len(flags):
+            err(f"README.md announces {m.group(1)} flags but flags.json holds {len(flags)}")
+summary = ROOT / "EXECUTIVE-SUMMARY.md"
+if summary.exists():
+    smtxt = summary.read_text()
+    # P-04's short link did not resolve to a product page; the summary must not present
+    # any observed target for it.
+    p04 = next((d for d in raw if d["id"] == "P-04"), None)
+    if p04 and not p04.get("observed_redirect_target"):
+        if "Observed ASIN" in smtxt:
+            err("EXECUTIVE-SUMMARY.md: uses the legacy 'Observed ASIN' column; P-04's redirect was not observed — use separate official-listing and observed-target labels")
+        if "P-04" in smtxt and "official listing" not in smtxt.lower():
+            err("EXECUTIVE-SUMMARY.md: names P-04 without distinguishing its official listing from the unobserved redirect")
 
 # ---------------------------------------------------------------- sitemap + feed
 sm_text = (ROOT / "sitemap.xml").read_text()

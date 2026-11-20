@@ -1,79 +1,57 @@
-# Executive Summary — ShopNow Kitchen (Session arena/436f4dbe-affil2)
+# Executive Summary — ShopNow Kitchen
 
-Date 2026-11-20 · Tracking ID in use `shopnow047c-20` (issuance unverified, FLG-002)
-Live site https://karagemop466-tech.github.io/Affil2/ · Full version with source links: `executive-summary.html`
+Date 2026-11-20 · Branch `arena/36170d15-affil2` · Tracking ID in use `shopnow047c-20` (issuance and activity unverified — FLG-002)
+Reference live site: https://karagemop466-tech.github.io/Affil2/ — publication is served by GitHub Pages from `main`; the work in this branch is not on `main` until merged.
+Full on-site version with source links: `executive-summary.html`
 
 ## What this is
-A static publication-style Amazon affiliate site covering five submitted products in two categories: three air fryers and two meat thermometers. Every specification is read from the official Amazon listing, dated and linked. Where two parts of one listing disagree, both figures are printed and the disagreement is flagged. No price, star rating, review count or best-seller rank is reproduced, because Amazon's Program Policies 2(b) and 6(t) only permit that when Amazon serves the link or the data comes through the Product Advertising / Creators API.
+A static, publication-style Amazon affiliate publication covering five submitted products in two categories: three air fryers and two meat thermometers. Specifications are tied to dated official sources; contradictions between listing statements are printed, not smoothed over; unsupported values are left blank. No price, star rating, review count or best-seller rank is reproduced — Program Policies §2(b) and §6(t) permit those only when Amazon serves the link or the data arrives through an approved API, and this site has neither.
 
-## The five products, as observed on 2026-11-20
-| ID | Submitted link | Observed ASIN | Official listing |
-|----|----------------|---------------|------------------|
-| P-01 | link.amazon/B04G1MEwY | B0CDY277D3 | https://www.amazon.com/dp/B0CDY277D3 |
-| P-02 | link.amazon/B02NbDxp3 | B09B7SB46R | https://www.amazon.com/dp/B09B7SB46R |
-| P-03 | link.amazon/B00hJ57DV | B08DKYBTPH | https://www.amazon.com/dp/B08DKYBTPH |
-| P-04 | link.amazon/B0c8moW59 | B0DHZTCNR5 | https://www.amazon.com/dp/B0DHZTCNR5 |
-| P-05 | link.amazon/B0f3GKalj | B0DZFD6R9Z | https://www.amazon.com/dp/B0DZFD6R9Z |
+## The five products: three separate identities, kept separate
+The submitted short-link token, any redirect actually observed, and the official listing used for the product record are stored as separate fields. Intended ASINs remain blank until the owner confirms them (FLG-001). Official listing ≠ confirmed intent; an observed redirect ≠ intended destination.
 
-Four of the five short links resolved to a product page when followed. `B0c8moW59` returned a checkpoint page on every attempt (FLG-012). Redirects were not stable between visits (FLG-011), so each observed ASIN is a dated snapshot, not a permanent mapping.
+| ID | Submitted token | Intended ASIN | Observed redirect target | Official listing |
+|----|-----------------|---------------|--------------------------|------------------|
+| P-01 | link.amazon/B04G1MEwY | blank (FLG-001) | B0CDY277D3 | https://www.amazon.com/dp/B0CDY277D3 |
+| P-02 | link.amazon/B02NbDxp3 | blank (FLG-001) | B09B7SB46R | https://www.amazon.com/dp/B09B7SB46R |
+| P-03 | link.amazon/B00hJ57DV | blank (FLG-001) | B08DKYBTPH | https://www.amazon.com/dp/B08DKYBTPH |
+| P-04 | link.amazon/B0c8moW59 | blank (FLG-001) | none observed — checkpoint page on every attempt (FLG-012) | https://www.amazon.com/dp/B0DHZTCNR5 |
+| P-05 | link.amazon/B0f3GKalj | blank (FLG-001) | B0DZFD6R9Z | https://www.amazon.com/dp/B0DZFD6R9Z |
 
-## Sources (official only)
-- S01 Operating Agreement §5 — https://affiliate-program.amazon.com/help/operating/agreement
-- S02 Program Policies §2(b), §6(t), §6(w), §6(y) — https://affiliate-program.amazon.com/help/operating/policies
-- S03 FTC Endorsement Guides FAQ — https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking
-- S04 Google, Qualify your outbound links — https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links
-- S05–S09 the five listings, S10–S14 the supplied short links — all in `data/sources.json`
-- Food-safety temperatures in the thermometer guides come from the USDA FSIS chart, linked on the page
+Redirect observations are dated snapshots, not permanent mappings (FLG-011). The official listing ASIN is shown because it is the page used to source the product data; it is not evidence of the owner's intent.
 
-## What was wrong in the previous pass, and is now fixed
-| Flag | Was | Now |
-|------|-----|-----|
-| FLG-017 | P-03 wattage printed as 1700 W | 1000 W from About this item, 1700 W from the spec field, both shown |
-| FLG-019 | P-05 warranty printed as one year | two-year assurance, as the listing states |
-| FLG-020 | four product titles were paraphrased | exact listing titles, dated |
-| FLG-023 | the earlier log claimed a line-by-line check | re-checked; the claim is corrected in public |
-| FLG-024 | compare table shifted P-04/P-05 into wrong rows | aligned by field, generated from one register |
-| FLG-025 | RSS feed was not well-formed XML | parses, 8 items, checked by the gate |
-| FLG-026 | two Associates source URLs were dead | current policy pages, text checked |
+## Current listing conflicts (both statements kept, source-linked)
+| Flag | Product | Field | Statements captured 2026-11-20 |
+|------|---------|-------|-------------------------------|
+| FLG-034 | Chefman 6 Qt (P-01) | Capacity | 6 quarts / 2×3-qt baskets (About this item) vs 6 liters (Product Details) |
+| FLG-021 | Emeril 26 QT (P-02) | Presets | 24 one-touch presets (page title) vs 25 cooking pre-sets (About this item) |
+| FLG-031 | Emeril 26 QT (P-02) | Included accessories | six (page title / Included Components names six) vs seven (Configuration) |
+| FLG-018 | Chefman 8 Qt (P-03) | Top temperature | 200–400 °F (About this item) vs 450 °F Hi-Fry option (page title) |
 
-## Listing conflicts a buyer should see
-| Flag | Product | Contradiction |
-|------|---------|---------------|
-| FLG-008 | CHEF iQ Sense | 50 hours battery in About this item, 70 hours in Product Description |
-| FLG-009 | Emeril 26 QT | model number appears in more than one form |
-| FLG-018 | Chefman 8 Qt | 200–400 °F in About this item, 450 °F Hi-Fry in the title |
-| FLG-021 | Emeril 26 QT | 24 presets in the title, 25 in About this item |
-| FLG-034 | Chefman 6 Qt | 6 quarts in the title, 6 liters in the capacity field |
-| FLG-031 | Emeril 26 QT | six accessories in the title, seven in Configuration, six named |
+P-04's certification is a seller-stated claim (NIST and NSF), not an independently verified certificate (FLG-035); its upper temperature is blank because the retrieved text did not confirm one (FLG-022).
+
+## Corrections recorded this pass (not current conflicts)
+- FLG-017 (P-03 wattage): an earlier register carried 1700 W; the current About this item excerpt states 120 V / 1000 W. Corrected; the 1700 W figure is not presented as a live same-page conflict.
+- FLG-019 (P-05 warranty): an earlier register carried one year; the current About this item text states two-year assurance. Corrected.
+- FLG-008 (P-05 battery): current About this item text states up to 50 hours per charge; an earlier capture recorded 70 hours that was not reproduced in review scope here. 50 hours is the only current statement kept; the earlier record is retained in the flag register for traceability.
+- FLG-009 (P-02 model): variant numbers from an earlier capture were not re-confirmed and the field is blank.
+- FLG-028 (legacy source IDs): S24 is now assigned (Search Console overview); S07 remains unused; no current claim depends on it.
+
+## Hosting and measurement — open, not assumed
+- GitHub Pages is configured (source `main`, `/`, HTTPS enforced) — configuration checked 2026-11-20 via the GitHub API. The public limits documentation states Pages is not intended or allowed as free hosting for sites primarily directed at commercial transactions; whether this affiliate publication fits is an unresolved policy question (FLG-036, SG-27), not a finding that a violation occurred. Owner should assess classification or migrate before directing purchase traffic.
+- GitHub Pages documentation says visitor IP addresses are logged and stored for security purposes; the site disclosure distinguishes GitHub's host-side logs from the site's local browser events (FLG-037). The owner should review whether any additional privacy step is needed.
+- Five events (`page_view`, `guide_read`, `outbound_click`, `search`, `suggestion_rank`) are counted in localStorage only; nothing is transmitted as the site ships. An optional, self-hosted collector (`scripts/analytics_server.py`) implements the same five events as daily aggregate counts without identifiers — it is not deployed and not wired to any page; if deployed, the disclosure must be updated first (SG-30).
+- The campaign ledger is empty by design and stays empty until an authorized first-party report provides rows (SG-07, SG-29). No click, session, conversion or revenue figure is presented, and none may be inferred.
+- Search Console verification would make query data available (SG-28); nothing about search demand is claimed yet.
 
 ## Not verified, and published as such
-Intended ASIN per product (FLG-001) · whether the tracking ID is live (FLG-002) · whether the short-link format is permitted for this placement (FLG-003) · the one-per-product Special Link test (FLG-004) · NIST/NSF and cETL certification beyond the listing's own wording (FLG-035) · any hands-on experience (FLG-032) · a named author (FLG-033) · weights and several model numbers that were not in the fetched listing text (FLG-022).
+Intended ASINs for all five products (FLG-001) · whether the tracking ID is live and recorded (FLG-002) · short-link compliance status (FLG-003) · the one-per-product Special Link test (FLG-004, SG-29) · certification documents (FLG-035) · hands-on experience (FLG-032) · a named editor (FLG-033) · several model numbers/weights/temperatures not confirmed in retrieved listing text (FLG-022 and product blanks) · full live-page transcripts — listings are dynamic; this pass reviewed available excerpts (FLG-023).
 
-## Decisions that change the numbers
-1. Complete the link test (SG-07) — nothing about revenue can be reported until it passes.
-2. Product Advertising API access (SG-13) — the only compliant route to showing prices.
-3. Search Console verification (SG-10) — the only way to pick the next guide from measured queries.
-4. A custom domain (SG-14, FLG-006) — canonicals currently point at the Pages subpath.
-
-## Honest position on revenue
-Zero, and no forecast. No commission rate, click, session or order figure is presented because nothing from an authorised first-party report exists yet. `campaign-ledger.html` is intentionally empty, with its schema and provenance rule written down so the first real row can be added without redesigning the page.
+## Decision Center additions this pass
+SG-27 (hosting fit review before promotion), SG-28 (Search Console verification before expanding guides), SG-29 (confirm intent + test each Special Link in Associates Central), SG-30 (choose endpoint hosting/retention before any event leaves the device), SG-31 (re-read the five listings end to end). Each cites its evidence in the Decision Center table. Nothing self-applies.
 
 ## How the site is kept honest
-`scripts/build_site.py` generates every page from `data/*.json`; nothing is hand-edited.
-`scripts/check_site.py` fails the build if the disclosure is missing or below the fold, if any amazon.com link lacks `rel="sponsored nofollow"`, if a price or star rating appears, if a link is broken, if a page is missing from the sitemap, if JSON-LD does not parse, or if a flag is referenced that is not defined. CI runs both, and fails if the committed pages drift from the generator.
+`scripts/build_site.py` generates every page from `data/*.json`; `scripts/check_site.py` fails the build on missing disclosure, sponsorship/tag errors, prices, star ratings, review counts, broken links, sitemap/feed drift, unsourced spec rows, missing decision-table evidence, or intent/observed field removal. The CI workflow regenerates and gates on PRs to `main` (it is a verifier, not a deployer; Pages' own branch builder publishes `main`).
 
-## Suggestions for improvement (SG-17..SG-20)
-- SG-17: Add an AI-powered research dashboard that ingests the five product ASINs, pulls live Amazon listing chunks, and flags new contradictions (automated research layer).
-- SG-18: Generate SEO-optimized question-shaped article drafts based on measured queries (once Search Console is verified in SG-10) and feed them into the existing guide pipeline.
-- SG-19: Create a dedicated Suggestions Review section (already in `suggestions.html`) where a human reviewer ranks SG-13, SG-14, SG-15, SG-16 before implementation.
-- SG-20: Implement a privacy-preserving self-hosted analytics endpoint (Q-08) to record the five defined events without cookies, exportable to CSV.
-
-## Open Questions register (Q-15..Q-16)
-- Q-15: How will the AI-powered research agent identify profitable niches beyond the five submitted products? (Discovery: monitor Amazon Best Sellers API / Creators API eligibility; blocks SG-17)
-- Q-16: What organic traffic metrics will define success for the question-shaped guides? (Discovery: Search Console once SG-10 is verified; blocks SG-16)
-
-## Verification log (2026-11-20, session arena/436f4dbe-affil2)
-- All 29 pages built successfully by `scripts/build_site.py`.
-- `scripts/check_site.py` passed (ALL CHECKS PASS).
-- GitHub Pages deployment is live at https://karagemop466-tech.github.io/Affil2/ (source branch main, commit eacaeca2d55ce8d5d01ecbb6de74ee3fd8067297).
-- No manual input required; all tasks completed autonomously.
+## Honest position on revenue
+Zero, with no forecast. No commission rate, click, conversion or earnings figure can be obtained from an authorized first-party report yet. `campaign-ledger.html` is intentionally empty with its schema and provenance rule documented.
