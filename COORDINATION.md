@@ -1286,3 +1286,29 @@ added its own FLG-041…045). Resolution, keeping both sides:
 work (this session's claim originally used T-20..T-22; this session's work is recorded as T-23..T-25).
 Flag IDs are unique and monotonic; task IDs are not. Future sessions should claim from the current
 maximum, not from the last ID seen in a prompt.
+
+## Session `arena/0acc86ad-affil2` — PR, merge and deploy result
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/49 |
+| Merge | merged into `main` 2026-11-20T06:37:58Z as merge commit `c50a7fa761dca963a2952ca169ae6ccfc79cdb76` |
+| CI before merge | "Regenerate and gate" — **pass** (run 44689101755) |
+| Pages | `status=built`, https://karagemop466-tech.github.io/Affil2/ |
+| Live verification | `findability.txt` fetched live and complete; product page fetched live and confirmed serving the reader-voice version ("Buy it if", "The specs that decide it", "Where this link actually goes", "Read from the listing bullets on 2026-11-20") with zero chunk citations or flag IDs |
+| Gate at merge | 36 pages, 5 product records, 50 flags, 19 sources — ALL CHECKS PASS |
+| Tests at merge | 3 Python tests OK; ALL JS COLLECTOR AND CLIENT TESTS PASS |
+
+### Merge rounds required (main moved four times during this session)
+
+1. `66ccda9` — clean rebase at claim time.
+2. `3ceebb0` (PRs #40–#46) — six-file conflict; merged generator kept both sides, generated pages
+   regenerated, upstream verification addendum R-01… preserved.
+3. `4faab79` (PRs #47–#48, session b6b809da) — 17-file conflict; upstream had also used
+   FLG-041…045, so **this session's four findings were renumbered to FLG-047…050**; upstream's new
+   CSS/class gate caught four missing status-token rules, which were added rather than the gate
+   being loosened.
+4. `9af864b` (PR #50) — COORDINATION.md only; both sides kept.
+
+No other session's work was discarded at any point. Every resolution was re-verified with the full
+gate and both test suites before pushing.
