@@ -730,6 +730,13 @@ def build_product(p):
     target_asin = p.get("observed") or p["asin"]
     og = ('<meta property="product:retailer_item_id" content="'
           + target_asin + '">')
+    related_guides = "".join(
+        f'<li><a href="../guides/{g["slug"]}.html">{esc(g["title"])}</a>'
+        f'<span>{esc(g["sub"])}</span></li>'
+        for g in GUIDES if p["id"] in g["products"])
+    if not related_guides:
+        related_guides = '<li class="muted">No guide links this product yet.</li>'
+
     body = f"""
 {breadcrumb([("Home", "index.html"), (p['cat'], p['catfile']), (p['brand'], None)], "../")}
 <div class="pdp-head">
@@ -783,6 +790,11 @@ def build_product(p):
      data-event="outbound_click">See it on Amazon<span class="btn-sub">paid link</span></a>
   <a class="btn ghost" href="../compare.html">Compare with the others</a>
 </p>
+
+<h2>Where this product is discussed</h2>
+<p class="muted">The guides that argue the decision this product is one answer to. If you are still
+  choosing, start there rather than with the specifications.</p>
+<ul class="linklist">{related_guides}</ul>
 
 <h2>Also in {esc(p['cat'])}</h2>
 <div class="grid">{"".join(card(x, "../") for x in others)}</div>
@@ -985,24 +997,24 @@ GUIDES = [
          fits, whether chips can sit in one layer, or whether two baskets are better than one big
          one. Here is what to check instead.""",
          sections=[
-            ("1. Total versus usable", """Six quarts split into two three-quart baskets is not the same
+            ("Total versus usable", """Six quarts split into two three-quart baskets is not the same
             as one six-quart basket. The split gives you two separate cooks; the single basket gives
             you one bigger flat area. Neither is better in the abstract &mdash; they suit different
             meals."""),
-            ("2. Flat area, not volume", """Crisping depends on surface contact and airflow. A deep
+            ("Flat area, not volume", """Crisping depends on surface contact and airflow. A deep
             basket that holds a lot of volume can still only crisp one layer of food. Ask how much
             fits in a single layer, not how much fits at all."""),
-            ("3. What the listing says fits", """Listings often state concrete fits: a 12-inch pizza,
+            ("What the listing says fits", """Listings often state concrete fits: a 12-inch pizza,
             a 6-pound chicken. Those are more actionable than a quart figure. The Emeril listing
             states it fits a 12-inch pizza and can rotisserie a 6-pound chicken, which tells you more
             about its usable size than the 26-quart headline does."""),
-            ("4. Physical size on the counter", """A bigger cavity usually means a bigger box. Compare
+            ("Physical size on the counter", """A bigger cavity usually means a bigger box. Compare
             dimensions before you talk yourself into capacity you do not have room for. The 26-quart
             oven is 16.9 inches deep; the 8-quart basket is 12.75."""),
-            ("5. Your household, honestly", """Two people who cook one protein and one vegetable need
+            ("Your household, honestly", """Two people who cook one protein and one vegetable need
             two small zones, not 26 quarts. Four people who batch-cook need volume. Write down what
             you cooked last week before you decide."""),
-            ("6. Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
+            ("Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
             6 liters in its capacity field. Six liters is about 6.3 US quarts, so this is almost
             certainly a label slip rather than a different product &mdash; but it is the kind of slip
             that makes a spec table worth reading rather than skimming. It is flagged as FLG-034."""),
@@ -1172,13 +1184,13 @@ GUIDES = [
          the kettle and the wall. Three measurements settle almost every decision, and none of them
          is capacity.""",
          sections=[
-            ("1. Depth, plus the air gap", """Depth is the first disqualifier. Both Chefman basket
+            ("Depth, plus the air gap", """Depth is the first disqualifier. Both Chefman basket
             units are under 14 inches deep; the oven-style Emeril is 16.9. Add the clearance the
             manual asks for behind and above, and you have your real number."""),
-            ("2. Door swing or drawer pull", """A drawer needs room in front for you to stand and pull.
+            ("Door swing or drawer pull", """A drawer needs room in front for you to stand and pull.
             French doors need room in front for two doors to open and stay open. In a narrow galley
             that difference decides whether the appliance is usable at all."""),
-            ("3. Where it lives between uses", """If it goes in a cupboard, weight decides whether that
+            ("Where it lives between uses", """If it goes in a cupboard, weight decides whether that
             happens twice or never. The 8-quart Chefman is 12.8 pounds and the 6-quart dual-basket
             Chefman is 13.3 pounds, both realistically movable. The Emeril listing does not state an
             item weight (FLG-022), and its 16.9-inch depth already rules out tight counters and most

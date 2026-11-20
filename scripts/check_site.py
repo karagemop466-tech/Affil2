@@ -578,6 +578,16 @@ for g in (ROOT / "guides").glob("*.html"):
     elif "amazon.com/dp/" not in txt:
         err(f"guides/{g.name}: product line carries no tagged listing link")
 
+# 7. Every product page links back into the guides that discuss it, and vice versa.
+for g in sorted((ROOT / "guides").glob("*.html")):
+    txt = g.read_text(encoding="utf-8")
+    if 'href="../products/' not in txt:
+        err(f"guides/{g.name}: links to no product page")
+for p_ in sorted((ROOT / "products").glob("*.html")):
+    txt = p_.read_text(encoding="utf-8")
+    if 'href="../guides/' not in txt:
+        err(f"products/{p_.name}: links to no guide")
+
 # 7. The front page must offer a way in before it offers a category directory.
 home = (ROOT / "index.html").read_text(encoding="utf-8")
 if 'class="router"' not in home:
