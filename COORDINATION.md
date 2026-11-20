@@ -857,3 +857,68 @@ Line-by-line review of the deployed pages found two publication defects, both ve
 2. The P-03 front-page card prints the item weight inside the Capacity chip ("Capacity: 8 quarts (12.8 lb)"). The 12.8 lb figure is verified (S12 Measurements table), but a weight belongs in the product spec table, which already carries it; the chip mixes two fields.
 
 Scope expanded to fix both: `scripts/build_site.py` (front-page panel section only), `data/products.json` (P-03 `card` chip wording only), regenerated pages, gate + tests rerun. No product fact, source, or flag changes; account-gated items (FLG-001/002/003/004/010/028/033) remain untouched. Also claiming the port of open PR #34's documentation block into this file (see next commit) since that branch has no merge base with the shallow clone and cannot be git-merged locally.
+
+### Port of open PR #34 (2026-11-20, session `cb967199`)
+
+PR #34 (`arena/82c875a9-affil2`, commit `d9bba276`) is a documentation-only record whose branch has no
+merge base with this shallow clone, so it cannot be git-merged locally; its block is ported verbatim
+below instead. The three merge-commit hashes it cites were verified to exist on `main` via the GitHub
+API before porting: `63cb1fb` → PR #30, `c916fce` → PR #32, `e948aae` → PR #33. PR #34 is closed as
+integrated once this lands.
+
+### Publication record (session `82c875a9`)
+
+| PR | Title | Result |
+|----|-------|--------|
+| [#30](https://github.com/karagemop466-tech/Affil2/pull/30) | Storefront rebuild, working search and pair compare, register re-verified against live listings | merged → `63cb1fb`; Pages **success**, Verify site **success** on that SHA |
+| [#32](https://github.com/karagemop466-tech/Affil2/pull/32) | Remove the last unsupported weight claim, gate against any lb figure in prose | merged → `c916fce`; live page confirmed |
+| [#33](https://github.com/karagemop466-tech/Affil2/pull/33) | P-02 lede stops promising weight content the register cannot supply | merged → `e948aae`; live page confirmed |
+
+Live: https://karagemop466-tech.github.io/Affil2/ — all 30 pages, plus `compare.html` with the working
+pair view, checked on the deployed URL rather than the local build.
+
+**Lesson repeated, and worth writing down.** PR #30 passed the gate, deployed green, and still shipped
+one wrong number: `data/editorial.json` carried "26.5 lb" for the Emeril, and that string is rendered
+into the compare table's catch column and into a product FAQ. I found it by reading the deployed
+`compare.html`, not by running `check_site.py` twice. The gate now fails on any `N lb/lbs/pound` figure
+in page prose, and on any promise of weight information, but the general point stands: the gate proves
+markup and sourcing rules, not that the sentence is true. Read the live page after every deploy.
+
+**Renumbering note for the next session.** `main` gained the Design & Traffic Brief at SG-17 while this
+branch was open. This branch's six proposals are therefore SG-18 to SG-23, and its two shipped items are
+SG-20 (change log) and SG-21 (pair compare). Do not re-use SG-17.
+
+### Review result, fixes, and open-PR dispositions (2026-11-20, session `cb967199`)
+
+Gate truth on the final base (`origin/main` `4025ecc` = PR #29 + #38 merged, plus this session's commits):
+`python3 scripts/build_site.py` → 36 pages, idempotent across consecutive runs; `python3 scripts/check_site.py`
+→ checked 36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS; `python3 -m unittest discover`
+→ 3 tests OK; `node tests/test_collector.js` → ALL JS COLLECTOR AND CLIENT TESTS PASS.
+
+Review method: fetched the deployed landing page and the P-01 product page live, read the PR bodies and
+changed-file lists of every open PR against what is actually on `main`, and re-ran the gate. Sources this
+session: the deployed pages themselves, the live Amazon listing B0CDY277D3 (title corroborates S10), and
+the GitHub API for PR/merge-commit facts. No product fact, source, or flag changed.
+
+Fixes shipped (each verified against the deployed site first, then fixed at generator/data level, rebuilt, gated):
+
+1. **Front page led with a dashboard panel.** `index.html` main content carried a third dashboard surface
+   ("Working on this site?") beyond the masthead Records group and the footer Records line. Removed in
+   `scripts/build_site.py`; dashboard surfaces remain reachable from the masthead Records group (the single
+   navigation group) and the footer — matches shipped proposal SG-01.
+2. **P-03 capacity chip mixed two fields.** The front-page card printed "Capacity: 8 quarts (12.8 lb)".
+   The 12.8 lb figure is verified (S12, Measurements table) but belongs in the spec table, which already
+   carries it. Chip now reads "8 quarts (single basket)" (`data/products.json`). No fact changed; the
+   verified weight stays on the P-03 specification table and QA row.
+
+Open-PR reconciliation (closes executed after this PR merges):
+
+| PR | Disposition | Rationale |
+|---|---|---|
+| #16 | close as superseded | Collector endpoints (`analytics/server.js`, `functions/api/collect.js`), the five-event schema, `measurement.html`, the platform concept and collector tests all shipped on `main` in integrated form via PR #31. Unique leftovers (`assets/js/collect.js`, `tests/collector.test.js`) are replaced by `assets/app.js` `send()` and `tests/test_collector.js`. The owner decision stays open (SG-25, FLG-010, Q-08) and is untouched. |
+| #28 | close as superseded | Shop-first front page, verified specs, review workflow, flag-reference and weight gates all shipped on `main` in later integrated form (PRs #30/#32/#33/#31). Unique content not on `main`: four guide topics — counter-depth, quarts-vs-litres, usda-temperature-chart, wattage-and-circuits — recorded here as the guide backlog for the next content session, to be regenerated natively in `build_site.py` GUIDES so index/sitemap/feed/search stay in sync. |
+| #34 | ported; close as integrated | Block ported verbatim above; branch not locally mergeable (no merge base in this shallow clone). |
+| #35 | close as superseded | Identity separation (intended/observed fields on every product page), source-linked spec rows, SG-27..SG-31, five-event coverage and the strengthened gate are all verified present on `main` this session by reading the deployed product page and the gate output. Unique leftover (`scripts/analytics_server.py`) duplicates `analytics/server.js`/`server.py`. |
+
+Account-gated open items (FLG-001/002/003/004/010/028/033, SG-07/SG-25/SG-29/SG-31, Q-01..Q-04) remain
+untouched and unguessed.
