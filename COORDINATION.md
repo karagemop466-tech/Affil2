@@ -922,3 +922,17 @@ Open-PR reconciliation (closes executed after this PR merges):
 
 Account-gated open items (FLG-001/002/003/004/010/028/033, SG-07/SG-25/SG-29/SG-31, Q-01..Q-04) remain
 untouched and unguessed.
+
+### Integration result (2026-11-20, session `cb967199`)
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/41 |
+| Merge | merged into `main` as merge commit `4dd7cdd` (no approval wait, per standing instruction) |
+| Verify site | run 44687657922 on `4dd7cdd` → success |
+| GitHub Pages | `pages build and deployment` run 44687657657 → success; site live at https://karagemop466-tech.github.io/Affil2/ |
+| Live verification | deployed landing page re-fetched with a cache-buster after deploy: "Working on this site?" panel absent from main content (dashboard surfaces only in the masthead Records group + footer), P-03 chip reads "Capacity: 8 quarts (single basket)", hero facts show 11 buying guides, disclosure strip above the fold, sponsored labels intact. A first uncached fetch minutes after deploy served the pre-deploy copy from CDN cache — noted so future sessions use a cache-buster when checking a just-deployed page. |
+| Merge conflicts during the pass | three rounds of `git pull --rebase origin main` while parallel sessions merged PRs #29/#38/#39/#40; all resolved in COORDINATION.md by keeping every session's record block once (nothing discarded). |
+| PR dispositions executed | #16 closed superseded; #28 closed superseded (four guide topics preserved as backlog); #34 closed integrated (block ported verbatim); #35 closed superseded. PR #29 was merged by its own session during this pass. Each close comment states where the work lives on main. |
+| Gate at merge | 36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS; 3 Python tests OK; JS collector tests pass; generator idempotent. |
+| Not touched | account-gated items FLG-001/002/003/004/010/028/033, SG-07/SG-25/SG-29/SG-31, Q-01..Q-04; no product fact, source, or flag changed. |
