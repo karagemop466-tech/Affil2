@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="Original illustration of a wireless food thermometer and display">
+  <rect width="320" height="180" rx="18" fill="#f6e8d7"/>
+  <ellipse cx="160" cy="154" rx="98" ry="8" fill="#4a3729" opacity=".13"/>
+  <rect x="58" y="45" width="93" height="83" rx="17" fill="#294238"/>
+  <rect x="71" y="58" width="67" height="42" rx="7" fill="#fff5e7"/>
+  <path d="M82 77h45" stroke="#df7652" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="104" cy="112" r="4" fill="#efa165"/>
+  <rect x="197" y="33" width="46" height="91" rx="8" fill="#22382f"/>
+  <rect x="202" y="40" width="36" height="72" rx="5" fill="#fdf7ee"/>
+  <path d="M208 54h24m-24 8h18m-18 8h21" stroke="#9b7254" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="220" cy="118" r="2.5" fill="#efa165"/>
+  <path d="M164 61q17-14 29 0m-25 9q12-9 20 0" fill="none" stroke="#e56d4e" stroke-width="4" stroke-linecap="round"/>
+  <path d="M74 129v17m62-17v17" stroke="#21382f" stroke-width="8" stroke-linecap="round"/>
+  <path d="M250 132h29" stroke="#667c70" stroke-width="4" stroke-linecap="round"/>
+  <path d="M279 132v17" stroke="#526a5d" stroke-width="4" stroke-linecap="round"/>
+</svg>

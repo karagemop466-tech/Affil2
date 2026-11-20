@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="Original illustration of a countertop oven-style air fryer">
+  <rect width="320" height="180" rx="18" fill="#f6e8d7"/>
+  <ellipse cx="160" cy="158" rx="96" ry="8" fill="#4a3729" opacity=".13"/>
+  <path d="M83 27q0-12 13-12h128q13 0 13 12v118H83z" fill="#3b5149"/>
+  <path d="M94 26h132v16H94z" fill="#52695f"/>
+  <rect x="100" y="52" width="120" height="72" rx="10" fill="#1d302a" stroke="#819287" stroke-width="4"/>
+  <path d="M110 63h100v48H110z" fill="#e8d4bc"/>
+  <path d="M111 80h98m-98 13h98" stroke="#bc8c64" stroke-width="3"/>
+  <path d="M160 63v48" stroke="#d9b08c" stroke-width="3"/>
+  <path d="M130 139h60" stroke="#e99a61" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="110" cy="34" r="4" fill="#ef9c61"/><circle cx="128" cy="34" r="4" fill="#e7d5bf"/>
+  <path d="M96 149v6m116-6v6" stroke="#20392f" stroke-width="8" stroke-linecap="round"/>
+</svg>
