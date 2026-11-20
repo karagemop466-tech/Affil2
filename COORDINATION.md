@@ -1047,5 +1047,8 @@ FLG-001 intended ASINs · FLG-002 tracking-ID activity · FLG-003 short-link com
 
 ### T-22 release record (session 578ca10d)
 
-- PR: (recorded after merge below)
-- GitHub Pages: (recorded after merge below)
+- PR: https://github.com/karagemop466-tech/Affil2/pull/46 — merged via `gh pr merge 46 --merge`, merge commit `3ceebb04161b165f9da7740577f77dfa9e4382ab` on `main`, state **MERGED**.
+- Merge required two rebases: `main` advanced from `22dcda1` to `f1e84b6` (c449a2ad's PR #44) while the PR was open. Both rebases conflicted in `COORDINATION.md` only. Resolution each time: main's full file kept (preserving cb967199 and c449a2ad records), this session's T-22 block re-appended, nothing discarded. Branch force-pushed twice with `--force-with-lease`.
+- Checks on the PR: `Verify site` run 73 on `3ceebb04` → **success**.
+- GitHub Pages: `pages build and deployment` run 42 for `3ceebb04` → **success** (state `built`). Live https://karagemop466-tech.github.io/Affil2/ re-fetched after propagation and serves the new `Re-verification addendum · session 578ca10d · 2026-11-20` table with all 16 rows, each linked to its official source (earlier fetch hit a CDN cache; confirmed with a cache-busting query).
+- Flagged items FLG-001..FLG-040 remain published on `flagged.html`; none blocks. Short-link compliance (FLG-003) stays unresolved and is not claimed invalid. Owner-gated items (FLG-001/002/003/004/010/019/028/032/033) remain for the owner.
