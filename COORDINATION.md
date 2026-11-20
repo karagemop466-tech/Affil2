@@ -1076,3 +1076,51 @@ re-verify any register value, and records no "verified" status for anything it d
 limited to markup, styling, generated navigation, gate rules, and the removal of duplication that can
 be proved from the repository itself. Register values stand on the earlier sessions' dated reads
 (S10–S19, S01–S04, S20–S24); that their text was not re-read today is itself recorded below.
+
+### T-23 completion (session `b6b809da`, 2026-11-20)
+
+Renumbered from T-21: session `c449a2ad` claimed T-21 (requirements traceability, `REQUIREMENTS-TRACE.md`)
+and session `578ca10d` then used T-22 for the final-integration addendum, both while this session worked.
+Those numbers were taken; this session's task is T-23. No other session's work was edited.
+
+**What shipped**
+
+| Area | Change |
+|---|---|
+| Stylesheet integrity | `assets/style.css` line 601 opened `.pdp-art img{` and never closed it, so the `@media(max-width:1000px)` rule after it was parsed as declarations and dropped. Fixed, and the gate now fails on an unbalanced stylesheet or an unclosed `@media` block. |
+| Missing styles | The generator emits `.hero`, `.hero-photo`, `.hero-copy`, `.hero-facts`, `.aisle-photo`, `.pdp-photo`; the November layer renamed the hero to `.cover` and shipped no rule for any of them. Rules added (dark-green cover card with cream type), and the gate now fails on any class the generator emits that has no rule. |
+| Front page | A four-way "start where you actually are" router sits directly under the hero and above the category directory. It answers "which of these am I?" before asking the reader to browse. Gated. |
+| Guides | Every guide now ends on *If this guide decided it for you*: one line per relevant product (choose-it-if + the caveat) and one tagged button. Section headings carry generated step markers; the hand-typed "1." prefixes were removed so the number is not printed twice. |
+| Product pages | Each product page links to the guides that discuss it (previously there was no product→guide link at all). Gated in both directions. |
+| Link semantics | FTC, Google, USDA and Amazon policy/creators-API citations were carrying `rel="sponsored nofollow"`, which marks them as paid placements. Only `amazon.com/dp/` listings are now sponsored; citations use `rel="noopener noreferrer"`. Gated. |
+| Dead files | Six unreferenced images removed (`assets/feature.jpg`, `basket.jpg`, `probe.jpg`, `assets/img/cat-air-fryers.jpg`, `cat-thermometers.jpg`, `hero-kitchen.jpg` — the last three duplicated a file of the same name under `assets/photos/` at a different size). Gated: an image file nothing references now fails the build. |
+| Stale counts | SG-02 said "ten guides … include all ten" against eleven published; the count is now derived from `GUIDES`. README and the executive summary were refreshed to 46 flags / current page count. |
+
+**What was verified, and what could not be**
+
+Reached from this sandbox: GitHub API and the repository itself. Not reached: `amazon.com`,
+`affiliate-program.amazon.com`, `ftc.gov`, `developers.google.com`, `fsis.usda.gov` — all failed at TLS.
+So **no listing, policy page or temperature chart was re-read in this session**, no register value was
+changed, and no value is newly marked verified. Every fact on the site still rests on the dated reads
+recorded against S01–S24 by earlier sessions. Published as **FLG-045** with the same wording on
+`flagged.html`.
+
+Verified by execution instead: `scripts/build_site.py` → 36 pages, idempotent across consecutive runs;
+`scripts/check_site.py` → `checked 36 pages, 5 product records, 46 flags, 19 sources — ALL CHECKS PASS`
+(including the 8 new rules); `python3 -m unittest discover` → 3 tests OK; `node tests/test_collector.js`
+→ ALL JS COLLECTOR AND CLIENT TESTS PASS; a full internal link crawl of all 36 pages → 0 broken links;
+HTTP 200 for home, shop, compare, guides, a guide, a product page, flagged, suggestions, questions,
+sources, every dashboard page, the stylesheet and the images; disclosure confirmed above `<main>` on the
+served homepage; `git diff --check` clean.
+
+**New flags published (append-only; FLG-001–FLG-040 untouched, verified field by field)**
+
+FLG-041 unclosed CSS rule · FLG-042 policy citations mislabelled `rel=sponsored` · FLG-043 six dead image
+files · FLG-044 stale "ten guides" count · FLG-045 no source re-read in this pass (the honest limit) ·
+FLG-046 the masthead name and volume line are editorial devices, not an owned brand.
+
+**Conflict log.** `git pull --rebase` conflicted in `COORDINATION.md` (main gained three session records
+and a `REQUIREMENTS-TRACE.md` while this session worked). Resolved by keeping main's entire file and
+re-appending only this session's block — no other session's record was discarded. The branch was force-pushed
+once with `--force-with-lease` after that rebase, on this branch only.
+
