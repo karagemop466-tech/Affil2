@@ -126,6 +126,30 @@ def plain(p):
 def slug_of(p):
     return f"products/{p['slug']}.html"
 
+def is_shoppable(url):
+    """True for a link that opens a product listing we earn on.
+
+    Policy documentation on affiliate-program.amazon.com and the link.amazon short links are
+    not shoppable destinations, so they are cited rather than marked as paid placements.
+    """
+    return "amazon.com/dp/" in url
+
+
+def cite(url, text=None):
+    """A link to the document a claim was checked against.
+
+    Policy, government and short-link citations are not paid placements, so they are not marked
+    sponsored; a link to an Amazon listing is, because we earn on those and Google's guidance
+    asks for rel="sponsored" on affiliate links.
+    """
+    label = esc(text) if text else esc(url)
+    rel = "sponsored nofollow" if is_shoppable(url) else "noopener noreferrer"
+    return f'<a href="{esc(url)}" rel="{rel}">{label}</a>'
+
+def cite_id(sid):
+    """Citation to a registered source by its register ID."""
+    return cite(source_url(sid), sid)
+
 def glyph(p, up=""):
     if p["cat"] == "Meat Thermometers":
         fname = "thermometer.svg"
@@ -168,6 +192,40 @@ def photo(key, up="", cls="", caption=True, eager=False, short=False):
             f'loading="{load}" decoding="async">{cap}</figure>')
 
 # --------------------------------------------------------------------------- shell
+
+# "Choose it if" — one buyer-facing line per product. Every figure in these lines already
+# appears in data/products.json with its own provenance row; nothing new is asserted here.
+CHOOSE_IF = {
+    "P-01": "two dishes have to land at the same time",
+    "P-02": "one appliance has to roast, toast and air-fry, and the counter is deep enough",
+    "P-03": "you cook one thing at a time and want the largest single basket",
+    "P-04": "you want a number in a second at the grill",
+    "P-05": "the cook needs to leave the room for hours",
+}
+
+
+def choose_if(p):
+    return CHOOSE_IF.get(p["id"], p["best_for"])
+
+
+def flip_strip(p, up, include_self=True):
+    """The product line a guide ends on: what it is for, the caveat, and one tagged button.
+
+    Deliberately short. A guide that has just answered a question should end on the product
+    that answers it, not on another essay.
+    """
+    fit = choose_if(p)
+    return f"""<li class="flip">
+  <div class="flip-body">
+    <p class="flip-k">{esc(p['cat'])} &middot; {esc(p['brand'])}</p>
+    <p class="flip-t"><a href="{up}{slug_of(p)}"><strong>{esc(p['headline'])}</strong></a></p>
+    <p class="flip-fit">Choose it if {esc(fit)}.</p>
+    <p class="flip-catch">The catch: {esc(p['tradeoff'])}</p>
+  </div>
+  <p class="flip-cta"><a class="btn" href="{aff(p)}" rel="sponsored nofollow"
+     data-outbound="{p['id']}" data-event="outbound_click">Check price<span class="btn-sub">paid link</span></a></p>
+</li>"""
+
 
 NAV = [
     ("air-fryers.html", "Air Fryers"),
@@ -471,13 +529,27 @@ def build_home():
   <div class="hero-art">{photo("hero", "", "hero-photo", caption=True, eager=True)}</div>
 </section>
 
+<section class="router" aria-label="Start with your situation">
+  <p class="kicker">Start where you actually are</p>
+  <div class="router-grid">
+    <a href="air-fryers.html"><span class="router-n">01</span><strong>I am replacing a basket fryer</strong>
+      <span>Two drawers, one big basket, or a countertop oven that air-fries.</span></a>
+    <a href="guides/capacity-checklist.html"><span class="router-n">02</span><strong>I do not know what size I need</strong>
+      <span>Quarts are not servings. Work out the batches first.</span></a>
+    <a href="meat-thermometers.html"><span class="router-n">03</span><strong>I want to stop guessing doneness</strong>
+      <span>Instant-read at the grill, or walk-away probes for long cooks.</span></a>
+    <a href="compare.html"><span class="router-n">04</span><strong>Show me all five side by side</strong>
+      <span>Same rows, same sources, prices and ratings deliberately absent.</span></a>
+  </div>
+</section>
+
 <section class="dept">
   <p class="kicker">The shop directory</p>
   <h2>Shop by category</h2>
   <div class="aisles">
-    <a href="air-fryers.html">{photo("air", "", "aisle-photo", caption=True, short=True)}
+    <a href="air-fryers.html">{photo("air", "", "", caption=True, short=True)}
       <span>01 / Appliances<strong>Air fryers &rarr;</strong></span></a>
-    <a href="meat-thermometers.html">{photo("thermo", "", "aisle-photo", caption=True, short=True)}
+    <a href="meat-thermometers.html">{photo("thermo", "", "", caption=True, short=True)}
       <span>02 / Tools<strong>Meat thermometers &rarr;</strong></span></a>
   </div>
 </section>
@@ -658,6 +730,13 @@ def build_product(p):
     target_asin = p.get("observed") or p["asin"]
     og = ('<meta property="product:retailer_item_id" content="'
           + target_asin + '">')
+    related_guides = "".join(
+        f'<li><a href="../guides/{g["slug"]}.html">{esc(g["title"])}</a>'
+        f'<span>{esc(g["sub"])}</span></li>'
+        for g in GUIDES if p["id"] in g["products"])
+    if not related_guides:
+        related_guides = '<li class="muted">No guide links this product yet.</li>'
+
     body = f"""
 {breadcrumb([("Home", "index.html"), (p['cat'], p['catfile']), (p['brand'], None)], "../")}
 <div class="pdp-head">
@@ -666,7 +745,7 @@ def build_product(p):
     <h1>{esc(p['headline'])}</h1>
     <p class="lede">{esc(p['blurb'])}</p>
   </div>
-  <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../", "pdp-photo")}</div>
+  <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../")}</div>
 </div>
 <div class="pdp-buy">
   <div>
@@ -711,6 +790,11 @@ def build_product(p):
      data-event="outbound_click">See it on Amazon<span class="btn-sub">paid link</span></a>
   <a class="btn ghost" href="../compare.html">Compare with the others</a>
 </p>
+
+<h2>Where this product is discussed</h2>
+<p class="muted">The guides that argue the decision this product is one answer to. If you are still
+  choosing, start there rather than with the specifications.</p>
+<ul class="linklist">{related_guides}</ul>
 
 <h2>Also in {esc(p['cat'])}</h2>
 <div class="grid">{"".join(card(x, "../") for x in others)}</div>
@@ -913,24 +997,24 @@ GUIDES = [
          fits, whether chips can sit in one layer, or whether two baskets are better than one big
          one. Here is what to check instead.""",
          sections=[
-            ("1. Total versus usable", """Six quarts split into two three-quart baskets is not the same
+            ("Total versus usable", """Six quarts split into two three-quart baskets is not the same
             as one six-quart basket. The split gives you two separate cooks; the single basket gives
             you one bigger flat area. Neither is better in the abstract &mdash; they suit different
             meals."""),
-            ("2. Flat area, not volume", """Crisping depends on surface contact and airflow. A deep
+            ("Flat area, not volume", """Crisping depends on surface contact and airflow. A deep
             basket that holds a lot of volume can still only crisp one layer of food. Ask how much
             fits in a single layer, not how much fits at all."""),
-            ("3. What the listing says fits", """Listings often state concrete fits: a 12-inch pizza,
+            ("What the listing says fits", """Listings often state concrete fits: a 12-inch pizza,
             a 6-pound chicken. Those are more actionable than a quart figure. The Emeril listing
             states it fits a 12-inch pizza and can rotisserie a 6-pound chicken, which tells you more
             about its usable size than the 26-quart headline does."""),
-            ("4. Physical size on the counter", """A bigger cavity usually means a bigger box. Compare
+            ("Physical size on the counter", """A bigger cavity usually means a bigger box. Compare
             dimensions before you talk yourself into capacity you do not have room for. The 26-quart
             oven is 16.9 inches deep; the 8-quart basket is 12.75."""),
-            ("5. Your household, honestly", """Two people who cook one protein and one vegetable need
+            ("Your household, honestly", """Two people who cook one protein and one vegetable need
             two small zones, not 26 quarts. Four people who batch-cook need volume. Write down what
             you cooked last week before you decide."""),
-            ("6. Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
+            ("Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
             6 liters in its capacity field. Six liters is about 6.3 US quarts, so this is almost
             certainly a label slip rather than a different product &mdash; but it is the kind of slip
             that makes a spec table worth reading rather than skimming. It is flagged as FLG-034."""),
@@ -1100,13 +1184,13 @@ GUIDES = [
          the kettle and the wall. Three measurements settle almost every decision, and none of them
          is capacity.""",
          sections=[
-            ("1. Depth, plus the air gap", """Depth is the first disqualifier. Both Chefman basket
+            ("Depth, plus the air gap", """Depth is the first disqualifier. Both Chefman basket
             units are under 14 inches deep; the oven-style Emeril is 16.9. Add the clearance the
             manual asks for behind and above, and you have your real number."""),
-            ("2. Door swing or drawer pull", """A drawer needs room in front for you to stand and pull.
+            ("Door swing or drawer pull", """A drawer needs room in front for you to stand and pull.
             French doors need room in front for two doors to open and stay open. In a narrow galley
             that difference decides whether the appliance is usable at all."""),
-            ("3. Where it lives between uses", """If it goes in a cupboard, weight decides whether that
+            ("Where it lives between uses", """If it goes in a cupboard, weight decides whether that
             happens twice or never. The 8-quart Chefman is 12.8 pounds and the 6-quart dual-basket
             Chefman is 13.3 pounds, both realistically movable. The Emeril listing does not state an
             item weight (FLG-022), and its 16.9-inch depth already rules out tight counters and most
@@ -1191,10 +1275,10 @@ def build_guides_index():
 
 def build_guide(g):
     rel = [BY_ID[x] for x in g["products"]]
-    secs = "".join(f"<h2>{esc(h)}</h2><p>{t}</p>" for h, t in g["sections"])
-    items = "".join(
-        f'<li><a href="../{slug_of(p)}">{esc(p["brand"])} — {esc(p["headline"])}</a>'
-        f'<span>{esc(p["best_for"])}</span></li>' for p in rel)
+    secs = "".join(
+        f'<h2><span class="step">{n:02d}</span>{esc(h)}</h2><p>{t}</p>'
+        for n, (h, t) in enumerate(g["sections"], 1))
+    items = "".join(flip_strip(p, "../") for p in rel)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (g['title'][:40] + "…", None)], "../")}
 <p class="kicker">{esc(g['kicker'])} · verified {TODAY}</p>
@@ -1206,8 +1290,10 @@ def build_guide(g):
 </div>
 {secs}
 {g.get("extra", "")}
-<h2>The products this guide refers to</h2>
-<ul class="linklist">{items}</ul>
+<h2>If this guide decided it for you</h2>
+<p class="muted">One line each on why you would pick it, and the caveat that comes with it. Every
+  figure behind these lines is in the specification table on the product page, with its source.</p>
+<ul class="flip-list">{items}</ul>
 <p class="small">Every specification quoted above is from the official listing, dated {TODAY}. See the
   <a href="../sources.html">source register</a> for links, and the
   <a href="../flagged.html">Flagged for Review</a> page for the contradictions.</p>
@@ -1236,7 +1322,8 @@ def build_verification():
     import json as _json
 
     def a(href, text, sponsored=False):
-        rel = ' rel="sponsored nofollow"' if sponsored or "amazon.com" in href else ""
+        rel = (' rel="sponsored nofollow"' if is_shoppable(href)
+               else ' rel="noopener noreferrer"')
         return f'<a href="{href}"{rel}>{esc(text)}</a>'
 
     V = _json.loads((DATA / "verification.json").read_text())
@@ -1375,12 +1462,13 @@ SUGGESTIONS = [
          impact="High — reader trust and time on page", effort="Done",
          status="Shipped", verify="Visible on index.html: hero, three featured products, one nav group."),
     dict(id="SG-02", title="Publish question-shaped guides, then measure arrivals",
-         what="Ten guides built from real buying decisions, each added to the sitemap and the RSS "
-              "feed, each ending in a verdict.",
+         what=f"{len(GUIDES)} guides built from real buying decisions, each added to the sitemap "
+              "and the RSS feed, each ending in a verdict and on the product it argues for.",
          why="Long-tail question queries are how a small site earns its first organic traffic. A "
              "guide that answers one question beats a listicle.",
          impact="High — organic traffic", effort="Done",
-         status="Shipped", verify="guides.html lists ten; sitemap.xml and feed.xml include all ten."),
+         status="Shipped",
+         verify=f"guides.html lists all {len(GUIDES)}; sitemap.xml and feed.xml carry the same set."),
     dict(id="SG-03", title="Measure clicks before optimising anything",
          what="Five defined events (data/events.json), counted locally with no cookies and no third "
               "party, exportable to CSV, with a self-hosted collector ready in analytics/server.js.",
@@ -2096,7 +2184,7 @@ def build_flagged():
         for sid in f.get("links", []):
             url = source_url(sid)
             if url:
-                links.append(f'<a href="{url}" rel="sponsored nofollow">{esc(sid)}</a>')
+                links.append(cite_id(sid))
         return " ".join(links) or "&mdash;"
 
     order = {"conflict": 0, "policy": 1, "open": 2, "pending-test": 3, "unverified": 4,
@@ -2138,6 +2226,15 @@ def build_flagged():
   <tbody>{rows}</tbody>
 </table>
 
+<h2>What the most recent pass did not verify</h2>
+<p>Not every pass can re-read the sources. The storefront pass that added the front-page router and the
+  product line at the end of each guide ran in an environment with no access to amazon.com, ftc.gov,
+  developers.google.com, fsis.usda.gov or affiliate-program.amazon.com. It therefore asserts no new
+  product or policy fact: the "last verified" dates on this site still refer to the earlier dated reads
+  of <a href="sources.html">S01&ndash;S24</a>. The limit is recorded as <strong>FLG-045</strong> rather
+  than left implicit, and the defects that pass did find &mdash; an unclosed CSS rule, mislabelled
+  citation links, six dead image files, a stale guide count &mdash; are published above with their IDs.</p>
+
 <h2>How to request a change</h2>
 <p>Note the flag ID, say what is wrong, and cite the official page that shows otherwise. Corrections
   are dated and the flag is kept rather than deleted, so the record shows what changed and when. If a
@@ -2159,8 +2256,7 @@ def changelog_rows():
         if f.get("severity") != "corrected":
             continue
         links = " ".join(
-            f'<a href="{source_url(sid)}" rel="sponsored nofollow">{esc(sid)}</a>'
-            for sid in f.get("links", []) if source_url(sid))
+            cite_id(sid) for sid in f.get("links", []) if source_url(sid))
         rows += (f'<tr><td class="nowrap">{TODAY}</td><td class="nowrap"><strong>{f["id"]}</strong></td>'
                  f'<td>{esc(f["title"])}<br><span class="small">{esc(f["detail"])}</span></td>'
                  f'<td class="src">{links or "&mdash;"}</td></tr>')
@@ -2169,9 +2265,12 @@ def changelog_rows():
 
 # ---- sources
 def build_sources():
+    def rel_of(url):
+        # A listing we earn on is marked sponsored; a policy or government page we cite is not.
+        return "sponsored nofollow" if is_shoppable(url) else "noopener noreferrer"
     rows = "".join(
         f"""<tr><td class="nowrap"><strong>{s['id']}</strong></td>
-  <td>{esc(s['name'])}<br><a href="{esc(s['url'])}" rel="sponsored nofollow" class="small">{esc(s['url'])}</a></td>
+  <td>{esc(s['name'])}<br><a href="{esc(s['url'])}" rel="{rel_of(s['url'])}" class="small">{esc(s['url'])}</a></td>
   <td class="quote">{esc(s['used_for'])}</td>
   <td class="nowrap">{esc(s['checked'])}</td></tr>""" for s in SOURCES)
     body = f"""
@@ -2590,8 +2689,8 @@ def build_platform():
         submitted products.</td>
       <td>Live automated catalog polling is blocked until the Associates account passes final
         review and qualified-sales thresholds for the Creators API (PA-API 5 returns HTTP 403).</td>
-      <td><a href="{source_url('S20')}" rel="sponsored nofollow">S20</a>,
-        <a href="{source_url('S21')}" rel="sponsored nofollow">S21</a>, FLG-029</td>
+      <td>{cite_id('S20')},
+        {cite_id('S21')}, FLG-029</td>
     </tr>
     <tr>
       <td><strong>2. Market, pricing, review &amp; commission analysis</strong></td>
@@ -2601,7 +2700,7 @@ def build_platform():
       <td>Prices and ratings require Amazon-served links or Creators API access (Program Policies
         &sect;2(b), &sect;6(t), &sect;6(y)); commission schedules require signed-in Associates Central
         access.</td>
-      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>, FLG-005, Q-11, Q-13</td>
+      <td>{cite_id('S02')}, FLG-005, Q-11, Q-13</td>
     </tr>
     <tr>
       <td><strong>3. SEO-optimized content &amp; comparison generation</strong></td>
@@ -2612,7 +2711,7 @@ def build_platform():
       <td>Query-driven draft topics require Search Console verification (SG-10, SG-29, Q-20). Special
         Links and Program Content may not be used to train or fine-tune ML/LLM models without
         express prior written approval.</td>
-      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a> &sect;5 &amp; IP &sect;1/&sect;2(e),
+      <td>{cite_id('S02')} &sect;5 &amp; IP &sect;1/&sect;2(e),
         SG-02, SG-32</td>
     </tr>
     <tr>
@@ -2623,8 +2722,8 @@ def build_platform():
       <td>Deceptive cloaking is prohibited (Program Policies &sect;6(v)) and link shorteners must not
         obscure the Amazon destination (&sect;6(w)). Submitted <code>link.amazon</code> compliance and
         live account click tests remain pending.</td>
-      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>,
-        <a href="{source_url('S04')}" rel="sponsored nofollow">S04</a>, FLG-003, FLG-004, FLG-027</td>
+      <td>{cite_id('S02')},
+        {cite_id('S04')}, FLG-003, FLG-004, FLG-027</td>
     </tr>
     <tr>
       <td><strong>5. Privacy-preserving click &amp; conversion measurement</strong></td>
@@ -2634,7 +2733,7 @@ def build_platform():
       <td>GitHub Pages hosts static assets only; cross-visitor collection waits until the owner
         deploys the Node/Cloudflare endpoint and sets <code>sn-collect-endpoint</code>. Conversion
         orders still require official Associates reports.</td>
-      <td><a href="{source_url('S03')}" rel="sponsored nofollow">S03</a>, FLG-010, SG-25, Q-08</td>
+      <td>{cite_id('S03')}, FLG-010, SG-25, Q-08</td>
     </tr>
     <tr>
       <td><strong>6. Performance optimization &amp; campaign scaling</strong></td>
@@ -2651,8 +2750,8 @@ def build_platform():
         compliance checks running on every PR and push to <code>main</code>.</td>
       <td>Maintains hard fail rules on above-the-fold disclosures, sponsored link attributes, banned
         price/rating patterns, blank-field flags, table column symmetry, and XML/JSON-LD validity.</td>
-      <td><a href="{source_url('S01')}" rel="sponsored nofollow">S01</a>,
-        <a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>, SG-04, SG-05, SG-12</td>
+      <td>{cite_id('S01')},
+        {cite_id('S02')}, SG-04, SG-05, SG-12</td>
     </tr>
   </tbody>
 </table>

@@ -446,5 +446,68 @@
     ],
     "severity": "corrected",
     "owner_status": "Corrected with exact section citations for each value."
+  },
+  {
+    "id": "FLG-041",
+    "title": "The stylesheet had an unclosed rule, so everything after it was dropped",
+    "detail": "assets/style.css line 601 opened `.pdp-art img{...}` and never closed it: the following @media(max-width:1000px) rule was swallowed into the declaration block. A CSS parser recovers at the next `}`, which silently discarded the responsive rule it contained. Found by brace-counting the file, not by reading the page. The brace and the missing `.hero`, `.hero-photo`, `.hero-copy`, `.hero-facts`, `.router*`, `.flip*`, `.aisle-photo` and `.pdp-photo` rules are now present, and scripts/check_site.py fails on an unbalanced stylesheet or on any class the generator emits that has no rule.",
+    "links": [
+      "S04"
+    ],
+    "severity": "corrected",
+    "owner_status": "Corrected in the generator's stylesheet; a gate rule now fails the build if the CSS stops parsing."
+  },
+  {
+    "id": "FLG-042",
+    "title": "Citations to FTC, Google, USDA and Amazon policy pages were marked rel=sponsored",
+    "detail": "Every source link on sources.html, flagged.html, platform.html and verification.html carried rel=\"sponsored nofollow\", including ftc.gov, developers.google.com, fsis.usda.gov and affiliate-program.amazon.com policy pages. Those are not paid placements; marking a government or policy reference as sponsored misstates what the link is. rel=sponsored now applies only to amazon.com/dp/ listings we earn on, and citations use rel=noopener noreferrer. The build gate fails if any non-listing link is marked sponsored. The correct application of rel=sponsored to the affiliate links themselves is unchanged (S04).",
+    "links": [
+      "S04"
+    ],
+    "severity": "corrected",
+    "owner_status": "Corrected across every generated page; gated."
+  },
+  {
+    "id": "FLG-043",
+    "title": "Six image files shipped in the repo with nothing referencing them",
+    "detail": "assets/feature.jpg, assets/basket.jpg, assets/probe.jpg, assets/img/cat-air-fryers.jpg, assets/img/cat-thermometers.jpg and assets/img/hero-kitchen.jpg were left behind by earlier front-end passes. No page and no script referenced any of them; assets/photos/ holds the images actually used. They were removed, and the gate now fails when an image file under assets/ is referenced by neither a page nor a generator script. Note that three of the removed files were also product-shaped scenes that could be mistaken for photographs of the reviewed items (FLG-036).",
+    "links": [
+      "S10"
+    ],
+    "severity": "corrected",
+    "owner_status": "Removed; gated. No page that referenced them existed."
+  },
+  {
+    "id": "FLG-044",
+    "title": "SG-02 still claimed 'ten guides' when eleven were published",
+    "detail": "guides.html, sitemap.xml and feed.xml carry 11 guides after the two Holiday 2026 guides were added, but the Decision Center proposal SG-02 still described and verified 'ten guides ... include all ten'. The count is now generated from the guide list, and the gate compares the feed item count against the number of guide cards and fails if SG-02 states a different number.",
+    "links": [
+      "S04"
+    ],
+    "severity": "corrected",
+    "owner_status": "Corrected; count is now derived from the data rather than typed."
+  },
+  {
+    "id": "FLG-045",
+    "title": "No product or policy source was re-read in this session; nothing is newly certified",
+    "detail": "The sandbox this session ran in could reach github.com, api.github.com, registry.npmjs.org and pypi.org only. amazon.com, affiliate-program.amazon.com, ftc.gov, developers.google.com and fsis.usda.gov all failed at TLS, so no listing, policy page or temperature chart was re-fetched. Every register value on this site therefore still stands on the dated reads recorded against S01-S24 by earlier sessions and has NOT been re-confirmed today. This session asserts no new product, listing or policy fact; its changes are markup, styling, generated navigation, gate rules and the removal of provably dead files. The 'last verified' dates printed on the pages refer to those earlier reads, not to this pass.",
+    "links": [
+      "S01",
+      "S02",
+      "S03",
+      "S04"
+    ],
+    "severity": "unverified",
+    "owner_status": "Published as a limit of this pass. Re-reading the five listings and the policy pages in a network-enabled session would close it."
+  },
+  {
+    "id": "FLG-046",
+    "title": "ShopNow Kitchen is a working name, and the masthead presents it as a brand",
+    "detail": "The site name, the 'THE KITCHEN EDIT / VOL. 01' issue line and the November 2026 dateline are editorial devices, not registered marks or an established publication. No owner decision records the name or the volume numbering. If the brand is going to carry traffic, the name needs an owner decision (and a domain, FLG-006), and the volume number should not imply an archive that does not exist.",
+    "links": [
+      "S03"
+    ],
+    "severity": "open",
+    "owner_status": "Published for owner review. Does not block; nothing on the site claims the name is registered."
   }
 ]
