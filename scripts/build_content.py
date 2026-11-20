@@ -14,7 +14,13 @@ SOURCES = {s["id"]: s for s in json.loads((DATA / "sources.json").read_text())}
 FLAGS = json.loads((DATA / "flags.json").read_text())
 TAG = "shopnow047c-20"
 CHECKED = "2026-11-20"
-ART = {"P-01": "Cn", "P-02": "Ee", "P-03": "Cn", "P-04": "Tn", "P-05": "CQ"}
+ART = {
+    "P-01": ("air-fryer.svg", "Illustration of a countertop air fryer; not a product photo"),
+    "P-02": ("air-fryer-oven.svg", "Illustration of a countertop oven-style air fryer; not a product photo"),
+    "P-03": ("air-fryer.svg", "Illustration of a countertop air fryer; not a product photo"),
+    "P-04": ("thermometer.svg", "Illustration of a kitchen thermometer; not a product photo"),
+    "P-05": ("thermometer.svg", "Illustration of a kitchen thermometer; not a product photo"),
+}
 # Verbatim leading words of each listing title, used only for card headings.
 SHORT = {
     "P-01": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven",
@@ -69,7 +75,8 @@ def card(p, prefix):
     specs = "".join(f"<li><strong>{esc(k)}:</strong> {esc(v)}</li>" for k, v in p["card"])
     return (
         f'<article class="card" data-product="{p["id"]}">\n'
-        f'<div class="card-art" aria-hidden="true">{ART[p["id"]]}</div>\n'
+        f'<div class="card-art"><img src="{prefix}assets/illustrations/{ART[p["id"]][0]}" '
+        f'alt="{esc(ART[p["id"]][1])}"></div>\n'
         f'<p class="kicker">{esc(p["cat"])} · {p["id"]}</p>'
         f'<h3><a href="{prefix}products/{p["slug"]}.html">{esc(SHORT[p["id"]])}</a></h3>\n'
         f'<p>{esc(p["blurb"])}</p>\n'
@@ -199,7 +206,9 @@ def main():
     cp = ROOT / "compare.html"
     af_html, mt_html = compare_tables()
     t = cp.read_text()
-    t = replace_once(t, r"<table><caption>.*?(?=<h2>How to decide</h2>)",
+    # Replace the whole generated comparison block, including headings, so repeated
+    # builds do not leave stale/duplicate category headings behind.
+    t = replace_once(t, r"<h2>Air fryers</h2>.*?(?=<h2>How to decide</h2>)",
                      af_html + mt_html, "compare table")
     cp.write_text(t)
     # 4. category pages: comparison table
