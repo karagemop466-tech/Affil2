@@ -1,126 +1,262 @@
-{
-  "_schema_note": "Two separate field groups. 'intended_*' = what the submitted link is supposed to be (blank unless confirmed from an official source). 'observed_*' = where the link actually resolved when fetched. These are never merged. Blank = unverified.",
-  "observed_date": "2026-11-20",
-  "products": [
-    {
-      "id": "P-01",
-      "supplied_link": "https://link.amazon/B04G1MEwY",
-      "supplied_token": "B04G1MEwY",
-      "supplied_token_length": 9,
-      "intended_asin": "",
-      "intended_asin_note": "Token is 9 characters; third-party references describe ASINs as 10 characters (F-01). Not confirmed as an ASIN.",
-      "official_listing_url": "",
-      "confirmation_date": "",
-      "confirmation_source": "",
-      "observed_redirect_url": "https://www.amazon.com/dp/B0CDY277D3",
-      "observed_asin": "B0CDY277D3",
-      "observed_title": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black",
-      "observed_title_short": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven",
-      "observed_breadcrumb": "Home & Kitchen › Kitchen & Dining › Small Appliances › Fryers › Air Fryers",
-      "observed_source": "https://www.amazon.com/dp/B0CDY277D3",
-      "observed_on": "2026-11-20",
-      "observed_price": "",
-      "observed_rating": "",
-      "price_note": "Price and rating not recorded: the rating text on this fetched page belonged to a 'customers also viewed' item, not this product (F-08).",
-      "category": "Air fryers",
-      "status": "Observed destination only. Intended ASIN and official listing URL unconfirmed.",
-      "findings": ["F-01", "F-02", "F-04", "F-08"]
-    },
-    {
-      "id": "P-02",
-      "supplied_link": "https://link.amazon/B02NbDxp3",
-      "supplied_token": "B02NbDxp3",
-      "supplied_token_length": 9,
-      "intended_asin": "",
-      "intended_asin_note": "Token is 9 characters (F-01). Not confirmed as an ASIN.",
-      "official_listing_url": "",
-      "confirmation_date": "",
-      "confirmation_source": "",
-      "observed_redirect_url": "https://www.amazon.com/dp/B09B7SB46R",
-      "observed_asin": "B09B7SB46R",
-      "observed_title": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included",
-      "observed_title_short": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven",
-      "observed_breadcrumb": "Home & Kitchen › Kitchen & Dining › Small Appliances › Fryers › Air Fryers",
-      "observed_source": "https://www.amazon.com/dp/B09B7SB46R",
-      "observed_on": "2026-11-20",
-      "observed_price": "",
-      "observed_rating": "",
-      "price_note": "Price and rating not recorded: values captured near the top of the fetched page belonged to carousel items (F-08).",
-      "category": "Multi-function / toaster-oven air fryers",
-      "status": "Observed destination only. Intended ASIN and official listing URL unconfirmed.",
-      "findings": ["F-01", "F-02", "F-04", "F-08"]
-    },
-    {
-      "id": "P-03",
-      "supplied_link": "https://link.amazon/B00hJ57DV",
-      "supplied_token": "B00hJ57DV",
-      "supplied_token_length": 9,
-      "intended_asin": "",
-      "intended_asin_note": "Token is 9 characters (F-01). Not confirmed as an ASIN.",
-      "official_listing_url": "",
-      "confirmation_date": "",
-      "confirmation_source": "",
-      "observed_redirect_url": "https://www.amazon.com/",
-      "observed_asin": "",
-      "observed_title": "",
-      "observed_title_short": "",
-      "observed_breadcrumb": "",
-      "observed_source": "https://www.amazon.com/",
-      "observed_on": "2026-11-20",
-      "observed_price": "",
-      "observed_rating": "",
-      "price_note": "No product page observed. First attempt returned HTTP 500; retry landed on the Amazon homepage.",
-      "category": "",
-      "status": "No product observed. Needs a working link or ASIN from the owner.",
-      "findings": ["F-01", "F-03"]
-    },
-    {
-      "id": "P-04",
-      "supplied_link": "https://link.amazon/B0c8moW59",
-      "supplied_token": "B0c8moW59",
-      "supplied_token_length": 9,
-      "intended_asin": "",
-      "intended_asin_note": "Token is 9 characters (F-01). Not confirmed as an ASIN.",
-      "official_listing_url": "",
-      "confirmation_date": "",
-      "confirmation_source": "",
-      "observed_redirect_url": "https://www.amazon.com/checkpoint/continue",
-      "observed_asin": "",
-      "observed_title": "",
-      "observed_title_short": "",
-      "observed_breadcrumb": "",
-      "observed_source": "https://www.amazon.com/",
-      "observed_on": "2026-11-20",
-      "observed_price": "",
-      "observed_rating": "",
-      "price_note": "No product page observed. First attempt returned HTTP 500; retry landed on an Amazon 'Continue shopping' checkpoint page.",
-      "category": "",
-      "status": "No product observed. Needs a working link or ASIN from the owner.",
-      "findings": ["F-01", "F-03"]
-    },
-    {
-      "id": "P-05",
-      "supplied_link": "https://link.amazon/B0f3GKalj",
-      "supplied_token": "B0f3GKalj",
-      "supplied_token_length": 9,
-      "intended_asin": "",
-      "intended_asin_note": "Token is 9 characters (F-01). Not confirmed as an ASIN.",
-      "official_listing_url": "",
-      "confirmation_date": "",
-      "confirmation_source": "",
-      "observed_redirect_url": "https://www.amazon.com/",
-      "observed_asin": "",
-      "observed_title": "",
-      "observed_title_short": "",
-      "observed_breadcrumb": "",
-      "observed_source": "https://www.amazon.com/",
-      "observed_on": "2026-11-20",
-      "observed_price": "",
-      "observed_rating": "",
-      "price_note": "No product page observed. Short link landed on the Amazon homepage; a direct /dp/ fetch of the same token failed.",
-      "category": "",
-      "status": "No product observed. Needs a working link or ASIN from the owner.",
-      "findings": ["F-01", "F-03"]
-    }
-  ]
-}
+[
+  {
+    "id": "P-01",
+    "slug": "p01-chefman-6qt-dual-basket",
+    "submitted": "https://link.amazon/B04G1MEwY",
+    "token": "B04G1MEwY",
+    "observed": "B0CDY277D3",
+    "title": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff",
+    "brand": "Chefman",
+    "model": "RJ38-SQPF-3TDB-2W",
+    "cat": "Air Fryers",
+    "catfile": "air-fryers.html",
+    "specs": [
+      [
+        "Capacity",
+        "6 quarts total \u2014 two independent 3-quart baskets"
+      ],
+      [
+        "Temperature range",
+        "200\u2013450 \u00b0F (listing)"
+      ],
+      [
+        "Power",
+        "1700 watts / 120 volts"
+      ],
+      [
+        "Dimensions (D\u00d7W\u00d7H)",
+        "13.38 \u00d7 11.81 \u00d7 10.63 inches"
+      ],
+      [
+        "Weight",
+        "13.3 pounds"
+      ],
+      [
+        "Baskets",
+        "Nonstick, dishwasher-safe (listing)"
+      ],
+      [
+        "Controls",
+        "Touch / digital"
+      ],
+      [
+        "Safety",
+        "Automatic shutoff; cETL approved (listing)"
+      ]
+    ],
+    "blurb": "Two baskets you can watch through the windows, timed to finish together. The question is not whether it fries \u2014 it is whether two 3-quart baskets fit the way you actually cook.",
+    "questions": [
+      "Do you cook a main and a side at the same time, or one thing at a time?",
+      "Will 11.81 inches of width fit your counter, with clearance above?",
+      "Do you want to see the food, or do you prefer a single larger basket?"
+    ]
+  },
+  {
+    "id": "P-02",
+    "slug": "p02-emeril-26qt-french-door",
+    "submitted": "https://link.amazon/B02NbDxp3",
+    "token": "B02NbDxp3",
+    "observed": "B09B7SB46R",
+    "title": "Emeril Lagasse 26 QT Extra Large Air Fryer, Convection Toaster Oven with French Doors, Stainless Steel",
+    "brand": "Emeril Lagasse",
+    "model": "4-00675-02 (listing also shows 4-00675-02X-VN \u2014 see FLG-009)",
+    "cat": "Air Fryers",
+    "catfile": "air-fryers.html",
+    "specs": [
+      [
+        "Capacity",
+        "26 quarts (24.6 litres, listing)"
+      ],
+      [
+        "Temperature range",
+        "Up to 500 \u00b0F (listing)"
+      ],
+      [
+        "Power",
+        "1700 watts / 120 volts"
+      ],
+      [
+        "Dimensions (D\u00d7W\u00d7H)",
+        "16.9 \u00d7 15.8 \u00d7 14.8 inches"
+      ],
+      [
+        "Weight",
+        "26.5 pounds"
+      ],
+      [
+        "Exterior",
+        "Stainless steel"
+      ],
+      [
+        "Accessories listed",
+        "Grill plate, rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool"
+      ],
+      [
+        "Presets",
+        "24 or 25 \u2014 listing conflicts, see FLG-009"
+      ]
+    ],
+    "blurb": "A countertop oven that air-fries. The trade-off is footprint and weight: this is a 26-quart appliance, not a compact basket fryer.",
+    "questions": [
+      "Do you have 16.9 inches of depth plus clearance for French doors to swing?",
+      "Do you need rotisserie / pizza capacity, or is that unused space?",
+      "At 26.5 pounds, will you move it or leave it in one spot?"
+    ]
+  },
+  {
+    "id": "P-03",
+    "slug": "p03-chefman-8qt-turbrofry",
+    "submitted": "https://link.amazon/B00hJ57DV",
+    "token": "B00hJ57DV",
+    "observed": "B08DKYBTPH",
+    "title": "Chefman TurboFry Touch Air Fryer, XL 8-Qt Family Size, One-Touch Digital Control Presets, Stainless Steel",
+    "brand": "Chefman",
+    "model": "RJ38-SQSS-8T",
+    "cat": "Air Fryers",
+    "catfile": "air-fryers.html",
+    "specs": [
+      [
+        "Capacity",
+        "8 quarts"
+      ],
+      [
+        "Temperature range",
+        "200\u2013400 \u00b0F (listing)"
+      ],
+      [
+        "Power",
+        "1700 watts / 120 volts"
+      ],
+      [
+        "Dimensions (D\u00d7W\u00d7H)",
+        "12.75 \u00d7 13.5 \u00d7 10 inches"
+      ],
+      [
+        "Weight",
+        "12.8 pounds"
+      ],
+      [
+        "Presets",
+        "Four preset functions listed (fries, chicken, meat, fish)"
+      ],
+      [
+        "Basket",
+        "Nonstick, dishwasher-safe parts (listing)"
+      ],
+      [
+        "Reminder",
+        "LED shake reminder"
+      ]
+    ],
+    "blurb": "One big basket, four presets, no windows. Simpler than dual-basket \u2014 and the right choice if you cook one thing at a time for a household.",
+    "questions": [
+      "One basket or two \u2014 which matches your weeknight routine?",
+      "Is 400 \u00b0F top temperature enough for what you cook?",
+      "Do you want presets, or do you prefer manual control?"
+    ]
+  },
+  {
+    "id": "P-04",
+    "slug": "p04-thermomaven-1sec",
+    "submitted": "https://link.amazon/B0c8moW59",
+    "token": "B0c8moW59",
+    "observed": "B0DHZTCNR5",
+    "title": "ThermoMaven Professional Digital Meat Thermometer, 1 Sec Instant Read, \u00b10.5 \u00b0F Accuracy, NIST & NSF Certified",
+    "brand": "ThermoMaven",
+    "model": "HT07",
+    "cat": "Meat Thermometers",
+    "catfile": "meat-thermometers.html",
+    "specs": [
+      [
+        "Response time",
+        "1 second (listing)"
+      ],
+      [
+        "Accuracy",
+        "\u00b10.5 \u00b0F (listing)"
+      ],
+      [
+        "Certification stated",
+        "NIST & NSF (listing)"
+      ],
+      [
+        "Upper temperature range",
+        "572 \u00b0F (listing)"
+      ],
+      [
+        "Display",
+        "Digital, auto-rotate bright LED screen"
+      ],
+      [
+        "Waterproof",
+        "Highly waterproof (listing)"
+      ],
+      [
+        "Power",
+        "1 \u00d7 AAA battery included (listing)"
+      ],
+      [
+        "In the box",
+        "Thermometer, AAA battery, user manual, calibration certificate"
+      ]
+    ],
+    "blurb": "The instant-read you keep by the grill. Speed and accuracy are the whole point \u2014 everything else is secondary.",
+    "questions": [
+      "Do you check temperature at the grill, or do you want to walk away?",
+      "Will you calibrate it, and how often?",
+      "Do you need a certificate, or is the listing claim enough?"
+    ]
+  },
+  {
+    "id": "P-05",
+    "slug": "p05-chefiq-sense-gen3",
+    "submitted": "https://link.amazon/B0f3GKalj",
+    "token": "B0f3GKalj",
+    "observed": "B0DZFD6R9Z",
+    "title": "CHEF iQ Sense [2025 Model] Smart Wireless Meat Thermometer, 3 Ultra-Thin Probes, WiFi Unlimited Range, 1000 \u00b0F Heat Safe, 5 Sensors, Gen3",
+    "brand": "CHEF iQ",
+    "model": "CQ60-3C-Z1-E",
+    "cat": "Meat Thermometers",
+    "catfile": "meat-thermometers.html",
+    "specs": [
+      [
+        "Probes",
+        "3 ultra-thin probes + hub"
+      ],
+      [
+        "Connectivity",
+        "WiFi / Bluetooth via CHEF iQ app"
+      ],
+      [
+        "Heat rating",
+        "1000 \u00b0F heat safe (listing)"
+      ],
+      [
+        "Sensors",
+        "5 sensors (4 internal + ambient, listing)"
+      ],
+      [
+        "Battery",
+        "50 hours vs 70 hours \u2014 listing conflicts, see FLG-008"
+      ],
+      [
+        "Probe length",
+        "4.75 inches (listing)"
+      ],
+      [
+        "Care",
+        "Waterproof, dishwasher-safe probes (listing)"
+      ],
+      [
+        "Warranty stated",
+        "1-year limited warranty (listing)"
+      ]
+    ],
+    "blurb": "Three proteins, three donenesses, no standing by the grill. The cost of that freedom is an app, a hub, and charging.",
+    "questions": [
+      "Do you cook multiple proteins at once, or one at a time?",
+      "Are you comfortable relying on an app and WiFi for doneness?",
+      "Will you charge and clean three probes after every cook?"
+    ]
+  }
+]

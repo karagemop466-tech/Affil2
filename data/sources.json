@@ -1,116 +1,56 @@
-{
-  "retrieved_on": "2026-11-20",
-  "note": "Every row links to the page it was checked against. 'Verified' means the stated claim was read on that page on the retrieved date. 'Partial' means only some chunks were read. Rows marked 'Not official' are included only to show what was NOT confirmed.",
-  "sources": [
-    {
-      "id": "SRC-01",
-      "title": "Associates Program Operating Agreement",
-      "publisher": "Amazon Associates (official)",
-      "url": "https://affiliate-program.amazon.com/help/operating/agreement",
-      "version_stated": "Updated October 15, 2025",
-      "checked": "Verified",
-      "what_was_checked": "§5 requires the statement 'As an Amazon Associate I earn from qualifying purchases.' to be clearly and prominently stated on the Site. §6 says violating §5 is a material breach. Read: chunks 0–1 of 4.",
-      "used_for": ["disclosure strip", "footer disclosure", "compliance gate"]
-    },
-    {
-      "id": "SRC-02",
-      "title": "Associates Program Policies (Commission Income Statement)",
-      "publisher": "Amazon Associates (official)",
-      "url": "https://affiliate-program.amazon.com/help/operating/policies",
-      "version_stated": "Updated April 14, 2026",
-      "checked": "Partial",
-      "what_was_checked": "§2 lists disqualified purchases including (c) prohibited paid-search placements on Amazon marks, (d) referral by a link generated or displayed on a search engine, (e) a 'Redirecting Link' that sends users indirectly via an intermediate site without a customer action, and (g) purchases not correctly tracked because links are improperly formatted. §1 defines a 24-hour session and an 89-day cart window. Read: chunks 0–1 of 11. The remaining chunks were not read.",
-      "used_for": ["link-format review (F-04)", "SEO referral review (F-13)"]
-    },
-    {
-      "id": "SRC-03",
-      "title": "Qualify your outbound links to Google",
-      "publisher": "Google Search Central (official)",
-      "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
-      "version_stated": "Last updated 2025-12-10 UTC",
-      "checked": "Verified",
-      "what_was_checked": "rel=\"sponsored\" marks advertisements or paid placements; values can be combined with other rel values.",
-      "used_for": ["rel=\"sponsored\" on every outbound product link"]
-    },
-    {
-      "id": "SRC-04",
-      "title": "16 CFR Part 255 — Guides Concerning Use of Endorsements and Testimonials in Advertising",
-      "publisher": "U.S. Federal Trade Commission, via eCFR (authoritative but unofficial)",
-      "url": "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-B/part-255",
-      "version_stated": "Up to date as of 11/18/2026; source 88 FR 48102 (July 26, 2023)",
-      "checked": "Partial",
-      "what_was_checked": "§255.5: a material connection between endorser and seller that the audience does not expect must be disclosed clearly and conspicuously; affiliate compensation is named as an example. 'Clear and conspicuous' definition: difficult to miss and easily understandable. The eCFR page was checked for citation and the Part 255 table of contents; the §255.5 text came from an eCFR search excerpt.",
-      "used_for": ["disclosure placement", "disclosure wording"]
-    },
-    {
-      "id": "SRC-05",
-      "title": "Guides Concerning the Use of Endorsements and Testimonials in Advertising — Final Rule",
-      "publisher": "Federal Register (official)",
-      "url": "https://www.federalregister.gov/documents/2023/07/26/2023-14795/guides-concerning-the-use-of-endorsements-and-testimonials-in-advertising",
-      "version_stated": "July 26, 2023",
-      "checked": "Partial",
-      "what_was_checked": "Search excerpt only: 'clear and conspicuous' definition and §255.5 commentary about affiliate compensation. Full document not opened.",
-      "used_for": ["background for SRC-04"]
-    },
-    {
-      "id": "SRC-06",
-      "title": "Amazon product page — observed destination of P-01 (CHEFMAN)",
-      "publisher": "Amazon.com (official retailer page, observed)",
-      "url": "https://www.amazon.com/dp/B0CDY277D3",
-      "version_stated": "Page title as displayed on 2026-11-20",
-      "checked": "Observed",
-      "what_was_checked": "Page title and breadcrumb. Rating and price not recorded for this product (see F-08). This is an observation of a redirect target, not confirmation of the owner's intended ASIN.",
-      "used_for": ["P-01 observed fields"]
-    },
-    {
-      "id": "SRC-07",
-      "title": "Amazon product page — observed destination of P-02 (Emeril Lagasse)",
-      "publisher": "Amazon.com (official retailer page, observed)",
-      "url": "https://www.amazon.com/dp/B09B7SB46R",
-      "version_stated": "Page title as displayed on 2026-11-20",
-      "checked": "Observed",
-      "what_was_checked": "Page title and breadcrumb. Rating and price not recorded (F-08). Observation only, not confirmation of the intended ASIN.",
-      "used_for": ["P-02 observed fields"]
-    },
-    {
-      "id": "SRC-08",
-      "title": "Amazon.com homepage — observed landing for P-03 and P-05",
-      "publisher": "Amazon.com (official, observed)",
-      "url": "https://www.amazon.com/",
-      "version_stated": "Observed 2026-11-20",
-      "checked": "Observed",
-      "what_was_checked": "The short links for P-03 (on retry) and P-05 landed here with no product page.",
-      "used_for": ["P-03", "P-05"]
-    },
-    {
-      "id": "SRC-09",
-      "title": "Amazon 'Continue shopping' checkpoint — observed landing for P-04",
-      "publisher": "Amazon.com (official, observed)",
-      "url": "https://www.amazon.com/checkpoint/continue",
-      "version_stated": "Observed 2026-11-20",
-      "checked": "Observed",
-      "what_was_checked": "The short link for P-04 (on retry) landed on an interstitial with a 'Continue shopping' button and no product. The cause was not determined.",
-      "used_for": ["P-04"]
-    },
-    {
-      "id": "SRC-10",
-      "title": "ASIN definition — 10-character identifier",
-      "publisher": "Not official — third-party glossary (indellia.com)",
-      "url": "https://indellia.com/glossary/asin/",
-      "version_stated": "Undated",
-      "checked": "Not official",
-      "what_was_checked": "States ASIN is a 10-character alphanumeric identifier. Used only as a secondary reference. An official Amazon definition was NOT located in this session.",
-      "used_for": ["F-01 (flagged, not verified)"]
-    },
-    {
-      "id": "SRC-11",
-      "title": "ASIN definition — third-party confirmation",
-      "publisher": "Not official — third-party (getonecart.com)",
-      "url": "https://www.getonecart.com/what-is-an-asin/",
-      "version_stated": "Undated",
-      "checked": "Not official",
-      "what_was_checked": "Same 10-character statement. Secondary only. Listed so a reviewer can see what was used.",
-      "used_for": ["F-01 (flagged, not verified)"]
-    }
-  ]
-}
+[
+  {
+    "id": "S01",
+    "name": "Amazon Associates Operating Agreement",
+    "url": "https://affiliate-program.amazon.com/help/node/topic/202093820",
+    "used_for": "Disclosure statement wording (Section 5)"
+  },
+  {
+    "id": "S02",
+    "name": "Amazon Associates Program Policies",
+    "url": "https://affiliate-program.amazon.com/help/node/topic/202131110",
+    "used_for": "Price-display rule \u00a72(b); no hardcoded prices"
+  },
+  {
+    "id": "S03",
+    "name": "FTC Endorsement Guides \u2014 What People Are Asking",
+    "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
+    "used_for": "Affiliate disclosure: clear and conspicuous, near the link"
+  },
+  {
+    "id": "S04",
+    "name": "Google \u2014 Qualify outbound links",
+    "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
+    "used_for": "rel=sponsored for paid/affiliate links"
+  },
+  {
+    "id": "S10",
+    "name": "Amazon listing B0CDY277D3 (P-01)",
+    "url": "https://www.amazon.com/dp/B0CDY277D3",
+    "used_for": "P-01 title, model, specs"
+  },
+  {
+    "id": "S11",
+    "name": "Amazon listing B09B7SB46R (P-02)",
+    "url": "https://www.amazon.com/dp/B09B7SB46R",
+    "used_for": "P-02 title, model, specs"
+  },
+  {
+    "id": "S12",
+    "name": "Amazon listing B08DKYBTPH (P-03)",
+    "url": "https://www.amazon.com/dp/B08DKYBTPH",
+    "used_for": "P-03 title, model, specs"
+  },
+  {
+    "id": "S13",
+    "name": "Amazon listing B0DHZTCNR5 (P-04)",
+    "url": "https://www.amazon.com/dp/B0DHZTCNR5",
+    "used_for": "P-04 title, model, specs"
+  },
+  {
+    "id": "S14",
+    "name": "Amazon listing B0DZFD6R9Z (P-05)",
+    "url": "https://www.amazon.com/dp/B0DZFD6R9Z",
+    "used_for": "P-05 title, model, specs"
+  }
+]

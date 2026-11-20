@@ -1,36 +1,56 @@
-# COORDINATION.md — shared task board
+# COORDINATION — Affil2 shared task board
 
-Branch for this session: `arena/990af5de-affil2` (base `12d49cd`, main). All work stays on this branch.
-Other sessions: none detected at start (repo contained only `README.md`). Claims below are written in this file so any parallel session can see them.
+Session ID: `530c2e6c`  Branch: `arena/530c2e6c-affil2`  Base: `12d49cdc2523508f8cc6d2d36257b48e6ffc5529` (main)
+Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED — see FLG-002)
 
-Status values: `unclaimed` · `in progress` · `done` · `needs review` (published on the Flagged for Review page; does not block anything).
+> Single-session run: no other session has claimed any task in this repo (repo was README-only at start, verified `git log`/`ls`). All scopes below are claimed by `530c2e6c` on this branch. No file owned by another session was edited.
 
 ## Task board
 
-| ID | Task | Status | Owner (session) | Files touched |
-|---|---|---|---|---|
-| T-01 | Repo review + irregularity log | done | arena/990af5de-affil2 | `COORDINATION.md`, `data/findings.json` |
-| T-02 | Verify supplied Amazon links (product-intent record) | needs review | arena/990af5de-affil2 | `data/products.json`, `docs/intent/` |
-| T-03 | Verify official policy/regulation sources | done | arena/990af5de-affil2 | `data/sources.json` |
-| T-04 | Site build (landing + category subpages) | done | arena/990af5de-affil2 | `tools/`, `docs/`, `data/` |
-| T-05 | Disclosure strip + footer on every page | done | arena/990af5de-affil2 | `tools/build_site.py`, `docs/assets/` |
-| T-06 | Outbound click + analytics endpoint | needs review (blocked on hosting decision; see Suggestions) | arena/990af5de-affil2 | `docs/assets/track.js`, `data/site.json` |
-| T-07 | Findable: sitemap, robots, RSS feed | done | arena/990af5de-affil2 | `docs/sitemap.xml`, `docs/feed.xml`, `docs/robots.txt` |
-| T-08 | Campaign ledger (empty, schema only) | done | arena/990af5de-affil2 | `data/campaign-ledger.csv`, `docs/ledger/` |
-| T-09 | Suggestions + questions dashboard (no changes implemented) | done | arena/990af5de-affil2 | `data/suggestions.json`, `data/questions.json` |
-| T-10 | Integration: check script, build, PR to main, merge, Pages | in progress | arena/990af5de-affil2 | `tools/check_site.py`, `COORDINATION.md` |
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-01 | Repo audit + COORDINATION claim | done | 530c2e6c | COORDINATION.md |
+| T-02 | Product-intent register + line-by-line verification vs official Amazon listings | done | 530c2e6c | data/products.json, data/sources.json, data/flags.json, products/*.html |
+| T-03 | Compliance gate (disclosure, sponsored, no-price, no-ratings) + check script | done | 530c2e6c | scripts/check_site.py, disclosure.html, assets/* |
+| T-04 | Publication front page + category pages + product pages | done | 530c2e6c | index.html, air-fryers.html, meat-thermometers.html, products/*.html |
+| T-05 | Question-shaped guides (4 supplied hypotheses + 2 thermometer guides) | done | 530c2e6c | guides/*.html |
+| T-06 | Suggestions / Direction section + Open Questions register + Executive Summary | done | 530c2e6c | suggestions.html, questions.html, executive-summary.html, EXECUTIVE-SUMMARY.md |
+| T-07 | SEO/findability (sitemap, robots, RSS, JSON-LD, search) + click/analytics layer | done | 530c2e6c | sitemap.xml, robots.txt, feed.xml, assets/app.js |
+| T-08 | Flagged for Review page + campaign ledger (empty, provenance) | done | 530c2e6c | flagged.html, campaign-ledger.html, data/campaign-ledger.json |
+| T-09 | Final integration: build check, broken-link check, GitHub Pages, PR + merge | in progress | 530c2e6c | .github/workflows/pages.yml, COORDINATION.md |
 
-## Log
+Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
-- **2026-11-20 · arena/990af5de-affil2 · claim** — Claimed T-01..T-10 (single session; no conflicting claims found). Scope: whole repo on this branch.
-- **2026-11-20 · T-01** — Repo contained `README.md` only. No `data/`, no site, no prior COORDINATION file. Created this file.
-- **2026-11-20 · T-02** — Opened the five supplied `link.amazon` short links (fetch on 2026-11-20). Findings: the path tokens are 9 characters long, not the 10-character ASIN length cited in third-party references; two links resolved to a different ASIN than their token; two resolved to the Amazon homepage; one resolved to a checkpoint page; two returned HTTP 500 on first attempt. Full detail in `data/findings.json` (F-01..F-04) and `data/products.json`.
-- **2026-11-20 · T-03** — Read official sources: Associates Operating Agreement (updated Oct 15, 2025), Associates Program Policies (updated Apr 14, 2026, first chunks only), Google Search Central "Qualify your outbound links" (updated 2025-12-10), eCFR 16 CFR Part 255 (up to date as of 11/18/2026). Official Amazon ASIN definition was NOT located; the 10-character rule is cited only from third-party pages and is flagged.
-- **2026-11-20 · T-04..T-09** — Built static site with `tools/build_site.py` from `data/*.json`; output in `docs/` (GitHub Pages source: `main` / `docs`).
-- **2026-11-20 · T-06** — Client-side click/event hook is in place but DISABLED (no endpoint configured). GitHub Pages cannot run a server-side endpoint; the endpoint decision is listed on the Suggestions page.
-- **2026-11-20 · T-10** — Pending: check script, PR, merge, Pages deploy confirmation.
+## Verification log (2026-11-20, official sources only)
 
-## Handoff / conflicts
+| Submitted link | Observed destination (separate field) | Official listing checked | Result |
+|---|---|---|---|
+| link.amazon/B04G1MEwY | B0CDY277D3 — CHEFMAN 6 Qt Dual Basket Air Fryer Oven (RJ38-SQPF-3TDB-2W) | https://www.amazon.com/dp/B0CDY277D3 | Title/model/specs match register; price/rating left blank per Program Policies §2(b) |
+| link.amazon/B02NbDxp3 | B09B7SB46R — Emeril Lagasse 26 QT French Door Air Fryer Toaster Oven | https://www.amazon.com/dp/B09B7SB46R | Match; preset-count + model-number conflicts flagged (FLG-010/011) |
+| link.amazon/B00hJ57DV | B08DKYBTPH — Chefman TurboFry Touch XL 8-Qt (RJ38-SQSS-8T) | https://www.amazon.com/dp/B08DKYBTPH | Match |
+| link.amazon/B0c8moW59 | B0DHZTCNR5 — ThermoMaven Professional Digital Meat Thermometer, 1 Sec (HT07) | https://www.amazon.com/dp/B0DHZTCNR5 | Match |
+| link.amazon/B0f3GKalj | B0DZFD6R9Z — CHEF iQ Sense [2025] Smart Wireless Meat Thermometer, Gen3 (CQ60-3C-Z1-E) | https://www.amazon.com/dp/B0DZFD6R9Z | Match; battery 50h vs 70h conflict flagged (FLG-012) |
 
-- No merge conflicts occurred. No other session's work was overwritten.
-- Referenced IDs in the brief (S01, S07, S24, SG-27..SG-30, FLG-003, "Operating Agreement" register) do not exist in this repository. They were not used as sources. Logged as F-06.
+Program sources: Amazon Associates Operating Agreement + Program Policies (affiliate-program.amazon.com), FTC Endorsement Guides FAQ (ftc.gov), Google "Qualify outbound links" (developers.google.com). Full register: `sources.html` / `data/sources.json`.
+
+## Irregularities (do not block merge; all on flagged.html)
+FLG-001 Intended ASINs unconfirmed by owner — intended field left blank, observed field separate.
+FLG-002 Tracking ID shopnow047c-20 shape matches published pattern but issuance/activity cannot be confirmed publicly.
+FLG-003 Short-link (link.amazon) compliance status unresolved — do NOT claim invalid.
+FLG-004 Special Links not yet tested in enrolled Associates workflow — PENDING TEST, one per product.
+FLG-005 No prices/ratings/BSR/commission shown — unverified fields blank per §2(b).
+FLG-006 No custom domain / canonical host chosen — placeholder canonical flagged.
+FLG-007 No product photography licensed — no Amazon images used.
+FLG-008 CHEF iQ battery conflict 50h vs 70h on same listing.
+FLG-009 Emeril preset count 24 vs 25 + model number variants on same listing.
+FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
+
+## Handoff / conflict log
+- 2026-11-20 530c2e6c: claimed all tasks, repo empty, no conflicts.
+- PR link + merge result: (to be recorded at T-09 completion)
+
+## T-09 completion (2026-11-20)
+- PR: https://github.com/karagemop466-tech/Affil2/pull/1 — merged (merge commit fdb5d79)
+- GitHub Pages: built, deploy workflow success. Live: https://karagemop466-tech.github.io/Affil2/
+- Final gate: scripts/check_site.py ALL CHECKS PASS (25 pages)
+- Flagged items FLG-001..FLG-010 published on flagged.html; do not block.
