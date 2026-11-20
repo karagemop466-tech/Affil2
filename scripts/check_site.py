@@ -834,6 +834,21 @@ for f in MARKER_FILES:
             f"(first: {bad[0][:40]!r}) — resolve the hunk, do not ship the debris")
 
 
+# ---------------------------------------------------------------- no implied price or value claims
+# The site prints no prices, so it must not imply a price comparison either. "Cheaper", "better
+# value" and "worth the money" are the same disclosure problem wearing a vaguer coat: they assert a
+# fact about a number this site refuses to display.
+VALUE_RE = re.compile(r"\b(cheaper|more expensive|cost-effective|best value|value for money|"
+                      r"worth the (?:money|price)|priced (?:low|below|under)|budget (?:pick|option|"
+                      r"buy)|inexpensive|affordable)\b", re.I)
+for g in sorted((ROOT / "guides").glob("*.html")) + [ROOT / "index.html", ROOT / "shop.html",
+                                                      ROOT / "compare.html", ROOT / "air-fryers.html",
+                                                      ROOT / "meat-thermometers.html"]:
+    for m in VALUE_RE.finditer(visible_text(g.read_text(encoding="utf-8"))):
+        err(f"{g.relative_to(ROOT)}: {m.group(0)!r} implies a price this site does not print "
+            "(Program Policies, S02 — say what the listing states instead)")
+
+
 # ---------------------------------------------------------------- report
 print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
       f"{len(flags)} flags, {len(sources)} sources")

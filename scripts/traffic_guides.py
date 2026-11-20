@@ -54,7 +54,7 @@ GUIDES = [
          verdict="""Buy two baskets if two parts of one dinner have to be ready in the same minute.
          Buy the single 8-quart basket if you cook one thing at a time for more than two people. If
          neither sentence describes your kitchen, the whole format is not your purchase, and the
-         cheaper appliance in this category is the better gift to yourself.""",
+         simpler one-zone basket on this page is the better gift to yourself.""",
          sections=[
             ("What the format actually buys you",
              """One box, two independent drawers, two timers. On the Chefman 6-quart in this

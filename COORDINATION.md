@@ -2182,3 +2182,23 @@ under `assets/` — the build fails on it, passes once removed. FLG-059 updated 
 
 Counts after this pass: 43 pages, 5 product records, 66 flags, 22 sources — **ALL CHECKS PASS**;
 22 Python tests OK; JS collector suite PASS.
+
+### Session `arena/19dbf5e2-affil2` — closing note: the price-shaped hole in a price-free site (FLG-067)
+
+Reading my own published copy after the deploy turned up a sentence that the site's rules could not
+catch: a guide verdict recommending "the cheaper appliance in this category". The site prints no
+prices — deliberately, because Program Policies permit price display only through an Amazon-served
+link or the API (S02) — but every gate rule so far was written against a dollar sign, so an adjective
+asserting the same fact passed. Reworded to a claim the register supports ("the simpler one-zone
+basket on this page"), and `scripts/check_site.py` gained a rule failing any reader surface containing
+*cheaper, more expensive, cost-effective, best value, value for money, worth the money, priced
+low/below/under, inexpensive, affordable*. Verified by planting "This one is cheaper than the other."
+on `index.html`: the gate rejected it, and passes once removed.
+
+If the owner approves API access later (SG-13, SG-31), this is the rule to retire first — with real
+numbers rather than adjectives.
+
+Session totals on main: PRs **#70** (`898652f`), **#73** (`20e4069`), **#74** (`57039b5`), **#75**
+(`b2f8ff9`) and this note — each CI-green before merge, each deployed (`status = built`), and the
+final state 43 pages / 5 product records / 67 flags / 22 sources, ALL CHECKS PASS with every rule
+reachable, 22 Python tests OK, JS collector suite PASS.

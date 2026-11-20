@@ -725,5 +725,15 @@
     ],
     "severity": "corrected",
     "owner_status": "Repaired on 2026-11-20 with a regression test. Nothing was deleted from the record: the codes live on flagged.html, the facts live on the product page."
+  },
+  {
+    "id": "FLG-067",
+    "title": "The site prints no prices, so it must not imply a price comparison either",
+    "detail": "A guide verdict written on 2026-11-20 recommended 'the cheaper appliance in this category'. Nothing on the site states a price, and the site refuses to: Amazon's Program Policies permit price and availability display only when Amazon serves the link or the data comes through the API. A word like 'cheaper' asserts the same fact in a vaguer coat, and the build gate had no rule about it, because every rule so far was written against a dollar sign. Reworded to 'the simpler one-zone basket on this page', which is a statement about the appliance the register can support. scripts/check_site.py now fails any reader surface containing cheaper, more expensive, cost-effective, best value, value for money, worth the money, priced low/below/under, inexpensive or affordable; verified by planting a sentence on index.html and watching the gate reject it.",
+    "links": [
+      "S02"
+    ],
+    "severity": "corrected",
+    "owner_status": "Repaired and gated on 2026-11-20. If the owner later approves PA-API or Creators API access (SG-13, SG-31), this rule is the one to retire first \u2014 with real data, not adjectives."
   }
 ]
