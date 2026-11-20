@@ -108,10 +108,12 @@ Branch: `arena/990af5de-affil2`. Work is PR #3 (https://github.com/karagemop466-
 ## Session 4bbf49bb — T-11 completion and coordination (2026-11-20)
 
 - Completed non-overlapping publication styling, original category illustrations, decision-path guidance, clearly labeled topic hypotheses, and safer search rendering/input targeting. Site data and product facts were not altered.
-- The subsequent upstream T-10 claim (`937876a6`) owns the generated landing page. Its newly updated `index.html` was preserved intact during rebase; no styling markup was applied there. Integration request: consider using `assets/illustrations/air-fryer.svg`, `assets/illustrations/air-fryer-oven.svg`, and `assets/illustrations/thermometer.svg` for the front-page product cards when the generated landing page is finalized. These are generic editorial illustrations, not product photos.
+- The subsequent upstream T-10 claim (`937876a6`) owned the generated landing page. Its updated `index.html` was preserved intact during rebase. T-12 later integrated the three generic editorial illustrations into the card generator; they are not product photos.
 - Other rebase conflicts were resolved by retaining upstream T-10 work and adding only T-11's decision panel in `questions.html`; no upstream product or source data was discarded.
 - Verification: `python3 scripts/check_site.py` passed (25 pages); all illustrations parsed as XML; changed-page assets exist; local HTTP smoke checks returned 200 for homepage, decision pages, search, and illustrations; `git diff --check` passed.
 - Self-hosted analytics, Search Console, Associates account access, and Special Link tests remain pending and are not represented as live.
+- PR #7: https://github.com/karagemop466-tech/Affil2/pull/7 — merged (merge commit 466be4d0c5bab85c3026a2c15a9671e23ffc8af2).
+- Pages run 44680289362 for PR #7's merge was cancelled by GitHub because a higher-priority Pages deployment was queued. The subsequent run 44680310672 for newer main commit a14339c succeeded and included PR #7. Pages API reports status `built` and live URL https://karagemop466-tech.github.io/Affil2/.
 
 ## T-10 completion (2026-11-20, session 937876a6)
 - PR: https://github.com/karagemop466-tech/Affil2/pull/6 — merged via `gh pr merge 6 --merge`, merge commit df6c8e178901c89f4fb850783c4ad5fffb87887b, state MERGED.
@@ -160,3 +162,5 @@ Branch: `arena/990af5de-affil2`. Work is PR #3 (https://github.com/karagemop466-
 - Fixed a generator non-idempotence issue: the compare page's “Air fryers” heading accumulated on repeat builds. The generator now replaces the entire generated comparison block.
 - Verification: `python3 scripts/build_content.py` run twice with identical second-run output; `python3 scripts/check_site.py` passed (25 pages); all SVG/feed/sitemap XML parsed; generated asset paths, five homepage card images, and single compare headings verified; `git diff --check` passed.
 - No product data, sourced values, links, or compliance claims changed. Existing unknowns remain flagged.
+- PR #11: https://github.com/karagemop466-tech/Affil2/pull/11 — merged (merge commit d51c04ac301c0c8dc9b9d34142d9391afb9e6c1b).
+- GitHub Pages deploy run 44680641868 for that merge succeeded; Pages API status is `built` at https://karagemop466-tech.github.io/Affil2/.
