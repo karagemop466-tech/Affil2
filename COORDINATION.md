@@ -378,12 +378,60 @@ temperature chart (S22, last updated Apr 14 2025 — all ten rows still match `d
 and listings B0CDY277D3 and B08DKYBTPH, both of which still serve the titles recorded in the register.
 No register value was changed on the strength of this pass; nothing needed correcting.
 
-**Irregularity found and not fixed here.** `guides/instant-vs-wireless.html` describes the ThermoMaven's
-upper range as "572 °F", but `data/products.json` marks that field `unverified` with the note that 572 °F
-was removed because it was not in the fetched listing text. The guide copy therefore states a figure the
-register has withdrawn. It is page copy inside the single generator, which this session owns, but it
-touches a spec claim, so it is logged here rather than silently rewritten — see the follow-up commit on
-this branch.
+**Irregularity found, then resolved the other way round.** `guides/instant-vs-wireless.html` quoted the
+ThermoMaven's upper range as 572 °F while `data/products.json` marked that field `unverified`. Rather than
+delete the prose, the listing was re-read: the product-information table states `Upper Temperature Range
+572 °F`, so the guide was right and the register was stale. See the re-read below.
 
 **Files not touched.** `data/products.json`, `data/sources.json` read-only. `data/flags.json` appended only
 (FLG-036, FLG-037). No other session's work was modified or reverted.
+
+### Live-listing re-read (2026-11-20) — seven blanks filled, one prose claim withdrawn
+
+Triggered by the 572 °F question above, every product page was re-read in full rather than from a partial
+excerpt. The product-information tables carry values an earlier pass had never reached.
+
+| Product | Field | Value now published | Section named as source |
+|---|---|---|---|
+| P-02 Emeril 26QT | Model | 4-00675-02X-VN | Item details: Model Number / Part Number |
+| P-02 Emeril 26QT | Temperature | 75–500 °F | Features & Specs: Min 75 °F, Max 500 °F |
+| P-02 Emeril 26QT | Power | 120 V / 1700 W | Features & Specs: Output Wattage, Wattage, Voltage |
+| P-04 ThermoMaven | Model | HT07 | Item details: Model Name / Model / Part Number |
+| P-04 ThermoMaven | Upper temperature | 572 °F | Features & Specs: Upper Temperature Range |
+| P-05 CHEF iQ Sense | Model | CQ60-3C-Z1-E | Item details: Model / Part Number |
+| P-05 CHEF iQ Sense | Probe length | 4.75 in | Immersion Depth; Measurements: Item Length |
+
+Two adverse findings came out of the same pass and are published, not smoothed over:
+
+- **FLG-039.** Three guides stated weights — 26.5 lb, 12.8 lb, "around 13 pounds" — that no listing
+  carries. The prose contradicted the register, which had weight correctly marked unverified. Every
+  weight figure was removed from the guide copy and the register's blank now prints on the compare page
+  with its reason.
+- **FLG-038.** The CHEF iQ listing states a two-year assurance in About this item and a `Warranty
+  Description` of `3 Year` in Item details. Both are now printed as a conflict; the earlier register
+  record held only the two-year figure.
+
+Nothing was inferred. Weight stays blank for all five products because no listing states it, and the
+model numbers moved from blank to stated only because the section naming them was read directly.
+
+### Shipped in the same pass, so the Decision Center stays honest
+
+- **SG-19 (was: recommended).** A dated, reader-facing change log now sits on `sources.html`, generated
+  from every flag whose severity is `corrected`.
+- **SG-20 (was: recommended).** The compare page has a working two-at-a-time head-to-head: two selectors,
+  17 aligned rows, rendered from an embedded view of the same register, with both buy links tagged. The
+  gate now checks that data parses, that each of the five products is present, that every linked page
+  exists and that every buy link carries the Associates tag.
+- **SG-17 (partially).** The front page prints a dated issue line; the picks themselves are still static,
+  so rotation remains open (Q-16).
+- **S23 added.** FTC *Disclosures 101* is now in the source register and cited for disclosure placement.
+  It was fetched and quoted this session; it is official FTC material, not a third-party summary.
+
+### Link and build audit this session
+
+- `scripts/check_site.py`: 29 pages, 5 products, 40 flags, 18 sources — **ALL CHECKS PASS**.
+- Independent audit across all 29 pages: 0 broken internal links, 0 missing assets, 0 un-sponsored
+  amazon.com anchors.
+- `node --check assets/app.js`: clean. Search and pair-view scripts syntax-checked.
+- Every generated photograph is captioned, has alt text and intrinsic dimensions; the gate fails
+  otherwise.
