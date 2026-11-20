@@ -341,7 +341,6 @@ It does not deploy, on purpose. This repository's Pages site is configured as **
 Given that the branch builder publishes whatever lands on `main`, the gate cannot block a merge by
 itself; it makes a breakage loud and immediate instead, which is what a repository without branch
 protection can actually support.
-
 ---
 
 ## Session `82c875a9` — storefront front end (T-17)
@@ -416,13 +415,13 @@ model numbers moved from blank to stated only because the section naming them wa
 
 ### Shipped in the same pass, so the Decision Center stays honest
 
-- **SG-19 (was: recommended).** A dated, reader-facing change log now sits on `sources.html`, generated
+- **SG-20 (was: recommended).** A dated, reader-facing change log now sits on `sources.html`, generated
   from every flag whose severity is `corrected`.
-- **SG-20 (was: recommended).** The compare page has a working two-at-a-time head-to-head: two selectors,
+- **SG-21 (was: recommended).** The compare page has a working two-at-a-time head-to-head: two selectors,
   17 aligned rows, rendered from an embedded view of the same register, with both buy links tagged. The
   gate now checks that data parses, that each of the five products is present, that every linked page
   exists and that every buy link carries the Associates tag.
-- **SG-17 (partially).** The front page prints a dated issue line; the picks themselves are still static,
+- **SG-18 (partially).** The front page prints a dated issue line; the picks themselves are still static,
   so rotation remains open (Q-16).
 - **S23 added.** FTC *Disclosures 101* is now in the source register and cited for disclosure placement.
   It was fetched and quoted this session; it is official FTC material, not a third-party summary.
@@ -435,3 +434,74 @@ model numbers moved from blank to stated only because the section naming them wa
 - `node --check assets/app.js`: clean. Search and pair-view scripts syntax-checked.
 - Every generated photograph is captioned, has alt text and intrinsic dimensions; the gate fails
   otherwise.
+
+---
+
+## Session 5ecbe089 — measurement and publication integration
+T-17 | in progress | 5ecbe089 | COORDINATION.md, measurement/, assets/app.js, scripts/build_site.py and generated publication outputs, assets/feature.webp, analytics documentation. Integrate current main first; preserve existing verification records.
+Coordination append conflict resolved by retaining both session entries.
+Scope adjustment: PR #16 already owns the collector and platform proposal; do not duplicate or overwrite that work. This integration covers the publication shell, search and local event wiring, generated pages, assets/style.css and original illustrative scenes (feature.jpg, basket.jpg, probe.jpg).
+T-17 | done (publication integration); server-side analytics remains needs review (FLG-010, parallel PR #16). New front-page artwork illustrates cooking situations, not specific SKUs. No new specifications, trend claims, orders or ASIN confirmations. Search renders text nodes from the generated index; search event contains only result count. Reviewed Amazon's Special Link requirement at https://affiliate-program.amazon.com/help/operating/agreement (section 1); no account-level reporting access. Inherited listing evidence was preserved, not newly certified. Local generator + integrity gate: 29 pages, five products, 35 published flags, 17 registered sources; passed.
+Rebase integration: preserved concurrent buyer-facing copy from #19 under the new featured section heading; regenerated index rather than hand-editing it.
+
+Release: [PR #20](https://github.com/karagemop466-tech/Affil2/pull/20) merged to main as abc753d. GitHub Pages reported built for descendant 64a35e5; [deployment succeeded](https://github.com/karagemop466-tech/Affil2/actions/runs/44682594233). Confirmed the new cover is present in the deployed revision.
+
+### PRs opened and merged by this session
+
+| PR | Title | Result | Commit / deploy |
+|----|-------|--------|-----------------|
+| [#15](https://github.com/karagemop466-tech/Affil2/pull/15) | One generator over the merged register, plus a stricter compliance gate | merged | `eacaeca`, Pages built |
+| [#17](https://github.com/karagemop466-tech/Affil2/pull/17) | CI: a verify gate that regenerates and checks every page | merged, `Verify site` green | `1a19c24`, Pages built |
+| [#19](https://github.com/karagemop466-tech/Affil2/pull/19) | Copy: stop explaining the brief to shoppers | merged, green | `829398c`, Pages built |
+| [#21](https://github.com/karagemop466-tech/Affil2/pull/21) | Compare table: category-aware rows, and a gate rule against cross-row placeholders | merged, green | `64a35e5`, Pages built |
+| [#24](https://github.com/karagemop466-tech/Affil2/pull/24) | Fix a page that quoted 572 °F and called the same field unverified | merged, green | `2a4ffa8`, Pages built |
+
+Live: https://karagemop466-tech.github.io/Affil2/ — `pages build and deployment` reported
+`completed/success` for every one of these commits, and `Verify site` reported `completed/success`
+on the same SHA each time.
+
+### Three defects found by reading the live pages, not the local build
+
+Each of these passed the gate at the time it was published, which is why they are recorded here
+rather than quietly fixed.
+
+1. **A page contradicted itself.** `products/p04-thermomaven-1sec.html` left upper temperature blank
+   in the spec table and answered the same question in the FAQ with "572 °F". Fixed in PR #24, and
+   the gate now fails when a FAQ states a figure the register calls unverified or conflicting.
+2. **Placeholders leaked between categories.** The comparison table printed
+   "n/a, not a capacity appliance" in the weight and dimensions rows and "see battery row" in the
+   power row, pointing at a row that does not exist. Fixed in PR #21, with a gate rule against that
+   class of text.
+3. **The gate was not running in CI at all.** Recorded above, fixed in PR #17.
+
+Lesson for the next session: `python3 scripts/check_site.py` proves the markup is compliant, not that
+it reads correctly. Read at least one product page and `compare.html` on the live URL after deploying,
+with a cache-busting query string, because GitHub Pages will serve a cached older build for a while
+and it is easy to mistake that for your own bug.
+
+## Session `3fb8f29e` — claim
+
+> NOTE (renumbered): another session used T-17 for its measurement/publication integration (merged in PR #20). This session's task is therefore T-18.
+
+Branch `arena/3fb8f29e-affil2`. Base `1a19c24` (main, after PR #17). Task: independent re-verification pass over the five official listings and the policy sources, plus one new deliverable the owner asked for — a generated `design-brief.html` (design prompt pack + organic-traffic plan + editorial standards) wired into the Decision Center as proposal SG-17. Then: build, gate, PR, merge, Pages confirmation, and the record here.
+
+Scope: `scripts/build_site.py`, `scripts/check_site.py` (only if a new gate rule is needed), new generated page `design-brief.html`, `sitemap.xml`, `feed.xml`, `robots.txt`, `COORDINATION.md`, `README.md` (one row), generated HTML. No other session's open PR (#16, branch `arena/bdedd85e-affil2`) is touched. Shared register `data/products.json`, `data/sources.json` are read-only unless verification proves a value wrong; `data/flags.json` is append-only.
+
+T-18 | Re-verification + design & traffic brief + PR/merge/Pages record | in progress | 3fb8f29e | scripts/build_site.py, design-brief.html, sitemap.xml, feed.xml, robots.txt, COORDINATION.md, README.md
+
+## Session `3fb8f29e` — T-18 completion record
+
+T-18 (renumbered from T-17; session 5ecbe089 used T-17 for its measurement/publication integration, merged as PR #20). Base `1a19c24`; rebased through `2a4ffa8` (PRs #19–#24 landed mid-flight).
+
+What shipped in [PR #26](https://github.com/karagemop466-tech/Affil2/pull/26):
+
+- New generated page `design-brief.html` — the Design & Traffic Brief: a copy-paste design prompt (brand, front-page anatomy, components, type and tone, illustration, accessibility, SEO/structured data, compliance, forbidden patterns); a 15-topic cluster plan labelled as hypotheses; a 2026-11-26 → 2027-02-14 seasonal calendar; a ten-point "not AI slop" editorial standards checklist; an explicit "what this brief does not claim" section; a brief-element-to-live-state mapping table.
+- SG-17 added to the Decision Center as "Adopt the Design & Traffic Brief as the next build step" (status: Not started — recommended for approval). It is linked from the footer dashboard group on all 30 pages, from the sitemap and from the on-site search index.
+- Docs reconciled: README start-here table (17 proposals, 35 flags); `EXECUTIVE-SUMMARY.md` gained a dated re-verification log and its never-registered SG-17..SG-20 / Q-15..Q-16 IDs were renumbered (live SG-17 = the brief; UF-1/UF-2 hold the leftover ideas).
+
+Independent re-verification (2026-11-20, all fetched live this session; full table in the PR body): all five official listings re-read line by line — titles, breadcrumbs, capacity, temperature ranges, wattage, dimensions, warranty, presets, probes, sensors, battery wording, included components — **all match the register**; the known listing contradictions (FLG-008, FLG-017, FLG-018, FLG-021, FLG-034) reproduce exactly as flagged. USDA FSIS chart, Google qualify-outbound-links, Associates Program Policies (updated 2026-04-14), PA-API 5 deprecation notice and the FTC Endorsement Guides FAQ were all re-fetched and match what the site cites. **No register corrections were required.**
+
+Merge: `gh pr merge 26 --merge` → merge commit `c021fb0`. GitHub Pages deploy run `44683183551` → **success** (site serves design-brief.html, confirmed live). "Verify site" run on the merge commit `44683184399` → **success**.
+
+Process notes: two rebases onto a fast-moving main; conflicts in COORDINATION.md, assets/style.css and generated pages resolved by keeping both sides and regenerating from the merged generator — no hand-edited HTML; committed pages re-verified byte-identical to generator output before push. One `git push --force-with-lease` (this branch only; lease checked). Open and untouched: PR #16 (analytics collector, needs review/owner decision), FLG-001..FLG-035 (all published, none blocks).
+

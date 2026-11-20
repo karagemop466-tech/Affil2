@@ -151,6 +151,12 @@ for p in pages:
     if len(h1s) != 1:
         err(f"{rel}: {len(h1s)} h1 elements, expected exactly 1")
 
+    # --- no cross-row placeholders: a cell must not point at another row
+    for bad in ("see battery row", "see flags row", "n/a, not a capacity appliance",
+                "TODO", "TBD"):
+        if bad in html:
+            err(f"{rel}: placeholder cell text {bad!r}")
+
     # --- no placeholder or template debris (outside script bodies, which hold JSON)
     prose = re.sub(r"<script\b.*?</script>", "", html, flags=re.S)
     prose = re.sub(r"<style\b.*?</style>", "", prose, flags=re.S)
@@ -199,6 +205,34 @@ for p in prod_pages:
             if food.split(" —")[0] not in html:
                 err(f"{rel}: USDA row missing: {food[:40]}")
 
+
+# ---------------------------------------------------------------- FAQ claims
+# A FAQ may not state a value the register marks as unverified or conflicting without saying so.
+reg_by_id = {d["id"]: d for d in json.loads((ROOT / "data" / "products.json").read_text())}
+ed_all = json.loads((ROOT / "data" / "editorial.json").read_text())
+UNITS = r"(?:°F|°C|watts?|W\b|volts|hours?|quarts?|liters?|inches|in\b|pounds|lb\b|seconds?|probes?)"
+for pid, rec in ed_all.items():
+    reg = reg_by_id[pid]
+    verified_nums = set()
+    for key, f in reg["fields"].items():
+        if f["v"] and f["st"] == "verified":
+            verified_nums.update(re.findall(r"\d+(?:\.\d+)?", f["v"]))
+    unver_nums = set()
+    for key, f in reg["fields"].items():
+        if f["v"] is None or f["st"] in ("unverified", "conflict"):
+            # a figure mentioned only as "removed, was 572 F" is still not a confirmed value
+            blob = " ".join(str(x) for x in (f["v"] or "", f.get("src", ""), f.get("note", "")))
+            unver_nums.update(re.findall(r"\d+(?:\.\d+)?", blob))
+    for q, a in rec["faq"]:
+        names_conflict = re.search(r"FLG-\d{3}|both|vs\.?|two figures|conflict|against each other",
+                                   a, re.I) is not None
+        for num in re.findall(r"\d+(?:\.\d+)?", a):
+            if num in unver_nums and num not in verified_nums and not names_conflict:
+                err(f"editorial.json {pid} FAQ '{q[:40]}': states {num} as fact, but the register "
+                    f"marks that value unverified or conflicting and the answer does not say so")
+        if re.search(r"\b(is|are|reads|reaches)\s+(?:exactly\s+)?\d+" + UNITS, a) and \
+                "flag" not in a.lower() and "blank" not in a.lower() and "not " not in a.lower()[:40]:
+            notes.append(f"editorial.json {pid} FAQ states a figure as fact: {q[:40]}")
 
 # ---------------------------------------------------------------- data integrity
 raw = json.loads((ROOT / "data" / "products.json").read_text())
