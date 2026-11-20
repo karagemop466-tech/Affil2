@@ -366,3 +366,21 @@ if errors:
         print("  ✗", e)
     sys.exit(1)
 print("ALL CHECKS PASS")
+
+
+# ---------------------------------------------------------------- analytics surface (session bba2deed)
+app = (ROOT / "assets" / "app.js").read_text()
+for ev in ("page_view", "outbound_click", "guide_read", "search", "suggestion_rank"):
+    if ev not in app:
+        err(f"assets/app.js: defined event {ev!r} missing")
+if not (ROOT / "analytics" / "server.py").exists():
+    err("analytics/server.py missing (self-hosted endpoint, SG-18)")
+if "analyticsEndpoint" not in (ROOT / "assets" / "config.js").read_text():
+    err("assets/config.js: analyticsEndpoint switch missing")
+vt = (ROOT / "verification.html").read_text()
+if "Verification Log" not in vt:
+    err("verification.html: content missing")
+for tm in re.finditer(r"<tbody>(.*?)</tbody>", vt, re.S):
+    for rm in re.finditer(r"<tr>.*?</tr>", tm.group(1), re.S):
+        if "<th" in rm.group(0) and "href=" not in rm.group(0) and 'scope="row"' in rm.group(0):
+            err("verification.html: register row without source link")

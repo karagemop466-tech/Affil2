@@ -163,6 +163,7 @@ DASH = [
     ("suggestions.html", "Decision Center"),
     ("design-brief.html", "Design &amp; Traffic Brief"),
     ("questions.html", "Open Questions"),
+    ("verification.html", "Verification Log"),
     ("flagged.html", "Flagged for Review"),
     ("sources.html", "Sources"),
     ("executive-summary.html", "Executive Summary"),
@@ -968,7 +969,60 @@ GUIDES = [
          ],
          verdict="""Measure depth, measure the space in front, and weigh whether it will go in a
          cupboard. Pick the unit that survives all three; then look at features."""),
+
+    dict(slug="holiday-capacity", title="Holiday hosting: how much air fryer capacity does a full table actually need?",
+         kicker="Seasonal guide · Holiday 2026",
+         sub="Air fryer capacity is not quarts — it is layers and minutes. A holiday hosting worksheet with batch math.",
+         intro="Everyone asks how many quarts. The better question is how many batches, and do they finish before the gravy does? Here is the worksheet we would actually use.",
+         verdict="Buy for the biggest meal you actually cook. Two 3-quart baskets that finish on synced timers usually beat one 6-quart basket for a real dinner, and a 26-quart oven-style unit is a different category of dinner entirely.",
+         sections=[
+           ("Capacity is layers, not litres",
+            "An air fryer is a small convection oven with a loud fan. Crispness comes from hot air touching every surface, which means food ideally sits in one layer. Stack a second layer of fries and the bottom layer steams. Usable capacity is what fits in a single layer — not the number stamped on the box. That is why two independent 3-quart baskets can out-cook one 6-quart basket at dinner, and why the 26-quart oven-style listing talking about a 6-lb chicken is describing a different job."),
+           ("Write the meal down before you shop",
+            "List the air-fried dishes, estimate single-layer volume per dish, assign minutes per batch, then add the batches up. Batches multiplied by minutes is the oven time you are really signing up for. If that number exceeds the calm window before you serve, you need more single-layer surface, a second zone, or fewer air-fried dishes."),
+         ],
+         extra='''<table><caption>An editorial planning grid — not a product claim. Adjust to your recipes.</caption>
+<thead><tr><th scope="col">Guests</th><th scope="col">Air-fried dishes</th><th scope="col">What usually works</th></tr></thead>
+<tbody><tr><th scope="row">2–4</th><td>1–2 sides</td><td>One basket (≈ 6–8 qt class) handles it in 1–2 batches</td></tr>
+<tr><th scope="row">4–6</th><td>2–3 dishes</td><td>Dual-basket units shine: main + side on synced timers</td></tr>
+<tr><th scope="row">6–10</th><td>3–4 dishes, or a roast</td><td>Oven-style capacity, or dual baskets plus your wall oven</td></tr>
+<tr><th scope="row">10+</th><td>Appetiser parade</td><td>Station cooking: one appliance crisps all evening in waves</td></tr></tbody></table>
+<p><img src="../assets/img/guide-holiday-hosting.jpg" alt="Platter of crisp appetisers beside a countertop air fryer in warm holiday light" loading="lazy"></p>
+<h2>The pre-holiday checklist</h2>
+<ul class="tight">
+<li>Measure your counter <em>with clearance</em> — French doors swing, baskets slide out, vents need air.</li>
+<li>Write the batch worksheet above before you shop. The right size is whatever makes the minutes work.</li>
+<li>Decide: crisp-while-the-oven-roasts (dual basket) or replace-the-oven for some dishes (oven-style)?</li>
+<li>Read what &ldquo;dishwasher-safe parts&rdquo; actually promises on the listing — it is not the same as &ldquo;easy to clean&rdquo;.</li>
+</ul>
+<div class="panel"><p class="kicker">Season</p><p>This is part of the Holiday 2026 cluster. The other half: <a href="holiday-roast-thermometer.html">the holiday roast question</a>. For the single-basket question, see the <a href="air-fryer-thanksgiving.html">Thanksgiving fit guide</a>.</p></div>
+''',
+         products=["P-01", "P-02", "P-03"]),
+    dict(slug="holiday-roast-thermometer", title="The holiday roast question: when does a wireless thermometer actually earn its keep?",
+         kicker="Seasonal guide · Holiday 2026",
+         sub="Doneness is a temperature, not a timer. USDA safe temperatures, probe placement, and the walk-away test for wireless probes.",
+         intro="A roast does not care what time it went in. It cares what temperature it reached. Everything else in the thermometer market is convenience — and convenience is worth paying for exactly when you would otherwise be standing by the oven.",
+         verdict="If you would otherwise get up every ten minutes to check a closed oven, a wireless probe solves a real problem. If you cook steaks and spot-check, a one-second instant-read is the whole tool you need.",
+         sections=[
+           ("Start with the numbers that matter",
+            "The USDA chart below is the reference we would tape inside a cabinet door. Measure in the thickest part of the food, away from bone. Note the rest time on roasts: it is part of the safety standard, and it is where carryover cooking happens — the temperature keeps climbing a few degrees after the meat leaves the heat."),
+           ("Two different jobs",
+            "An instant-read answers in about a second and goes away again — perfect for thin cuts, spot-checks and doneness confidence. Wireless probes stay in the meat while a hub streams temperature to your phone; they earn their keep on long, closed-door cooks: a turkey, a standing rib roast, an all-day brisket."),
+         ],
+         extra='''<table><caption>USDA Safe Minimum Internal Temperatures. Every row cites the <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="sponsored nofollow">official USDA FSIS chart</a> (source S22, read 2026-11-20).</caption><thead><tr><th scope="col">Food</th><th scope="col">Minimum internal temperature</th><th scope="col">Source</th></tr></thead><tbody><tr><th scope="row">Poultry — breasts, whole bird, legs, thighs, wings, ground poultry, giblets, stuffing</th><td>165 °F (73.9 °C)</td><td class="src"><a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="sponsored nofollow">USDA FSIS</a></td></tr><tr><th scope="row">Ground meats</th><td>160 °F (71.1 °C)</td><td class="src"><a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="sponsored nofollow">USDA FSIS</a></td></tr><tr><th scope="row">Beef, pork, veal and lamb steaks, chops and roasts</th><td>145 °F (62.8 °C) with a rest of at least 3 minutes</td><td class="src"><a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="sponsored nofollow">USDA FSIS</a></td></tr><tr><th scope="row">Fish and shellfish</th><td>145 °F (62.8 °C)</td><td class="src"><a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="sponsored nofollow">USDA FSIS</a></td></tr><tr><th scope="row">Leftovers and casseroles</th><td>165 °F (73.9 °C)</td><td class="src"><a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="sponsored nofollow">USDA FSIS</a></td></tr></tbody></table>
+<h2>Probe placement — the five-minute skill</h2>
+<ul class="tight">
+<li>Thickest part of the muscle, not touching bone, fat pockets, or the pan.</li>
+<li>For poultry: the deepest part of the thigh, avoiding bone; the breast reads cooler and is where guests judge you.</li>
+<li>For roasts: aim for the geometric centre of the thickest muscle.</li>
+<li>Trust the number over the clock — ovens lie, roasts vary, and the USDA chart is the standard, not the recipe.</li>
+</ul>
+<p><img src="../assets/img/guide-roast.jpg" alt="A holiday roast with a wireless thermometer probe inserted, resting on a carving board" loading="lazy"></p>
+<div class="panel"><p class="kicker">Season</p><p>Part of the Holiday 2026 cluster — the other half is <a href="holiday-capacity.html">the capacity worksheet</a>. The listings referenced above carry open contradictions (battery claims, warranty wording) that are published on the <a href="../flagged.html">Flagged for Review</a> page rather than smoothed over.</p></div>
+''',
+         products=["P-04", "P-05"]),
 ]
+
 
 
 def build_guides_index():
@@ -1019,6 +1073,7 @@ def build_guide(g):
   <p>{esc(g['verdict'])}</p>
 </div>
 {secs}
+{g.get("extra", "")}
 <h2>The products this guide refers to</h2>
 <ul class="linklist">{items}</ul>
 <p class="small">Every specification quoted above is from the official listing, dated {TODAY}. See the
@@ -1041,6 +1096,61 @@ def build_guide(g):
     BUILT.append(page(f"guides/{g['slug']}.html", f"{g['title']} — {SITE}",
                       g["sub"], body, jsonld=ld))
 
+
+
+# ---- verification log (generated from data/verification.json; session bba2deed)
+def build_verification():
+    import json as _json
+
+    def a(href, text, sponsored=False):
+        rel = ' rel="sponsored nofollow"' if sponsored or "amazon.com" in href else ""
+        return f'<a href="{href}"{rel}>{esc(text)}</a>'
+
+    V = _json.loads((DATA / "verification.json").read_text())
+    legend = "".join(f"<li><strong>{esc(k)}</strong> — {esc(v2)}</li>" for k, v2 in V["method_legend"].items())
+    pol_rows = "".join(
+        f'<tr><th scope="row">{esc(s["id"])}</th><td>{a(s["url"], s["name"])}</td>'
+        f'<td>{esc(s["verified"])}</td><td>{esc(s["status"])}</td></tr>' for s in V["policy_sources"])
+    prod_blocks = ""
+    for prod in V["products"]:
+        rows = ""
+        for r in prod["rows"]:
+            note = f' — {esc(r["note"])}' if r.get("note") else ""
+            rows += (f'<tr><th scope="row">{esc(r["field"])}</th><td>{esc(r["value"])}</td>'
+                     f'<td>{esc(r["status"])}</td><td>{esc(r["method"])}{note}</td>'
+                     f'<td class="src">{a(prod["source_url"], "official listing", True)}</td></tr>')
+        prod_blocks += (f'<h2>{esc(prod["id"])} · observed ASIN {esc(prod["asin_observed"])}</h2>'
+                        f'<table><caption>Every row links to the {a(prod["source_url"], "official listing", True)} ({esc(prod["source_id"])}).</caption>'
+                        f'<thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Status</th>'
+                        f'<th scope="col">How it was checked</th><th scope="col">Source</th></tr></thead>'
+                        f'<tbody>{rows}</tbody></table>')
+    corr = "".join(
+        f'<tr><th scope="row">{esc(c["id"])}</th><td>{esc(c["what"])}</td><td>{esc(c["action"])}</td></tr>'
+        for c in V["corrections"])
+    body = f"""
+{breadcrumb([("Home", "index.html"), ("Verification Log", None)])}
+<p class="kicker">Reference · verified {esc(V["verified_on"])} · sessions 530c2e6c + 937876a6 + bba2deed</p>
+<h1>Verification Log</h1>
+<p class="lede">Every value in the product register, re-checked row by row against the official Amazon listing or an official policy page. This log is generated from <code>data/verification.json</code>. {esc(V["supersedes"])}</p>
+<div class="panel"><h2>Method legend</h2><ul class="tight">{legend}</ul>
+<p class="small">Prices, ratings, review counts and commission rates appear nowhere on this site (Program Policies §2(b); FLG-005). Values that could not be confirmed are left blank and flagged — never inferred.</p></div>
+<h2>Program &amp; policy sources</h2>
+<table><caption>Policy claims checked against official pages. Every row links to its official source.</caption>
+<thead><tr><th scope="col">ID</th><th scope="col">Source (official)</th><th scope="col">Claim checked</th><th scope="col">Status</th></tr></thead>
+<tbody>{pol_rows}</tbody></table>
+{prod_blocks}
+<h2>Corrections made in this pass</h2>
+<table><caption>Register corrections (C-IDs). Findings that survived as open contradictions are on the <a href="flagged.html">Flagged for Review</a> page.</caption>
+<thead><tr><th scope="col">ID</th><th scope="col">What was wrong</th><th scope="col">Action taken</th></tr></thead>
+<tbody>{corr}</tbody></table>
+<div class="panel"><h2>What this log does not claim</h2>
+<p>Values marked <em>corroborated</em> were read from product-information mirrors of the listing's own spec table, not from the listing's Product details block itself (the fetch pass could not extract it reliably). The official listing link is in every table row for manual review. Independent sessions reached the same conclusions about the P-03 wattage, the P-03 temperature nuance and the P-05 warranty — those findings are canonical as FLG-017, FLG-018 and FLG-019.</p>
+<p><a class="btn ghost" href="flagged.html">See Flagged for Review</a> <a class="btn ghost" href="sources.html">See the source register</a> <a class="btn ghost" href="suggestions.html">Decision Center</a></p></div>
+"""
+    BUILT.append(page("verification.html", f"Verification Log — {SITE}",
+                      "Line-by-line verification of every register value against official listings and policy pages, with method and status per row.",
+                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                                    "name": "Verification Log", "url": BASE + "verification.html"}))
 
 # ---- how we choose
 def build_how():
@@ -1117,12 +1227,12 @@ SUGGESTIONS = [
          impact="High — reader trust and time on page", effort="Done",
          status="Shipped", verify="Visible on index.html: hero, three featured products, one nav group."),
     dict(id="SG-02", title="Publish question-shaped guides, then measure arrivals",
-         what="Eight guides built from real buying decisions, each added to the sitemap and the RSS "
+         what="Ten guides built from real buying decisions, each added to the sitemap and the RSS "
               "feed, each ending in a verdict.",
          why="Long-tail question queries are how a small site earns its first organic traffic. A "
              "guide that answers one question beats a listicle.",
          impact="High — organic traffic", effort="Done",
-         status="Shipped", verify="guides.html lists eight; sitemap.xml and feed.xml include all eight."),
+         status="Shipped", verify="guides.html lists ten; sitemap.xml and feed.xml include all ten."),
     dict(id="SG-03", title="Measure clicks before optimising anything",
          what="Five defined events, counted locally with no cookies and no third party, exportable "
               "to CSV by the reader or the owner.",
@@ -1264,7 +1374,7 @@ def build_suggestions():
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>Seventeen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>Eighteen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
     <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
@@ -1289,6 +1399,7 @@ def build_suggestions():
     <tr><td>SG-15</td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
     <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
     <tr><td>SG-17</td><td>Approve the Design &amp; Traffic Brief as the next build</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-18</td><td>Deploy the self-hosted analytics endpoint (choose a host)</td><td>Owner (host decision)</td></tr>
   </tbody>
 </table>
 
@@ -1319,7 +1430,7 @@ def build_suggestions():
 </ul>
 """
     BUILT.append(page("suggestions.html", f"Decision Center — {SITE}",
-                      "Seventeen proposals for this site, with honest status, ranked before anything "
+                      "Eighteen proposals for this site, with honest status, ranked before anything "
                       "is built. Review the shortlist and choose a path.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Decision Center", "url": BASE + "suggestions.html"}))
@@ -1980,6 +2091,7 @@ def build_disclosure():
 
 <h2>What we measure</h2>
 <p>Five events, defined once and used consistently:</p>
+<p><strong>Where they go.</strong> By default the counts stay in your own browser (localStorage) and can be exported as CSV — nothing leaves your device. A self-hosted collector (<code>analytics/server.py</code>) is written, smoke-tested and deliberately switched off in <code>assets/config.js</code> until the owner chooses a host (SG-18 / Q-08). That endpoint never reads IP addresses, writes no access log, stores no identifiers, and keeps only aggregate counts. Either way there are no cookies, no fingerprinting, no referrer capture, and search events carry a result count — never what you typed.</p>
 <table class="events">
   <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
   <tbody>
@@ -2221,6 +2333,7 @@ def main():
     build_guides_index()
     for g in GUIDES:
         build_guide(g)
+    build_verification()
     build_how()
     build_design_brief()
     build_suggestions()

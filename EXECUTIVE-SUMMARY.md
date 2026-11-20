@@ -88,3 +88,18 @@ Zero, and no forecast. No commission rate, click, session or order figure is pre
 - FTC Endorsement Guides FAQ re-fetched; disclosure-above-the-fold requirement reaffirmed.
 - No register corrections were required. 30 pages build; `check_site.py` passes ALL CHECKS.
 - New: `design-brief.html` — the Design & Traffic Brief (SG-17).
+
+
+---
+
+## Session bba2deed — verification, seasonal cluster and measurement (2026-11-20)
+
+**Independent line-by-line verification.** Every register value was re-read against the official listings and policy pages and is published in the generated **Verification Log** (`verification.html`, machine record `data/verification.json`) with per-row source links, method and status (confirmed / corroborated / confirmed-conflict / corrected). Three corrections this pass found independently matched a parallel session's findings and are canonical as **FLG-017** (P-03 wattage 1000 W live bullet vs 1700 W mirrors/manual), **FLG-018** (P-03 title drift + 450°F Hi-Fry vs 200–400°F range) and **FLG-019** (P-05 warranty "two-year assurance" replacing an unconfirmed "1-year" value).
+
+**Measurement is shipped.** `analytics/server.py` is a self-hosted, privacy-preserving collector for the five defined events (no cookies, no IP reads, no access log, aggregates only) — smoke-tested end-to-end and switched off in `assets/config.js` until an owner picks a host (SG-18 / Q-08). Browser-local counting and CSV export remain the default.
+
+**Seasonal cluster.** Two Holiday 2026 question-shaped guides are live (capacity worksheet; the roast/thermometer question with a USDA-sourced temperature table), registered in `scripts/build_site.py` and flowing into the guides index, sitemap, feed and search automatically. Publishing-cadence and measured-topic selection remain as recorded in the Decision Center (SG-16).
+
+**Registers.** SG-18 (deploy the analytics endpoint) and Q-15/Q-16 (ledger report ownership; confirm the five events) were added — SG-27..SG-30 topics from the brief are covered by the existing SG-10/SG-16 rows plus shipped features (nav Records group, RSS feed), noted in COORDINATION.md.
+
+**Gate.** `scripts/check_site.py` extended with the analytics surface and per-row source-link checks. ALL CHECKS PASS (33 pages).

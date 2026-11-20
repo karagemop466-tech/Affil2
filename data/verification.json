@@ -45,10 +45,10 @@
       "id": "P-03", "asin_observed": "B08DKYBTPH", "source_id": "S12",
       "source_url": "https://www.amazon.com/dp/B08DKYBTPH",
       "rows": [
-        {"field": "title", "value": "Chefman Air Fryer 8 Qt | TurboFry 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel", "method": "listing-fetch", "status": "corrected", "note": "Register previously held an earlier listing title ('TurboFry Touch ... One-Touch Digital Control Presets ...') still visible in product-info mirrors. Title updated to the live listing title 2026-11-20 (FLG-012)."},
+        {"field": "title", "value": "Chefman Air Fryer 8 Qt | TurboFry 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel", "method": "listing-fetch", "status": "corrected", "note": "Register previously held an earlier listing title ('TurboFry Touch ... One-Touch Digital Control Presets ...') still visible in product-info mirrors. Title updated to the live listing title 2026-11-20 (FLG-018)."},
         {"field": "capacity", "value": "8 quarts", "method": "listing-fetch", "status": "confirmed", "note": "Overview table: Capacity 8 quarts; Size selector 8 quarts."},
-        {"field": "temperature range", "value": "200-400 °F (About this item); title advertises a 450°F Hi-Fry option", "method": "listing-fetch", "status": "confirmed-conflict", "note": "Bullet: 'temperature range from 200-400°F'. Title: '450°F Hi-Fry Option'. Both published; FLG-012."},
-        {"field": "power", "value": "1000 watts / 120 volts (live About this item) vs 1700 watts (product-info mirrors + Chefman manual)", "method": "listing-fetch", "status": "confirmed-conflict", "note": "Live RESOURCES bullet 2026-11-20: '1000 Watts/120 Volts - RJ38-SQSS-8T'. Mirrors of the listing's Product information block and the Chefman user manual state 1700 watts. Register previously showed 1700 W only. Both claims now published; FLG-011."},
+        {"field": "temperature range", "value": "200-400 °F (About this item); title advertises a 450°F Hi-Fry option", "method": "listing-fetch", "status": "confirmed-conflict", "note": "Bullet: 'temperature range from 200-400°F'. Title: '450°F Hi-Fry Option'. Both published; FLG-018."},
+        {"field": "power", "value": "1000 watts / 120 volts (live About this item) vs 1700 watts (product-info mirrors + Chefman manual)", "method": "listing-fetch", "status": "confirmed-conflict", "note": "Live RESOURCES bullet 2026-11-20: '1000 Watts/120 Volts - RJ38-SQSS-8T'. Mirrors of the listing's Product information block and the Chefman user manual state 1700 watts. Register previously showed 1700 W only. Both claims now published; FLG-017."},
         {"field": "dimensions", "value": "12.75 x 13.5 x 10 in (D x W x H)", "method": "listing-fetch", "status": "confirmed", "note": "Overview table: 12.75\"D x 13.5\"W x 10\"H."},
         {"field": "weight", "value": "12.8 pounds", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Item Weight 12.8 pounds."},
         {"field": "presets", "value": "Four preset functions (fries, chicken, meat, fish)", "method": "listing-fetch", "status": "confirmed", "note": "About this item: 'Four presets ... French fries, chicken, meat, and fish'."},
@@ -85,7 +85,7 @@
         {"field": "battery", "value": "50 hours (About this item) vs 70 hours (Product Description) — listing conflicts", "method": "listing-fetch", "status": "confirmed-conflict", "note": "Re-verified live: bullet 'running for up to 50 hours on a full charge'; Product Description/mirrors '70+ hours of probe use'. FLG-008 stands."},
         {"field": "probe length", "value": "4.75 inches", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Immersion Depth / Item Length 4.75 inches."},
         {"field": "care", "value": "Waterproof, dishwasher-safe probes", "method": "listing-fetch", "status": "confirmed", "note": "EASY TO CLEAN bullet; Product Care Instructions Dishwasher Safe."},
-        {"field": "warranty stated", "value": "Two-year assurance (About this item)", "method": "listing-fetch", "status": "corrected", "note": "Register previously said '1-year limited warranty' — NOT found on the live listing. RESOURCES bullet: 'two-year assurance provided by CHEF iQ'; mirrors agree. Prior value unconfirmed and replaced; FLG-013."},
+        {"field": "warranty stated", "value": "Two-year assurance (About this item)", "method": "listing-fetch", "status": "corrected", "note": "Register previously said '1-year limited warranty' — NOT found on the live listing. RESOURCES bullet: 'two-year assurance provided by CHEF iQ'; mirrors agree. Prior value unconfirmed and replaced; FLG-019."},
         {"field": "model", "value": "CQ60-3C-Z1-E", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Part/Model Number CQ60-3C-Z1-E."}
       ]
     }
@@ -97,12 +97,12 @@
     {"id": "S04", "name": "Google Search Central — Qualify your outbound links", "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links", "method": "policy-fetch", "status": "confirmed", "verified": "Page fetched 2026-11-20: rel=\"sponsored\" marks advertisements/paid placements ('commonly called paid links'); multiple rel values may be combined (e.g. 'sponsored nofollow')."}
   ],
   "corrections": [
-    {"id": "C-01", "what": "P-03 power shown as '1700 watts' only", "action": "Both claims published (1000 W live bullet vs 1700 W mirrors/manual); FLG-011 opened. No single value chosen."},
-    {"id": "C-02", "what": "P-05 warranty shown as '1-year limited warranty'", "action": "Replaced with the listing's own 'two-year assurance' claim (multi-source); prior value recorded as unconfirmed. FLG-013 opened."},
-    {"id": "C-03", "what": "P-03 product title stale (earlier listing variant)", "action": "Title updated to live listing title; prior variant retained in this ledger. FLG-012 covers title/Hi-Fry nuance."},
+    {"id": "C-01", "what": "P-03 power shown as '1700 watts' only", "action": "Both claims published (1000 W live bullet vs 1700 W mirrors/manual); FLG-017 opened. No single value chosen."},
+    {"id": "C-02", "what": "P-05 warranty shown as '1-year limited warranty'", "action": "Replaced with the listing's own 'two-year assurance' claim (multi-source); prior value recorded as unconfirmed. FLG-019 opened."},
+    {"id": "C-03", "what": "P-03 product title stale (earlier listing variant)", "action": "Title updated to live listing title; prior variant retained in this ledger. FLG-018 covers title/Hi-Fry nuance."},
     {"id": "C-04", "what": "P-04/P-05 titles paraphrased in register", "action": "Normalized to live listing titles 2026-11-20."},
     {"id": "C-05", "what": "feed.xml malformed (<language> tag unclosed; XML parse error line 9)", "action": "Fixed in T-15 integration pass."},
     {"id": "C-06", "what": "SG-08 register claimed 'JSON-LD' shipped; no application/ld+json block existed on any page", "action": "JSON-LD (WebSite/Organization/Article/BreadcrumbList) added in T-15; SG-08 status corrected."},
-    {"id": "C-07", "what": "COORDINATION.md session-530c2e6c log cross-referenced FLG-010/011/012 for Emeril/CHEF-iQ conflicts; canonical data/flags.json numbers those FLG-008/009 (FLG-010 = analytics local-only)", "action": "COORDINATION.md corrected to the canonical flag numbering; new findings appended as FLG-011..FLG-013."}
+    {"id": "C-07", "what": "COORDINATION.md session-530c2e6c log cross-referenced FLG-010/011/012 for Emeril/CHEF-iQ conflicts; canonical data/flags.json numbers those FLG-008/009 (FLG-010 = analytics local-only)", "action": "COORDINATION.md corrected to the canonical flag numbering; new findings appended as FLG-017..FLG-019."}
   ]
 }
