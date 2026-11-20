@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Open Questions — ShopNow Kitchen</title>
-<meta name="description" content="Fourteen questions that must be answered before a decision can reasonably be made, with how to discover each missing fact and what it blocks.">
+<meta name="description" content="16 questions that must be answered before a decision can reasonably be made, with how to discover each missing fact and what it blocks.">
 <link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/questions.html">
 <meta property="og:site_name" content="ShopNow Kitchen">
 <meta property="og:title" content="Open Questions — ShopNow Kitchen">
-<meta property="og:description" content="Fourteen questions that must be answered before a decision can reasonably be made, with how to discover each missing fact and what it blocks.">
+<meta property="og:description" content="16 questions that must be answered before a decision can reasonably be made, with how to discover each missing fact and what it blocks.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/questions.html">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Open Questions", "url": "https://karagemop466-tech.github.io/Affil2/questions.html"}</script>
@@ -43,9 +43,9 @@
 
 <div class="panel">
   <h2>What this page is for</h2>
-  <p>Fourteen questions, grouped by who can answer them. Six need the owner's account access or a
-    yes/no decision. Four need a seller to clarify a listing that contradicts itself. Two need Amazon
-    support. Two are editorial choices that only the owner can make.</p>
+  <p>16 questions, grouped by who can answer them. Owner account access, Amazon
+    support replies, seller clarifications on listing contradictions, and API eligibility each sit in
+    plain view instead of being replaced with assumptions.</p>
   <p class="small">If you only answer one thing, answer <strong>Q-04</strong> &mdash; whether the
     tagged links are being recorded. Everything about revenue depends on it, and nothing else
     does.</p>
@@ -64,7 +64,7 @@
   <td><span class="unverified">Not obtained</span></td></tr><tr><td class="nowrap"><strong>Q-02</strong></td>
   <td><strong>Is the Associate ID shopnow047c-20 issued, active and approved?</strong><br><span class="small">Only Associates Central can answer this. No public page shows account status.</span></td>
   <td>Sign in to Associates Central and check Account Settings, then look for any click in the tracking report.</td>
-  <td>Whether any of this earns anything (FLG-010)</td>
+  <td>Whether any of this earns anything (FLG-002)</td>
   <td>Owner</td>
   <td><span class="unverified">Not verifiable externally</span></td></tr><tr><td class="nowrap"><strong>Q-03</strong></td>
   <td><strong>Are link.amazon short links permitted on a website?</strong><br><span class="small">The submitted links use that domain. Public documentation does not settle it, and guessing would be worse than a blank.</span></td>
@@ -84,7 +84,7 @@
   <td><span class="unverified">Not decided</span></td></tr><tr><td class="nowrap"><strong>Q-06</strong></td>
   <td><strong>Who is the editor of record?</strong><br><span class="small">FTC guidance treats an implied experience claim as a problem. A byline needs a real person behind it.</span></td>
   <td>Name a person and describe the actual review process, or keep the current explicit statement that there is no hands-on test.</td>
-  <td>Publication polish (FLG-032)</td>
+  <td>Publication polish (FLG-033, FLG-032)</td>
   <td>Owner</td>
   <td><span class="unverified">Blank</span></td></tr><tr><td class="nowrap"><strong>Q-07</strong></td>
   <td><strong>What publishing cadence can actually be sustained?</strong><br><span class="small">Cadence compounds; a burst followed by silence does not.</span></td>
@@ -92,19 +92,19 @@
   <td>Content planning (SG-16)</td>
   <td>Owner</td>
   <td><span class="unverified">Assumed, not confirmed</span></td></tr><tr><td class="nowrap"><strong>Q-08</strong></td>
-  <td><strong>Where would a self-hosted analytics endpoint live?</strong><br><span class="small">Events are counted in the browser only, so there is no cross-visitor data at all.</span></td>
-  <td>Choose a host, a retention period and a privacy statement before collecting anything server-side.</td>
-  <td>Any real measurement (FLG-010)</td>
+  <td><strong>Where would the self-hosted analytics endpoint live?</strong><br><span class="small">Collector code (analytics/server.js, functions/api/collect.js) ships in the repo, while GitHub Pages is static-only so events stay in localStorage until hosted externally.</span></td>
+  <td>Deploy to Cloudflare Pages or a Node host, verify GET /api/collect, and configure the endpoint.</td>
+  <td>Cross-visitor measurement (FLG-010, SG-20)</td>
   <td>Owner</td>
-  <td><span class="unverified">No endpoint</span></td></tr><tr><td class="nowrap"><strong>Q-09</strong></td>
+  <td><span class="unverified">Code ready; unhosted</span></td></tr><tr><td class="nowrap"><strong>Q-09</strong></td>
   <td><strong>Which reader-capture channel, if any?</strong><br><span class="small">An RSS feed exists. Email capture and Search Console both need accounts.</span></td>
   <td>Verify the site in Search Console and submit the sitemap. Decide whether email is wanted.</td>
   <td>Growth loop (SG-10)</td>
   <td>Owner</td>
   <td><span class="unverified">RSS only</span></td></tr><tr><td class="nowrap"><strong>Q-10</strong></td>
-  <td><strong>Which listing contradictions can be resolved with the seller?</strong><br><span class="small">There are now six: preset count, accessory count, top temperature, wattage, capacity units and warranty length.</span></td>
+  <td><strong>Which listing contradictions can be resolved with the seller?</strong><br><span class="small">There are now eight: Emeril preset count (24 vs 25), Emeril accessory count (6 vs 7), Emeril model variant, Chefman 8-Qt temp (400 vs 450 °F), Chefman 8-Qt wattage (1700 vs 1000 W), Chefman 6-Qt capacity (6 qt vs 6 L), CHEF iQ battery (50 vs 70 h), and CHEF iQ warranty (2 vs 3 yr).</span></td>
   <td>Ask each seller in writing, or read the printed manual. Until then both figures stay published.</td>
-  <td>Specification certainty (FLG-017 to FLG-022)</td>
+  <td>Specification certainty (FLG-008, FLG-009, FLG-017 to FLG-022, FLG-031, FLG-034)</td>
   <td>Sellers</td>
   <td><span class="unverified">Open</span></td></tr><tr><td class="nowrap"><strong>Q-11</strong></td>
   <td><strong>What commission categories apply, and at what rate?</strong><br><span class="small">Rates live in the Commission Income Statement inside the account and change by category.</span></td>
@@ -126,20 +126,32 @@
   <td>Set a re-verification interval, for example quarterly, and record each pass with its date.</td>
   <td>Trust over time (FLG-023)</td>
   <td>Owner</td>
-  <td><span class="unverified">Not defined</span></td></tr></tbody>
+  <td><span class="unverified">Not defined</span></td></tr><tr><td class="nowrap"><strong>Q-15</strong></td>
+  <td><strong>Will the Associates account qualify for Amazon Creators API credentials?</strong><br><span class="small">PA-API 5 returns HTTP 403 and Creators API requires final Associates acceptance plus qualifying sales (10 qualifying sales in the prior 30 days for catalog API access, S20/S21).</span></td>
+  <td>Complete account review in Associates Central, verify qualified sales, and apply as primary account owner.</td>
+  <td>Automated product ingestion and legal price/image display (SG-13, SG-17, FLG-029)</td>
+  <td>Owner</td>
+  <td><span class="unverified">Blocked on API acceptance</span></td></tr><tr><td class="nowrap"><strong>Q-16</strong></td>
+  <td><strong>Which Search Console query metrics will pick the next buying guides?</strong><br><span class="small">Without Search Console property verification, organic queries, impressions, and CTR cannot be seen.</span></td>
+  <td>Verify the canonical URL in Google Search Console, submit sitemap.xml, and review query reports monthly.</td>
+  <td>Topic selection and guide cadence (SG-16, SG-18)</td>
+  <td>Owner</td>
+  <td><span class="unverified">Blocked on Search Console</span></td></tr></tbody>
 </table>
 
 <h2>What we do know, and where it came from</h2>
 <ul>
   <li><strong>The five short links resolve to five specific ASINs.</strong> Observed on 2026-11-20, and
-    recorded separately from intent on each product page.</li>
+    recorded separately from intent on each product page (with earlier checkpoint failures on
+    B0c8moW59 resolved on follow-up under FLG-012 while instability remains under FLG-011).</li>
   <li><strong>Every specification on this site was read off an official listing</strong> on 2026-11-20.
     The <a href="sources.html">source register</a> links every one.</li>
   <li><strong>The compliance rules are public and quoted.</strong> Amazon's Operating Agreement
-    Section 5, Program Policies 2(a) and 2(b), FTC disclosure guidance and Google's outbound-link
-    guidance are all linked with the exact wording used.</li>
-  <li><strong>USDA publishes the minimum internal temperatures</strong> used in the thermometer
-    guides, and that page is linked rather than paraphrased.</li>
+    Section 5, Program Policies Participation Requirements §2(a), §2(b), §5, §6(t), §6(v), §6(w),
+    §6(y), IP License §1, §2(e), §4 (Agent Terms), Commission Income Statement §2(d)/(e)/(g), FTC
+    disclosure guidance, and Google's outbound-link guidance are all linked with exact wording.</li>
+  <li><strong>USDA publishes the minimum internal temperatures and calibration instructions</strong>
+    used in the thermometer guides (S22, S23), linked rather than paraphrased.</li>
 </ul>
 
 <h2>What we deliberately do not know</h2>
@@ -154,7 +166,7 @@
   <div class="wrap">
     <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
-    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,

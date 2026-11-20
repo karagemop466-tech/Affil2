@@ -341,3 +341,31 @@ It does not deploy, on purpose. This repository's Pages site is configured as **
 Given that the branch builder publishes whatever lands on `main`, the gate cannot block a merge by
 itself; it makes a breakage loud and immediate instead, which is what a repository without branch
 protection can actually support.
+
+---
+
+## Session `arena/9f19fe6b-affil2` — deep live verification, JS/collector completion, and platform blueprint (2026-11-20)
+
+Branch `arena/9f19fe6b-affil2` (fast-forward synced with `origin/main` at `829398c` ahead of edits, preserving PRs #17–#19).
+
+### Live verification performed
+
+- Re-fetched all five `link.amazon/*` short links: all five resolved cleanly on attempt 1 (`B04G1MEwY -> B0CDY277D3`, `B02NbDxp3 -> B09B7SB46R`, `B00hJ57DV -> B08DKYBTPH`, `B0c8moW59 -> B0DHZTCNR5`, `B0f3GKalj -> B0DZFD6R9Z`). Intermittent redirect instability stays tracked under `FLG-011` and `FLG-012` is updated accordingly.
+- Audited deep `Product information` tables (`Features & Specs`, `Measurements`, `Item details`, `Warranty & Support`) across all five live `/dp/` listings:
+  - Verified previously unconfirmed fields: P-01 weight `13.3 pounds`; P-02 model `4-00675-02X-VN`, temperature `75–500 °F`, power `120 volts / 1700 watts`; P-03 weight `12.8 pounds`; P-04 model `HT07`, upper temperature `572 °F`, length/depth `6.5 inches`; P-05 model `CQ60-3C-Z1-E`, probe length `4.75 inches`.
+  - Confirmed live listing conflicts (`st: "conflict"`): P-03 power (`1700 W` in Features & Specs vs `1000 W` in About this item, `FLG-017`) and P-05 warranty (`two-year assurance` in About this item vs `3 Year` in Item details, `FLG-019`).
+  - Confirmed P-02 weight is absent from the live listing HTML (`FLG-022`); kept `weight: null` and removed the unverified Emeril weight figure from `data/editorial.json` and `GUIDES`.
+- Read Amazon Operating Agreement §5, Program Policies (chunks 0–9: Commission Income Statement §2(d)/(e)/(g), Participation Requirements §2(a)/(b), §5 ML restriction, §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), and §4 Agent Terms), Creators API onboarding (`S20`), PA-API 5 deprecation (`S21`), FTC Endorsement Guides FAQ (`S03`), Google outbound links (`S04`), and USDA FSIS temperature/calibration guides (`S22`, `S23`).
+
+### Code, data, and gate additions
+
+- Fixed `scripts/build_site.py`: `build_sources()` 4-column table alignment; removed `normalise()` fallback masking `observed: null`; rendered existing `assets/illustrations/*.svg` editorial artwork (fixing orphaned files); remapped stale flag references in `data/editorial.json`, `GUIDES`, and `QUESTIONS`; reconciled `SG-17..SG-20` and `Q-15..Q-16` across `suggestions.html`, `questions.html`, and `EXECUTIVE-SUMMARY.md`; added `platform.html` (AI affiliate architecture & compliance matrix) and `measurement.html` (telemetry schema & Search Console guide).
+- Fixed `assets/app.js` and added self-hosted measurement endpoints: implemented client search (`search.html`), mobile `.navtoggle`, `#exportEvents` CSV download, RFC-4180 CSV escaping, and schema-validated `send()` transport paired with `data/events.json`, `analytics/server.js`, and `functions/api/collect.js`.
+- Strengthened `scripts/check_site.py` (HTML table column symmetry, unverified weight claim guard, non-orphaned valid SVGs, `og:url` verification, editorial flag checks, `events.json` & `app.js` checks) and added `tests/test_site.py` + `tests/test_collector.js` wired into `.github/workflows/pages.yml`.
+
+### Gate and tests
+
+- `python3 scripts/build_site.py`: `built 31 pages` (idempotent across consecutive runs).
+- `python3 scripts/check_site.py`: `checked 31 pages, 5 product records, 35 flags, 18 sources — ALL CHECKS PASS`.
+- `python3 -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
+- `node tests/test_collector.js`: `ALL JS COLLECTOR AND CLIENT TESTS PASS`.

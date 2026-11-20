@@ -7,56 +7,56 @@
     "submitted": "https://link.amazon/B04G1MEwY",
     "token": "B04G1MEwY",
     "observed": "B0CDY277D3",
-    "observed_status": "Confirmed: short link fetched and resolved to amazon.com/dp/B0CDY277D3",
+    "observed_status": "Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B0CDY277D3",
     "asin": "B0CDY277D3",
     "listing": "https://www.amazon.com/dp/B0CDY277D3",
     "title": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black",
     "fields": {
       "model": {
         "v": "RJ38-SQPF-3TDB-2W",
-        "src": "Item details table",
+        "src": "Product information — Item details table (Model Number & Part Number, chunk 8)",
         "st": "verified",
         "note": ""
       },
       "capacity": {
-        "v": "6 quarts combined — 2 independent 3-quart baskets",
-        "src": "About this item (bullets 1 and 3)",
-        "st": "verified",
-        "note": ""
+        "v": "6 quarts combined — 2 independent 3-quart baskets (Measurements table prints 6 liters)",
+        "src": "Page title & About this item (6 quarts / two 3Qt baskets) vs Measurements table (6 liters, chunk 7)",
+        "st": "conflict",
+        "note": "Both expressions appear on the listing (FLG-034); 6 liters is ~6.34 US quarts."
       },
       "temperature": {
-        "v": "200–450 °F",
-        "src": "About this item",
+        "v": "200–450 °F (Features & Specs prints Min 93 °C / Max 450 °F)",
+        "src": "About this item & Product information — Features & Specs (chunks 4 & 7)",
         "st": "verified",
         "note": ""
       },
       "power": {
         "v": "120 volts / 1700 watts",
-        "src": "About this item",
+        "src": "About this item & Product information — Features & Specs (chunks 5 & 7)",
         "st": "verified",
         "note": ""
       },
       "dimensions": {
         "v": "13.38 in D × 11.81 in W × 10.63 in H",
-        "src": "Product Details table",
+        "src": "About this item & Product information — Measurements table (chunks 4 & 7)",
         "st": "verified",
         "note": ""
       },
       "weight": {
-        "v": null,
-        "src": "Product Details table (weight not visible in fetched text)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "13.3 pounds",
+        "src": "Product information — Measurements table (Item Weight, chunk 7)",
+        "st": "verified",
+        "note": ""
       },
       "warranty": {
         "v": "1-year assurance provided by Chefman",
-        "src": "About this item",
+        "src": "About this item (chunk 5)",
         "st": "verified",
         "note": ""
       },
       "features": {
-        "v": "Two viewing windows, Sync Finish, Hi-Fry, auto shutoff, cETL approved, dishwasher-safe non-stick baskets",
-        "src": "About this item; Product Details table",
+        "v": "Two viewing windows, Sync Finish, Hi-Fry, +2Min button, mute option, automatic shut-off, cETL approved, dishwasher-safe non-stick baskets",
+        "src": "About this item & Product information — Features & Specs (chunks 4, 5 & 7)",
         "st": "verified",
         "note": ""
       }
@@ -64,7 +64,7 @@
     "card": [
       [
         "Capacity",
-        "6 quarts combined (2 × 3-quart baskets)"
+        "6 quarts combined (2 × 3-quart baskets; Measurements table says 6 liters)"
       ],
       [
         "Temperature",
@@ -90,62 +90,68 @@
     "submitted": "https://link.amazon/B02NbDxp3",
     "token": "B02NbDxp3",
     "observed": "B09B7SB46R",
-    "observed_status": "Confirmed: short link fetched and resolved to amazon.com/dp/B09B7SB46R",
+    "observed_status": "Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B09B7SB46R",
     "asin": "B09B7SB46R",
     "listing": "https://www.amazon.com/dp/B09B7SB46R",
     "title": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included",
     "fields": {
       "model": {
-        "v": null,
-        "src": "Item details table (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Earlier records listed 4-00675-02 and 4-00675-02X-VN; FLG-009 reports both on the listing. Neither appeared in this check’s fetched text, so the model is left blank."
+        "v": "4-00675-02X-VN (prior listing capture noted 4-00675-02, absent from live page)",
+        "src": "Product information — Item details table (Model Number & Part Number, chunk 10)",
+        "st": "conflict",
+        "note": "Live Item details table lists 4-00675-02X-VN; earlier records cited 4-00675-02 (FLG-009)."
       },
       "capacity": {
-        "v": "26 quarts (Product Details: 24.6 liters)",
-        "src": "About this item; Product Details table",
+        "v": "26 quarts (Measurements table: 24.6 liters)",
+        "src": "About this item & Product information — Measurements table (chunks 4 & 10)",
         "st": "verified",
         "note": ""
       },
       "temperature": {
-        "v": null,
-        "src": "About this item / Product Details (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "75–500 °F",
+        "src": "Product information — Features & Specs table (Min Temp 75 °F / Max Temp 500 °F, chunks 9–10)",
+        "st": "verified",
+        "note": ""
       },
       "power": {
-        "v": null,
-        "src": "About this item (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "120 volts / 1700 watts",
+        "src": "Product information — Features & Specs table (Output Wattage, Wattage, Voltage, chunk 9)",
+        "st": "verified",
+        "note": ""
       },
       "dimensions": {
         "v": "16.9 in D × 15.8 in W × 14.8 in H",
-        "src": "Product Details table",
+        "src": "About this item & Product information — Measurements table (chunks 4 & 10)",
         "st": "verified",
         "note": ""
       },
       "weight": {
         "v": null,
-        "src": "Product Details table (not visible in fetched text)",
+        "src": "Product information — Measurements table (no item weight stated on listing, chunk 10)",
         "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "note": "No item weight is printed on amazon.com/dp/B09B7SB46R — left blank (FLG-022)."
       },
       "presets": {
-        "v": "24 (page title) vs 25 (About this item)",
-        "src": "Page title; About this item",
+        "v": "24 (page title, Product Description & Configuration) vs 25 (About this item)",
+        "src": "Page title & Product Description vs About this item (chunks 0, 4, 8, 12)",
         "st": "conflict",
         "note": "Listing states both 24 One-Touch Preset Options and 25 cooking pre-sets (FLG-021)."
       },
+      "accessories": {
+        "v": "6 accessories (Title & Included Components: Rack, Bake Pan, Drip Tray, Crisper Basket, Rotisserie Spit, Fetch Tool) vs 7 accessories (Configuration & Product Description)",
+        "src": "Page title & Included Components vs Configuration & Product Description (FLG-031)",
+        "st": "conflict",
+        "note": "Title and Included Components list 6 accessories while Configuration and Product Description say 7 (FLG-031)."
+      },
       "warranty": {
         "v": null,
-        "src": "Not visible in fetched text",
+        "src": "Warranty & Support links a PDF file only; duration and terms are not in the HTML listing text",
         "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "note": "Warranty duration not printed in HTML listing text — left blank (FLG-022)."
       },
       "features": {
-        "v": "French doors open with a single pull; 360º superheated air circulation; rotisserie a 6-lb chicken; bake a 12-inch pizza; stainless steel exterior",
-        "src": "About this item",
+        "v": "French doors open with a single pull; 360° superheated air circulation (Air Frying Technology: True); rotisserie a 6-lb chicken; bake a 12-inch pizza; stainless steel interior & exterior",
+        "src": "About this item & Features & Specs (chunks 4, 9–10)",
         "st": "verified",
         "note": ""
       }
@@ -156,20 +162,20 @@
         "26 quarts (24.6 liters)"
       ],
       [
-        "Presets",
-        "24 or 25 — conflicting listing text (FLG-021)"
+        "Temperature",
+        "75–500 °F (1700 W)"
       ],
       [
         "Dimensions",
-        "16.9 × 15.8 × 14.8 in"
+        "16.9 × 15.8 × 14.8 in (weight unstated)"
       ]
     ],
     "questions": [
       "Do you have 16.9 inches of depth plus clearance for French doors to swing?",
       "Do you need rotisserie or pizza capacity, or is that unused space?",
-      "Will you move it, or leave it in one spot?"
+      "Will you keep it parked on the counter rather than moving it?"
     ],
-    "blurb": "A countertop oven that air-fries. The trade-off is footprint and weight: this is a 26-quart appliance, not a compact basket fryer."
+    "blurb": "A countertop oven that air-fries. The trade-off is footprint and counter permanence: this is a 26-quart French-door oven at 16.9 inches deep, not a compact basket fryer."
   },
   {
     "id": "P-03",
@@ -179,62 +185,62 @@
     "submitted": "https://link.amazon/B00hJ57DV",
     "token": "B00hJ57DV",
     "observed": "B08DKYBTPH",
-    "observed_status": "Confirmed: short link fetched and resolved to amazon.com/dp/B08DKYBTPH",
+    "observed_status": "Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B08DKYBTPH",
     "asin": "B08DKYBTPH",
     "listing": "https://www.amazon.com/dp/B08DKYBTPH",
     "title": "Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel",
     "fields": {
       "model": {
-        "v": "RJ38-SQSS-8T",
-        "src": "About this item (model line)",
+        "v": "RJ38-SQSS-8T (About this item & Part Number; Item details Model Number field prints 'Large Air Fryer')",
+        "src": "About this item (chunk 4) & Product information — Item details table (chunk 7)",
         "st": "verified",
         "note": ""
       },
       "capacity": {
         "v": "8 quarts",
-        "src": "Product Details table",
+        "src": "About this item & Product information — Measurements table (chunks 4 & 7)",
         "st": "verified",
         "note": ""
       },
       "temperature": {
-        "v": "200–400 °F (About this item) vs 450 °F Hi-Fry option (page title)",
-        "src": "About this item; page title",
+        "v": "200–400 °F (About this item & Features & Specs Max 400 °F) vs 450 °F Hi-Fry option (page title)",
+        "src": "About this item & Features & Specs (chunks 4 & 7) vs page title (chunk 0)",
         "st": "conflict",
-        "note": "Both appear on the listing (FLG-018). Both published."
+        "note": "Both figures appear on the listing (FLG-018). Both published."
       },
       "power": {
-        "v": "120 volts / 1000 watts",
-        "src": "About this item (model line)",
-        "st": "verified",
-        "note": "Register previously said 1700 W; the listing says 1000 W (corrected)."
+        "v": "120 volts / 1700 watts (Features & Specs: Output Wattage & Wattage) vs 1000 watts (About this item)",
+        "src": "Product information — Features & Specs (chunk 7) vs About this item (chunk 4)",
+        "st": "conflict",
+        "note": "Same listing prints both 1700 watts (Features & Specs) and 1000 watts (About this item) (FLG-017). Both shown."
       },
       "dimensions": {
         "v": "12.75 in D × 13.5 in W × 10 in H",
-        "src": "Product Details table",
+        "src": "About this item & Product information — Measurements table (chunks 4 & 7)",
         "st": "verified",
         "note": ""
       },
       "weight": {
-        "v": null,
-        "src": "Product Details table (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "12.8 pounds",
+        "src": "Product information — Measurements table (Item Weight, chunk 7)",
+        "st": "verified",
+        "note": ""
       },
       "presets": {
         "v": "Four presets: French fries, chicken, meat, fish",
-        "src": "About this item",
+        "src": "About this item (chunk 4)",
         "st": "verified",
         "note": ""
       },
       "warranty": {
-        "v": "1-year warranty provided by Chefman",
-        "src": "About this item",
+        "v": "1-year warranty provided by Chefman (Item details: 1-Year Limited Warranty)",
+        "src": "About this item (chunk 4) & Product information — Item details (chunk 7)",
         "st": "verified",
         "note": ""
       },
       "features": {
         "v": "LED shake reminder; automatic shut-off; programmable; top-rack dishwasher-safe 8-quart basket and flat frying tray; cETL approved",
-        "src": "Product Details table; About this item",
+        "src": "About this item & Product information — Features & Specs (chunks 4 & 7)",
         "st": "verified",
         "note": ""
       }
@@ -242,20 +248,20 @@
     "card": [
       [
         "Capacity",
-        "8 quarts"
+        "8 quarts (12.8 lb)"
       ],
       [
         "Temperature",
-        "200–400 °F (listing) · 450 °F Hi-Fry option in title"
+        "200–400 °F (specs) · 450 °F Hi-Fry (title)"
       ],
       [
         "Power",
-        "120 V / 1000 W"
+        "120 V · 1700 W (specs) / 1000 W (bullets)"
       ]
     ],
     "questions": [
       "One basket or two — which matches your weeknight routine?",
-      "Is 400 °F top temperature enough for what you cook?",
+      "Is 400 °F top temperature enough if the Hi-Fry claim is unclear?",
       "Do you want presets, or do you prefer manual control?"
     ],
     "blurb": "One big basket, four presets, no windows. Simpler than dual-basket — and the right choice if you cook one thing at a time for a household."
@@ -267,73 +273,85 @@
     "catfile": "meat-thermometers.html",
     "submitted": "https://link.amazon/B0c8moW59",
     "token": "B0c8moW59",
-    "observed": null,
-    "observed_status": "NOT CONFIRMED: the short link returned an Amazon checkpoint page (“To continue, please click the Continue shopping button”) rather than a product page. The listing B0DHZTCNR5 was checked directly; the short link's destination remains unverified (FLG-012).",
+    "observed": "B0DHZTCNR5",
+    "observed_status": "Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages (FLG-012); fresh fetch in follow-up verification resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent redirect instability remains under FLG-011; intended ASIN remains blank under FLG-001)",
     "asin": "B0DHZTCNR5",
     "listing": "https://www.amazon.com/dp/B0DHZTCNR5",
     "title": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black",
     "fields": {
       "model": {
-        "v": null,
-        "src": "Not visible in fetched text (register listed HT07; removed)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "HT07",
+        "src": "Product information — Item details table (Model Name, Model & Part Number, chunk 11)",
+        "st": "verified",
+        "note": ""
       },
       "response": {
         "v": "1 second",
-        "src": "About this item",
+        "src": "About this item & Product information — Features & Specs (chunks 3 & 11)",
         "st": "verified",
         "note": ""
       },
       "accuracy": {
-        "v": "±0.5 °F (±0.5℉)",
-        "src": "Page title; About this item",
+        "v": "±0.5 °F (±0.5℉); 0.1° display resolution",
+        "src": "Page title, About this item & Features & Specs (chunks 0, 3 & 11)",
+        "st": "verified",
+        "note": ""
+      },
+      "upper_temp": {
+        "v": "572 °F",
+        "src": "Product information — Features & Specs table (Upper Temperature Rating, chunk 11)",
+        "st": "verified",
+        "note": ""
+      },
+      "probe_length": {
+        "v": "6.5 inches (Immersion Depth & Item Length)",
+        "src": "Product information — Features & Specs & Measurements tables (chunk 11)",
         "st": "verified",
         "note": ""
       },
       "certification": {
-        "v": "NIST and NSF",
-        "src": "Product Details table (Specification Met)",
+        "v": "NIST and NSF (seller statement in Specification Met; certificates not independently inspected — FLG-035)",
+        "src": "About this item & Product information — Features & Specs (chunks 3 & 11)",
         "st": "verified",
         "note": ""
       },
       "waterproof": {
         "v": "IP67 waterproof; fully waterproof",
-        "src": "Page title; About this item",
+        "src": "Page title & About this item (chunks 0 & 3)",
         "st": "verified",
         "note": ""
       },
       "display": {
         "v": "Auto-rotate bright LED screen; motion-activated",
-        "src": "Page title; About this item",
+        "src": "Page title & About this item (chunks 0 & 3)",
+        "st": "verified",
+        "note": ""
+      },
+      "care": {
+        "v": "Wipe Clean",
+        "src": "Purchase options & Product information — Materials & Care (chunks 3 & 11)",
         "st": "verified",
         "note": ""
       },
       "included": {
         "v": "1 meat thermometer, 1 AAA battery, user manual, calibration certificate",
-        "src": "Product Details table (Included Components)",
+        "src": "Product information — Item details table (Included Components, chunk 11)",
         "st": "verified",
         "note": ""
-      },
-      "upper_temp": {
-        "v": null,
-        "src": "Not visible in fetched text (register said 572 °F; removed)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
       }
     },
     "card": [
       [
         "Response time",
-        "1 second"
+        "1 second (HT07)"
       ],
       [
-        "Accuracy",
-        "±0.5 °F"
+        "Accuracy & range",
+        "±0.5 °F · up to 572 °F"
       ],
       [
         "Certification",
-        "NIST and NSF"
+        "NIST and NSF (listing claim)"
       ]
     ],
     "questions": [
@@ -341,7 +359,7 @@
       "Will you calibrate it, and how often?",
       "Do you need a certificate, or is the listing claim enough?"
     ],
-    "blurb": "The instant-read you keep by the grill. Speed and accuracy are the whole point — everything else is secondary."
+    "blurb": "The instant-read you keep by the grill. Speed and stated accuracy are the whole point — everything else is secondary."
   },
   {
     "id": "P-05",
@@ -351,62 +369,62 @@
     "submitted": "https://link.amazon/B0f3GKalj",
     "token": "B0f3GKalj",
     "observed": "B0DZFD6R9Z",
-    "observed_status": "Confirmed: short link fetched and resolved to amazon.com/dp/B0DZFD6R9Z",
+    "observed_status": "Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B0DZFD6R9Z",
     "asin": "B0DZFD6R9Z",
     "listing": "https://www.amazon.com/dp/B0DZFD6R9Z",
     "title": "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3",
     "fields": {
       "model": {
-        "v": null,
-        "src": "Not visible in fetched text (register listed CQ60-3C-Z1-E; removed)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "CQ60-3C-Z1-E",
+        "src": "Product information — Item details table (Model & Part Number, chunk 8)",
+        "st": "verified",
+        "note": ""
       },
       "probes": {
         "v": "3 ultra-thin probes plus hub (Included Components: 3 Probes, Hub)",
-        "src": "Product Details table; About this item",
+        "src": "About this item & Product information — Item details (chunks 4 & 8)",
         "st": "verified",
         "note": ""
       },
       "heat": {
-        "v": "1000 °F heat safe",
-        "src": "Page title; About this item",
+        "v": "1000 °F heat safe (Upper Temperature Range: 1000 °F)",
+        "src": "Page title, About this item & Features & Specs (chunks 0, 4 & 7)",
         "st": "verified",
         "note": ""
       },
       "sensors": {
         "v": "5 sensors: 4 internal + 1 ambient",
-        "src": "About this item",
+        "src": "About this item (chunk 4)",
         "st": "verified",
         "note": ""
       },
       "connectivity": {
         "v": "Wi-Fi and Bluetooth, via CHEF iQ app",
-        "src": "Product Details table; About this item",
+        "src": "About this item & Product information — Features & Specs (chunks 4 & 7)",
         "st": "verified",
         "note": ""
       },
       "battery": {
-        "v": "Up to 50 hours on a full charge (About this item); 70 hours reported on the Product Description (FLG-008)",
-        "src": "About this item",
+        "v": "Up to 50 hours on a full charge (About this item); 70 hours reported on an earlier capture of Product Description (FLG-008)",
+        "src": "About this item (chunk 4) vs earlier capture of Product Description (FLG-008)",
         "st": "conflict",
-        "note": "Both figures are published as reported; neither is chosen. The 70-hour text was reported by an earlier verification (FLG-008) and is not in the text fetched for this check."
+        "note": "Both figures are published as reported; neither is chosen. The 70-hour text was reported by an earlier verification (FLG-008) and is not in the fetched HTML."
       },
       "probe_length": {
-        "v": null,
-        "src": "Not visible in fetched text (register said 4.75 in; removed)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "4.75 inches (Immersion Depth & Item Length)",
+        "src": "Product information — Features & Specs (chunk 7) & Measurements (chunk 8)",
+        "st": "verified",
+        "note": ""
       },
       "warranty": {
-        "v": "Two-year assurance provided by CHEF iQ",
-        "src": "About this item",
-        "st": "verified",
-        "note": "Register previously said 1-year; the listing says two-year (corrected)."
+        "v": "Two-year assurance provided by CHEF iQ (About this item) vs 3 Year (Item details Warranty Description)",
+        "src": "About this item (chunk 4) vs Product information — Item details Warranty Description (chunk 8)",
+        "st": "conflict",
+        "note": "Same listing states two-year assurance in About this item and 3 Year in Item details (prior register said 1-year) (FLG-019)."
       },
       "care": {
         "v": "Waterproof, dishwasher-safe probes",
-        "src": "About this item",
+        "src": "About this item & Product information — Features & Specs (chunks 4 & 7)",
         "st": "verified",
         "note": ""
       }
@@ -414,7 +432,7 @@
     "card": [
       [
         "Probes",
-        "3 ultra-thin probes + hub"
+        "3 ultra-thin probes + hub (4.75 in)"
       ],
       [
         "Connectivity",
@@ -422,7 +440,7 @@
       ],
       [
         "Heat rating",
-        "1000 °F heat safe"
+        "1000 °F heat safe (CQ60-3C-Z1-E)"
       ]
     ],
     "questions": [

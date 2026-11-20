@@ -23,20 +23,22 @@ USDA = json.loads((DATA / "usda-temperatures.json").read_text())
 EDITORIAL = json.loads((DATA / "editorial.json").read_text())
 SOURCES = json.loads((DATA / "sources.json").read_text())
 FLAGS = json.loads((DATA / "flags.json").read_text())
+EVENTS = json.loads((DATA / "events.json").read_text())
 
 FIELD_LABEL = {
     "model": "Model", "capacity": "Capacity", "temperature": "Temperature range",
     "power": "Power", "dimensions": "Dimensions D x W x H", "weight": "Weight",
-    "presets": "Presets", "warranty": "Warranty", "features": "Notable features",
-    "response": "Response time", "accuracy": "Stated accuracy", "certification": "Certification",
+    "presets": "Presets", "accessories": "Accessories", "warranty": "Warranty",
+    "features": "Notable features", "response": "Response time",
+    "accuracy": "Stated accuracy", "certification": "Certification",
     "waterproof": "Water resistance", "display": "Display", "included": "In the box",
     "upper_temp": "Upper temperature", "probes": "Probes", "heat": "Heat rating",
     "sensors": "Sensors", "connectivity": "Connectivity", "battery": "Battery",
     "probe_length": "Probe length", "care": "Cleaning",
 }
-FIELD_ORDER = ["capacity", "temperature", "power", "dimensions", "weight", "presets", "model",
-               "response", "accuracy", "upper_temp", "probes", "heat", "sensors",
-               "connectivity", "battery", "probe_length", "waterproof", "display",
+FIELD_ORDER = ["capacity", "temperature", "power", "dimensions", "weight", "presets",
+               "accessories", "model", "response", "accuracy", "upper_temp", "probes", "heat",
+               "sensors", "connectivity", "battery", "probe_length", "waterproof", "display",
                "certification", "included", "care", "warranty", "features"]
 
 
@@ -68,8 +70,7 @@ def normalise(p, ed):
     p["commerce_note"] = ed["evidence_note"]
     p["listing_title"] = p["title"]
     p["intended"] = None
-    if not p.get("observed"):
-        p["observed"] = p["asin"]
+    p["observed"] = p.get("observed")
     p["observed_checked"] = TODAY
     p["observed_note"] = p["observed_status"]
     p["blurb"] = p["blurb"] or ed["headline"]
@@ -114,39 +115,28 @@ def esc(s):
 
 def aff(p):
     """The tagged Special Link we publish."""
-    return f"https://www.amazon.com/dp/{p['observed']}?tag={TRACKING_ID}"
+    target = p.get("observed") or p["asin"]
+    return f"https://www.amazon.com/dp/{target}?tag={TRACKING_ID}"
 
 def plain(p):
     """Untagged official listing, for verification."""
-    return f"https://www.amazon.com/dp/{p['observed']}"
+    target = p.get("observed") or p["asin"]
+    return f"https://www.amazon.com/dp/{target}"
 
 def slug_of(p):
     return f"products/{p['slug']}.html"
 
-AIRFRYER_GLYPH = """<svg viewBox="0 0 120 90" role="img" aria-label="Illustration of a basket air fryer">
-<rect x="14" y="18" width="92" height="54" rx="10" fill="#f4e3d3" stroke="#c2410c" stroke-width="2.5"/>
-<rect x="22" y="27" width="76" height="22" rx="5" fill="#fffdf8" stroke="#c2410c" stroke-width="2"/>
-<circle cx="96" cy="60" r="5" fill="#c2410c"/><path d="M34 60h40" stroke="#c2410c" stroke-width="3" stroke-linecap="round"/>
-<path d="M30 72v6M90 72v6" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/></svg>"""
-
-OVEN_GLYPH = """<svg viewBox="0 0 120 90" role="img" aria-label="Illustration of an oven-style air fryer">
-<rect x="12" y="16" width="96" height="58" rx="8" fill="#f4e3d3" stroke="#c2410c" stroke-width="2.5"/>
-<rect x="22" y="26" width="34" height="38" rx="4" fill="#fffdf8" stroke="#c2410c" stroke-width="2"/>
-<rect x="64" y="26" width="34" height="38" rx="4" fill="#fffdf8" stroke="#c2410c" stroke-width="2"/>
-<circle cx="39" cy="45" r="9" fill="none" stroke="#c2410c" stroke-width="2"/>
-<path d="M70 45h22M70 53h14" stroke="#c2410c" stroke-width="3" stroke-linecap="round"/></svg>"""
-
-THERMO_GLYPH = """<svg viewBox="0 0 120 90" role="img" aria-label="Illustration of a meat thermometer">
-<rect x="26" y="26" width="40" height="44" rx="7" fill="#f4e3d3" stroke="#c2410c" stroke-width="2.5"/>
-<rect x="32" y="33" width="28" height="15" rx="3" fill="#fffdf8" stroke="#c2410c" stroke-width="2"/>
-<path d="M70 47h26" stroke="#1c1917" stroke-width="4" stroke-linecap="round"/>
-<path d="M96 47l8 -4v8z" fill="#1c1917"/>
-<circle cx="41" cy="60" r="3.5" fill="#c2410c"/><circle cx="51" cy="60" r="3.5" fill="#c2410c"/></svg>"""
-
-def glyph(p):
+def glyph(p, up=""):
     if p["cat"] == "Meat Thermometers":
-        return THERMO_GLYPH
-    return OVEN_GLYPH if p["id"] == "P-02" else AIRFRYER_GLYPH
+        fname = "thermometer.svg"
+        alt = "Editorial illustration of a kitchen meat thermometer — original artwork, not product photography"
+    elif p["id"] == "P-02":
+        fname = "air-fryer-oven.svg"
+        alt = "Editorial illustration of a countertop oven-style air fryer — original artwork, not product photography"
+    else:
+        fname = "air-fryer.svg"
+        alt = "Editorial illustration of a basket air fryer — original artwork, not product photography"
+    return f'<img src="{up}assets/illustrations/{fname}" alt="{esc(alt)}">'
 
 # --------------------------------------------------------------------------- shell
 
@@ -164,6 +154,8 @@ DASH = [
     ("questions.html", "Open Questions"),
     ("flagged.html", "Flagged for Review"),
     ("sources.html", "Sources"),
+    ("platform.html", "Platform Architecture"),
+    ("measurement.html", "Measurement &amp; Collector"),
     ("executive-summary.html", "Executive Summary"),
     ("campaign-ledger.html", "Campaign Ledger"),
     ("about.html", "About &amp; Authorship"),
@@ -205,7 +197,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
 <meta property="og:description" content="{esc(desc)[:300]}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{canon}">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <link rel="stylesheet" href="{up}assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="{SITE} — Feed" href="{up}feed.xml">
 {ld}{extra_head}</head>
@@ -258,7 +250,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
 def buybox(p, up, variant="full"):
     checks = "".join(f"<li>{esc(q)}</li>" for q, _ in p["questions"][:3])
     return f"""<div class="buybox">
-  <div class="buybox-art">{glyph(p)}</div>
+  <div class="buybox-art">{glyph(p, up)}</div>
   <div class="buybox-body">
     <p class="kicker">{esc(p['cat'])} · {p['id']}</p>
     <h3>{esc(p['headline'])}</h3>
@@ -282,7 +274,7 @@ def buybox(p, up, variant="full"):
 
 def card(p, up):
     return f"""<article class="card">
-  <div class="card-art">{glyph(p)}</div>
+  <div class="card-art">{glyph(p, up)}</div>
   <p class="kicker">{esc(p['cat'])}</p>
   <h3><a href="{up}{slug_of(p)}">{esc(p['headline'])}</a></h3>
   <p class="brandline">{esc(p['brand'])}</p>
@@ -351,7 +343,7 @@ def intent_table(p):
     <tr><th scope="row">Submitted link (as supplied)</th><td>{esc(p['submitted'])}</td></tr>
     <tr><th scope="row">Short-link token</th><td>{esc(p['token'])} (not an ASIN)</td></tr>
     <tr><th scope="row">Intended ASIN</th><td>{esc(intended)}</td></tr>
-    <tr><th scope="row">Observed redirect target</th><td>{esc(p['observed'])}</td></tr>
+    <tr><th scope="row">Observed redirect target</th><td>{esc(p['observed'] or '— not observed yet')}</td></tr>
     <tr><th scope="row">What the submitted link actually opened</th><td>{esc(p['observed_note'])}</td></tr>
     <tr><th scope="row">Official listing URL</th>
       <td><a href="{plain(p)}" rel="sponsored nofollow">{plain(p)}</a></td></tr>
@@ -418,8 +410,8 @@ def build_home():
     <p class="small">Two baskets or one? Instant-read or wireless? Those are the real questions.</p>
   </div>
   <div class="hero-art" aria-hidden="true">
-    <div class="hero-tile">{AIRFRYER_GLYPH}</div>
-    <div class="hero-tile">{THERMO_GLYPH}</div>
+    <div class="hero-tile"><img src="assets/illustrations/air-fryer.svg" alt="Editorial illustration of a countertop air fryer — original artwork, not product photography"></div>
+    <div class="hero-tile"><img src="assets/illustrations/thermometer.svg" alt="Editorial illustration of a kitchen meat thermometer — original artwork, not product photography"></div>
   </div>
 </section>
 
@@ -580,8 +572,9 @@ def build_category(catfile, cat, headline, intro, guides_, picks):
 # ---- product page
 def build_product(p):
     others = [x for x in PRODUCTS if x["id"] != p["id"] and x["cat"] == p["cat"]]
+    target_asin = p.get("observed") or p["asin"]
     og = ('<meta property="product:retailer_item_id" content="'
-          + p["observed"] + '">')
+          + target_asin + '">')
     body = f"""
 {breadcrumb([("Home", "index.html"), (p['cat'], p['catfile']), (p['brand'], None)], "../")}
 <div class="pdp-head">
@@ -590,7 +583,7 @@ def build_product(p):
     <h1>{esc(p['headline'])}</h1>
     <p class="lede">{esc(p['blurb'])}</p>
   </div>
-  <div class="pdp-art">{glyph(p)}</div>
+  <div class="pdp-art">{glyph(p, "../")}</div>
 </div>
 <div class="pdp-buy">
   <div>
@@ -744,14 +737,16 @@ GUIDES = [
             is easy to forget when you are measuring a gap between a toaster and a coffee maker."""),
             ("Think about how you load it, and how you clean it", """Pulling a drawer out towards you is
             one movement. Opening two doors, sliding a rack out, and lifting a tray is several. The
-            basket units are lighter and easier to move; the 26-quart oven weighs 26.5 pounds and is
-            realistically going to stay where you put it. If you clean in the sink, a removable
-            nonstick basket is simpler than a stainless cavity and racks."""),
+            basket units are lighter and easier to handle (13.3 pounds for the 6-quart dual-basket
+            Chefman and 12.8 pounds for the 8-quart Chefman), whereas the 26-quart Emeril oven does
+            not state an item weight on its listing (FLG-022) and, at 16.9 inches deep with French
+            doors, is realistically going to stay where you put it. If you clean in the sink, a
+            removable nonstick basket is simpler than a stainless cavity and racks."""),
             ("Where each one wins", """Choose the dual-basket unit if you routinely cook a main and a
             side together and want them to finish together. Choose the single 8-quart basket if you
             cook one thing at a time in quantity and want the simplest possible operation. Choose the
-            oven if you also want to roast, toast, and rotisserie, and you have the counter depth and
-            the appetite for a 26.5-pound appliance that stays put."""),
+            oven if you also want to roast, toast, and rotisserie, and you have the counter depth
+            for a full-sized countertop appliance that stays put."""),
          ],
          verdict="""Measure your counter depth first, then decide between a drawer and a door. If
          both fit, pick by what you cook: two things at once means two baskets, one big tray of
@@ -805,9 +800,12 @@ GUIDES = [
             dual-basket Chefman says the removable non-stick coated baskets are dishwasher safe. The
             oven does not make a dishwasher claim about its cavity, and it would not be realistic if
             it did."""),
-            ("Weight decides where it lives", """At 26.5 pounds the Emeril is a fixture. The two basket
-            units are around 13 pounds, which is heavy but movable. If you plan to put the appliance
-            away between uses, weight is the number that decides whether that actually happens."""),
+            ("Weight decides where it lives", """The 6-quart dual-basket Chefman weighs 13.3 pounds and
+            the 8-quart Chefman weighs 12.8 pounds &mdash; movable when needed, though bulky in a
+            shallow cupboard. The Emeril listing omits item weight altogether (FLG-022), but at
+            16.9 inches deep and 26 quarts it is plainly a countertop fixture. If you plan to put the
+            appliance away between uses, weight and door clearance decide whether that actually
+            happens."""),
             ("Measure depth, swing and clearance together", """Depth alone is not enough. Add the air
             gap behind, the headroom needed above the vents, and &mdash; for a door-style oven &mdash;
             the space the doors occupy when open. Write all four numbers down before you move
@@ -856,8 +854,9 @@ GUIDES = [
          sections=[
             ("What an instant-read is for", """Spot checks. You open the grill, stab the thickest part,
             read a number, and decide. It is fast, it needs no app, and it works when the WiFi does
-            not. The ThermoMaven here claims a 1-second response, &plusmn;0.5&nbsp;&deg;F, and a
-            572&nbsp;&deg;F upper range, and it ships with a calibration certificate."""),
+            not. The ThermoMaven HT07 here claims a 1-second response, &plusmn;0.5&nbsp;&deg;F, a
+            0.1&deg; display resolution, and a 572&nbsp;&deg;F upper range, and it ships with a
+            calibration certificate."""),
             ("What a wireless system is for", """Long cooks you do not want to babysit. You insert
             probes, close the lid, and watch from inside the house. The CHEF iQ here uses three
             probes into one hub with WiFi range, and adds guided cooking and rest timers in the
@@ -898,14 +897,15 @@ GUIDES = [
             ThermoMaven listing ships a calibration certificate in the box, which is the most concrete
             artefact on offer here."""),
             ("Look for a calibration path", """A thermometer you can verify is worth more than one you
-            have to trust. The ice-water test &mdash; a slurry of ice and water, which sits at
-            32&nbsp;&deg;F at sea level &mdash; will tell you whether a unit is reading plausibly. A
-            unit that ships with a certificate and a stated calibration method is easier to keep
-            honest."""),
+            have to trust. The <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/food-thermometers">USDA
+            FSIS Food Thermometers guide</a> (source S23) describes the ice-water calibration test:
+            immerse the stem at least 2 inches in an ice-water slurry for 30 seconds without touching
+            the glass; a calibrated thermometer reads 32&nbsp;&deg;F. A unit that ships with a
+            certificate and a clear calibration path is easier to keep honest."""),
             ("Check resolution separately from accuracy", """Resolution is how many digits the display
             shows; accuracy is how close the number is to the truth. A 0.1&deg; display with
-            &plusmn;0.5&nbsp;&deg;F accuracy is not a 0.1&deg; instrument. The ThermoMaven listing
-            states both, which makes the distinction visible."""),
+            &plusmn;0.5&nbsp;&deg;F accuracy is not a 0.1&deg; instrument. The ThermoMaven HT07
+            listing states both, which makes the distinction visible."""),
             ("Match the tool to the number you need", """USDA's minimum internal temperatures are
             published in whole degrees: 145, 160, 165. If you are cooking to those targets, a
             thermometer that is within a degree is comfortably sufficient. Precision beyond that is
@@ -931,10 +931,11 @@ GUIDES = [
             crisp at the moment they hit the table: sprouts, potatoes, a last-minute tray of
             something. The dual-basket Chefman lets you run two of those at once and finish them
             together, which is more useful on the day than a bigger single basket."""),
-            ("Check the circuit before the menu", """Two 1700-watt appliances on one kitchen circuit
-            plus an oven is a tripped breaker, not a crispier sprout. Wattage is worth knowing before
-            the day, which is why it is in the specification table &mdash; and why the 8-quart
-            Chefman's contradictory 1700&nbsp;W / 1000&nbsp;W figures are flagged as FLG-017."""),
+            ("Check the circuit before the menu", """All three air fryers here list 1700 watts in their
+            specification tables (and two 1700-watt appliances on one kitchen circuit plus an oven is
+            a tripped breaker, not a crispier sprout). Wattage is worth knowing before the day
+            &mdash; which is why the 8-quart Chefman's contradictory 1700&nbsp;W spec field and
+            1000&nbsp;W bullet are flagged as FLG-017."""),
          ],
          verdict="""Use the countertop appliance for sides and reheats, keep the bird in the oven, and
          check what else is on the circuit before you plug in a second 1700-watt unit."""),
@@ -952,8 +953,10 @@ GUIDES = [
             French doors need room in front for two doors to open and stay open. In a narrow galley
             that difference decides whether the appliance is usable at all."""),
             ("3. Where it lives between uses", """If it goes in a cupboard, weight decides whether that
-            happens twice or never. The 8-quart Chefman is 12.8 pounds; the Emeril is 26.5. Neither
-            is a one-hand lift, but only one of them is realistically movable."""),
+            happens twice or never. The 8-quart Chefman is 12.8 pounds and the 6-quart dual-basket
+            Chefman is 13.3 pounds, both realistically movable. The Emeril listing does not state an
+            item weight (FLG-022), and its 16.9-inch depth already rules out tight counters and most
+            standard cupboards."""),
             ("What to give up first", """Windows, presets, and a second basket are all things you can
             live without. Depth and weight are not. If the counter is tight, a single-basket unit
             with no window is the honest choice, and it is also the cheapest of the three here."""),
@@ -1116,11 +1119,11 @@ SUGGESTIONS = [
          impact="High — organic traffic", effort="Done",
          status="Shipped", verify="guides.html lists eight; sitemap.xml and feed.xml include all eight."),
     dict(id="SG-03", title="Measure clicks before optimising anything",
-         what="Five defined events, counted locally with no cookies and no third party, exportable "
-              "to CSV by the reader or the owner.",
+         what="Five defined events (data/events.json), counted locally with no cookies and no third "
+              "party, exportable to CSV, with a self-hosted collector ready in analytics/server.js.",
          why="Optimising without a click count is guesswork. Doing it with a tracker would be worse.",
          impact="High — every later decision", effort="Done",
-         status="Shipped", verify="disclosure.html lists the five events; assets/app.js implements them."),
+         status="Shipped", verify="measurement.html and disclosure.html document the five events; assets/app.js implements them."),
     dict(id="SG-04", title="Disclosure above the fold on every page, repeated in the footer",
          what="A strip directly under the masthead carrying the exact Associates statement, plus a "
               "repeat in the footer.",
@@ -1206,6 +1209,35 @@ SUGGESTIONS = [
          why="Cadence compounds; sporadic bursts do not.",
          impact="Medium — organic growth", effort="Ongoing", status="Blocked on Search Console",
          verify="Requires Search Console access (SG-10)."),
+    dict(id="SG-17", title="AI-powered affiliate platform architecture and Creators API pipeline",
+         what="Document every subsystem (research, market analysis, SEO drafting, Special Links vs "
+              "cloaking, analytics, scaling, compliance gate) alongside hard Creators API (S20/S21) "
+              "and ML-training/Agent Terms limits (Program Policies §5, IP License §1/§2(e)/§4).",
+         why="Automating research or price ingestion without final Associates acceptance and "
+             "policy-compliant API handling would break program rules or hallucinate specs.",
+         impact="High — architecture and compliance", effort="Done (architecture); API gated on owner",
+         status="Blocked on Creators API",
+         verify="platform.html lists every module, what runs today, and exact policy gates (FLG-029)."),
+    dict(id="SG-18", title="Generate question-shaped article drafts from Search Console queries",
+         what="Turn measured impressions and search queries from Search Console into structured, "
+              "listing-cited guides that pass the check_site.py compliance gate before merging.",
+         why="Query-driven drafting grows organic search without guessing topics.",
+         impact="High — organic discovery", effort="Owner action", status="Blocked on Search Console",
+         verify="Requires Search Console verification (SG-10, Q-16)."),
+    dict(id="SG-19", title="Human review and ranking before building new proposals",
+         what="Maintain suggestions.html so every directional proposal is scored, ordered, and "
+              "recorded with a concrete success metric before implementation.",
+         why="Separates backlog ideas from shipped capabilities cleanly.",
+         impact="Medium — roadmap hygiene", effort="Done", status="Shipped",
+         verify="suggestions.html interactive rank controls, shortlist table, and CSV export."),
+    dict(id="SG-20", title="Privacy-preserving self-hosted analytics endpoint",
+         what="Ship zero-dependency Node.js (analytics/server.js) and Cloudflare Pages Function "
+              "(functions/api/collect.js) collectors plus non-blocking send() transport in app.js.",
+         why="GitHub Pages is static-only; shipping vetted collector code lets the owner turn on "
+             "cross-visitor measurement without cookies, third-party pixels, or rewriting pages.",
+         impact="High — measurement", effort="Code shipped; hosting is owner action",
+         status="Code shipped — hosting pending",
+         verify="measurement.html, data/events.json, analytics/server.js, functions/api/collect.js, tests/test_collector.js (FLG-010)."),
 ]
 
 
@@ -1247,7 +1279,7 @@ def build_suggestions():
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>Sixteen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>{len(SUGGESTIONS)} proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
     <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
@@ -1271,6 +1303,9 @@ def build_suggestions():
     <tr><td>SG-14</td><td>Choose and attach a custom domain</td><td>Owner (decision)</td></tr>
     <tr><td>SG-15</td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
     <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td>SG-17</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
+    <tr><td>SG-18</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td>SG-20</td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
   </tbody>
 </table>
 
@@ -1301,7 +1336,7 @@ def build_suggestions():
 </ul>
 """
     BUILT.append(page("suggestions.html", f"Decision Center — {SITE}",
-                      "Sixteen proposals for this site, with honest status, ranked before anything "
+                      f"{len(SUGGESTIONS)} proposals for this site, with honest status, ranked before anything "
                       "is built. Review the shortlist and choose a path.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Decision Center", "url": BASE + "suggestions.html"}))
@@ -1318,7 +1353,7 @@ QUESTIONS = [
      "Only Associates Central can answer this. No public page shows account status.",
      "Sign in to Associates Central and check Account Settings, then look for any click in the "
      "tracking report.",
-     "Whether any of this earns anything (FLG-010)", "Owner", "Not verifiable externally"),
+     "Whether any of this earns anything (FLG-002)", "Owner", "Not verifiable externally"),
     ("Q-03", "Are link.amazon short links permitted on a website?",
      "The submitted links use that domain. Public documentation does not settle it, and guessing "
      "would be worse than a blank.",
@@ -1339,26 +1374,27 @@ QUESTIONS = [
      "behind it.",
      "Name a person and describe the actual review process, or keep the current explicit statement "
      "that there is no hands-on test.",
-     "Publication polish (FLG-032)", "Owner", "Blank"),
+     "Publication polish (FLG-033, FLG-032)", "Owner", "Blank"),
     ("Q-07", "What publishing cadence can actually be sustained?",
      "Cadence compounds; a burst followed by silence does not.",
      "Check what is realistic per week. One guide a week is the working assumption; confirm or "
      "revise.",
      "Content planning (SG-16)", "Owner", "Assumed, not confirmed"),
-    ("Q-08", "Where would a self-hosted analytics endpoint live?",
-     "Events are counted in the browser only, so there is no cross-visitor data at all.",
-     "Choose a host, a retention period and a privacy statement before collecting anything "
-     "server-side.",
-     "Any real measurement (FLG-010)", "Owner", "No endpoint"),
+    ("Q-08", "Where would the self-hosted analytics endpoint live?",
+     "Collector code (analytics/server.js, functions/api/collect.js) ships in the repo, while "
+     "GitHub Pages is static-only so events stay in localStorage until hosted externally.",
+     "Deploy to Cloudflare Pages or a Node host, verify GET /api/collect, and configure the endpoint.",
+     "Cross-visitor measurement (FLG-010, SG-20)", "Owner", "Code ready; unhosted"),
     ("Q-09", "Which reader-capture channel, if any?",
      "An RSS feed exists. Email capture and Search Console both need accounts.",
      "Verify the site in Search Console and submit the sitemap. Decide whether email is wanted.",
      "Growth loop (SG-10)", "Owner", "RSS only"),
     ("Q-10", "Which listing contradictions can be resolved with the seller?",
-     "There are now six: preset count, accessory count, top temperature, wattage, capacity units and "
-     "warranty length.",
+     "There are now eight: Emeril preset count (24 vs 25), Emeril accessory count (6 vs 7), "
+     "Emeril model variant, Chefman 8-Qt temp (400 vs 450 °F), Chefman 8-Qt wattage (1700 vs 1000 W), "
+     "Chefman 6-Qt capacity (6 qt vs 6 L), CHEF iQ battery (50 vs 70 h), and CHEF iQ warranty (2 vs 3 yr).",
      "Ask each seller in writing, or read the printed manual. Until then both figures stay published.",
-     "Specification certainty (FLG-017 to FLG-022)", "Sellers", "Open"),
+     "Specification certainty (FLG-008, FLG-009, FLG-017 to FLG-022, FLG-031, FLG-034)", "Sellers", "Open"),
     ("Q-11", "What commission categories apply, and at what rate?",
      "Rates live in the Commission Income Statement inside the account and change by category.",
      "Read the Commission Income Statement in Associates Central. Do not publish a rate until it is "
@@ -1377,6 +1413,15 @@ QUESTIONS = [
      "Listings change. A site with a dated verification stamp needs a process for re-dating it.",
      "Set a re-verification interval, for example quarterly, and record each pass with its date.",
      "Trust over time (FLG-023)", "Owner", "Not defined"),
+    ("Q-15", "Will the Associates account qualify for Amazon Creators API credentials?",
+     "PA-API 5 returns HTTP 403 and Creators API requires final Associates acceptance plus "
+     "qualifying sales (10 qualifying sales in the prior 30 days for catalog API access, S20/S21).",
+     "Complete account review in Associates Central, verify qualified sales, and apply as primary account owner.",
+     "Automated product ingestion and legal price/image display (SG-13, SG-17, FLG-029)", "Owner", "Blocked on API acceptance"),
+    ("Q-16", "Which Search Console query metrics will pick the next buying guides?",
+     "Without Search Console property verification, organic queries, impressions, and CTR cannot be seen.",
+     "Verify the canonical URL in Google Search Console, submit sitemap.xml, and review query reports monthly.",
+     "Topic selection and guide cadence (SG-16, SG-18)", "Owner", "Blocked on Search Console"),
 ]
 
 
@@ -1398,9 +1443,9 @@ def build_questions():
 
 <div class="panel">
   <h2>What this page is for</h2>
-  <p>Fourteen questions, grouped by who can answer them. Six need the owner's account access or a
-    yes/no decision. Four need a seller to clarify a listing that contradicts itself. Two need Amazon
-    support. Two are editorial choices that only the owner can make.</p>
+  <p>{len(QUESTIONS)} questions, grouped by who can answer them. Owner account access, Amazon
+    support replies, seller clarifications on listing contradictions, and API eligibility each sit in
+    plain view instead of being replaced with assumptions.</p>
   <p class="small">If you only answer one thing, answer <strong>Q-04</strong> &mdash; whether the
     tagged links are being recorded. Everything about revenue depends on it, and nothing else
     does.</p>
@@ -1417,14 +1462,16 @@ def build_questions():
 <h2>What we do know, and where it came from</h2>
 <ul>
   <li><strong>The five short links resolve to five specific ASINs.</strong> Observed on {TODAY}, and
-    recorded separately from intent on each product page.</li>
+    recorded separately from intent on each product page (with earlier checkpoint failures on
+    B0c8moW59 resolved on follow-up under FLG-012 while instability remains under FLG-011).</li>
   <li><strong>Every specification on this site was read off an official listing</strong> on {TODAY}.
     The <a href="sources.html">source register</a> links every one.</li>
   <li><strong>The compliance rules are public and quoted.</strong> Amazon's Operating Agreement
-    Section 5, Program Policies 2(a) and 2(b), FTC disclosure guidance and Google's outbound-link
-    guidance are all linked with the exact wording used.</li>
-  <li><strong>USDA publishes the minimum internal temperatures</strong> used in the thermometer
-    guides, and that page is linked rather than paraphrased.</li>
+    Section 5, Program Policies Participation Requirements §2(a), §2(b), §5, §6(t), §6(v), §6(w),
+    §6(y), IP License §1, §2(e), §4 (Agent Terms), Commission Income Statement §2(d)/(e)/(g), FTC
+    disclosure guidance, and Google's outbound-link guidance are all linked with exact wording.</li>
+  <li><strong>USDA publishes the minimum internal temperatures and calibration instructions</strong>
+    used in the thermometer guides (S22, S23), linked rather than paraphrased.</li>
 </ul>
 
 <h2>What we deliberately do not know</h2>
@@ -1435,7 +1482,7 @@ def build_questions():
 <p class="cta"><a class="btn" href="suggestions.html">Take the shortlist to the Decision Center</a></p>
 """
     BUILT.append(page("questions.html", f"Open Questions — {SITE}",
-                      "Fourteen questions that must be answered before a decision can reasonably be "
+                      f"{len(QUESTIONS)} questions that must be answered before a decision can reasonably be "
                       "made, with how to discover each missing fact and what it blocks.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Open Questions", "url": BASE + "questions.html"}))
@@ -1453,6 +1500,7 @@ def build_flagged():
 
     order = {"conflict": 0, "policy": 1, "open": 2, "pending-test": 3, "unverified": 4,
              "corrected": 5, "resolved-earlier": 6}
+    conflict_count = len([f for f in FLAGS if f.get("severity") == "conflict"])
     rows = ""
     for f in sorted(FLAGS, key=lambda x: (order.get(x["severity"], 9), x["id"])):
         rows += f"""<tr><td class="nowrap"><strong>{f['id']}</strong></td>
@@ -1470,13 +1518,15 @@ def build_flagged():
 <div class="panel">
   <h2>Read this page in this order</h2>
   <ol class="tight">
-    <li><strong>Conflicts</strong> &mdash; places where a listing says two different things. Six of
-      them. These are the ones most likely to affect a buying decision.</li>
-    <li><strong>Unverified</strong> &mdash; values we could not confirm, so they are blank rather than
-      filled in.</li>
+    <li><strong>Conflicts</strong> &mdash; places where a listing says two different things
+      ({conflict_count} active contradictions). These are the ones most likely to affect a buying
+      decision.</li>
     <li><strong>Policy</strong> &mdash; things deliberately absent for compliance reasons: prices,
-      ratings, product photography.</li>
-    <li><strong>Open</strong> &mdash; operational gaps that need an account or a decision.</li>
+      ratings, product photography, hands-on claims.</li>
+    <li><strong>Unverified / Pending test</strong> &mdash; values we could not confirm from public
+      records or Associates Central, left blank rather than guessed.</li>
+    <li><strong>Open / Corrected</strong> &mdash; operational gaps, redirect snapshots, and earlier
+      mistakes fixed in the register.</li>
   </ol>
 </div>
 
@@ -1526,9 +1576,9 @@ def build_sources():
 </div>
 
 <table class="sources">
-  <caption>Source register. The "used for" column names the exact point taken from each source.</caption>
-  <thead><tr><th scope="col">ID</th><th scope="col">Source</th><th scope="col">What it supports</th>
-    <th scope="col">Wording relied on</th><th scope="col">Read on</th></tr></thead>
+  <caption>Source register. The third column names the exact claim or wording relied on from each source.</caption>
+  <thead><tr><th scope="col">ID</th><th scope="col">Source</th>
+    <th scope="col">What it supports &amp; wording relied on</th><th scope="col">Read on</th></tr></thead>
   <tbody>{rows}</tbody>
 </table>
 
@@ -1548,7 +1598,7 @@ def build_sources():
   erasing them.</p>
 """
     BUILT.append(page("sources.html", f"Sources — {SITE}",
-                      "Ten sources, all official, all dated, with the exact wording each claim "
+                      f"{len(SOURCES)} sources, all official, all dated, with the exact wording each claim "
                       "relies on.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Sources", "url": BASE + "sources.html"}))
@@ -1582,8 +1632,10 @@ def build_exec():
   feed, and a disclosure strip under the masthead on every page. Alongside it sit the internal
   records: the <a href="suggestions.html">Decision Center</a>, the
   <a href="questions.html">Open Questions</a> register, the
-  <a href="flagged.html">flag register</a>, the <a href="sources.html">source register</a>, and an
-  intentionally empty <a href="campaign-ledger.html">campaign ledger</a>.</p>
+  <a href="flagged.html">flag register</a>, the <a href="sources.html">source register</a>, the
+  <a href="platform.html">platform architecture</a> matrix, the
+  <a href="measurement.html">measurement &amp; collector guide</a>, and an intentionally empty
+  <a href="campaign-ledger.html">campaign ledger</a>.</p>
 
 <h2>2. The five products, as observed</h2>
 <table class="exec">
@@ -1596,13 +1648,21 @@ def build_exec():
 
 <h2>3. What is verified</h2>
 <ul>
-  <li>Every product title, dimension, weight, wattage, temperature range and capacity on this site was
-    read from the official listing on {TODAY}.</li>
-  <li>The four policy sources &mdash; Operating Agreement Section 5, Program Policies 2(a) and 2(b),
-    FTC disclosure guidance and Google's outbound-link guidance &mdash; are quoted with exact wording
-    in the <a href="sources.html">source register</a>.</li>
-  <li>Food-safety temperatures come from the USDA FSIS chart, not from a product listing.</li>
-  <li>All five short links were fetched and their destinations recorded separately from intent.</li>
+  <li>Every product title, dimension, weight (where stated), wattage, temperature range and capacity
+    on this site was read from the official listing and its Product information tables on {TODAY}.
+    Deep chunk inspection resolved previously blank weights (P-01 13.3 lb, P-03 12.8 lb), models
+    (P-02 4-00675-02X-VN, P-04 HT07, P-05 CQ60-3C-Z1-E), temperatures (P-02 75&ndash;500 &deg;F, P-04
+    572 &deg;F), P-02 power (1700 W), and probe lengths (P-04 6.5 in, P-05 4.75 in).</li>
+  <li>All official policy sources &mdash; Operating Agreement Section 5 (S01), Program Policies
+    Participation Requirements &sect;2(a)/(b), &sect;5, &sect;6(t)/(v)/(w)/(y), IP License &sect;1,
+    &sect;2(e)/(h)/(i)/(k), &sect;4 Agent Terms, Commission Income Statement &sect;2(d)/(e)/(g) (S02),
+    FTC disclosure FAQ (S03), Google outbound-link qualification (S04), and Creators API / PA-API 5
+    notices (S20, S21) &mdash; are quoted in the <a href="sources.html">source register</a>.</li>
+  <li>Food-safety temperatures and thermometer calibration guidance come from USDA FSIS charts (S22,
+    S23), not from product listings.</li>
+  <li>All five short links were fetched and their redirect targets observed separately from intent
+    (including B0c8moW59 resolving to B0DHZTCNR5 on re-test while redirect instability stays under
+    FLG-011).</li>
 </ul>
 
 <h2>4. What is not verified, and is not pretended to be</h2>
@@ -1615,32 +1675,38 @@ def build_exec():
     tagged amazon.com/dp/ URLs and does not call the short links invalid (FLG-003).</li>
   <li><strong>The link test.</strong> No tagged link has been clicked inside the enrolled account, so
     every product page still says PENDING TEST (FLG-004).</li>
-  <li><strong>Certification.</strong> NIST and NSF appear on the listings. No certificate or test
-    report has been seen (FLG-035).</li>
+  <li><strong>P-02 weight and warranty terms.</strong> Absent from the live listing HTML, so left
+    blank (FLG-022); an unverified Emeril weight figure from earlier editorial prose was removed.</li>
+  <li><strong>Certification.</strong> NIST, NSF, and cETL appear on the listings. No certificate or
+    test report has been seen (FLG-035).</li>
   <li><strong>Hands-on experience.</strong> None. Nothing on this site implies it was tested
     (FLG-032).</li>
 </ul>
 
-<h2>5. The six listing conflicts a buyer should know about</h2>
+<h2>5. The listing conflicts a buyer should know about</h2>
 <table class="exec">
   <thead><tr><th scope="col">Flag</th><th scope="col">Product</th><th scope="col">Contradiction</th></tr></thead>
   <tbody>
-    <tr><td>FLG-021</td><td>Emeril 26 QT</td><td>24 presets in the title, 25 in About this item</td></tr>
-    <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in the title, seven in Configuration, six named</td></tr>
-    <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 °F max in the spec field, 450 °F Hi-Fry in the title</td></tr>
-    <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in the spec fields, 1000 W in About this item</td></tr>
-    <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in the title, 6 liters in the capacity field</td></tr>
-    <tr><td>FLG-019</td><td>CHEF iQ Sense</td><td>Two-year assurance on the listing, one year in the earlier pass</td></tr>
+    <tr><td>FLG-021</td><td>Emeril 26 QT</td><td>24 presets in title/Configuration/Description, 25 in About this item</td></tr>
+    <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in title &amp; Included Components, seven in Configuration &amp; Description</td></tr>
+    <tr><td>FLG-009</td><td>Emeril 26 QT</td><td>4-00675-02X-VN in live Item details vs 4-00675-02 in earlier listing capture</td></tr>
+    <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 &deg;F max in spec field &amp; About this item, 450 &deg;F Hi-Fry in title</td></tr>
+    <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in Features &amp; Specs, 1000 W in About this item</td></tr>
+    <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in title/bullets, 6 liters in Measurements field</td></tr>
+    <tr><td>FLG-008</td><td>CHEF iQ Sense</td><td>50 hours battery in About this item, 70 hours in earlier Product Description capture</td></tr>
+    <tr><td>FLG-019</td><td>CHEF iQ Sense</td><td>Two-year assurance in About this item vs 3 Year in Item details (prior register: 1-year)</td></tr>
   </tbody>
 </table>
 
 <h2>6. What would change the numbers</h2>
-<p>Two credentials, and one decision. Product Advertising API access would make legal price display
-  possible (SG-13), which is the largest single lever on conversion. Search Console verification would
-  make query data available (SG-10), which is the only way to choose the next guide from evidence
-  rather than instinct. A custom domain decision (SG-14, FLG-006) would strengthen brand and
-  indexation. Everything else on the <a href="suggestions.html">Decision Center</a> is either shipped
-  or cosmetic.</p>
+<p>Two credentials, hosting for the collector, and one domain decision. Creators API access
+  (S20, S21) would make legal price and product-photo display possible (SG-13, SG-15, SG-17), which
+  is the largest lever on conversion. Search Console verification would make query data available
+  (SG-10, SG-18), which is the only way to choose the next guide from evidence. Hosting the
+  shipped self-hosted analytics endpoint (<a href="measurement.html">SG-20</a>, FLG-010) enables
+  cross-visitor event counts without cookies, and a custom domain (SG-14, FLG-006) strengthens
+  brand and indexation. Everything else on the <a href="suggestions.html">Decision Center</a> is
+  shipped or blocked on owner account verification.</p>
 
 <h2>7. Honest position on revenue</h2>
 <p>No commission rate, click count, conversion rate or revenue figure is presented here, because none
@@ -1755,11 +1821,13 @@ def build_disclosure():
       <td>Which direction is actually preferred</td></tr>
   </tbody>
 </table>
-<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
-  carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
-  pixel and no tag manager on this site. A self-hosted endpoint could replace local storage later,
-  and the event names are fixed so that swap would not require editing any page &mdash; but until
-  that endpoint exists, nothing leaves your device.</p>
+<p>All five are counted in your browser's local storage by default. No cookie is set, no request
+  carries your data to a third party, and no fingerprinting is used. There is no advertising script,
+  no pixel and no tag manager on this site. A zero-dependency self-hosted endpoint
+  (<code>analytics/server.js</code> and Cloudflare Pages Function <code>functions/api/collect.js</code>)
+  ships in this repository and activates only when configured via <code>sn_collect_url</code> or
+  <code>&lt;meta name="sn-collect-endpoint"&gt;</code> &mdash; on static GitHub Pages nothing leaves
+  your device (<a href="measurement.html">Measurement &amp; Collector guide</a>, FLG-010).</p>
 <p>You can clear everything we store by clearing site data for this domain, and you can export it
   first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
 
@@ -1823,11 +1891,11 @@ def build_about():
   and corrections are dated rather than quietly applied.</p>
 
 <h2>Artwork and trademarks</h2>
-<p>All illustrations on this site are original CSS and inline SVG drawn for it. No Amazon product
-  photography is used anywhere, because the licence for those images runs through Amazon's own terms
-  (FLG-007). Product names, Amazon and Amazon Associates are trademarks of Amazon.com, Inc. or its
-  affiliates. This site is not endorsed by Amazon, and nothing here implies that Amazon sponsors or
-  approves it.</p>
+<p>All illustrations on this site are original editorial SVG artwork stored in
+  <code>assets/illustrations/</code>. No Amazon product photography is used anywhere, because the
+  licence for those images runs through Amazon's own terms (FLG-007). Product names, Amazon and
+  Amazon Associates are trademarks of Amazon.com, Inc. or its affiliates. This site is not endorsed
+  by Amazon, and nothing here implies that Amazon sponsors or approves it.</p>
 
 <h2>Contact and change requests</h2>
 <p>There is no contact form and no email capture on this site. Change requests go through the
@@ -1840,6 +1908,226 @@ def build_about():
                       "corrections work.",
                       body, jsonld={"@context": "https://schema.org", "@type": "AboutPage",
                                     "name": "About", "url": BASE + "about.html"}))
+
+
+# ---- platform architecture
+def build_platform():
+    body = f"""
+{breadcrumb([("Home", "index.html"), ("Platform Architecture", None)])}
+<h1>AI Affiliate Platform Architecture &amp; Compliance Gates</h1>
+<p class="lede">An AI-assisted affiliate workflow is only as reliable as its verification sources
+  and policy gates. Below is the subsystem blueprint for this site &mdash; what already runs in the
+  repository today, what is blocked by Amazon Associates eligibility or policy rules, and why
+  automation never publishes without passing the gate.</p>
+
+<div class="statrow">
+  <div><span class="statnum">7</span><span class="statlabel">platform modules mapped</span></div>
+  <div><span class="statnum">5</span><span class="statlabel">events in privacy schema</span></div>
+  <div><span class="statnum">0</span><span class="statlabel">auto-published claims</span></div>
+  <div><span class="statnum">0</span><span class="statlabel">model-training calls on Amazon data</span></div>
+</div>
+
+<h2>1. Subsystem status matrix</h2>
+<table class="exec">
+  <caption>Every platform module required by an automated affiliate pipeline, checked against Amazon
+    Associates Operating Agreement (S01), Program Policies (S02), Creators API docs (S20), PA-API 5
+    deprecation (S21), FTC FAQ (S03), and Google Search Central (S04).</caption>
+  <thead><tr><th scope="col">Module</th><th scope="col">What runs in this repo today</th>
+    <th scope="col">Current limit / blocker</th><th scope="col">Policy &amp; flags</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>1. Automated product research &amp; trend detection</strong></td>
+      <td>Structured product registers (<code>data/products.json</code>), chunked snapshot log
+        (<code>data/reverification-2026-11-20.json</code>), and conflict surfacing across all five
+        submitted products.</td>
+      <td>Live automated catalog polling is blocked until the Associates account passes final
+        review and qualified-sales thresholds for the Creators API (PA-API 5 returns HTTP 403).</td>
+      <td><a href="{source_url('S20')}" rel="sponsored nofollow">S20</a>,
+        <a href="{source_url('S21')}" rel="sponsored nofollow">S21</a>, FLG-029</td>
+    </tr>
+    <tr>
+      <td><strong>2. Market, pricing, review &amp; commission analysis</strong></td>
+      <td>Explicit field separation keeping prices, star ratings, review counts, and commission
+        forecasts omitted rather than scraped or estimated; empty provenance-gated
+        <a href="campaign-ledger.html">campaign ledger</a>.</td>
+      <td>Prices and ratings require Amazon-served links or Creators API access (Program Policies
+        &sect;2(b), &sect;6(t), &sect;6(y)); commission schedules require signed-in Associates Central
+        access.</td>
+      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>, FLG-005, Q-11, Q-13</td>
+    </tr>
+    <tr>
+      <td><strong>3. SEO-optimized content &amp; comparison generation</strong></td>
+      <td>Single-source generator (<code>scripts/build_site.py</code>) building 8 guides, field-aligned
+        <code>compare.html</code>, JSON-LD (<code>Product</code>, <code>FAQPage</code>,
+        <code>Article</code>, <code>BreadcrumbList</code>), <code>sitemap.xml</code>,
+        <code>feed.xml</code>, and client search index.</td>
+      <td>Query-driven draft topics require Search Console verification (SG-10, Q-16). Special
+        Links and Program Content may not be used to train or fine-tune ML/LLM models without
+        express prior written approval.</td>
+      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a> &sect;5 &amp; IP &sect;1/&sect;2(e),
+        SG-02, SG-18</td>
+    </tr>
+    <tr>
+      <td><strong>4. Link management, Special Links &amp; anti-cloaking</strong></td>
+      <td>Canonical <code>https://www.amazon.com/dp/&lt;ASIN&gt;?tag={TRACKING_ID}</code> Special
+        Links paired with visible <strong>(paid link)</strong> labels, <code>rel="sponsored nofollow"</code>,
+        separate intended/observed ASIN tables, and untagged audit links.</td>
+      <td>Deceptive cloaking is prohibited (Program Policies &sect;6(v)) and link shorteners must not
+        obscure the Amazon destination (&sect;6(w)). Submitted <code>link.amazon</code> compliance and
+        live account click tests remain pending.</td>
+      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>,
+        <a href="{source_url('S04')}" rel="sponsored nofollow">S04</a>, FLG-003, FLG-004, FLG-027</td>
+    </tr>
+    <tr>
+      <td><strong>5. Privacy-preserving click &amp; conversion measurement</strong></td>
+      <td>Strict 5-event schema (<code>data/events.json</code>), local browser logging + CSV export +
+        configurable <code>send()</code> transport in <code>assets/app.js</code>, and zero-dependency
+        collectors (<code>analytics/server.js</code>, <code>functions/api/collect.js</code>).</td>
+      <td>GitHub Pages hosts static assets only; cross-visitor collection waits until the owner
+        deploys the Node/Cloudflare endpoint and sets <code>sn-collect-endpoint</code>. Conversion
+        orders still require official Associates reports.</td>
+      <td><a href="{source_url('S03')}" rel="sponsored nofollow">S03</a>, FLG-010, SG-20, Q-08</td>
+    </tr>
+    <tr>
+      <td><strong>6. Performance optimization &amp; campaign scaling</strong></td>
+      <td>Human-first <a href="suggestions.html">Decision Center</a> ranking and export workflow,
+        Search Console &amp; RSS checklists (<a href="measurement.html">SG-10</a>), and auditability
+        gates before traffic expansion.</td>
+      <td>Blocked on Q-04 (one-per-product Associates tracking test), Q-16 (Search Console query
+        metrics), and Q-05 (optional custom domain).</td>
+      <td>FLG-004, FLG-006, SG-07, SG-10, SG-16</td>
+    </tr>
+    <tr>
+      <td><strong>7. Compliance &amp; disclosure automation</strong></td>
+      <td>Automated Python gate (<code>scripts/check_site.py</code>) plus GitHub Actions CI drift +
+        compliance checks running on every PR and push to <code>main</code>.</td>
+      <td>Maintains hard fail rules on above-the-fold disclosures, sponsored link attributes, banned
+        price/rating patterns, blank-field flags, table column symmetry, and XML/JSON-LD validity.</td>
+      <td><a href="{source_url('S01')}" rel="sponsored nofollow">S01</a>,
+        <a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>, SG-04, SG-05, SG-12</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Hard policy boundaries for AI and automation</h2>
+<ul>
+  <li><strong>No ML or LLM training on Amazon Program Content (Program Policies, Participation
+    Requirements &sect;5 &amp; IP License &sect;1, &sect;2(e)):</strong> Affiliates may not use
+    Special Links, Program Content, Creators API, PA API, or Data Feeds to develop, train, or
+    fine-tune machine learning models, LLMs, or related technologies without Amazon's express prior
+    written approval. All editorial copy on this site is generated deterministically by Python from
+    audited local JSON registers, never trained into model weights.</li>
+  <li><strong>Agent identification &amp; anti-evasion (IP License &sect;4 Agent Terms):</strong>
+    Any software agent accessing Program Content must identify itself in HTTP User-Agent headers
+    as <code>Agent/[agent name]</code>, must never mimic human browsing or bypass CAPTCHAs/checkpoints,
+    and must stop immediately if Amazon requests exclusion.</li>
+  <li><strong>No link cloaking or hidden redirects (Program Policies &sect;6(v), &sect;6(w) &amp;
+    Commission Income Statement &sect;2(e)):</strong> Readers must always see clearly that they are
+    clicking a paid link to Amazon. Redirecting links without user action can disqualify commissions.</li>
+  <li><strong>No cached Amazon images or unrefreshed API prices (IP License &sect;2(h), &sect;2(i),
+    &sect;2(k)):</strong> Until Creators API credentials exist, this site uses original editorial SVG
+    illustrations in <code>assets/illustrations/</code> and leaves price/availability fields blank
+    by policy (FLG-005, FLG-007).</li>
+</ul>
+
+<h2>3. Deterministic 7-stage publishing pipeline</h2>
+<ol>
+  <li><strong>Fetch &amp; snapshot:</strong> Read official listings and policy docs; log URLs and dates
+    in <code>data/sources.json</code> and <code>data/reverification-2026-11-20.json</code>.</li>
+  <li><strong>Reconcile conflicts:</strong> Record contradictory listing figures with <code>"st": "conflict"</code>
+    and assign a flag ID in <code>data/flags.json</code> rather than picking one number.</li>
+  <li><strong>Redact unverified fields:</strong> Leave unstated specs <code>null</code> (<code>st: "unverified"</code>)
+    and omit prices/ratings per Program Policies &sect;2(b) and &sect;6(t).</li>
+  <li><strong>Render deterministically:</strong> Build all pages, <code>sitemap.xml</code>,
+    <code>feed.xml</code>, <code>robots.txt</code>, and the client search index via
+    <code>python3 scripts/build_site.py</code>.</li>
+  <li><strong>Gate before publish:</strong> Run <code>python3 scripts/check_site.py</code> and automated
+    tests locally and in GitHub Actions (<code>.github/workflows/pages.yml</code>) to block drift or
+    policy violations.</li>
+  <li><strong>Measure with zero cookies:</strong> Count the five defined events in browser storage or a
+    self-hosted endpoint configured per <a href="measurement.html">Measurement &amp; Collector</a>.</li>
+  <li><strong>Human decision gate:</strong> Rank new features on <a href="suggestions.html">Decision Center</a>
+    and verify Associates tracking (<a href="questions.html">Q-04</a>) before scaling traffic.</li>
+</ol>
+"""
+    BUILT.append(page("platform.html", f"Platform Architecture — {SITE}",
+                      "AI-powered affiliate platform blueprint: seven modules, what runs today, "
+                      "Creators API prerequisites, ML-training restrictions, and compliance gates.",
+                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                                    "name": "Platform Architecture", "url": BASE + "platform.html"}))
+
+
+# ---- measurement & collector
+def build_measurement():
+    ev_rows = ""
+    for name, spec in EVENTS["events"].items():
+        fields = ", ".join(f"<code>{esc(k)}</code>" for k in spec["allowed_fields"])
+        ev_rows += (
+            f"<tr><td><code>{esc(name)}</code></td>"
+            f"<td>{esc(spec['fires_when'])}</td>"
+            f"<td>{fields}</td>"
+            f"<td>{esc(spec['used_for'])}</td></tr>"
+        )
+    forbidden = ", ".join(f"<code>{esc(f)}</code>" for f in EVENTS["forbidden_fields"])
+    body = f"""
+{breadcrumb([("Home", "index.html"), ("Measurement & Collector", None)])}
+<h1>Measurement, Collector &amp; Search Console Setup</h1>
+<p class="lede">Static GitHub Pages hosting cannot run backend code, so visitor metrics stay in your
+  browser by default. When you are ready for cross-visitor counts without cookies or third-party
+  scripts, this repository already includes the zero-dependency collector and strict schema below.</p>
+
+<h2>1. Five-event schema (<code>data/events.json</code>)</h2>
+<table class="events">
+  <caption>Privacy contract v{esc(EVENTS['schema_version'])}. Disallowed fields ({forbidden}) are
+    stripped client-side and rejected with HTTP 400 by the collector.</caption>
+  <thead><tr><th scope="col">Event</th><th scope="col">Trigger</th>
+    <th scope="col">Allowed fields</th><th scope="col">Purpose</th></tr></thead>
+  <tbody>{ev_rows}</tbody>
+</table>
+
+<h2>2. How browser logging and <code>send()</code> behave</h2>
+<ul>
+  <li><strong>Default on GitHub Pages:</strong> All five events are appended to
+    <code>localStorage</code> (<code>sn_events</code>, capped at 500 records) and outbound clicks
+    increment <code>sn_clicks</code>. No network request fires while no collector endpoint is set
+    (FLG-010).</li>
+  <li><strong>Activating the self-hosted collector:</strong> Set
+    <code>&lt;meta name="sn-collect-endpoint" content="/api/collect"&gt;</code>, define
+    <code>window.SN_COLLECT_ENDPOINT</code>, or set <code>localStorage.setItem('sn_collect_url', ...)</code>.
+    <code>send()</code> strips disallowed keys, rounds timestamps to the nearest minute, and sends a
+    cookieless <code>POST</code> (<code>credentials: 'omit'</code>).</li>
+  <li><strong>Search privacy:</strong> The <code>search</code> event records only query length
+    (<code>q_len</code>) and match count (<code>results</code>), never the words typed by a reader.</li>
+</ul>
+
+<h2>3. Running the self-hosted collector</h2>
+<p>Option A &mdash; Node.js zero-dependency server (<code>analytics/server.js</code>):</p>
+<pre class="codebox">HOST=0.0.0.0 PORT=8787 COLLECT_LOG_FILE=/var/log/shopnow/events.ndjson node analytics/server.js
+# Verify: GET /health or GET /api/collect -&gt; 200 OK {{"ok": true, "cookies": false}}</pre>
+<p>Option B &mdash; Cloudflare Pages Function (<code>functions/api/collect.js</code>):</p>
+<pre class="codebox"># Deploy the repository on Cloudflare Pages; /api/collect handles GET health and POST ingestion.
+# Bind optional KV namespace SN_EVENTS to store timestamped JSON event entries.</pre>
+
+<h2>4. Search Console &amp; reader-capture checklist (SG-10, Q-09, Q-16)</h2>
+<ol>
+  <li><strong>RSS capture (live now):</strong> <a href="feed.xml">feed.xml</a> is valid RSS 2.0
+    listing all eight buying guides and linked from every page head and footer.</li>
+  <li><strong>Google Search Console (owner action):</strong> Verify property ownership for
+    <code>{BASE}</code> (or custom domain under SG-14), submit <code>{BASE}sitemap.xml</code>, and
+    track impressions/CTR to choose new guide topics (SG-18).</li>
+  <li><strong>Conversion truth stays in Associates Central:</strong> First-party click counts show
+    reader exits, never Amazon purchases. Authorised Associates tracking reports go into
+    <a href="campaign-ledger.html">campaign-ledger.html</a> once <a href="questions.html">Q-04</a>
+    passes.</li>
+</ol>
+<p class="cta"><a class="btn" href="disclosure.html">View Disclosure &amp; CSV Export</a>
+  <a class="btn ghost" href="platform.html">Back to Platform Architecture</a></p>
+"""
+    BUILT.append(page("measurement.html", f"Measurement & Collector — {SITE}",
+                      "Privacy-preserving five-event measurement schema, self-hosted Node.js and "
+                      "Cloudflare Pages collectors, and Search Console onboarding steps.",
+                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                                    "name": "Measurement and Collector", "url": BASE + "measurement.html"}))
 
 
 # ---- search
@@ -1870,7 +2158,14 @@ def build_search():
                    "What has to be answered before a decision can be made", "page"),
                   ("Flagged for Review", "flagged.html",
                    "Every conflict and unverified value with its source", "page"),
-                  ("Sources", "sources.html", "The ten official sources behind every claim", "page"),
+                  ("Sources", "sources.html",
+                   f"The {len(SOURCES)} official sources behind every claim", "page"),
+                  ("Platform Architecture", "platform.html",
+                   "AI affiliate platform subsystems, Creators API eligibility, ML-training limits, "
+                   "anti-cloaking and automated CI compliance gates", "page"),
+                  ("Measurement and Collector", "measurement.html",
+                   "Five privacy-preserving events, self-hosted Node and Cloudflare collectors, and "
+                   "Search Console setup", "page"),
                   ("Disclosure and privacy", "disclosure.html",
                    "Affiliate disclosure, price policy, and the five measured events", "page")]:
         index.append({"t": extra[0], "u": extra[1], "d": extra[2], "k": extra[3]})
@@ -1985,6 +2280,8 @@ def main():
     build_questions()
     build_flagged()
     build_sources()
+    build_platform()
+    build_measurement()
     build_exec()
     build_ledger()
     build_disclosure()

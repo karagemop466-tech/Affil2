@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Platform Architecture — ShopNow Kitchen</title>
+<meta name="description" content="AI-powered affiliate platform blueprint: seven modules, what runs today, Creators API prerequisites, ML-training restrictions, and compliance gates.">
+<link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/platform.html">
+<meta property="og:site_name" content="ShopNow Kitchen">
+<meta property="og:title" content="Platform Architecture — ShopNow Kitchen">
+<meta property="og:description" content="AI-powered affiliate platform blueprint: seven modules, what runs today, Creators API prerequisites, ML-training restrictions, and compliance gates.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/platform.html">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Platform Architecture", "url": "https://karagemop466-tech.github.io/Affil2/platform.html"}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="masthead">
+  <div class="wrap mast">
+    <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
+    <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
+    <form class="search" action="search.html" method="get" role="search">
+      <label class="sr" for="q">Search products and guides</label>
+      <input id="q" name="q" type="search" placeholder="Search air fryers, thermometers, guides" autocomplete="off">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+</header>
+<div class="disclosure" role="note"><div class="wrap">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.
+  <a href="disclosure.html">How we disclose</a></div></div>
+<main id="main" class="wrap">
+
+<p class="crumbs"><a href="index.html">Home</a> &rsaquo; <span>Platform Architecture</span></p>
+<h1>AI Affiliate Platform Architecture &amp; Compliance Gates</h1>
+<p class="lede">An AI-assisted affiliate workflow is only as reliable as its verification sources
+  and policy gates. Below is the subsystem blueprint for this site &mdash; what already runs in the
+  repository today, what is blocked by Amazon Associates eligibility or policy rules, and why
+  automation never publishes without passing the gate.</p>
+
+<div class="statrow">
+  <div><span class="statnum">7</span><span class="statlabel">platform modules mapped</span></div>
+  <div><span class="statnum">5</span><span class="statlabel">events in privacy schema</span></div>
+  <div><span class="statnum">0</span><span class="statlabel">auto-published claims</span></div>
+  <div><span class="statnum">0</span><span class="statlabel">model-training calls on Amazon data</span></div>
+</div>
+
+<h2>1. Subsystem status matrix</h2>
+<table class="exec">
+  <caption>Every platform module required by an automated affiliate pipeline, checked against Amazon
+    Associates Operating Agreement (S01), Program Policies (S02), Creators API docs (S20), PA-API 5
+    deprecation (S21), FTC FAQ (S03), and Google Search Central (S04).</caption>
+  <thead><tr><th scope="col">Module</th><th scope="col">What runs in this repo today</th>
+    <th scope="col">Current limit / blocker</th><th scope="col">Policy &amp; flags</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>1. Automated product research &amp; trend detection</strong></td>
+      <td>Structured product registers (<code>data/products.json</code>), chunked snapshot log
+        (<code>data/reverification-2026-11-20.json</code>), and conflict surfacing across all five
+        submitted products.</td>
+      <td>Live automated catalog polling is blocked until the Associates account passes final
+        review and qualified-sales thresholds for the Creators API (PA-API 5 returns HTTP 403).</td>
+      <td><a href="https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api" rel="sponsored nofollow">S20</a>,
+        <a href="https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation" rel="sponsored nofollow">S21</a>, FLG-029</td>
+    </tr>
+    <tr>
+      <td><strong>2. Market, pricing, review &amp; commission analysis</strong></td>
+      <td>Explicit field separation keeping prices, star ratings, review counts, and commission
+        forecasts omitted rather than scraped or estimated; empty provenance-gated
+        <a href="campaign-ledger.html">campaign ledger</a>.</td>
+      <td>Prices and ratings require Amazon-served links or Creators API access (Program Policies
+        &sect;2(b), &sect;6(t), &sect;6(y)); commission schedules require signed-in Associates Central
+        access.</td>
+      <td><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="sponsored nofollow">S02</a>, FLG-005, Q-11, Q-13</td>
+    </tr>
+    <tr>
+      <td><strong>3. SEO-optimized content &amp; comparison generation</strong></td>
+      <td>Single-source generator (<code>scripts/build_site.py</code>) building 8 guides, field-aligned
+        <code>compare.html</code>, JSON-LD (<code>Product</code>, <code>FAQPage</code>,
+        <code>Article</code>, <code>BreadcrumbList</code>), <code>sitemap.xml</code>,
+        <code>feed.xml</code>, and client search index.</td>
+      <td>Query-driven draft topics require Search Console verification (SG-10, Q-16). Special
+        Links and Program Content may not be used to train or fine-tune ML/LLM models without
+        express prior written approval.</td>
+      <td><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="sponsored nofollow">S02</a> &sect;5 &amp; IP &sect;1/&sect;2(e),
+        SG-02, SG-18</td>
+    </tr>
+    <tr>
+      <td><strong>4. Link management, Special Links &amp; anti-cloaking</strong></td>
+      <td>Canonical <code>https://www.amazon.com/dp/&lt;ASIN&gt;?tag=shopnow047c-20</code> Special
+        Links paired with visible <strong>(paid link)</strong> labels, <code>rel="sponsored nofollow"</code>,
+        separate intended/observed ASIN tables, and untagged audit links.</td>
+      <td>Deceptive cloaking is prohibited (Program Policies &sect;6(v)) and link shorteners must not
+        obscure the Amazon destination (&sect;6(w)). Submitted <code>link.amazon</code> compliance and
+        live account click tests remain pending.</td>
+      <td><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="sponsored nofollow">S02</a>,
+        <a href="https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links" rel="sponsored nofollow">S04</a>, FLG-003, FLG-004, FLG-027</td>
+    </tr>
+    <tr>
+      <td><strong>5. Privacy-preserving click &amp; conversion measurement</strong></td>
+      <td>Strict 5-event schema (<code>data/events.json</code>), local browser logging + CSV export +
+        configurable <code>send()</code> transport in <code>assets/app.js</code>, and zero-dependency
+        collectors (<code>analytics/server.js</code>, <code>functions/api/collect.js</code>).</td>
+      <td>GitHub Pages hosts static assets only; cross-visitor collection waits until the owner
+        deploys the Node/Cloudflare endpoint and sets <code>sn-collect-endpoint</code>. Conversion
+        orders still require official Associates reports.</td>
+      <td><a href="https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking" rel="sponsored nofollow">S03</a>, FLG-010, SG-20, Q-08</td>
+    </tr>
+    <tr>
+      <td><strong>6. Performance optimization &amp; campaign scaling</strong></td>
+      <td>Human-first <a href="suggestions.html">Decision Center</a> ranking and export workflow,
+        Search Console &amp; RSS checklists (<a href="measurement.html">SG-10</a>), and auditability
+        gates before traffic expansion.</td>
+      <td>Blocked on Q-04 (one-per-product Associates tracking test), Q-16 (Search Console query
+        metrics), and Q-05 (optional custom domain).</td>
+      <td>FLG-004, FLG-006, SG-07, SG-10, SG-16</td>
+    </tr>
+    <tr>
+      <td><strong>7. Compliance &amp; disclosure automation</strong></td>
+      <td>Automated Python gate (<code>scripts/check_site.py</code>) plus GitHub Actions CI drift +
+        compliance checks running on every PR and push to <code>main</code>.</td>
+      <td>Maintains hard fail rules on above-the-fold disclosures, sponsored link attributes, banned
+        price/rating patterns, blank-field flags, table column symmetry, and XML/JSON-LD validity.</td>
+      <td><a href="https://affiliate-program.amazon.com/help/operating/agreement" rel="sponsored nofollow">S01</a>,
+        <a href="https://affiliate-program.amazon.com/help/operating/policies" rel="sponsored nofollow">S02</a>, SG-04, SG-05, SG-12</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Hard policy boundaries for AI and automation</h2>
+<ul>
+  <li><strong>No ML or LLM training on Amazon Program Content (Program Policies, Participation
+    Requirements &sect;5 &amp; IP License &sect;1, &sect;2(e)):</strong> Affiliates may not use
+    Special Links, Program Content, Creators API, PA API, or Data Feeds to develop, train, or
+    fine-tune machine learning models, LLMs, or related technologies without Amazon's express prior
+    written approval. All editorial copy on this site is generated deterministically by Python from
+    audited local JSON registers, never trained into model weights.</li>
+  <li><strong>Agent identification &amp; anti-evasion (IP License &sect;4 Agent Terms):</strong>
+    Any software agent accessing Program Content must identify itself in HTTP User-Agent headers
+    as <code>Agent/[agent name]</code>, must never mimic human browsing or bypass CAPTCHAs/checkpoints,
+    and must stop immediately if Amazon requests exclusion.</li>
+  <li><strong>No link cloaking or hidden redirects (Program Policies &sect;6(v), &sect;6(w) &amp;
+    Commission Income Statement &sect;2(e)):</strong> Readers must always see clearly that they are
+    clicking a paid link to Amazon. Redirecting links without user action can disqualify commissions.</li>
+  <li><strong>No cached Amazon images or unrefreshed API prices (IP License &sect;2(h), &sect;2(i),
+    &sect;2(k)):</strong> Until Creators API credentials exist, this site uses original editorial SVG
+    illustrations in <code>assets/illustrations/</code> and leaves price/availability fields blank
+    by policy (FLG-005, FLG-007).</li>
+</ul>
+
+<h2>3. Deterministic 7-stage publishing pipeline</h2>
+<ol>
+  <li><strong>Fetch &amp; snapshot:</strong> Read official listings and policy docs; log URLs and dates
+    in <code>data/sources.json</code> and <code>data/reverification-2026-11-20.json</code>.</li>
+  <li><strong>Reconcile conflicts:</strong> Record contradictory listing figures with <code>"st": "conflict"</code>
+    and assign a flag ID in <code>data/flags.json</code> rather than picking one number.</li>
+  <li><strong>Redact unverified fields:</strong> Leave unstated specs <code>null</code> (<code>st: "unverified"</code>)
+    and omit prices/ratings per Program Policies &sect;2(b) and &sect;6(t).</li>
+  <li><strong>Render deterministically:</strong> Build all pages, <code>sitemap.xml</code>,
+    <code>feed.xml</code>, <code>robots.txt</code>, and the client search index via
+    <code>python3 scripts/build_site.py</code>.</li>
+  <li><strong>Gate before publish:</strong> Run <code>python3 scripts/check_site.py</code> and automated
+    tests locally and in GitHub Actions (<code>.github/workflows/pages.yml</code>) to block drift or
+    policy violations.</li>
+  <li><strong>Measure with zero cookies:</strong> Count the five defined events in browser storage or a
+    self-hosted endpoint configured per <a href="measurement.html">Measurement &amp; Collector</a>.</li>
+  <li><strong>Human decision gate:</strong> Rank new features on <a href="suggestions.html">Decision Center</a>
+    and verify Associates tracking (<a href="questions.html">Q-04</a>) before scaling traffic.</li>
+</ol>
+
+</main>
+<footer>
+  <div class="wrap">
+    <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
+    <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
+    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+      <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
+    <p class="small">Prices and availability are not shown on this site; check the live listing for
+      current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
+      Inc. or its affiliates. This site is not endorsed by Amazon. Artwork is original illustration,
+      not product photography. Nothing here is a hands-on product test — every specification is read
+      from the official listing and dated. Last verified 2026-11-20.</p>
+    <p class="small">© 2026 ShopNow Kitchen. <a href="flagged.html">Flagged for Review</a> lists everything
+      we could not verify.</p>
+  </div>
+</footer>
+<script src="assets/app.js" defer></script>
+</body>
+</html>

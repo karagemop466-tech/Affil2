@@ -82,5 +82,30 @@
     "FTC Endorsement Guides FAQ on ftc.gov (cited by the other session; not reopened here)",
     "Associates Special Link test (FLG-004 stands; needs the owner's Associates account)",
     "Tracking-ID activity (FLG-002 stands)"
-  ]
+  ],
+  "follow_up_verification": {
+    "session": "arena/9f19fe6b-affil2",
+    "date": "2026-11-20",
+    "scope": "Deep multi-chunk audit of all 5 /dp/ Product information tables (Features & Specs, Measurements, Item details, Warranty & Support), re-test of all 5 link.amazon/* short links, and full read of Operating Agreement §5, Program Policies (chunks 0-9 of 11), Creators API onboarding & PA-API 5 deprecation, FTC Endorsement Guides FAQ, Google outbound-link docs, and USDA FSIS Temperature & Thermometer pages.",
+    "short_link_retest": [
+      {"token": "B04G1MEwY", "resolved_to": "https://www.amazon.com/dp/B0CDY277D3", "attempt": 1},
+      {"token": "B02NbDxp3", "resolved_to": "https://www.amazon.com/dp/B09B7SB46R", "attempt": 1},
+      {"token": "B00hJ57DV", "resolved_to": "https://www.amazon.com/dp/B08DKYBTPH", "attempt": 1},
+      {"token": "B0c8moW59", "resolved_to": "https://www.amazon.com/dp/B0DHZTCNR5", "attempt": 1, "note": "Resolved cleanly here while earlier session attempts hit checkpoint/500 (FLG-011, FLG-012)"},
+      {"token": "B0f3GKalj", "resolved_to": "https://www.amazon.com/dp/B0DZFD6R9Z", "attempt": 1}
+    ],
+    "deep_spec_findings": [
+      "P-01 B0CDY277D3: verified Item Weight 13.3 pounds (chunk 7); confirmed capacity conflict 6 quarts vs 6 liters (FLG-034).",
+      "P-02 B09B7SB46R: verified Model/Part 4-00675-02X-VN (chunk 10), temp 75–500 °F (chunks 9–10), power 120V/1700W (chunk 9); confirmed weight absent from listing HTML (removed unverified 26.5 lb prose, FLG-022); confirmed preset conflict 24 vs 25 (FLG-021) and accessory conflict 6 vs 7 (FLG-031).",
+      "P-03 B08DKYBTPH: verified Item Weight 12.8 pounds (chunk 7); confirmed wattage conflict 1700 W in Features & Specs (chunk 7) vs 1000 W in About this item (chunk 4, FLG-017) and temperature conflict 400 °F vs 450 °F Hi-Fry (FLG-018).",
+      "P-04 B0DHZTCNR5: verified Model HT07, Upper Temperature Rating 572 °F, length/immersion depth 6.5 inches, 0.1° resolution, Wipe Clean care (chunk 11).",
+      "P-05 B0DZFD6R9Z: verified Model CQ60-3C-Z1-E (chunk 8) and probe length/immersion depth 4.75 inches (chunks 7–8); discovered warranty conflict two-year assurance (About this item, chunk 4) vs 3 Year (Item details Warranty Description, chunk 8, FLG-019)."
+    ],
+    "policy_clauses_verified": [
+      "Operating Agreement §5 verbatim disclosure (S01)",
+      "Program Policies Commission Income Statement §2(d)/(e)/(g), Participation Requirements §2(a)/(b), §5 (no ML model training without express prior written approval), §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), and §4 Agent Terms (Agent/[name] user-agent string) (S02)",
+      "Creators API eligibility & PA-API 5 HTTP 403 deprecation (S20, S21)",
+      "USDA FSIS Safe Minimum Internal Temperature Chart & Food Thermometers ice-water 32 °F calibration guidance (S22, S23)"
+    ]
+  }
 }

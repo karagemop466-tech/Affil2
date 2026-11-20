@@ -134,9 +134,9 @@ button{font-family:var(--sans)}
 .hero-art{display:grid;gap:14px;justify-items:center}
 .hero-tile{
   background:#fff;border:1px solid var(--line);border-radius:18px;
-  padding:16px 20px;width:100%;max-width:220px;box-shadow:var(--shadow)
+  padding:10px;width:100%;max-width:240px;box-shadow:var(--shadow)
 }
-.hero-tile svg{display:block;width:100%;height:auto}
+.hero-tile svg,.hero-tile img{display:block;width:100%;height:auto;border-radius:12px}
 
 /* ---------- cards ---------- */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;margin:22px 0}
@@ -148,10 +148,11 @@ button{font-family:var(--sans)}
 .card:hover{box-shadow:0 2px 4px rgba(23,20,15,.06),0 16px 34px -16px rgba(23,20,15,.24);
   transform:translateY(-2px)}
 .card-art{
-  background:var(--cream-2);border-radius:var(--radius);padding:12px;
+  background:var(--cream-2);border-radius:var(--radius);padding:10px;
   margin-bottom:16px;display:flex;align-items:center;justify-content:center;min-height:104px
 }
 .card-art svg{width:100%;max-width:170px;height:auto}
+.card-art img{width:100%;max-width:260px;height:auto;border-radius:10px;display:block}
 .card h3{margin:.1em 0 .35em;font-size:20.5px}
 .card h3 a{color:var(--ink);text-decoration:none}
 .card h3 a:hover{color:var(--accent-d);text-decoration:underline}
@@ -169,9 +170,10 @@ button{font-family:var(--sans)}
   padding:26px;margin:22px 0;box-shadow:var(--shadow)
 }
 .buybox-art{
-  background:var(--cream-2);border-radius:var(--radius);padding:18px;
+  background:var(--cream-2);border-radius:var(--radius);padding:12px;
   display:flex;align-items:center;justify-content:center
 }
+.buybox-art img,.buybox-art svg{display:block;width:100%;height:auto;border-radius:10px}
 .buybox-body h3{font-size:clamp(21px,2.3vw,27px);margin:.1em 0 .4em}
 .factrow{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;padding:14px 0;
   border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -186,9 +188,9 @@ button{font-family:var(--sans)}
 /* ---------- product page ---------- */
 .pdp-head{display:grid;grid-template-columns:1fr 260px;gap:34px;align-items:center;
   margin-bottom:22px}
-.pdp-art{background:var(--cream-2);border-radius:var(--radius-lg);padding:24px;
+.pdp-art{background:var(--cream-2);border-radius:var(--radius-lg);padding:14px;
   border:1px solid var(--line)}
-.pdp-art svg{width:100%;height:auto}
+.pdp-art svg,.pdp-art img{display:block;width:100%;height:auto;border-radius:12px}
 .pdp-buy{
   display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap;
   background:var(--paper);border:1px solid var(--line-2);border-left:4px solid var(--accent);
@@ -442,3 +444,8 @@ p.statement{
   background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
   padding:16px 20px;font-size:16px;color:#5c2b12;margin:20px 0
 }
+pre.codebox{
+  background:#1f1a14;color:#f5ebdc;border-radius:var(--radius);padding:16px 18px;
+  overflow-x:auto;font-size:13.5px;line-height:1.5;margin:16px 0
+}
+.pill.code{background:#eef4e0;border-color:#c3d69b;color:var(--ok)}

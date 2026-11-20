@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Privacy-preserving measurement contract for ShopNow Kitchen. No cookies, no third-party pixels, no device fingerprinting, and no raw search text transmitted.",
+  "events": {
+    "page_view": {
+      "fires_when": "Any generated page finishes loading",
+      "allowed_fields": ["e", "t", "page"],
+      "used_for": "Understanding which pages are visited"
+    },
+    "outbound_click": {
+      "fires_when": "A tagged Amazon affiliate link ([data-outbound]) is clicked",
+      "allowed_fields": ["e", "t", "page", "product"],
+      "used_for": "Measuring which product a reader clicks out to"
+    },
+    "guide_read": {
+      "fires_when": "A buying guide under guides/ finishes loading",
+      "allowed_fields": ["e", "t", "page"],
+      "used_for": "Separating guide consumption from catalog navigation"
+    },
+    "search": {
+      "fires_when": "On-site search evaluates a non-empty query on search.html",
+      "allowed_fields": ["e", "t", "page", "q_len", "results"],
+      "used_for": "Detecting zero-result searches via query length and match count without recording raw user text"
+    },
+    "suggestion_rank": {
+      "fires_when": "A proposal row on suggestions.html is moved up or down",
+      "allowed_fields": ["e", "t", "page", "rank"],
+      "used_for": "Recording reviewer priority ordering in Decision Center"
+    }
+  },
+  "forbidden_fields": [
+    "ip",
+    "user_agent",
+    "referrer",
+    "cookie",
+    "fingerprint",
+    "query_text",
+    "email",
+    "session_id"
+  ],
+  "local_storage_keys": [
+    "sn_events",
+    "sn_clicks",
+    "sn_rank",
+    "sn_decision",
+    "sn_collect_url"
+  ],
+  "transport": {
+    "default_mode": "localStorage-only (static GitHub Pages; send() is a no-op until sn_collect_url or meta[name=sn-collect-endpoint] is configured)",
+    "collector_endpoints": [
+      "analytics/server.js (Node.js zero-dependency collector, POST /api/collect)",
+      "functions/api/collect.js (Cloudflare Pages Function collector, POST /api/collect)"
+    ]
+  }
+}
