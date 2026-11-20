@@ -182,12 +182,19 @@ function testAppJsClientBehavior() {
     setItem: (k, v) => { store[k] = String(v); },
     removeItem: (k) => { delete store[k]; }
   };
+  const sStore = { sn_search_query: 'two baskets' };
+  const sessionStorage = {
+    getItem: (k) => (Object.prototype.hasOwnProperty.call(sStore, k) ? sStore[k] : null),
+    setItem: (k, v) => { sStore[k] = String(v); },
+    removeItem: (k) => { delete sStore[k]; }
+  };
 
   const navBtn = makeFakeElement('button', '');
   const navMenu = makeFakeElement('nav', 'primary-nav');
   const searchInput = makeFakeElement('input', 'sq');
   const headerInput = makeFakeElement('input', 'q');
   const searchForm = makeFakeElement('form', '');
+  searchForm.querySelector = () => searchInput;
   searchInput.closest = () => searchForm;
   const searchMeta = makeFakeElement('p', 'searchMeta');
   const resultsEl = makeFakeElement('div', 'results');
@@ -210,12 +217,17 @@ function testAppJsClientBehavior() {
   const fetchCalls = [];
   const docListeners = {};
   const blobsCreated = [];
+  const navigatedUrls = [];
 
   const sandbox = {
     window: {},
-    location: { pathname: '/guides/basket-vs-oven.html', search: '?q=two+baskets' },
+    location: {
+      pathname: '/guides/basket-vs-oven.html',
+      search: '',
+      assign: (u) => navigatedUrls.push(u)
+    },
     localStorage,
-    URLSearchParams,
+    sessionStorage,
     Blob: function FakeBlob(parts) { blobsCreated.push(parts.join('')); this.parts = parts; },
     URL: { createObjectURL: () => 'blob:mock', revokeObjectURL: () => {} },
     Date,
@@ -242,6 +254,7 @@ function testAppJsClientBehavior() {
       },
       querySelectorAll: (sel) => {
         if (sel === '[data-outbound]') return [outboundBtn];
+        if (sel === 'form[role="search"]') return [searchForm];
         return [];
       },
       addEventListener: (t, fn) => { (docListeners[t] = docListeners[t] || []).push(fn); }
@@ -252,6 +265,7 @@ function testAppJsClientBehavior() {
   // Run 1: default static mode -> 0 fetch requests even with events firing
   vm.runInNewContext(appCode, sandbox);
   assert.equal(fetchCalls.length, 0, 'Static mode must send zero analytics requests');
+  assert.equal(sessionStorage.getItem('sn_search_query'), null, 'sn_search_query must clear after handoff');
 
   const loggedEvents = JSON.parse(localStorage.getItem('sn_events'));
   assert.ok(loggedEvents.some((e) => e.e === 'page_view'));

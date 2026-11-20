@@ -1,6 +1,6 @@
 // Privacy-preserving measurement, search, mobile navigation, pair compare, ranking, and CSV export.
 // Five events: page_view, outbound_click, guide_read, search, suggestion_rank.
-// No cookies, no third-party requests, no fingerprinting, and no raw search text logged.
+// No cookies, no third-party requests, no fingerprinting, and no search query text in URLs or logs.
 (function () {
   'use strict';
   try {
@@ -90,7 +90,7 @@
       });
     }
 
-    // Outbound affiliate link clicks (supports static and dynamically rendered links)
+    // Outbound affiliate link clicks (static and dynamic)
     document.querySelectorAll('[data-outbound]').forEach(function (a) {
       a.addEventListener('click', function () {
         recordOutbound(a.getAttribute('data-outbound'));
@@ -147,105 +147,127 @@
       });
     }
 
-    // On-site search (search.html)
+    // Privacy-preserving built-in search handoff (uses sessionStorage sn_search_query, never URL query strings)
     var searchIdxEl = document.getElementById('searchIndex');
     var resultsEl = document.getElementById('results');
     var searchInput = document.getElementById('sq');
     var searchMeta = document.getElementById('searchMeta');
-    if (searchIdxEl && resultsEl && searchInput) {
-      var indexData = [];
+    var indexData = [];
+    if (searchIdxEl) {
       try { indexData = JSON.parse(searchIdxEl.textContent || '[]'); } catch (_) { indexData = []; }
+    }
 
-      function runSearch(query, recordEvent) {
-        var trimmed = (query || '').trim();
-        searchInput.value = trimmed;
-        var headerInput = document.getElementById('q');
-        if (headerInput && !headerInput.value) headerInput.value = trimmed;
-        while (resultsEl.firstChild) resultsEl.removeChild(resultsEl.firstChild);
+    function runSearch(query, recordEvent) {
+      if (!searchIdxEl || !resultsEl || !searchInput) return;
+      var trimmed = (query || '').trim().replace(/\s+/g, ' ').slice(0, 120);
+      searchInput.value = trimmed;
+      var headerInput = document.getElementById('q');
+      if (headerInput && !headerInput.value) headerInput.value = trimmed;
+      while (resultsEl.firstChild) resultsEl.removeChild(resultsEl.firstChild);
 
-        if (!trimmed) {
+      if (!trimmed) {
+        if (searchMeta) {
+          searchMeta.textContent = 'Search matches run in your browser across ' + indexData.length +
+            ' pages. Built-in search terms are carried in session storage, not in the request URL.';
+        }
+        return;
+      }
+
+      var terms = trimmed.toLowerCase().split(/\s+/).filter(Boolean);
+      var scored = [];
+      indexData.forEach(function (entry) {
+        var t = (entry.t || '').toLowerCase();
+        var d = (entry.d || '').toLowerCase();
+        var k = (entry.k || '').toLowerCase();
+        var combined = t + ' ' + k + ' ' + d;
+        var allMatch = terms.every(function (term) { return combined.indexOf(term) !== -1; });
+        if (!allMatch) return;
+        var score = 0;
+        terms.forEach(function (term) {
+          if (t.indexOf(term) !== -1) score += 3;
+          if (k.indexOf(term) !== -1) score += 2;
+          if (d.indexOf(term) !== -1) score += 1;
+        });
+        scored.push({ entry: entry, score: score });
+      });
+      scored.sort(function (a, b) { return b.score - a.score; });
+
+      if (searchMeta) {
+        searchMeta.textContent = scored.length + ' result' + (scored.length === 1 ? '' : 's') +
+          ' across ' + indexData.length + ' pages (matched locally in your browser).';
+      }
+
+      if (!scored.length) {
+        var empty = document.createElement('p');
+        empty.className = 'muted';
+        empty.textContent = 'No matching pages found. Try broader terms like "basket", "450", "wireless", "capacity", or "warranty".';
+        resultsEl.appendChild(empty);
+      } else {
+        scored.forEach(function (hit) {
+          var box = document.createElement('article');
+          box.className = 'hit';
+
+          var where = document.createElement('div');
+          where.className = 'where';
+          where.textContent = hit.entry.k || 'page';
+          box.appendChild(where);
+
+          var h3 = document.createElement('h3');
+          var a = document.createElement('a');
+          a.href = hit.entry.u;
+          a.textContent = hit.entry.t;
+          h3.appendChild(a);
+          box.appendChild(h3);
+
+          var p = document.createElement('p');
+          var snippet = hit.entry.d || '';
+          p.textContent = snippet.length > 220 ? snippet.slice(0, 217) + '...' : snippet;
+          box.appendChild(p);
+
+          resultsEl.appendChild(box);
+        });
+      }
+
+      if (recordEvent) {
+        log('search', { q_len: trimmed.length, results: scored.length });
+      }
+    }
+
+    document.querySelectorAll('form[role="search"]').forEach(function (form) {
+      var field = form.querySelector('input[type="search"]');
+      if (!field) return;
+      form.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+        var query = (field.value || '').trim().replace(/\s+/g, ' ').slice(0, 120);
+        if (!query) return;
+        if (searchIdxEl && resultsEl && searchInput) {
+          runSearch(query, true);
+          return;
+        }
+        try {
+          sessionStorage.setItem('sn_search_query', query);
+        } catch (_) {
           if (searchMeta) {
-            searchMeta.textContent = 'Searching across ' + indexData.length +
-              ' pages on this site. Nothing is sent to a server — the index is embedded below and matched in your browser.';
+            searchMeta.textContent = 'This browser could not start a local search session. No query was sent.';
           }
           return;
         }
+        location.assign(form.getAttribute('action') || 'search.html');
+      });
+    });
 
-        var terms = trimmed.toLowerCase().split(/\s+/).filter(Boolean);
-        var scored = [];
-        indexData.forEach(function (entry) {
-          var t = (entry.t || '').toLowerCase();
-          var d = (entry.d || '').toLowerCase();
-          var k = (entry.k || '').toLowerCase();
-          var combined = t + ' ' + k + ' ' + d;
-          var allMatch = terms.every(function (term) { return combined.indexOf(term) !== -1; });
-          if (!allMatch) return;
-          var score = 0;
-          terms.forEach(function (term) {
-            if (t.indexOf(term) !== -1) score += 3;
-            if (k.indexOf(term) !== -1) score += 2;
-            if (d.indexOf(term) !== -1) score += 1;
-          });
-          scored.push({ entry: entry, score: score });
-        });
-        scored.sort(function (a, b) { return b.score - a.score; });
-
-        if (searchMeta) {
-          searchMeta.textContent = scored.length + ' result' + (scored.length === 1 ? '' : 's') +
-            ' across ' + indexData.length + ' pages (matched locally in your browser).';
-        }
-
-        if (!scored.length) {
-          var empty = document.createElement('p');
-          empty.className = 'muted';
-          empty.textContent = 'No matching pages found. Try broader terms like "basket", "450", "wireless", "capacity", or "warranty".';
-          resultsEl.appendChild(empty);
-        } else {
-          scored.forEach(function (hit) {
-            var box = document.createElement('article');
-            box.className = 'hit';
-
-            var where = document.createElement('div');
-            where.className = 'where';
-            where.textContent = hit.entry.k || 'page';
-            box.appendChild(where);
-
-            var h3 = document.createElement('h3');
-            var a = document.createElement('a');
-            a.href = hit.entry.u;
-            a.textContent = hit.entry.t;
-            h3.appendChild(a);
-            box.appendChild(h3);
-
-            var p = document.createElement('p');
-            var snippet = hit.entry.d || '';
-            p.textContent = snippet.length > 220 ? snippet.slice(0, 217) + '...' : snippet;
-            box.appendChild(p);
-
-            resultsEl.appendChild(box);
-          });
-        }
-
-        if (recordEvent) {
-          log('search', { q_len: trimmed.length, results: scored.length });
-        }
+    if (searchIdxEl && resultsEl && searchInput) {
+      var initialQ = '';
+      try {
+        initialQ = sessionStorage.getItem('sn_search_query') || '';
+        sessionStorage.removeItem('sn_search_query');
+      } catch (_) {
+        initialQ = '';
       }
-
-      var params = new URLSearchParams(location.search || '');
-      var initialQ = params.get('q') || '';
-      runSearch(initialQ, Boolean(initialQ.trim()));
-
-      var searchForm = searchInput.closest('form');
-      if (searchForm) {
-        searchForm.addEventListener('submit', function (evt) {
-          evt.preventDefault();
-          var qVal = searchInput.value || '';
-          var nextUrl = location.pathname + (qVal.trim() ? ('?q=' + encodeURIComponent(qVal.trim())) : '');
-          if (window.history && window.history.replaceState) {
-            window.history.replaceState(null, '', nextUrl);
-          }
-          runSearch(qVal, Boolean(qVal.trim()));
-        });
+      if (initialQ.trim()) {
+        runSearch(initialQ, true);
+      } else {
+        runSearch('', false);
       }
     }
 

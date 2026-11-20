@@ -187,6 +187,11 @@ for p in pages:
             err(f"{rel}: image {m.group(1)} has no alt text")
         if not re.search(r'width="\d+" height="\d+"', tag):
             err(f"{rel}: image {m.group(1)} has no intrinsic dimensions")
+    # --- search controls must not serialize query text into a request URL
+    for form in re.finditer(r'<form\b[^>]*\brole="search"[^>]*>(.*?)</form>', html, re.S | re.I):
+        for input_tag in re.findall(r"<input\b[^>]*>", form.group(1), re.I):
+            if re.search(r"\bname=", input_tag):
+                err(f"{rel}: search input has a name and could serialize query text into a request URL")
 
     # --- structured data must parse
     for m in re.finditer(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
@@ -447,9 +452,19 @@ else:
             err(f"compare.html pair data buy link for {pid} lacks the Associates tag")
         if len(rec["rows"]) < 12:
             err(f"compare.html pair data for {pid} has only {len(rec['rows'])} rows")
+# ---------------------------------------------------------------- search privacy
+app_js = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+if re.search(r"URLSearchParams\(\s*location\.search", app_js) or ".get('q')" in app_js or '.get("q")' in app_js:
+    err("assets/app.js: reads search text from the request URL; built-in search must use session storage")
+if "sn_search_query" not in app_js or "sessionStorage" not in app_js:
+    err("assets/app.js: session-storage handoff for built-in search is missing")
+if "session storage" not in (ROOT / "disclosure.html").read_text(encoding="utf-8").lower():
+    err("disclosure.html: search query handling is not explained in the privacy statement")
 
 # ---------------------------------------------------------------- search index
 search_html = (ROOT / "search.html").read_text()
+if re.search(r"nothing is sent to\s+a server", search_html, re.I):
+    err("search.html: claims nothing is sent to a server, but page requests reach the host; use the session-storage wording")
 m = re.search(r'<script type="application/json" id="searchIndex">(.*?)</script>',
               search_html, re.S)
 if not m:
