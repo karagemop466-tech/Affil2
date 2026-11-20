@@ -26,6 +26,7 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
 | T-27 | Reconcile open PRs (#47, #51, #53) and record dispositions | done | a150712 | COORDINATION.md only |
 | T-30 | Final integration: documentation reconciliation, official-source pass, gates, PR and Pages verification | in progress | 57fc3be0 | COORDINATION.md, README.md, EXECUTIVE-SUMMARY.md, data/verification-2026-11-20-pass3.json |
+| T-31 | Live re-check of the five /dp/ listings (titles, ASINs) and the five short-link final URLs (corroborates FLG-051, does not duplicate it); calendar corrections against OPM (2026, 2027 tables); official-host gate for source URLs (I-4); I-5 page date; ASIN-definition search (I-7, open); REQUIREMENTS-TRACE update | done (PR #59) | 7481731c | `data/link-resolution-2026-11-20.json` (new), `data/flags.json` (append only: FLG-052, FLG-053), `data/sources.json` (append only: S25, S26; used_for text on S01, S15–S19), `scripts/build_site.py`, `scripts/check_site.py`, generated pages, `REQUIREMENTS-TRACE.md`, `COORDINATION.md` |
 
 > **Session `57fc3be0` claim (2026-11-20).** Branch `arena/57fc3be0-affil2`, base `4ddede5` (main).
 > This session takes the **final-integration** role described in the brief: it re-verifies the combined
@@ -1429,3 +1430,54 @@ because parallel sessions read the same stale prompt. Flag IDs are safe (monoton
 **PR reconciliation:** PR #53 is merged (confirmed); its docs work is included in main history. PR #47 and PR #51 were closed after review: #47's unrelated divergent tree diff would remove substantial current functionality (including analytics, findability, compliance checks, and shared records); #51's narrative is coordination-only. Their own branches were not merged, and neither closure changes the standing verification data or the unresolved status of submitted short links. The closure rationale and the narrower live pass are retained here.
 
 **Local validation (2026-11-20):** `python3 scripts/build_site.py` → built 36 pages; `python3 scripts/check_site.py` → 36 pages, 5 products, 51 flags, 19 sources, ALL CHECKS PASS; Python unittest → 3 tests OK; `node tests/test_collector.js` → ALL JS COLLECTOR AND CLIENT TESTS PASS. Additional internal href/src scan found zero missing local targets. GitHub Pages API reported `built`, source `main`, URL `https://karagemop466-tech.github.io/Affil2/` before the latest documentation-only changes; deployment for PR #57 is pending.
+
+## Session `arena/7481731c-affil2` — T-31 (2026-11-20 UTC): claim, merge with main, completion
+
+**Renumbered from T-26.** This session first claimed T-26 on its base (`4ddede5`). While it worked, `main` gained a T-26 short-link re-check from session `614b9fe7` (PR #55) and a T-26..T-30 claim from session `57fc3be0`. The claim is therefore recorded here as **T-31**, the next free number after T-30. Nothing from the earlier T-26 claim survives under that number.
+
+**Duplicate finding dropped.** The short-link re-check this session did has the same result as main's FLG-051 and `data/verification-2026-11-20-shortlinks.json` (both 2026-11-20, every link ended on the amazon.com home page). This session's flag for it (FLG-052 on the branch) was **dropped** to avoid two records of one finding. FLG-051 is the single record. This session adds its own detail as attempt-by-attempt evidence in `data/link-resolution-2026-11-20.json`, which cross-refers to FLG-051.
+
+**Flag IDs after merge:** FLG-051 is main's short-link record. FLG-052 is the seasonal-calendar correction (branch numbering FLG-053). FLG-053 is the ASIN-definition gap (branch numbering FLG-054).
+
+### Sources checked (live, 2026-11-20, official only)
+
+- Listing pages, title and ASIN re-read: https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z. Each resolves to a product page whose title contains the register title. Prices and ratings were seen and deliberately not recorded (Program Policies, S02).
+- Submitted short links, final URL: https://link.amazon/B04G1MEwY · https://link.amazon/B02NbDxp3 · https://link.amazon/B00hJ57DV · https://link.amazon/B0c8moW59 · https://link.amazon/B0f3GKalj. Every fetch ended on https://www.amazon.com/ (P-01 and P-04 twice). Not called invalid (FLG-003, FLG-051).
+- OPM federal holidays: https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/ (2026: Thursday, November 26, Thanksgiving Day; 2027: Friday, January 01, New Year's Day). Registered as S26.
+- Associates Operating Agreement: https://affiliate-program.amazon.com/help/operating/agreement ("Updated: October 15, 2025"; §1 defines Special Links). S01 row updated.
+- Seller Central, Add one product at a time (help G1471): https://sellercentral.amazon.com/help/hub/reference/external/G1471. Lists "UPC, EAN, ISBN, or ASIN" as accepted identifiers and does not define ASIN. Registered as S25. Also checked, no ASIN definition: G200426310, G200182950.
+
+### What changed
+
+1. `data/link-resolution-2026-11-20.json` (new): the five short-link attempts and the five listing re-reads, kept apart from the intended and observed ASIN fields. Short-link results cross-refer to FLG-051.
+2. Seasonal calendar in `design-brief.html` (FLG-052): New Year corrected from 2027-01-02 to 2027-01-01 (OPM 2027). The Advent row was 2026-12-02 and is now 2026-11-29 (the fourth Sunday before 25 December, computed). Black Friday, Cyber Monday and Advent are labelled computed, with no cited source. The table gained a Source column; every row is either linked to OPM or marked unverified.
+3. ASIN definition (FLG-053): three official Seller Central pages checked. None defines ASIN. The gap is published, not filled from third-party glossaries.
+4. Gate (`scripts/check_site.py`): an official-host allowlist for every source URL (closes I-4, and any new host must be approved by a person). A consistency check on the link-resolution record: submitted links match the register, listing titles contain the register titles, no prices, and a home-page result cannot be marked as reproducing the earlier record. Each negative case was run on a deliberately bad copy and failed as intended.
+5. `verification.html` gained a submitted-link re-check section, generated from the JSON record.
+6. `REQUIREMENTS-TRACE.md`: rows 9, 14, 27, 28 and 36 updated; I-2, I-4 and I-5 closed; I-7 open; section 5 added with the sources.
+
+### Verification performed
+
+- Build run twice; the second run changed nothing.
+- `python3 scripts/check_site.py`: ALL CHECKS PASS (36 pages, 5 product records, 53 flags, 21 sources at the time of the record; re-run after the merge, see the PR record).
+- `python3 -m unittest discover -s tests -p "test_*.py"`: 3 tests OK. `node tests/test_collector.js`: ALL JS COLLECTOR AND CLIENT TESTS PASS.
+
+### Irregularities (published on Flagged for Review; none blocks)
+
+- **FLG-051 (main, not changed here):** submitted short links ended on the amazon.com home page. Same-day records in `data/products.json` and S15–S19 say the links resolved. The cause is unknown. Owner action: open each link in a normal browser.
+- **FLG-052 (corrected, partly unverified):** calendar dates corrected. Black Friday, Cyber Monday and Advent remain computed.
+- **FLG-053 (unverified):** no official Amazon page defining ASIN was located.
+- `data/products.json` `observed_status` text still says the links "resolved cleanly" on 2026-11-20. It was left as the earlier record. The conflict is recorded in FLG-051, and changing the text needs the owner's browser check.
+
+### Handoffs and conflicts (logged per protocol)
+
+- **Merge with main.** `origin/main` moved from `4ddede5` to `629a00c` during this session. The merge conflicted in six files. Resolution: `EXECUTIVE-SUMMARY.md`, `README.md`, `executive-summary.html` and `sources.html` take main's version (the generated pages were regenerated afterwards); `data/flags.json` is main's 51 flags plus this session's two; this section and the task row were added to main's `COORDINATION.md`. No other session's record was discarded.
+- **Flag FLG-051 is held on two open branches.** `arena/ca4af934-affil2` also uses FLG-051 for a different item. That branch is not merged, so whichever PR merges second must renumber. This session did not touch it.
+- **Source IDs S25 and S26 are new.** If another open branch also adds S25 or S26, the second to merge must renumber.
+- **Stray conflict markers in `assets/style.css` (found after merge, fixed here).** `origin/main` already contained the three conflict marker lines (`<<<<<<< HEAD`, `=======`, `>>>>>>> origin/main`) around two independent CSS blocks (the reader-facing additions, and the router/guide-step block). Resolution: the marker lines were deleted and both blocks kept; no selector appears in both. A repo-wide scan for markers now comes back empty. Session `614b9fe7` or `35973829` likely left them (cause unconfirmed); the owner of `style.css` should check that no rule was dropped on their side.
+- **PR:** https://github.com/karagemop466-tech/Affil2/pull/59 (`arena/7481731c-affil2` → `main`), opened 2026-11-20. Merge status: recorded in the post-merge note below.
+- Open PRs from other sessions were not edited. Final integration (T-30, `57fc3be0`) remains that session's task. This PR merges into `main` and is logged so that session can rebase.
+
+### Still blocked (owner account or decision; not claimed here)
+
+Special Link test in Associates Central (FLG-004). Tracking-ID activity (FLG-002). Intended ASINs (FLG-001). Short-link compliance (FLG-003). Analytics hosting (FLG-010). Search Console (SG-29). Named author (FLG-033). Reader-capture provider (SG-30).
