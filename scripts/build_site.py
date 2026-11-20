@@ -788,7 +788,7 @@ def build_product(p):
 NOT_STATED = "— <span class=\"unverified\">not stated on the listing</span>"
 NA_CAP = "— <span class=\"unverified\">n/a, measures temperature</span>"
 NA_POWER = "— <span class=\"unverified\">n/a, battery powered</span>"
-NOWEIGHT = "— <span class='unverified'>not stated on this listing (FLG-022)</span>"
+NOWEIGHT = "— <span class=\"unverified\">not stated in this listing's product tables</span>"
 
 
 def spec(p, key, other=NOT_STATED):

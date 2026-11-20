@@ -1,11 +1,11 @@
-# Executive Summary — ShopNow Kitchen (Verified Update — Session arena/9f19fe6b-affil2)
+# Executive Summary — ShopNow Kitchen (Verified Update — Session arena/d95938bb-affil2)
 
 Date 2026-11-20 · Tracking ID in use `shopnow047c-20` (issuance unverified, FLG-002)
 Live site https://karagemop466-tech.github.io/Affil2/ · Full version with source links: `executive-summary.html`
 
 ## What this is
 A static publication-style Amazon affiliate site covering five submitted products in two categories:
-three air fryers and two meat thermometers across 33 generated HTML pages (including 9 buying guides). Every specification is read
+three air fryers and two meat thermometers across 36 generated HTML pages (including 11 buying guides). Every specification is read
 from the official Amazon listing (including deep `Product information` tables), dated and linked.
 Where two parts of one listing disagree, both figures are printed and the disagreement is flagged.
 No price, star rating, review count or best-seller rank is reproduced, because Amazon's Program
@@ -88,8 +88,8 @@ its schema and provenance rule written down so the first real row can be added w
 the page.
 
 ## How the site is kept honest
-`scripts/build_site.py` generates all 33 HTML pages from `data/*.json`; nothing is hand-edited.
-`scripts/check_site.py` fails the build if the disclosure is missing or below the fold, if any
+`scripts/build_site.py` generates all 36 HTML pages from `data/*.json`; nothing is hand-edited.
+`scripts/check_site.py` fails the build if the disclosure is missing or below the fold, if a double-escaped entity or an image without alt/intrinsic size/loading appears, if a product's distinguishing name is missing from the front page or the shop index, if `assets/config.js` stops being loaded before `assets/app.js`, if any
 `amazon.com` link lacks `rel="sponsored nofollow"`, if a price, star rating, cross-row placeholder, or
 unverified weight claim appears, if a link or asset is broken, if any SVG schematic is orphaned, if
 any generated photo lacks a caption/alt/dimensions, if any table has mismatched `<thead>`/`<tbody>`
@@ -104,10 +104,52 @@ or unpublished flag exists. CI runs regeneration, drift detection, `check_site.p
 - `SG-31` (`platform.html`) / `Q-19`: AI affiliate platform blueprint and compliance matrix shipped; automated catalog ingestion remains blocked until Creators API acceptance (`S20`, `S21`, `FLG-029`).
 - `SG-32` / `Q-20`: Question-shaped article generation from Search Console queries (blocked until SG-10 / SG-29 verification).
 
+## Session `arena/d95938bb-affil2` — storefront polish pass (2026-11-20)
+
+This pass audited the built site rather than the data register, and fixed what a reader would
+actually see. Every change below is generated from `scripts/build_site.py` or `data/`, and new gate
+rules were added so none of them can silently return.
+
+**What was wrong, and what it is now**
+
+| Flag | Defect | Reader-visible symptom | Fix |
+|---|---|---|---|
+| FLG-041 | Cards identified a product by its brand only | The front page, shop and category grids showed "Chefman" twice with no way to tell the 6-quart from the 8-quart | Each product carries a distinguishing name in `data/products.json` (`Chefman 6-Qt Dual Basket` vs `Chefman 8-Qt TurboFry`), printed on cards, the compare header, the product-page byline, breadcrumb and `<title>` |
+| FLG-042 | Entities were escaped twice | "Seasonal guide &#183; Holiday 2026" and "&#8212;" printed as raw codes on three pages | Entities are decoded before escaping; gate fails on any double-escaped entity |
+| FLG-043 | Guide images bypassed the photo system | No dimensions (layout shift), no loading attribute, no illustration caption | Both moved into `assets/photos/` and rendered through the captioned figure component; gate now requires alt, width/height and loading on every image |
+| FLG-044 | Nine classes had no CSS rule | Unstyled text inside styled cards (safety table, badges, spec chips, hero facts) | Rules added; a class-vs-stylesheet audit reports zero unstyled classes |
+| FLG-045 | Six unused images were committed | Dead weight, and imagery that looked gated but was not | Deleted; the images on the site are exactly the images that pass the gate |
+| FLG-046 | Design brief counts were stale | "8 live guides" where 11 are live | Counts computed at build time from the guide list |
+| FLG-047 | Compare implied prices/ratings were absent | A reader was told the data does not exist, when the listing prints it and this site excludes it by policy | Wording corrected on `compare.html` and every product page; no value is printed |
+| FLG-048 | Spec citations name fetch chunk numbers | Citations that look precise but cannot be re-run | Kept, and explained: trust the table and field name, not the chunk number |
+| FLG-049 | The analytics switch was inert | `assets/config.js` documented an endpoint no page loaded, so turning measurement on did nothing | The shell loads `config.js` before `app.js`, and `app.js` reads `window.SITE_CONFIG.analyticsEndpoint` |
+
+**Re-verification performed in this pass (official listings only, 2026-11-20)**
+
+Titles re-read and matched for all five ASINs, and the `Product information` block read row by row
+for four of them. Confirmed directly: P-01 max 450 °F / 120 V / 1700 W / 13.38 × 11.81 × 10.63 in /
+13.3 lb / "6 liters" against "6 Quart"; P-03 1700 W and Max 400 °F against "450 °F Hi-Fry" in the
+title (FLG-017, FLG-018), 12.8 lb, 8 quarts, Part Number RJ38-SQSS-8T; P-05 upper temperature
+1000 °F, immersion depth 4.75 in, 5 sensors, Wi-Fi + Bluetooth; P-02 title (24 presets, "Six Cooking
+Accessories Included") against the 25-preset and seven-accessory fields already published as
+conflicts (FLG-021, FLG-031). Full record, including what was *not* re-read and why, is in
+`data/reverification-2026-11-20-session-d95938bb.json` and rendered on `verification.html`.
+
+Prices, star ratings, review counts and best-seller ranks were visible on the listings in this pass
+and are still not printed anywhere (Program Policies §2(b); FLG-005).
+
+**Still blocked, unchanged, and not presented as done:** the one-Special-Link-per-product test
+(FLG-004), tracking-ID activity (FLG-002), short-link compliance (FLG-003), Search Console
+(FLG-028), a deployed collector (FLG-010), a custom domain (FLG-006), a named editor (FLG-033), and
+any hands-on testing (FLG-032). All are owner actions; none can be completed from this environment.
+
+**Gate status after this pass:** `python3 scripts/check_site.py` → 36 pages, 5 product records,
+49 flags, 19 sources, ALL CHECKS PASS. Unit tests and the Node collector/client suite pass.
+
 ## Verification log (2026-11-20, session arena/9f19fe6b-affil2)
 - Synced cleanly with `origin/main` (`21424ae`, preserving PRs #17–#36 including `design-brief.html`, storefront photos, `pairCompare`, `guides/first-week-air-fryer.html`, and dated `sources.html` changelog).
 - Verified all 5 `link.amazon/*` short links, deep chunks across all 5 `/dp/` product pages, and official docs (`S01`–`S04`, `S20`–`S24`) live on 2026-11-20.
-- `python3 -B scripts/build_site.py` built all 33 pages idempotently.
-- `python3 -B scripts/check_site.py` passed (`checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`).
+- `python3 -B scripts/build_site.py` built all 36 pages idempotently.
+- `python3 -B scripts/check_site.py` passed (`checked 36 pages, 5 product records, 49 flags, 19 sources — ALL CHECKS PASS`).
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
 - `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).
