@@ -22,7 +22,7 @@
         "v": "6 quarts combined — 2 independent 3-quart baskets",
         "src": "About this item (bullets 1 and 3)",
         "st": "verified",
-        "note": ""
+        "note": "Title and Size field say 6 Quart; the Capacity field says 6 liters. Both printed (FLG-034)."
       },
       "temperature": {
         "v": "200–450 °F",
@@ -43,10 +43,10 @@
         "note": ""
       },
       "weight": {
-        "v": null,
-        "src": "Product Details table (weight not visible in fetched text)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "13.3 pounds",
+        "src": "Product information — Measurements (Item Weight)",
+        "st": "verified",
+        "note": "Read this pass; previously left blank because an earlier fetch did not return the spec panel."
       },
       "warranty": {
         "v": "1-year assurance provided by Chefman",
@@ -64,15 +64,19 @@
     "card": [
       [
         "Capacity",
-        "6 quarts combined (2 × 3-quart baskets)"
+        "6 quarts across two 3-quart baskets"
       ],
       [
         "Temperature",
         "200–450 °F"
       ],
       [
-        "Power",
-        "120 V / 1700 W"
+        "Weight",
+        "13.3 lb"
+      ],
+      [
+        "Model",
+        "RJ38-SQPF-3TDB-2W"
       ]
     ],
     "questions": [
@@ -96,10 +100,10 @@
     "title": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included",
     "fields": {
       "model": {
-        "v": null,
-        "src": "Item details table (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Earlier records listed 4-00675-02 and 4-00675-02X-VN; FLG-009 reports both on the listing. Neither appeared in this check’s fetched text, so the model is left blank."
+        "v": "4-00675-02X-VN",
+        "src": "Item details — Model Number / Part Number",
+        "st": "verified",
+        "note": "FLG-009 records that the listing has also shown 4-00675-02. One form is printed here with its source."
       },
       "capacity": {
         "v": "26 quarts (Product Details: 24.6 liters)",
@@ -108,16 +112,16 @@
         "note": ""
       },
       "temperature": {
-        "v": null,
-        "src": "About this item / Product Details (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "75–500 °F",
+        "src": "Product information — Min / Max Temperature Setting",
+        "st": "verified",
+        "note": ""
       },
       "power": {
-        "v": null,
-        "src": "About this item (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "120 volts / 1700 watts",
+        "src": "Product information — Voltage, Wattage, Output Wattage",
+        "st": "verified",
+        "note": ""
       },
       "dimensions": {
         "v": "16.9 in D × 15.8 in W × 14.8 in H",
@@ -135,7 +139,7 @@
         "v": "24 (page title) vs 25 (About this item)",
         "src": "Page title; About this item",
         "st": "conflict",
-        "note": "Listing states both 24 One-Touch Preset Options and 25 cooking pre-sets (FLG-021)."
+        "note": "Title, Configuration field and Product Description say 24; an About this item bullet says 25. Both published, neither chosen (FLG-021)."
       },
       "warranty": {
         "v": null,
@@ -156,18 +160,22 @@
         "26 quarts (24.6 liters)"
       ],
       [
-        "Presets",
-        "24 or 25 — conflicting listing text (FLG-021)"
+        "Temperature",
+        "75–500 °F"
       ],
       [
-        "Dimensions",
-        "16.9 × 15.8 × 14.8 in"
+        "Power",
+        "120 V / 1700 W"
+      ],
+      [
+        "Presets",
+        "24 or 25 — conflicting (FLG-021)"
       ]
     ],
     "questions": [
-      "Do you have 16.9 inches of depth plus clearance for French doors to swing?",
-      "Do you need rotisserie or pizza capacity, or is that unused space?",
-      "Will you move it, or leave it in one spot?"
+      "Do you have 16.9 inches of depth plus room for French doors to swing?",
+      "Do you need rotisserie and pizza capacity, or is that space you will never load?",
+      "Will it live on the counter, given the door and rack footprint?"
     ],
     "blurb": "A countertop oven that air-fries. The trade-off is footprint and weight: this is a 26-quart appliance, not a compact basket fryer."
   },
@@ -200,13 +208,13 @@
         "v": "200–400 °F (About this item) vs 450 °F Hi-Fry option (page title)",
         "src": "About this item; page title",
         "st": "conflict",
-        "note": "Both appear on the listing (FLG-018). Both published."
+        "note": "About this item states a 200–400 °F range; the Product Description and title state a 450 °F Hi-Fry button. Both published (FLG-018)."
       },
       "power": {
-        "v": "120 volts / 1000 watts",
-        "src": "About this item (model line)",
-        "st": "verified",
-        "note": "Register previously said 1700 W; the listing says 1000 W (corrected)."
+        "v": "1000 watts (About this item, model line RJ38-SQSS-8T) vs 1700 W (Product Description)",
+        "src": "About this item; Product Description",
+        "st": "conflict",
+        "note": "Both figures appear on the same listing page. The earlier register note called this a simple correction to 1000 W; that was incomplete (FLG-038)."
       },
       "dimensions": {
         "v": "12.75 in D × 13.5 in W × 10 in H",
@@ -246,11 +254,11 @@
       ],
       [
         "Temperature",
-        "200–400 °F (listing) · 450 °F Hi-Fry option in title"
+        "200–400 °F stated · 450 °F Hi-Fry in the title"
       ],
       [
         "Power",
-        "120 V / 1000 W"
+        "1000 W or 1700 W — conflicting (FLG-038)"
       ]
     ],
     "questions": [
@@ -333,7 +341,7 @@
       ],
       [
         "Certification",
-        "NIST and NSF"
+        "NIST and NSF (seller statement)"
       ]
     ],
     "questions": [
@@ -387,10 +395,10 @@
         "note": ""
       },
       "battery": {
-        "v": "Up to 50 hours on a full charge (About this item); 70 hours reported on the Product Description (FLG-008)",
-        "src": "About this item",
+        "v": "Up to 50 hours (About this item) vs up to 70 hours / “70+ hours” (Product Description)",
+        "src": "About this item; Product Description",
         "st": "conflict",
-        "note": "Both figures are published as reported; neither is chosen. The 70-hour text was reported by an earlier verification (FLG-008) and is not in the text fetched for this check."
+        "note": "Both figures seen on the same listing in one fetch this pass (FLG-008)."
       },
       "probe_length": {
         "v": null,
@@ -409,6 +417,12 @@
         "src": "About this item",
         "st": "verified",
         "note": ""
+      },
+      "accuracy": {
+        "v": "Within 1 °F",
+        "src": "Product Description",
+        "st": "verified",
+        "note": ""
       }
     },
     "card": [
@@ -421,8 +435,8 @@
         "Wi-Fi / Bluetooth via CHEF iQ app"
       ],
       [
-        "Heat rating",
-        "1000 °F heat safe"
+        "Battery",
+        "50 h or 70 h — conflicting (FLG-008)"
       ]
     ],
     "questions": [

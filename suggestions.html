@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Decision Center — ShopNow Kitchen</title>
-<meta name="description" content="Seventeen proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<title>Suggestions — ShopNow Kitchen</title>
+<meta name="description" content="Proposals for this site, with honest status, a review box and an exportable record, so a path is chosen before anything is built.">
 <link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta property="og:site_name" content="ShopNow Kitchen">
-<meta property="og:title" content="Decision Center — ShopNow Kitchen">
-<meta property="og:description" content="Seventeen proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<meta property="og:title" content="Suggestions — ShopNow Kitchen">
+<meta property="og:description" content="Proposals for this site, with honest status, a review box and an exportable record, so a path is chosen before anything is built.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Decision Center", "url": "https://karagemop466-tech.github.io/Affil2/suggestions.html"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Suggestions", "url": "https://karagemop466-tech.github.io/Affil2/suggestions.html"}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -34,30 +34,32 @@
   <a href="disclosure.html">How we disclose</a></div></div>
 <main id="main" class="wrap">
 
-<p class="crumbs"><a href="index.html">Home</a> &rsaquo; <span>Decision Center</span></p>
-<h1>Decision Center</h1>
-<p class="lede">Every proposal for this site lands here first. Nothing below is auto-applied. Read the
-  proposal, its evidence, and its cost, then rank it. Your ranking is stored in your browser and can
-  be exported as CSV, so you can review the shortlist before anything changes.</p>
+<p class="crumbs"><a href="index.html">Home</a> &rsaquo; <span>Suggestions</span></p>
+<h1>Suggestions</h1>
+<p class="lede">Every idea for this site lands here before anything is built. Read the proposal, the
+  reason it matters and what it would cost, then record a decision: <strong>approve</strong>,
+  <strong>defer</strong> or <strong>reject</strong>. Nothing on this page changes the site by itself.
+  Your decisions are stored in this browser and export as CSV.</p>
 
 <div class="panel">
   <h2>How to use this page in three minutes</h2>
   <ol class="tight">
-    <li>Read the <strong>Status</strong> column first. Anything marked <em>Shipped</em> is already
-      live &mdash; the verification note tells you where to check it.</li>
+    <li>Read the <strong>Status</strong> column first. <em>Shipped</em> means it is already live and the
+      check column tells you where to look.</li>
     <li>Anything marked <em>Blocked</em> or <em>Not started</em> needs a decision or a credential from
-      you. Rank those against each other.</li>
-    <li>Use the arrows to order the shortlist, then export the ranking. Nothing is built from this
-      page without an explicit choice recorded in the worksheet at the bottom.</li>
+      the owner. Those are the rows where a click changes something.</li>
+    <li>Click <strong>Approve</strong>, <strong>Defer</strong> or <strong>Reject</strong>. The tally under
+      the table updates, and the export gives you a dated list to work from.</li>
   </ol>
 </div>
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>Seventeen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>22 proposals with honest status. &ldquo;Shipped&rdquo; means it is live and
+    checkable now; the last two columns are yours.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
-    <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
+    <th scope="col">How to check it</th><th scope="col">Review</th><th scope="col">Your rank</th></tr></thead>
   <tbody><tr data-sug="SG-01">
   <td class="nowrap"><strong>SG-01</strong></td>
   <td><strong>Lead the front page with products, not with verification</strong><br><span class="small">Rebuild the landing page as a publication front page. Keep every dashboard surface reachable from one footer group.</span></td>
@@ -66,6 +68,12 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">Visible on index.html: hero, three featured products, one nav group.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-01" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-01" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-01" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-01" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-01" aria-label="Move SG-01 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-01" aria-label="Move SG-01 down">&darr;</button>
@@ -73,12 +81,18 @@
   </td>
 </tr><tr data-sug="SG-02">
   <td class="nowrap"><strong>SG-02</strong></td>
-  <td><strong>Publish question-shaped guides, then measure arrivals</strong><br><span class="small">Eight guides built from real buying decisions, each added to the sitemap and the RSS feed, each ending in a verdict.</span></td>
+  <td><strong>Publish question-shaped guides, then measure arrivals</strong><br><span class="small">Twelve guides built from real buying decisions, each added to the sitemap and the RSS feed, each ending in a verdict.</span></td>
   <td>Long-tail question queries are how a small site earns its first organic traffic. A guide that answers one question beats a listicle.</td>
   <td>High — organic traffic</td>
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
-  <td class="small">guides.html lists eight; sitemap.xml and feed.xml include all eight.</td>
+  <td class="small">guides.html lists twelve; sitemap.xml and feed.xml include all twelve.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-02" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-02" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-02" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-02" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-02" aria-label="Move SG-02 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-02" aria-label="Move SG-02 down">&darr;</button>
@@ -92,6 +106,12 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">disclosure.html lists the five events; assets/app.js implements them.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-03" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-03" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-03" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-03" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-03" aria-label="Move SG-03 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-03" aria-label="Move SG-03 down">&darr;</button>
@@ -105,6 +125,12 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">Every generated page contains the statement twice; the build gate fails otherwise.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-04" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-04" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-04" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-04" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-04" aria-label="Move SG-04 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-04" aria-label="Move SG-04 down">&darr;</button>
@@ -118,6 +144,12 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">Gate fails on any amazon.com anchor without rel=sponsored.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-05" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-05" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-05" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-05" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-05" aria-label="Move SG-05 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-05" aria-label="Move SG-05 down">&darr;</button>
@@ -131,6 +163,12 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">Gate fails if a product page drops either field.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-06" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-06" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-06" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-06" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-06" aria-label="Move SG-06 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-06" aria-label="Move SG-06 down">&darr;</button>
@@ -144,6 +182,12 @@
   <td>Owner action</td>
   <td><span class="pill blocked">Blocked on the owner</span></td>
   <td class="small">Product pages still say PENDING TEST. Cannot be completed without account access.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-07" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-07" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-07" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-07" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-07" aria-label="Move SG-07 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-07" aria-label="Move SG-07 down">&darr;</button>
@@ -157,6 +201,12 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">sitemap.xml lists every page; three JSON-LD blocks on product pages; search.html reads a generated index.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-08" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-08" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-08" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-08" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-08" aria-label="Move SG-08 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-08" aria-label="Move SG-08 down">&darr;</button>
@@ -170,6 +220,12 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">how-we-choose.html, about.html, two seasonal/occasion guides, inline SVG artwork throughout.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-09" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-09" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-09" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-09" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-09" aria-label="Move SG-09 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-09" aria-label="Move SG-09 down">&darr;</button>
@@ -183,6 +239,12 @@
   <td>Owner action</td>
   <td><span class="pill blocked">Blocked on the owner</span></td>
   <td class="small">feed.xml exists and validates; no Search Console property has been verified.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-10" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-10" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-10" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-10" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-10" aria-label="Move SG-10 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-10" aria-label="Move SG-10 down">&darr;</button>
@@ -196,6 +258,12 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped, intentionally empty</span></td>
   <td class="small">campaign-ledger.html renders zero rows and says why.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-11" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-11" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-11" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-11" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-11" aria-label="Move SG-11 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-11" aria-label="Move SG-11 down">&darr;</button>
@@ -209,6 +277,12 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">scripts/check_site.py runs on every build and fails on disclosure, sponsorship, price and link errors.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-12" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-12" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-12" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-12" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-12" aria-label="Move SG-12 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-12" aria-label="Move SG-12 down">&darr;</button>
@@ -222,6 +296,12 @@
   <td>Owner action, needs API approval</td>
   <td><span class="pill not">Not started — recommended for approval</span></td>
   <td class="small">Blocked: no API credentials. Program Policies 2(b) is the constraint.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-13" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-13" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-13" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-13" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-13" aria-label="Move SG-13 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-13" aria-label="Move SG-13 down">&darr;</button>
@@ -235,6 +315,12 @@
   <td>Small, owner decision</td>
   <td><span class="pill not">Not started — recommended for approval</span></td>
   <td class="small">Currently flagged as FLG-006.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-14" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-14" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-14" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-14" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-14" aria-label="Move SG-14 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-14" aria-label="Move SG-14 down">&darr;</button>
@@ -248,6 +334,12 @@
   <td>Owner action, needs API approval</td>
   <td><span class="pill not">Not started — recommended for approval</span></td>
   <td class="small">Currently flagged as FLG-007.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-15" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-15" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-15" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-15" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-15" aria-label="Move SG-15 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-15" aria-label="Move SG-15 down">&darr;</button>
@@ -261,6 +353,12 @@
   <td>Ongoing</td>
   <td><span class="pill blocked">Blocked on Search Console</span></td>
   <td class="small">Requires Search Console access (SG-10).</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-16" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-16" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-16" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-16" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-16" aria-label="Move SG-16 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-16" aria-label="Move SG-16 down">&darr;</button>
@@ -274,20 +372,132 @@
   <td>Medium, one design pass</td>
   <td><span class="pill not">Not started — recommended for approval</span></td>
   <td class="small">design-brief.html is on this site now. Nothing changes until the owner picks this row.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-17" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-17" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-17" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-17" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-17" aria-label="Move SG-17 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-17" aria-label="Move SG-17 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
+</tr><tr data-sug="SG-18">
+  <td class="nowrap"><strong>SG-18</strong></td>
+  <td><strong>Add a review column so suggestions can be approved, deferred or rejected</strong><br><span class="small">Each proposal carries three buttons. The choice is stored in the reader's browser, shown beside the row, counted in a running tally, and exports to CSV next to the ranking.</span></td>
+  <td>Ranking tells you what is most interesting. It does not record a decision. A review column turns a list into a queue somebody can work through.</td>
+  <td>High — turns proposals into decisions</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">The Review column on this page; the tally below the table; the CSV export.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-18" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-18" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-18" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-18" aria-live="polite"></span>
+  </td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-18" aria-label="Move SG-18 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-18" aria-label="Move SG-18 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-19">
+  <td class="nowrap"><strong>SG-19</strong></td>
+  <td><strong>Show readers what each proposal would cost them</strong><br><span class="small">Every proposal states its effort in plain words — a decision, an account, an approval, or an ongoing commitment — rather than a size label.</span></td>
+  <td>Most of these are blocked on a credential, not on work. Saying so stops the list looking like a backlog when it is really a checklist of things only the owner can unlock.</td>
+  <td>Medium — honest planning</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">The Cost column; the Owner-blocked group in the shortlist.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-19" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-19" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-19" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-19" aria-live="polite"></span>
+  </td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-19" aria-label="Move SG-19 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-19" aria-label="Move SG-19 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-20">
+  <td class="nowrap"><strong>SG-20</strong></td>
+  <td><strong>Write the guides buyers actually search for</strong><br><span class="small">Four more question-shaped guides: the quart-versus-litre mismatch, counter depth and door swing, kitchen circuits and wattage, and the USDA temperature chart.</span></td>
+  <td>Each answers a question a buyer has in front of them, and each is built from a source this site already cites. None of them guesses at search volume.</td>
+  <td>High — organic traffic</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">guides.html lists twelve; sitemap.xml and feed.xml include all twelve.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-20" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-20" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-20" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-20" aria-live="polite"></span>
+  </td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-20" aria-label="Move SG-20 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-20" aria-label="Move SG-20 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-21">
+  <td class="nowrap"><strong>SG-21</strong></td>
+  <td><strong>Say what the commission rate is, from the published table</strong><br><span class="small">The Standard Commission Income Statement lists Kitchen at 4.50% for website Associates. The site now states that, names the source, and separates it from the Onsite rate.</span></td>
+  <td>A buyer-facing site that earns commission should be able to say what the published rate is. It is a table, not a forecast, and it is checkable.</td>
+  <td>Medium — transparency</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">sources.html S23 and S24; how-we-choose.html and disclosure.html quote the figure.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-21" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-21" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-21" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-21" aria-live="polite"></span>
+  </td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-21" aria-label="Move SG-21 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-21" aria-label="Move SG-21 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-22">
+  <td class="nowrap"><strong>SG-22</strong></td>
+  <td><strong>Publish a re-verification interval, and keep it</strong><br><span class="small">Every listing is re-read and re-dated when the register is rebuilt. The date is printed on the page, and stale fields are corrected rather than left standing.</span></td>
+  <td>Listings change under a static site. A dated stamp is the difference between a reference and a rumour.</td>
+  <td>Medium — trust over time</td>
+  <td>Ongoing</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">Every product page carries the date; data/products.json records the source per field.</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="SG-22" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="SG-22" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="SG-22" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="SG-22" aria-live="polite"></span>
+  </td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-22" aria-label="Move SG-22 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-22" aria-label="Move SG-22 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
 </tr></tbody>
 </table>
+
+<div class="tally" id="reviewTally" aria-live="polite">
+  <p class="small">Approved <strong id="tApprove">0</strong> ·
+    Deferred <strong id="tDefer">0</strong> ·
+    Rejected <strong id="tReject">0</strong> ·
+    <span id="tLeft">nothing reviewed yet</span></p>
+</div>
 <p class="cta">
+  <button type="button" id="exportReview">Export my review (CSV)</button>
   <button type="button" id="exportRank">Export my ranking (CSV)</button>
+  <button type="button" id="resetReview" class="ghostbtn">Clear reviews</button>
   <button type="button" id="resetRank" class="ghostbtn">Reset ranking</button>
 </p>
+<p class="small">Reviews and rankings are written to this browser only. Nothing is sent anywhere, and
+  nothing on the site changes until a person makes the change.</p>
 
-<h2>My shortlist</h2>
-<p class="small">Filtered down to what is <em>not</em> yet shipped, because that is where a decision
+<h2>Open decisions, and who can unblock them</h2>
+<p class="small">Filtered to what is <em>not</em> yet shipped, because that is where a decision
   actually changes something.</p>
 <table class="shortlist">
   <caption>Open decisions only.</caption>
@@ -301,12 +511,16 @@
     <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
     <tr><td>SG-17</td><td>Approve the Design &amp; Traffic Brief as the next build</td><td>Owner (decision)</td></tr>
   </tbody>
+  <caption>Open decisions only, generated from the proposals that are not yet shipped.
+    &ldquo;Unlocked by&rdquo; is the thing that has to happen first, not a price.</caption>
+  <thead><tr><th scope="col">ID</th><th scope="col">Decision needed</th><th scope="col">Who can do it</th></tr></thead>
+  <tbody><tr><td class="nowrap">SG-07</td><td>Test one Special Link per product inside the enrolled account</td><td>Owner action</td><td>Blocked on the owner</td></tr><tr><td class="nowrap">SG-10</td><td>Reader capture and Search Console verification</td><td>Owner action</td><td>Blocked on the owner</td></tr><tr><td class="nowrap">SG-13</td><td>Add a price display through the Product Advertising API</td><td>Owner action, needs API approval</td><td>Not started — recommended for approval</td></tr><tr><td class="nowrap">SG-14</td><td>Add a custom domain</td><td>Small, owner decision</td><td>Not started — recommended for approval</td></tr><tr><td class="nowrap">SG-15</td><td>Get real product photography through the API</td><td>Owner action, needs API approval</td><td>Not started — recommended for approval</td></tr><tr><td class="nowrap">SG-16</td><td>Publish a weekly cadence and hold it</td><td>Ongoing</td><td>Blocked on Search Console</td></tr><tr><td class="nowrap">SG-17</td><td>Adopt the Design &amp; Traffic Brief as the next build step</td><td>Medium, one design pass</td><td>Not started — recommended for approval</td></tr></tbody>
 </table>
 
 <h2>Record a decision</h2>
 <form id="decisionForm" class="decision-form">
   <label>Chosen path (proposal IDs)
-    <input name="chosen" required placeholder="e.g. SG-13, SG-14">
+    <input name="chosen" required placeholder="e.g. SG-07, SG-14">
   </label>
   <label>Why this path
     <textarea name="why" rows="3" placeholder="What made this the right next move?"></textarea>
@@ -317,13 +531,11 @@
   <button type="submit">Save decision locally</button>
 </form>
 <p id="decisionSaved" class="small" aria-live="polite"></p>
-<p class="small">Saving writes to this browser only. Export it with your ranking and keep it with the
-  <a href="campaign-ledger.html">campaign ledger</a> so the decision has a dated record.</p>
 
 <h2>What we will not do without a new decision</h2>
 <ul>
   <li>Print prices or star ratings copied from a listing.</li>
-  <li>Call any product "best" without evidence.</li>
+  <li>Call any product &ldquo;best&rdquo; without evidence.</li>
   <li>Auto-publish generated content without passing the build gate.</li>
   <li>Merge the intended and observed ASIN fields.</li>
   <li>Scale outbound links before the one-per-product test passes.</li>

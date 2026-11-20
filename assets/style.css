@@ -461,3 +461,25 @@ p.statement{
   overflow-x: auto;
   margin: 0.5rem 0 1.5rem;
 }
+
+/* ---------- review + tally (suggestions page) ---------- */
+.review{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.review .rvbt{
+  font-size:12px;padding:4px 8px;border:1px solid var(--line-2);background:var(--paper);
+  color:var(--ink-2);border-radius:7px;cursor:pointer;line-height:1.2
+}
+.review .rvbt:hover{border-color:var(--accent);color:var(--accent-d)}
+.review .rvbt[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.review .verdict{display:block;width:100%;font-size:11.5px;font-weight:600;letter-spacing:.02em}
+.review .verdict.v-approve{color:var(--ok)}
+.review .verdict.v-defer{color:var(--warn)}
+.review .verdict.v-reject{color:var(--accent-d)}
+tr.rv-approve td{background:#f3f7ea}
+tr.rv-defer td{background:#fdf6e6}
+tr.rv-reject td{background:#fdf0eb}
+.tally{margin:10px 0 4px}
+.grid-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:820px){.grid-two{grid-template-columns:1fr}}
+@media (max-width:900px){
+  .review .rvbt{font-size:11px;padding:4px 6px}
+}

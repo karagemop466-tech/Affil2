@@ -404,25 +404,34 @@ BUILT = []
 # ---- home
 def build_home():
     featured = [BY_ID["P-01"], BY_ID["P-03"], BY_ID["P-04"]]
+    also = [BY_ID["P-02"], BY_ID["P-05"]]
     body = f"""
 <div class="issue"><b>THE KITCHEN EDIT</b><span></span> VOL. 01 &nbsp; / &nbsp; NOVEMBER 2026</div>
 <section class="cover">
  <div class="cover-copy"><p class="eyebrow">● &nbsp; THE WEEKEND GUIDE</p>
  <h1>One basket,<br>two baskets,<br><em>or an oven?</em></h1>
  <p>Start with dinner. A tray of roast potatoes and two sides that need different temperatures ask different things of an air fryer.</p>
- <a class="cover-link" href="guides/basket-vs-oven.html">Read the buying guide &nbsp; →</a></div>
+ <a class="cover-link" href="guides/basket-vs-oven.html">Read the buying guide &nbsp; &rarr;</a></div>
  <img src="assets/feature.jpg" alt="Illustrated kitchen scene with roast potatoes and a basket air fryer" fetchpriority="high">
 </section>
 <section class="dept"><p class="kicker">THE SHOP DIRECTORY</p><h2>Shop by category</h2>
-<div class="aisles"><a href="air-fryers.html"><img src="assets/basket.jpg" alt=""><span>01 / APPLIANCES<strong>Air fryers ↗</strong></span></a>
-<a href="meat-thermometers.html"><img src="assets/probe.jpg" alt=""><span>02 / TOOLS<strong>Meat thermometers ↗</strong></span></a></div></section>
+<div class="aisles"><a href="air-fryers.html"><img src="assets/basket.jpg" alt=""><span>01 / APPLIANCES<strong>Air fryers &nearr;</strong></span></a>
+<a href="meat-thermometers.html"><img src="assets/probe.jpg" alt=""><span>02 / TOOLS<strong>Meat thermometers &nearr;</strong></span></a></div></section>
 <section>
   <p class="kicker">FROM THE BUYING DESK</p><h2>Three places to start</h2>
-  <p class="muted">Not the whole market &mdash; these five are the ones we cover. These are the three we would start with, and the reason is written on each card.</p>
+  <p class="muted">Not the whole market &mdash; these five are the ones we cover. These are the three we
+    would start with, and the reason is written on each card.</p>
   <div class="grid">
     {"".join(card(p, "") for p in featured)}
   </div>
-  <p class="small"><a href="shop.html">See all five products &rarr;</a></p>
+</section>
+
+<section>
+  <h2>Also worth a look</h2>
+  <div class="grid grid-two">
+    {"".join(card(p, "") for p in also)}
+  </div>
+  <p class="small"><a href="shop.html">All five products, side by side &rarr;</a></p>
 </section>
 
 <section class="split">
@@ -433,12 +442,19 @@ def build_home():
         <span>Footprint, doors, and how you load it.</span></li>
       <li><a href="guides/capacity-checklist.html">A no-hype checklist for comparing capacity</a>
         <span>Quarts are not servings.</span></li>
+      <li><a href="guides/quarts-vs-litres.html">Six quarts or six litres? When the units disagree</a>
+        <span>Two fields, one appliance, two numbers.</span></li>
+      <li><a href="guides/counter-depth.html">Will it fit? Depth, door swing and clearance</a>
+        <span>Measure the counter before the feature list.</span></li>
+      <li><a href="guides/wattage-and-circuits.html">What a 1700 W appliance means for your circuit</a>
+        <span>Two appliances, one breaker.</span></li>
       <li><a href="guides/cleanup-counter-space.html">Cleanup and counter-space trade-offs</a>
         <span>Dishwasher-safe is not the same as easy.</span></li>
       <li><a href="guides/instant-vs-wireless.html">Instant-read or wireless thermometer?</a>
         <span>Speed at the grill versus leaving the room.</span></li>
-      <li><a href="guides/thermometer-accuracy.html">How to read accuracy claims</a>
-        <span>What &plusmn;0.5&nbsp;&deg;F and NIST actually mean.</span></li>
+      <li><a href="guides/usda-temperature-chart.html">The only temperature chart you need</a>
+        <span>Straight from the USDA, not from us.</span></li>
+      <li><a href="guides.html">All twelve guides &rarr;</a></li>
     </ul>
   </div>
   <aside class="panel">
@@ -446,8 +462,8 @@ def build_home():
     <ol class="tight">
       <li>Every specification is read from the official listing and stamped with a date.</li>
       <li>When a listing contradicts itself, both figures are printed. Nothing is averaged.</li>
-      <li>Prices and ratings are never copied &mdash; Amazon policy on price display, and it keeps
-        us honest.</li>
+      <li>Prices, star ratings and review counts are never copied &mdash; Amazon policy on price
+        display, and it keeps us honest.</li>
       <li>We have not cooked with these units. The site says so instead of implying otherwise.</li>
     </ol>
     <p class="small"><a href="how-we-choose.html">How we choose and what we won't claim &rarr;</a></p>
@@ -471,22 +487,13 @@ def build_home():
     <details><summary>Which one would you buy?</summary><p>It depends on one thing: do you cook two
       things at once. If yes, the dual-basket Chefman. If you cook in batches and want the biggest
       single basket, the 8-quart Chefman. If you want an oven that air-fries, the Emeril &mdash; and
-      only if you have 16.9 inches of depth.</p></details>
+      only if you have 16.9 inches of depth plus room for the doors to swing.</p></details>
     <details><summary>Are the star ratings on Amazon reliable?</summary><p>They are real, and they are
       not shown here &mdash; partly policy, partly because a rating summarises other people's
       kitchens. The specification table is more useful for your counter.</p></details>
     <details><summary>How current is this?</summary><p>Every listing was re-read on {TODAY}. Listings
       change; the date is printed on each product page so you can judge.</p></details>
   </div>
-</section>
-
-<section class="panel">
-  <h2>Working on this site?</h2>
-  <p>Every internal record is reachable from the footer of every page: the
-    <a href="suggestions.html">Decision Center</a> where proposals are ranked before anything is
-    built, the <a href="questions.html">Open Questions</a> register, the
-    <a href="flagged.html">Flagged for Review</a> page, and the
-    <a href="sources.html">source register</a>.</p>
 </section>
 """
     ld = [{"@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": BASE,
@@ -746,20 +753,20 @@ GUIDES = [
             vertical clearance. The basket wins on speed and simplicity; the oven wins on volume and
             on foods that need to lie flat."""),
             ("Measure the footprint, including the swing", """The oven-style Emeril here is 16.9 inches
-            deep. The two basket units are 13.4 and 12.75 inches deep. Depth is what usually
+            deep. The two basket units are 13.38 and 12.75 inches deep. Depth is what usually
             disqualifies a counter, because the wall behind and the air gap above both have to be
             accounted for. A French-door oven also needs room in front for the doors to open, which
             is easy to forget when you are measuring a gap between a toaster and a coffee maker."""),
             ("Think about how you load it, and how you clean it", """Pulling a drawer out towards you is
             one movement. Opening two doors, sliding a rack out, and lifting a tray is several. The
-            basket units are lighter and easier to move; the 26-quart oven weighs 26.5 pounds and is
-            realistically going to stay where you put it. If you clean in the sink, a removable
+            basket units are lighter and easier to move; the 26-quart oven is a stainless box with a door
+            and racks, and realistically it stays where you put it. If you clean in the sink, a removable
             nonstick basket is simpler than a stainless cavity and racks."""),
             ("Where each one wins", """Choose the dual-basket unit if you routinely cook a main and a
             side together and want them to finish together. Choose the single 8-quart basket if you
             cook one thing at a time in quantity and want the simplest possible operation. Choose the
-            oven if you also want to roast, toast, and rotisserie, and you have the counter depth and
-            the appetite for a 26.5-pound appliance that stays put."""),
+            oven if you also want to roast, toast, and rotisserie, and you have the counter depth for a
+            door that opens in front of the unit."""),
          ],
          verdict="""Measure your counter depth first, then decide between a drawer and a door. If
          both fit, pick by what you cook: two things at once means two baskets, one big tray of
@@ -813,9 +820,11 @@ GUIDES = [
             dual-basket Chefman says the removable non-stick coated baskets are dishwasher safe. The
             oven does not make a dishwasher claim about its cavity, and it would not be realistic if
             it did."""),
-            ("Weight decides where it lives", """At 26.5 pounds the Emeril is a fixture. The two basket
-            units are around 13 pounds, which is heavy but movable. If you plan to put the appliance
-            away between uses, weight is the number that decides whether that actually happens."""),
+            ("Where it lives decides whether you use it", """The two basket units are drawers you lift out
+            and carry to the sink. The oven-style unit is a stainless box with a door and racks, and it
+            stays where you put it. If you plan to put the appliance away between uses, check the weight
+            on the listing first \u2014 this site only prints a weight it read on the page, and only one of
+            these three listings showed one (13.3 lb for the 6-quart Chefman)."""),
             ("Measure depth, swing and clearance together", """Depth alone is not enough. Add the air
             gap behind, the headroom needed above the vents, and &mdash; for a door-style oven &mdash;
             the space the doors occupy when open. Write all four numbers down before you move
@@ -942,10 +951,123 @@ GUIDES = [
             ("Check the circuit before the menu", """Two 1700-watt appliances on one kitchen circuit
             plus an oven is a tripped breaker, not a crispier sprout. Wattage is worth knowing before
             the day, which is why it is in the specification table &mdash; and why the 8-quart
-            Chefman's contradictory 1700&nbsp;W / 1000&nbsp;W figures are flagged as FLG-017."""),
+            Chefman's contradictory 1000&nbsp;W / 1700&nbsp;W figures are flagged as FLG-038."""),
          ],
          verdict="""Use the countertop appliance for sides and reheats, keep the bird in the oven, and
          check what else is on the circuit before you plug in a second 1700-watt unit."""),
+    dict(slug="quarts-vs-litres", title="Six quarts or six litres? What to do when a listing gives two units",
+         sub="One capacity field said 6 quarts and another said 6 liters. The conversion is the boring part; the useful part is knowing which number to trust.",
+         kicker="Buying guide · 4 min read", products=["P-01", "P-02"],
+         intro="""A listing that gives capacity in quarts in one field and litres in another is not
+         necessarily wrong about either. Six US quarts is about 5.7 litres, and six litres is about 6.3
+         US quarts, so the two figures are close enough to describe the same appliance with a rounding
+         difference. That is worth knowing before you reject a product over a unit mismatch.""",
+         sections=[
+            ("What the two units actually mean", """A US liquid quart is about 0.946 litres, so
+            quarts are the larger unit. That means a number in quarts converts to a smaller number in
+            litres for the same volume. If a listing shows the same digit in both fields, one of the two
+            figures has almost certainly been carried across without conversion."""),
+            ("Where this listing does it", """The dual-basket Chefman states 6 quarts in its title and
+            its Size field, and 6 liters in the Capacity field. Six litres is roughly 6.3 US quarts, so
+            the Capacity field describes a slightly larger cavity than the title does. Both figures are
+            printed on this site, and the discrepancy is flagged as FLG-034."""),
+            ("Does a rounding gap change the purchase?", """Almost never on its own. A 6.3-quart cavity
+            and a 6-quart cavity hold the same dinner. What does change the purchase is how that volume
+            is split: two 3-quart baskets cannot take a single large item, even though their total is
+            the same as one 6-quart basket."""),
+            ("The number to check instead", """The listing's own concrete claims are more useful than
+            either unit figure. The Emeril listing states it fits a 12-inch pizza and can rotisserie a
+            6-lb chicken. Those are statements about usable interior size, and you can measure a pizza
+            pan against them."""),
+            ("What to do at checkout", """If a capacity figure is the deciding factor for you, check the
+            live listing, because fields change. If the two units still disagree, the smaller figure is
+            the safe planning number."""),
+         ],
+         verdict="""Treat a unit mismatch as a rounding issue, not a red flag, and decide on flat area
+         and basket count instead. A quart total tells you less than one concrete fit claim."""),
+    dict(slug="counter-depth", title="Will it fit? Measure depth, door swing and clearance before anything else",
+         sub="Every air fryer here is wider than a toaster. Two of them need room in front as well, and one needs 16.9 inches of depth.",
+         kicker="Buying guide · 5 min read", products=["P-02", "P-01", "P-03"],
+         intro="""The first thing a countertop appliance has to do is sit on the counter. That sounds
+         obvious until you measure the space between the kettle and the wall, and then measure the
+         appliance. Depth is the measurement that disqualifies more kitchens than any other.""",
+         sections=[
+            ("Get the depth right, including the gap behind", """The three air fryers here are 16.9,
+            13.38 and 12.75 inches deep, as stated in their listing spec panels. Add the clearance the
+            manual asks for behind and above the vents. A unit pushed flat against a wall is a unit
+            recirculating its own hot air."""),
+            ("Door swing versus drawer pull", """A basket fryer needs room in front for you to stand and
+            pull a drawer towards you. The French-door oven needs room in front for two doors to open and
+            stay open while you slide a rack out. In a narrow galley that difference decides whether the
+            appliance is usable at all."""),
+            ("Width is the easy one; height is the trap", """Width matters if the appliance has to live
+            between two fixed objects. Height matters if it lives under a cupboard, because the top vents
+            need somewhere to exhaust. Check the cupboard above, not just the counter below."""),
+            ("Where it lives between uses", """If the plan is to put it away after each use, the plan has
+            to survive a drawer pull, a door swing and a lift. This site prints a weight only when the
+            listing showed one: 13.3 lb for the 6-quart Chefman. The other two listings did not show a
+            weight in the text we fetched (FLG-040), so no weight is printed for them."""),
+            ("The two-minute test", """Cut three strips of paper to 16.9, 13.38 and 12.75 inches. Lay
+            each on the counter where the appliance would go, then stand in front of it. If the paper
+            reaches the wall or the sink, that unit does not fit."""),
+         ],
+         verdict="""Measure depth plus clearance, then the space in front, then the headroom. Buy the
+         unit that survives all three, and treat features as a tiebreaker."""),
+    dict(slug="wattage-and-circuits", title="What a 1700 W appliance means for your kitchen circuit",
+         sub="Air fryers are high-draw appliances. Two on one circuit is a tripped breaker, not a crispier sprout.",
+         kicker="Buying guide · 4 min read", products=["P-02", "P-03", "P-01"],
+         intro="""Air fryers convert electricity into heat, which is the most power-hungry thing a
+         countertop appliance does. A kettle is the same. Knowing the wattage before the day you need it
+         is cheaper than finding out at the breaker panel.""",
+         sections=[
+            ("Read the number off the listing", """The Emeril's spec panel states 1700 W at 120 V. The
+            6-quart Chefman's spec panel states 1700 W at 120 V. The 8-quart Chefman states 1000 W in one
+            place and 1700 W in another, which is flagged as FLG-038 and is exactly why both are printed
+            here rather than one being chosen."""),
+            ("What 1700 W means in amps", """At 120 V a 1700 W appliance draws roughly 14 amps. A
+            standard US kitchen small-appliance circuit is 20 amps, and it is usually shared with the
+            other countertop outlets in the room. Check the panel before assuming you have the headroom."""),
+            ("What else is on that circuit", """The kettle, the coffee machine, the toaster and the
+            microwave often share one circuit. Two 1700 W appliances running together, plus anything
+            else, is how a holiday dinner ends in the dark. Run one high-draw appliance at a time."""),
+            ("Extension cords and power strips", """A high-draw appliance belongs in a wall outlet. If
+            the cord does not reach, the appliance belongs somewhere else, not on a strip. Follow the
+            manufacturer's instructions, which are linked on the listing."""),
+            ("Why this is in a buying guide", """Because the wattage is the one specification that can
+            make an otherwise ideal appliance unusable in your kitchen. It is worth thirty seconds of
+            arithmetic before you order."""),
+         ],
+         verdict="""Add up the wattage of everything that shares the circuit, and plan to run one
+         high-draw appliance at a time. If a listing gives two wattages, assume the higher one."""),
+    dict(slug="usda-temperature-chart", title="The temperature chart that actually matters (and it is not on Amazon)",
+         sub="Food-safety minimums come from the USDA, not from a listing or from us. Here is the chart, quoted.",
+         kicker="Reference · 3 min read", products=["P-04", "P-05"],
+         intro="""A meat thermometer is only as useful as the number you are cooking towards. That
+         number does not come from an Amazon listing and it should not come from a blog. In the United
+         States it comes from the USDA Food Safety and Inspection Service, which publishes a table of
+         safe minimum internal temperatures.""",
+         sections=[
+            ("The minimums, quoted", """Poultry, including ground poultry, giblets and stuffing: 165 °F
+            (73.9 °C). Ground meats: 160 °F (71.1 °C). Beef, pork, veal and lamb steaks, chops and roasts:
+            145 °F (62.8 °C) with a rest of at least three minutes. Fish and shellfish: 145 °F (62.8 °C).
+            Leftovers and casseroles: 165 °F (73.9 °C). Eggs: 160 °F (71.1 °C)."""),
+            ("Where those numbers come from", """The USDA FSIS Safe Minimum Internal Temperature Chart,
+            linked in full on every thermometer page on this site and recorded as source S22 in the
+            source register. The chart was last updated in April 2025, and it is the only temperature
+            source this site quotes."""),
+            ("What accuracy you actually need", """The chart's targets are whole degrees: 145, 160, 165.
+            A thermometer that reads within one degree is comfortably sufficient for those targets.
+            Anything beyond that is about repeatability and preference, not safety."""),
+            ("Calibrate before you trust it", """An ice-water slurry sits at 32 °F at sea level, which
+            makes it a free reference point. If a thermometer reads several degrees off in ice water, it
+            will read several degrees off in a chicken. The ThermoMaven listing ships a calibration
+            certificate; the CHEF iQ listing describes USDA-approved doneness presets in its app."""),
+            ("Rest time is part of the number", """For whole cuts the USDA figure includes a rest of at
+            least three minutes. Carry-over cooking continues after the food leaves the heat, which is why
+            pulling a roast at the target rather than above it is the usual practice."""),
+         ],
+         verdict="""Cook to the USDA chart, calibrate the probe in ice water, and let whole cuts rest.
+         A faster thermometer does not change the target."""),
     dict(slug="small-kitchen-air-fryer", title="Air fryer for a small kitchen: the three measurements that decide it",
          sub="Depth, door swing and where it lives when it is not in use.",
          kicker="Buying guide · 4 min read", products=["P-03", "P-01", "P-02"],
@@ -960,8 +1082,9 @@ GUIDES = [
             French doors need room in front for two doors to open and stay open. In a narrow galley
             that difference decides whether the appliance is usable at all."""),
             ("3. Where it lives between uses", """If it goes in a cupboard, weight decides whether that
-            happens twice or never. The 8-quart Chefman is 12.8 pounds; the Emeril is 26.5. Neither
-            is a one-hand lift, but only one of them is realistically movable."""),
+            happens twice or never. This site only prints weights it read on the page, and the listings for
+            the 8-quart Chefman and the Emeril did not show one in the text fetched (FLG-040). Measure
+            with your own cupboard in mind before assuming either is a one-hand lift."""),
             ("What to give up first", """Windows, presets, and a second basket are all things you can
             live without. Depth and weight are not. If the counter is tight, a single-basket unit
             with no window is the honest choice, and it is also the cheapest of the three here."""),
@@ -1062,6 +1185,12 @@ def build_how():
   <li><strong>We have not cooked with any of these.</strong> There is no hands-on test, no
     side-by-side taste trial, and no measured performance. Nothing on this site implies otherwise
     (FLG-032).</li>
+  <li><strong>What we earn.</strong> Amazon publishes its rates. The Standard Commission Income
+    Statement lists Kitchen inside the 4.50% band; the Onsite Associates table lists Kitchen at 1.25%,
+    which applies to Amazon-native placements rather than to a website. This site is a website, so the
+    4.50% line is the relevant published figure. It is a table, not a forecast, and the rate that
+    applies to this specific account has not been read in Associates Central (Q-17). See sources
+    S23 and S24.</li>
   <li><strong>We have not seen the certificates.</strong> NIST and NSF appear on the listings. We have
     not been given the documents or an independent test report (FLG-035).</li>
   <li><strong>We have not confirmed the submitted short links.</strong> Their compliance status is
@@ -1117,12 +1246,12 @@ SUGGESTIONS = [
          impact="High — reader trust and time on page", effort="Done",
          status="Shipped", verify="Visible on index.html: hero, three featured products, one nav group."),
     dict(id="SG-02", title="Publish question-shaped guides, then measure arrivals",
-         what="Eight guides built from real buying decisions, each added to the sitemap and the RSS "
+         what="Twelve guides built from real buying decisions, each added to the sitemap and the RSS "
               "feed, each ending in a verdict.",
          why="Long-tail question queries are how a small site earns its first organic traffic. A "
              "guide that answers one question beats a listicle.",
          impact="High — organic traffic", effort="Done",
-         status="Shipped", verify="guides.html lists eight; sitemap.xml and feed.xml include all eight."),
+         status="Shipped", verify="guides.html lists twelve; sitemap.xml and feed.xml include all twelve."),
     dict(id="SG-03", title="Measure clicks before optimising anything",
          what="Five defined events, counted locally with no cookies and no third party, exportable "
               "to CSV by the reader or the owner.",
@@ -1223,6 +1352,41 @@ SUGGESTIONS = [
          impact="High — perceived quality and conversion", effort="Medium, one design pass",
          status="Not started — recommended for approval",
          verify="design-brief.html is on this site now. Nothing changes until the owner picks this row."),
+    dict(id="SG-18", title="Add a review column so suggestions can be approved, deferred or rejected",
+         what="Each proposal carries three buttons. The choice is stored in the reader's browser, shown "
+              "beside the row, counted in a running tally, and exports to CSV next to the ranking.",
+         why="Ranking tells you what is most interesting. It does not record a decision. A review column "
+             "turns a list into a queue somebody can work through.",
+         impact="High — turns proposals into decisions", effort="Done",
+         status="Shipped", verify="The Review column on this page; the tally below the table; the CSV export."),
+    dict(id="SG-19", title="Show readers what each proposal would cost them",
+         what="Every proposal states its effort in plain words — a decision, an account, an approval, or "
+              "an ongoing commitment — rather than a size label.",
+         why="Most of these are blocked on a credential, not on work. Saying so stops the list looking "
+             "like a backlog when it is really a checklist of things only the owner can unlock.",
+         impact="Medium — honest planning", effort="Done", status="Shipped",
+         verify="The Cost column; the Owner-blocked group in the shortlist."),
+    dict(id="SG-20", title="Write the guides buyers actually search for",
+         what="Four more question-shaped guides: the quart-versus-litre mismatch, counter depth and door "
+              "swing, kitchen circuits and wattage, and the USDA temperature chart.",
+         why="Each answers a question a buyer has in front of them, and each is built from a source this "
+             "site already cites. None of them guesses at search volume.",
+         impact="High — organic traffic", effort="Done", status="Shipped",
+         verify="guides.html lists twelve; sitemap.xml and feed.xml include all twelve."),
+    dict(id="SG-21", title="Say what the commission rate is, from the published table",
+         what="The Standard Commission Income Statement lists Kitchen at 4.50% for website Associates. "
+              "The site now states that, names the source, and separates it from the Onsite rate.",
+         why="A buyer-facing site that earns commission should be able to say what the published rate is. "
+             "It is a table, not a forecast, and it is checkable.",
+         impact="Medium — transparency", effort="Done", status="Shipped",
+         verify="sources.html S23 and S24; how-we-choose.html and disclosure.html quote the figure."),
+    dict(id="SG-22", title="Publish a re-verification interval, and keep it",
+         what="Every listing is re-read and re-dated when the register is rebuilt. The date is printed on "
+              "the page, and stale fields are corrected rather than left standing.",
+         why="Listings change under a static site. A dated stamp is the difference between a reference and "
+             "a rumour.",
+         impact="Medium — trust over time", effort="Ongoing", status="Shipped",
+         verify="Every product page carries the date; data/products.json records the source per field."),
 ]
 
 
@@ -1237,46 +1401,69 @@ def build_suggestions():
   <td>{esc(s['effort'])}</td>
   <td><span class="pill {s['status'].split()[0].lower().strip(',.')}">{esc(s['status'])}</span></td>
   <td class="small">{esc(s['verify'])}</td>
+  <td class="nowrap review">
+    <button type="button" class="rvbt" data-review="{s['id']}" data-verdict="approve">Approve</button>
+    <button type="button" class="rvbt" data-review="{s['id']}" data-verdict="defer">Defer</button>
+    <button type="button" class="rvbt" data-review="{s['id']}" data-verdict="reject">Reject</button>
+    <span class="verdict" data-for="{s['id']}" aria-live="polite"></span>
+  </td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="{s['id']}" aria-label="Move {s['id']} up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="{s['id']}" aria-label="Move {s['id']} down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
 </tr>"""
+    owner = [s for s in SUGGESTIONS if s["status"].startswith(("Blocked", "Not started"))]
+    shortlist = "".join(
+        f'<tr><td class="nowrap">{s["id"]}</td><td>{esc(s["title"])}</td>'
+        f'<td>{esc(s["effort"])}</td><td>{esc(s["status"])}</td></tr>' for s in owner)
     body = f"""
-{breadcrumb([("Home", "index.html"), ("Decision Center", None)])}
-<h1>Decision Center</h1>
-<p class="lede">Every proposal for this site lands here first. Nothing below is auto-applied. Read the
-  proposal, its evidence, and its cost, then rank it. Your ranking is stored in your browser and can
-  be exported as CSV, so you can review the shortlist before anything changes.</p>
+{breadcrumb([("Home", "index.html"), ("Suggestions", None)])}
+<h1>Suggestions</h1>
+<p class="lede">Every idea for this site lands here before anything is built. Read the proposal, the
+  reason it matters and what it would cost, then record a decision: <strong>approve</strong>,
+  <strong>defer</strong> or <strong>reject</strong>. Nothing on this page changes the site by itself.
+  Your decisions are stored in this browser and export as CSV.</p>
 
 <div class="panel">
   <h2>How to use this page in three minutes</h2>
   <ol class="tight">
-    <li>Read the <strong>Status</strong> column first. Anything marked <em>Shipped</em> is already
-      live &mdash; the verification note tells you where to check it.</li>
+    <li>Read the <strong>Status</strong> column first. <em>Shipped</em> means it is already live and the
+      check column tells you where to look.</li>
     <li>Anything marked <em>Blocked</em> or <em>Not started</em> needs a decision or a credential from
-      you. Rank those against each other.</li>
-    <li>Use the arrows to order the shortlist, then export the ranking. Nothing is built from this
-      page without an explicit choice recorded in the worksheet at the bottom.</li>
+      the owner. Those are the rows where a click changes something.</li>
+    <li>Click <strong>Approve</strong>, <strong>Defer</strong> or <strong>Reject</strong>. The tally under
+      the table updates, and the export gives you a dated list to work from.</li>
   </ol>
 </div>
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>Seventeen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>{len(SUGGESTIONS)} proposals with honest status. &ldquo;Shipped&rdquo; means it is live and
+    checkable now; the last two columns are yours.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
-    <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
+    <th scope="col">How to check it</th><th scope="col">Review</th><th scope="col">Your rank</th></tr></thead>
   <tbody>{rows}</tbody>
 </table>
+
+<div class="tally" id="reviewTally" aria-live="polite">
+  <p class="small">Approved <strong id="tApprove">0</strong> ·
+    Deferred <strong id="tDefer">0</strong> ·
+    Rejected <strong id="tReject">0</strong> ·
+    <span id="tLeft">nothing reviewed yet</span></p>
+</div>
 <p class="cta">
+  <button type="button" id="exportReview">Export my review (CSV)</button>
   <button type="button" id="exportRank">Export my ranking (CSV)</button>
+  <button type="button" id="resetReview" class="ghostbtn">Clear reviews</button>
   <button type="button" id="resetRank" class="ghostbtn">Reset ranking</button>
 </p>
+<p class="small">Reviews and rankings are written to this browser only. Nothing is sent anywhere, and
+  nothing on the site changes until a person makes the change.</p>
 
-<h2>My shortlist</h2>
-<p class="small">Filtered down to what is <em>not</em> yet shipped, because that is where a decision
+<h2>Open decisions, and who can unblock them</h2>
+<p class="small">Filtered to what is <em>not</em> yet shipped, because that is where a decision
   actually changes something.</p>
 <table class="shortlist">
   <caption>Open decisions only.</caption>
@@ -1290,12 +1477,16 @@ def build_suggestions():
     <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
     <tr><td>SG-17</td><td>Approve the Design &amp; Traffic Brief as the next build</td><td>Owner (decision)</td></tr>
   </tbody>
+  <caption>Open decisions only, generated from the proposals that are not yet shipped.
+    &ldquo;Unlocked by&rdquo; is the thing that has to happen first, not a price.</caption>
+  <thead><tr><th scope="col">ID</th><th scope="col">Decision needed</th><th scope="col">Who can do it</th></tr></thead>
+  <tbody>{shortlist}</tbody>
 </table>
 
 <h2>Record a decision</h2>
 <form id="decisionForm" class="decision-form">
   <label>Chosen path (proposal IDs)
-    <input name="chosen" required placeholder="e.g. SG-13, SG-14">
+    <input name="chosen" required placeholder="e.g. SG-07, SG-14">
   </label>
   <label>Why this path
     <textarea name="why" rows="3" placeholder="What made this the right next move?"></textarea>
@@ -1306,23 +1497,21 @@ def build_suggestions():
   <button type="submit">Save decision locally</button>
 </form>
 <p id="decisionSaved" class="small" aria-live="polite"></p>
-<p class="small">Saving writes to this browser only. Export it with your ranking and keep it with the
-  <a href="campaign-ledger.html">campaign ledger</a> so the decision has a dated record.</p>
 
 <h2>What we will not do without a new decision</h2>
 <ul>
   <li>Print prices or star ratings copied from a listing.</li>
-  <li>Call any product "best" without evidence.</li>
+  <li>Call any product &ldquo;best&rdquo; without evidence.</li>
   <li>Auto-publish generated content without passing the build gate.</li>
   <li>Merge the intended and observed ASIN fields.</li>
   <li>Scale outbound links before the one-per-product test passes.</li>
 </ul>
 """
-    BUILT.append(page("suggestions.html", f"Decision Center — {SITE}",
-                      "Seventeen proposals for this site, with honest status, ranked before anything "
-                      "is built. Review the shortlist and choose a path.",
+    BUILT.append(page("suggestions.html", f"Suggestions — {SITE}",
+                      "Proposals for this site, with honest status, a review box and an exportable "
+                      "record, so a path is chosen before anything is built.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
-                                    "name": "Decision Center", "url": BASE + "suggestions.html"}))
+                                    "name": "Suggestions", "url": BASE + "suggestions.html"}))
 
 
 # ---- questions
@@ -1373,10 +1562,11 @@ QUESTIONS = [
      "Verify the site in Search Console and submit the sitemap. Decide whether email is wanted.",
      "Growth loop (SG-10)", "Owner", "RSS only"),
     ("Q-10", "Which listing contradictions can be resolved with the seller?",
-     "There are now six: preset count, accessory count, top temperature, wattage, capacity units and "
-     "warranty length.",
+     "Six are open: preset count on the Emeril, accessory count on the Emeril, top temperature on the "
+     "8-quart Chefman, wattage on the 8-quart Chefman, capacity units on the 6-quart Chefman, and battery "
+     "life on the CHEF iQ.",
      "Ask each seller in writing, or read the printed manual. Until then both figures stay published.",
-     "Specification certainty (FLG-017 to FLG-022)", "Sellers", "Open"),
+     "Specification certainty (FLG-018, FLG-021, FLG-031, FLG-034, FLG-038)", "Sellers", "Open"),
     ("Q-11", "What commission categories apply, and at what rate?",
      "Rates live in the Commission Income Statement inside the account and change by category.",
      "Read the Commission Income Statement in Associates Central. Do not publish a rate until it is "
@@ -1395,6 +1585,42 @@ QUESTIONS = [
      "Listings change. A site with a dated verification stamp needs a process for re-dating it.",
      "Set a re-verification interval, for example quarterly, and record each pass with its date.",
      "Trust over time (FLG-023)", "Owner", "Not defined"),
+    ("Q-15", "Which fields can only be confirmed in a browser?",
+     "The listings were read through a text extraction. On some pages the spec panel did not come "
+     "through, so weight and upper temperature stay blank rather than guessed (FLG-040).",
+     "Open each listing in a normal browser, screenshot the Product information panel, and record the "
+     "values that are missing.",
+     "Six blank fields across three products (FLG-040, FLG-022)", "Owner", "Blank"),
+    ("Q-16", "Which of the four air-fryer guides should carry the next new topic?",
+     "Twelve guides exist. The next one should be chosen from queries that actually arrive, not from a "
+     "guess about what seems popular.",
+     "Verify Search Console, wait for four weeks of impressions, then pick the topic with impressions "
+     "and no matching page.",
+     "The publishing cadence (SG-16, SG-10)", "Owner", "No query data"),
+    ("Q-17", "Is the 4.50% Kitchen rate the one that applies to this account?",
+     "The published Standard Commission Income Statement lists Kitchen at 4.50%. The rate that applies "
+     "to a specific account is confirmed in Associates Central, and it can differ by program.",
+     "Read the Commission Income Statement inside the account and compare it with S23. Record the "
+     "answer with a date.",
+     "Any statement about earnings (SG-21)", "Owner", "Published table only"),
+    ("Q-18", "Should this site show Amazon-supplied images instead of illustration?",
+     "Original SVG is licence-safe but a shopper wants to see the product. API-supplied imagery arrives "
+     "with its own licence conditions.",
+     "If and when API access is approved, compare the image terms with the current illustration "
+     "approach before switching.",
+     "Conversion and visual trust (SG-15, FLG-007)", "Owner", "Not decided"),
+    ("Q-19", "What is the review deadline for a flag that stays open?",
+     "Forty flags are published. Some will never close without the owner, and an open list with no "
+     "deadline stops being read.",
+     "Set a review date per severity: listing conflicts at the next re-verification, owner-only items "
+     "on a fixed date.",
+     "Whether the Flagged page stays useful (FLG-001 to FLG-040)", "Owner", "No date set"),
+    ("Q-20", "Which single number would show this site is working?",
+     "Clicks, sessions, orders and revenue are all measurable in principle, and only one of them is "
+     "readable without account access.",
+     "Pick one primary metric, write it into the decision form, and check it against the campaign "
+     "ledger on a fixed date.",
+     "Every optimisation decision after launch", "Owner", "Not chosen"),
 ]
 
 
@@ -1416,9 +1642,9 @@ def build_questions():
 
 <div class="panel">
   <h2>What this page is for</h2>
-  <p>Fourteen questions, grouped by who can answer them. Six need the owner's account access or a
-    yes/no decision. Four need a seller to clarify a listing that contradicts itself. Two need Amazon
-    support. Two are editorial choices that only the owner can make.</p>
+  <p>Twenty questions, grouped by who can answer them. Most need the owner's account access or a
+    yes/no decision. Six need a seller to clarify a listing that contradicts itself. One needs Amazon
+    support. The rest are editorial choices that only the owner can make.</p>
   <p class="small">If you only answer one thing, answer <strong>Q-04</strong> &mdash; whether the
     tagged links are being recorded. Everything about revenue depends on it, and nothing else
     does.</p>
@@ -1453,7 +1679,7 @@ def build_questions():
 <p class="cta"><a class="btn" href="suggestions.html">Take the shortlist to the Decision Center</a></p>
 """
     BUILT.append(page("questions.html", f"Open Questions — {SITE}",
-                      "Fourteen questions that must be answered before a decision can reasonably be "
+                      "Twenty questions that must be answered before a decision can reasonably be "
                       "made, with how to discover each missing fact and what it blocks.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Open Questions", "url": BASE + "questions.html"}))
@@ -1857,6 +2083,12 @@ def build_exec():
     report has been seen (FLG-035).</li>
   <li><strong>Hands-on experience.</strong> None. Nothing on this site implies it was tested
     (FLG-032).</li>
+  <li><strong>What we earn.</strong> Amazon publishes its rates. The Standard Commission Income
+    Statement lists Kitchen inside the 4.50% band; the Onsite Associates table lists Kitchen at 1.25%,
+    which applies to Amazon-native placements rather than to a website. This site is a website, so the
+    4.50% line is the relevant published figure. It is a table, not a forecast, and the rate that
+    applies to this specific account has not been read in Associates Central (Q-17). See sources
+    S23 and S24.</li>
 </ul>
 
 <h2>5. The six listing conflicts a buyer should know about</h2>
@@ -1866,7 +2098,7 @@ def build_exec():
     <tr><td>FLG-021</td><td>Emeril 26 QT</td><td>24 presets in the title, 25 in About this item</td></tr>
     <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in the title, seven in Configuration, six named</td></tr>
     <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 °F max in the spec field, 450 °F Hi-Fry in the title</td></tr>
-    <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in the spec fields, 1000 W in About this item</td></tr>
+    <tr><td>FLG-038</td><td>Chefman 8 Qt</td><td>1000 W in About this item, 1700 W in the Product Description</td></tr>
     <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in the title, 6 liters in the capacity field</td></tr>
     <tr><td>FLG-019</td><td>CHEF iQ Sense</td><td>Two-year assurance on the listing, one year in the earlier pass</td></tr>
   </tbody>

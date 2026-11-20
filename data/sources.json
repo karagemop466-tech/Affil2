@@ -117,5 +117,19 @@
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
     "used_for": "Official minimum internal cooking temperatures: poultry 165 F (73.9 C); ground meats 160 F (71.1 C); beef, pork, veal and lamb steaks, chops and roasts 145 F (62.8 C) with a 3-minute rest; fish and shellfish 145 F (62.8 C); leftovers and casseroles 165 F (73.9 C). Any doneness figure on this site must defer to this chart.",
     "checked": "2026-11-20"
+  },
+  {
+    "id": "S23",
+    "name": "Amazon Associates — Standard Commission Income Statement (Table 1, fixed rates)",
+    "url": "https://affiliate-program.amazon.com/help/node/topic/GRXPHT8U84RAYDXZ",
+    "used_for": "Table 1 lists “Physical Books, Kitchen, Automotive — 4.50%”. Read verbatim this pass. This is the published table, not a promise for any individual account; the rate that applies to a given account is confirmed in Associates Central (Q-11).",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S24",
+    "name": "Amazon Associates — Onsite Associates Program Commission Income (Table A)",
+    "url": "https://affiliate-program.amazon.com/help/node/topic/G4ARBJC7Z2NK48CA",
+    "used_for": "Table A lists Kitchen at 1.25% for Onsite Associates (Amazon-native placements), which is a different program from a website's Standard Commission Income. Recorded so the two tables are not confused.",
+    "checked": "2026-11-20"
   }
 ]

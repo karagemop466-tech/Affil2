@@ -3,11 +3,12 @@
     "brand": "Chefman",
     "headline": "Two baskets, two windows, one finish time",
     "best_for": "Cooked-for-two households that want a main and a side done at once",
-    "tradeoff": "Two small baskets instead of one big one; 450 °F max, and the listing's own capacity field says 6 liters",
+    "tradeoff": "Two 3-quart baskets instead of one big one — no single zone takes a large roast. The listing gives capacity as 6 quarts in one field and 6 liters in another (FLG-034).",
     "faq": [
       [
         "What is the total capacity?",
-        "6 quarts, split into two independent 3-quart baskets, according to the listing title. The product-details capacity field says 6 liters, which is a different figure from 6 quarts, and both are printed on the product page. Flagged as FLG-034."
+
+        "6 quarts, split into two independent 3-quart baskets, according to the listing title and its Size field. The product-details capacity field says 6 liters, which is about 6.3 US quarts, so the two figures describe roughly the same volume in different units. Both are printed. Flagged as FLG-034."
       ],
       [
         "Does it have a preheat function?",
@@ -42,15 +43,15 @@
     "brand": "Emeril Lagasse",
     "headline": "A countertop oven that happens to air-fry",
     "best_for": "Households of 4–6 that want one appliance to roast, toast, air-fry and rotisserie",
-    "tradeoff": "16.9 in of depth plus door swing, 26.5 lb, and the listing contradicts itself on preset count and accessory count",
+    "tradeoff": "16.9 in of depth plus door swing, a stainless box that stays put, and a listing that contradicts itself on preset count (FLG-021) and accessory count (FLG-031).",
     "faq": [
       [
         "How many presets does it have?",
-        "The listing is inconsistent: the title and Product Description say 24 one-touch presets, while the About this item bullet says 25 cooking pre-sets. Both are published here and neither is chosen. Flagged as FLG-014."
+        "The listing is inconsistent: the title, the Configuration field and the Product Description say 24 one-touch presets, while an About this item bullet says 25 cooking pre-sets. Both are published here and neither is chosen. Flagged as FLG-021."
       ],
       [
         "How many accessories are included?",
-        "The title says six cooking accessories, the Configuration field says 7 accessories, and Included Components names six: rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool. Flagged as FLG-015."
+        "The title says six cooking accessories, the Configuration field says 7 accessories, and Included Components names six: rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool. Flagged as FLG-031."
       ],
       [
         "Will a 12-inch pizza fit?",
@@ -59,13 +60,17 @@
       [
         "Does it air-fry or is it just a toaster oven?",
         "The listing has an Air Frying Technology field set to True and describes 360° hot air circulation. It air-fries using oven-style circulation, not a basket."
+      ],
+      [
+        "How hot does it get, and what does it draw?",
+        "The listing's spec panel states 75–500 °F and 1700 W at 120 V. On a North American kitchen circuit that is a high-draw appliance; check what else is on the same circuit before running it beside another 1700 W unit."
       ]
     ],
     "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
     "qa": [
       [
         "Do you have 16.9 in of depth, plus room for French doors to swing?",
-        "Depth is the binding constraint on most counters. Doors pull open in front of the unit."
+        "Depth is the binding constraint on most counters. The doors pull open in front of the unit, so measure the counter, not the gap."
       ],
       [
         "Will you actually rotisserie?",
@@ -73,7 +78,7 @@
       ],
       [
         "Are you willing to leave it in one place?",
-        "At 26.5 lb this is a park-it-and-keep-it appliance, not something you lift into a cupboard."
+        "This is a countertop oven with a door and racks — it is not a drawer you lift out. It is a park-it-and-keep-it appliance, and the listing does not state a weight we could verify (FLG-040)."
       ],
       [
         "Do you need a preset count you can rely on?",
@@ -85,15 +90,15 @@
     "brand": "Chefman",
     "headline": "One basket, no windows, four buttons",
     "best_for": "Households cooking one thing at a time who want maximum basket for the footprint",
-    "tradeoff": "No window, single zone, and the listing contradicts itself on top temperature and wattage",
+    "tradeoff": "No window and a single zone, a listing that gives two wattages (FLG-038) and two top temperatures (FLG-018), and a spec panel that was not visible in the text we fetched.",
     "faq": [
       [
         "What is the maximum temperature?",
-        "Conflicting: the Max Temperature Setting spec field says 400 °F, while the listing title advertises a 450 °F Hi-Fry option. Both are published; neither is chosen. Flagged as FLG-016."
+        "Conflicting: the About this item bullet gives a 200–400 °F range, while the listing title and Product Description advertise a 450 °F Hi-Fry option for the last two minutes of cooking. Both are published; neither is chosen. Flagged as FLG-018."
       ],
       [
         "How many watts?",
-        "The Wattage and Output Wattage spec fields say 1700 watts, but the About this item bullet says 1000 watts. Flagged as FLG-017."
+        "The About this item bullet states “1000 Watts/120 Volts – RJ38-SQSS-8T”; the Product Description states 1700 W. Both figures are on the same page, so both are printed and the conflict is open (FLG-038)."
       ],
       [
         "Is the basket dishwasher safe?",
@@ -112,7 +117,7 @@
       ],
       [
         "Is 400 °F top temperature enough?",
-        "The spec field says 400 °F. The title advertises a 450 °F Hi-Fry option. That gap is flagged; ask the seller or check the manual if high-heat crisping matters."
+        "The About this item bullet says 200–400 °F; the title advertises a 450 °F Hi-Fry button. It is the same appliance described two ways on one page, so if high-heat crisping matters, check the manual before buying."
       ],
       [
         "Do you need to see the food?",
@@ -124,7 +129,7 @@
     "brand": "ThermoMaven",
     "headline": "The one you keep in a drawer and grab",
     "best_for": "Grill and oven cooks who check temperature at the appliance and want zero setup",
-    "tradeoff": "Accuracy and certification are seller claims, not independent test results; no walk-away monitoring",
+    "tradeoff": "Accuracy and certification are seller statements, not documents we saw; no walk-away monitoring, and the listing's spec panel was not visible in the text we fetched (FLG-040).",
     "faq": [
       [
         "How fast is it?",
@@ -136,7 +141,8 @@
       ],
       [
         "What is the highest temperature it reads?",
-        "The listing's own upper-temperature field did not appear in the text we read on 2026-11-20, so this page leaves it blank rather than quoting a figure from elsewhere. Check the listing's Product Details table for the current value (FLG-022)."
+
+        "The listing's spec panel was not visible in the text fetched for this check, so no upper temperature is printed here. An earlier pass carried 572 °F from a different reading; it is removed rather than repeated without a source (FLG-040)."
       ],
       [
         "Can I put it in the dishwasher?",
@@ -163,7 +169,7 @@
     "brand": "CHEF iQ",
     "headline": "Three probes, no standing at the grill",
     "best_for": "Smoker and multi-protein cooks who want to monitor from inside the house",
-    "tradeoff": "The listing contradicts itself on battery life and warranty length, and it depends on an app plus WiFi",
+    "tradeoff": "The listing contradicts itself on battery life — 50 hours in one bullet, 70 in the Product Description (FLG-008) — and the whole product depends on an app plus WiFi.",
     "faq": [
       [
         "How long does the battery last?",
@@ -179,7 +185,7 @@
       ],
       [
         "Is it dishwasher safe?",
-        "The listing says the probes are waterproof and dishwasher safe. The hub's care instructions are not stated."
+        "The listing's care instruction says waterproof and dishwasher-safe probes. The hub is not described as dishwasher safe."
       ]
     ],
     "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",

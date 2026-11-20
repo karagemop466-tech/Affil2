@@ -65,7 +65,11 @@
   <td>P-01 capacity stated in quarts and liters<br><span class="small pill-sev conflict">conflict</span></td>
   <td>The listing title says 6 quarts; the product-details capacity field says 6 liters. Six litres is about 6.3 US quarts, so the same page carries two expressions of one capacity. Both are shown on the product page; neither is chosen here.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
-  <td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">S10</a></td></tr><tr><td class="nowrap"><strong>FLG-032</strong></td>
+  <td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">S10</a></td></tr><tr><td class="nowrap"><strong>FLG-038</strong></td>
+  <td>P-03 wattage: two figures on one listing<br><span class="small pill-sev conflict">conflict</span></td>
+  <td>The 8-quart Chefman's About this item bullet says “1000 Watts/120 Volts – RJ38-SQSS-8T”; its Product Description says “1700W/120V”. An earlier pass labelled 1700 W simply wrong and replaced it with 1000 W. That was incomplete: both are on the page. Both are now printed and the conflict is open.</td>
+  <td>Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible.</td>
+  <td class="src"><a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">S12</a></td></tr><tr><td class="nowrap"><strong>FLG-032</strong></td>
   <td>No hands-on testing<br><span class="small pill-sev policy">policy</span></td>
   <td>Nobody who wrote this site has used any of the five appliances. Every statement is read from a listing or a public source; nothing is a review, a rating or a durability claim. Copy is written to stay inside that limit.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
@@ -193,11 +197,27 @@
   <td>No named author or editorial owner<br><span class="small pill-sev open">open</span></td>
   <td>The site has no named byline, no editor of record and no organisation behind it that a reader could check. Search engines and readers both treat that as a trust signal. An author page with a real name and a stated method is recommended before traffic is scaled.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
-  <td class="src"><a href="https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking" rel="sponsored nofollow">S03</a></td></tr><tr><td class="nowrap"><strong>FLG-035</strong></td>
+  <td class="src"><a href="https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking" rel="sponsored nofollow">S03</a></td></tr><tr><td class="nowrap"><strong>FLG-036</strong></td>
+  <td>Editorial copy cited superseded flag numbers<br><span class="small pill-sev open">open</span></td>
+  <td>Four flag references in data/editorial.json pointed at numbers that were reused when two sessions merged their registers: the capacity note pointed at FLG-018 (it is FLG-034), the preset note at FLG-014 (FLG-021), the accessory note at FLG-015 (FLG-031) and the temperature note at FLG-016 (FLG-018). A reader following those references landed on an unrelated finding. All four are repointed, and check_site.py now fails if editorial copy cites a flag that is not in flags.json.</td>
+  <td>Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible.</td>
+  <td class="src"><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="sponsored nofollow">S02</a></td></tr><tr><td class="nowrap"><strong>FLG-039</strong></td>
+  <td>Executive summary claimed proposals and questions that did not exist<br><span class="small pill-sev open">open</span></td>
+  <td>EXECUTIVE-SUMMARY.md listed SG-17 to SG-20 and Q-15/Q-16 as if they were on the site. They were not: suggestions.html carried sixteen proposals and questions.html fourteen. Those IDs now exist and are published, and the summary is rewritten to match what a reader can actually open.</td>
+  <td>Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible.</td>
+  <td class="src"><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="sponsored nofollow">S02</a></td></tr><tr><td class="nowrap"><strong>FLG-035</strong></td>
   <td>cETL, NIST and NSF are seller statements, not documents we saw<br><span class="small pill-sev unverified">unverified</span></td>
   <td>P-01 states cETL approved and P-04 states NIST and NSF under Specification Met. These are words on a listing, not certificates or test reports. Nothing on this site should be read as independent confirmation of a safety or accuracy mark.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
-  <td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">S10</a> <a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">S13</a></td></tr></tbody>
+  <td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">S10</a> <a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">S13</a></td></tr><tr><td class="nowrap"><strong>FLG-037</strong></td>
+  <td>Three weight figures were published without a source; now removed<br><span class="small pill-sev unverified">unverified</span></td>
+  <td>The guides stated the Emeril as 26.5 lb, the two basket fryers as “around 13 pounds” and the 8-quart Chefman as 12.8 lb. None of those figures was in the listing text this site had fetched. The only weight now published is 13.3 lb for the 6-quart Chefman, read from its Product information table in this pass; every other weight is blank and marked unverified.</td>
+  <td>Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible.</td>
+  <td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">S10</a> <a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">S11</a> <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">S12</a></td></tr><tr><td class="nowrap"><strong>FLG-040</strong></td>
+  <td>Some listing fields were not visible in the fetched text<br><span class="small pill-sev unverified">unverified</span></td>
+  <td>The listings were read through a text extraction of the product page. On this pass the Product information panel was visible for four of the five listings but not for B0DHZTCNR5, and Item Weight was absent for three listings. Those fields stay blank rather than being filled from memory or from another retailer. Re-check in a browser before relying on them.</td>
+  <td>Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible.</td>
+  <td class="src"><a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">S13</a> <a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">S14</a></td></tr></tbody>
 </table>
 
 <h2>How to request a change</h2>

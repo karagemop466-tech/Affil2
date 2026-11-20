@@ -385,5 +385,58 @@
     ],
     "severity": "unverified",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-036",
+    "severity": "open",
+    "title": "Editorial copy cited superseded flag numbers",
+    "detail": "Four flag references in data/editorial.json pointed at numbers that were reused when two sessions merged their registers: the capacity note pointed at FLG-018 (it is FLG-034), the preset note at FLG-014 (FLG-021), the accessory note at FLG-015 (FLG-031) and the temperature note at FLG-016 (FLG-018). A reader following those references landed on an unrelated finding. All four are repointed, and check_site.py now fails if editorial copy cites a flag that is not in flags.json.",
+    "links": [
+      "S02"
+    ],
+    "owner_status": "Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible."
+  },
+  {
+    "id": "FLG-037",
+    "severity": "unverified",
+    "title": "Three weight figures were published without a source; now removed",
+    "detail": "The guides stated the Emeril as 26.5 lb, the two basket fryers as “around 13 pounds” and the 8-quart Chefman as 12.8 lb. None of those figures was in the listing text this site had fetched. The only weight now published is 13.3 lb for the 6-quart Chefman, read from its Product information table in this pass; every other weight is blank and marked unverified.",
+    "links": [
+      "S10",
+      "S11",
+      "S12"
+    ],
+    "owner_status": "Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible."
+  },
+  {
+    "id": "FLG-038",
+    "severity": "conflict",
+    "title": "P-03 wattage: two figures on one listing",
+    "detail": "The 8-quart Chefman's About this item bullet says “1000 Watts/120 Volts – RJ38-SQSS-8T”; its Product Description says “1700W/120V”. An earlier pass labelled 1700 W simply wrong and replaced it with 1000 W. That was incomplete: both are on the page. Both are now printed and the conflict is open.",
+    "links": [
+      "S12"
+    ],
+    "owner_status": "Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible."
+  },
+  {
+    "id": "FLG-039",
+    "severity": "open",
+    "title": "Executive summary claimed proposals and questions that did not exist",
+    "detail": "EXECUTIVE-SUMMARY.md listed SG-17 to SG-20 and Q-15/Q-16 as if they were on the site. They were not: suggestions.html carried sixteen proposals and questions.html fourteen. Those IDs now exist and are published, and the summary is rewritten to match what a reader can actually open.",
+    "links": [
+      "S02"
+    ],
+    "owner_status": "Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible."
+  },
+  {
+    "id": "FLG-040",
+    "severity": "unverified",
+    "title": "Some listing fields were not visible in the fetched text",
+    "detail": "The listings were read through a text extraction of the product page. On this pass the Product information panel was visible for four of the five listings but not for B0DHZTCNR5, and Item Weight was absent for three listings. Those fields stay blank rather than being filled from memory or from another retailer. Re-check in a browser before relying on them.",
+    "links": [
+      "S13",
+      "S14"
+    ],
+    "owner_status": "Published on the Flagged for Review page. Does not block publication — it is a correction made in this pass, recorded so the change is visible."
   }
 ]
