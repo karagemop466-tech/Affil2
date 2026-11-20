@@ -22,12 +22,31 @@
  });
  function download(n,c){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download=n;a.click();}
 }catch(e){}})();
-// Keep navigation and search operational even when browser storage is disabled.
+// Keep navigation and search operational without sending query text in a request URL.
 (() => {
  const toggle=document.querySelector('.navtoggle'), nav=document.querySelector('#primary-nav');
  toggle?.addEventListener('click',()=>toggle.setAttribute('aria-expanded',nav.classList.toggle('open')));
+ document.querySelectorAll('form[role="search"]').forEach(form=>{
+   const field=form.querySelector('input[type="search"]');
+   if(!field)return;
+   form.addEventListener('submit',event=>{
+     event.preventDefault();
+     const query=field.value.trim().replace(/\s+/g,' ').slice(0,120);
+     if(!query)return;
+     try{sessionStorage.setItem('sn_search_query',query)}catch(error){
+       const status=document.querySelector('#searchMeta');
+       if(status)status.textContent='This browser could not start a local search session. No query was sent.';
+       return;
+     }
+     // Search inputs have no name attribute, so a no-JavaScript form submit cannot serialize q.
+     location.assign(form.getAttribute('action')||'search.html');
+   });
+ });
  const index=document.querySelector('#searchIndex'); if(!index)return;
- const q=(new URLSearchParams(location.search).get('q')||'').trim(); document.querySelector('#sq').value=q;
+ const searchField=document.querySelector('#sq');
+ let q='';
+ try{q=sessionStorage.getItem('sn_search_query')||'';sessionStorage.removeItem('sn_search_query')}catch(error){}
+ if(searchField)searchField.value=q;
  if(!q)return;
  const tokens=q.toLowerCase().split(/\s+/), hits=JSON.parse(index.textContent).filter(x=>tokens.every(t=>(x.t+' '+x.d+' '+x.k).toLowerCase().includes(t)));
  document.querySelector('#searchMeta').textContent=hits.length?`${hits.length} matching pages`:'No matches. Try “basket”, “wireless” or “capacity”.';
