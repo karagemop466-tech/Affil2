@@ -66,7 +66,10 @@ their own event log and click counts as CSV. A self-hosted collector is one func
 
 ## CI
 
-`.github/workflows/pages.yml` has two jobs. `verify` regenerates every page and fails if the
-committed files differ from the generator, then runs `scripts/check_site.py`. `deploy` runs only on
-`main` and only if `verify` passed. The workflow also runs on pull requests, so a change that breaks
-the gate is caught before merge.
+GitHub Pages publishes this repository with its own branch builder (`main`, `/`). It does not need a
+deploy workflow, and `.github/workflows/pages.yml` deliberately does not try to run one; a second
+deployer fighting the branch builder is how you get a half-published site.
+
+The workflow is a gate, not a deployer. It regenerates every page and fails if the committed files
+differ from the generator, then runs `scripts/check_site.py`. It runs on every push to `main` and on
+every pull request, so a change that breaks either step is visible before it merges.

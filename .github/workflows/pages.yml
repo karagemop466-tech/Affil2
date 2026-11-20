@@ -1,4 +1,9 @@
-name: Generate, gate and deploy
+name: Verify site
+
+# Publication is handled by GitHub Pages' own builder, which is configured for this
+# repository as "deploy from a branch" (main, /). This workflow does not deploy; it exists
+# to stop a change that breaks the generator or the compliance gate from being the version
+# that gets published. A failure here is a red X, not a rollback, so read it before merging.
 
 on:
   push:
@@ -9,11 +14,9 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: verify-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -37,20 +40,3 @@ jobs:
 
       - name: Compliance and integrity gate
         run: python3 scripts/check_site.py
-
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: verify
-    if: github.ref == 'refs/heads/main'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: "."
-      - id: deployment
-        uses: actions/deploy-pages@v4
