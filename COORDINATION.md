@@ -733,3 +733,7 @@ Auto-merged without conflict; outputs regenerated. Register rows for this sessio
 | Guide shipped | guides/first-week-air-fryer.html (in sitemap + feed) |
 | Flagged / open | FLG-001…FLG-040 as published on flagged.html; analytics collector still owned by open PR #16 (not duplicated here) |
 
+### Claim (2026-11-20, `active`)
+
+- Claiming the local-search privacy defect: built-in search terms are currently serialized into request URLs (`?q=`), and `search.html` / `disclosure.html` claim "nothing is sent to a server" while search query text nonetheless reaches the host in the request URL. Fix (T-19, renumbered to avoid clashing with session `3fb8f29e`'s T-18 in PR #26): generated search forms will stop serializing `q`, a session-storage handoff will feed the local results page, and the site copy will state exactly what happens to search words and what measurement does. Scope is `scripts/build_site.py`, `assets/app.js`, `scripts/check_site.py` gate rules and regenerated pages only; register rows and product facts are out of scope. Owner-gated open items (FLG-001/002/003/004/010/028/033) remain untouched. (Earlier T-10 doc pass duplicated work already merged upstream via `main`; those commits were dropped during this rebase.)
+
