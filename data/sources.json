@@ -1,0 +1,56 @@
+[
+  {
+    "id": "S01",
+    "name": "Amazon Associates Operating Agreement",
+    "url": "https://affiliate-program.amazon.com/help/node/topic/202093820",
+    "used_for": "Disclosure statement wording (Section 5)"
+  },
+  {
+    "id": "S02",
+    "name": "Amazon Associates Program Policies",
+    "url": "https://affiliate-program.amazon.com/help/node/topic/202131110",
+    "used_for": "Price-display rule \u00a72(b); no hardcoded prices"
+  },
+  {
+    "id": "S03",
+    "name": "FTC Endorsement Guides \u2014 What People Are Asking",
+    "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
+    "used_for": "Affiliate disclosure: clear and conspicuous, near the link"
+  },
+  {
+    "id": "S04",
+    "name": "Google \u2014 Qualify outbound links",
+    "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
+    "used_for": "rel=sponsored for paid/affiliate links"
+  },
+  {
+    "id": "S10",
+    "name": "Amazon listing B0CDY277D3 (P-01)",
+    "url": "https://www.amazon.com/dp/B0CDY277D3",
+    "used_for": "P-01 title, model, specs"
+  },
+  {
+    "id": "S11",
+    "name": "Amazon listing B09B7SB46R (P-02)",
+    "url": "https://www.amazon.com/dp/B09B7SB46R",
+    "used_for": "P-02 title, model, specs"
+  },
+  {
+    "id": "S12",
+    "name": "Amazon listing B08DKYBTPH (P-03)",
+    "url": "https://www.amazon.com/dp/B08DKYBTPH",
+    "used_for": "P-03 title, model, specs"
+  },
+  {
+    "id": "S13",
+    "name": "Amazon listing B0DHZTCNR5 (P-04)",
+    "url": "https://www.amazon.com/dp/B0DHZTCNR5",
+    "used_for": "P-04 title, model, specs"
+  },
+  {
+    "id": "S14",
+    "name": "Amazon listing B0DZFD6R9Z (P-05)",
+    "url": "https://www.amazon.com/dp/B0DZFD6R9Z",
+    "used_for": "P-05 title, model, specs"
+  }
+]
