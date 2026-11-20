@@ -1,0 +1,43 @@
+{
+  "checked_on": "2026-11-20",
+  "session": "arena/614b9fe7-affil2",
+  "method": "fetch_page on each submitted link.amazon URL, chunk 0, final URL reported by the fetch tool",
+  "results": [
+    {
+      "submitted": "https://link.amazon/B04G1MEwY",
+      "register_observed_asin": "B0CDY277D3",
+      "final_url_this_session": "https://www.amazon.com/",
+      "final_url_is_product_page": false,
+      "source": "S15"
+    },
+    {
+      "submitted": "https://link.amazon/B02NbDxp3",
+      "register_observed_asin": "B09B7SB46R",
+      "final_url_this_session": "https://www.amazon.com/",
+      "final_url_is_product_page": false,
+      "source": "S16"
+    },
+    {
+      "submitted": "https://link.amazon/B00hJ57DV",
+      "register_observed_asin": "B08DKYBTPH",
+      "final_url_this_session": "https://www.amazon.com/",
+      "final_url_is_product_page": false,
+      "source": "S17"
+    },
+    {
+      "submitted": "https://link.amazon/B0c8moW59",
+      "register_observed_asin": "B0DHZTCNR5",
+      "final_url_this_session": "https://www.amazon.com/",
+      "final_url_is_product_page": false,
+      "source": "S18"
+    },
+    {
+      "submitted": "https://link.amazon/B0f3GKalj",
+      "register_observed_asin": "B0DZFD6R9Z",
+      "final_url_this_session": "https://www.amazon.com/",
+      "final_url_is_product_page": false,
+      "source": "S19"
+    }
+  ],
+  "interpretation": "Not reproduced. Register observed_status values were NOT changed. The product-page destinations for the five ASINs remain as recorded from earlier passes; this session could not reproduce the redirect to them. Possible causes (unconfirmed): fetch-tool redirect handling, Amazon bot/checkpoint interstitial, or a change in short-link behaviour. Not a finding that the short links are invalid (see FLG-003)."
+}

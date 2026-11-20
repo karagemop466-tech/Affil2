@@ -2794,7 +2794,7 @@ def build_exec():
   <li>All five short links were fetched and their redirect targets observed separately from intent
     (including B0c8moW59 resolving to B0DHZTCNR5 on re-test while redirect instability stays under
     FLG-011).</li>
-  <li>An independent line-by-line re-verification pass on {TODAY} (session ca4af934, T-26) re-fetched
+  <li>An independent line-by-line re-verification pass on {TODAY} (session ca4af934, T-30) re-fetched
     all five listing titles &mdash; all five match the register exactly &mdash; and re-read the P-03
     Product information tables (12.8 pounds item weight, 12.75&nbsp;&times;&nbsp;13.5&nbsp;&times;&nbsp;10
     inches, 1700&nbsp;W / 120&nbsp;V, 400&nbsp;&deg;F max, part number RJ38-SQSS-8T, 1-Year Limited

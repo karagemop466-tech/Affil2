@@ -180,10 +180,12 @@ Also re-read live: the USDA FSIS Safe Minimum Internal Temperature Chart (page s
 updated 2025-04-14) and the FTC Endorsement Guides FAQ. Both corroborate what the site already
 cites (S22, S03).
 
-**New findings, added as flags and published on Flagged for Review:** FLG-041 (a long
-`Specification Met` list is a seller self-declaration, not tested certification), FLG-042 (P-03's
-page points to a newer model than the one submitted), FLG-043 (buy-box offer state changes between
-reads), FLG-044 (the five register values this pass did not reach, queued for next time).
+**New findings, added as flags and published on Flagged for Review:** FLG-047 (a long
+`Specification Met` list is a seller self-declaration, not tested certification), FLG-048 (P-03's
+page points to a newer model than the one submitted), FLG-049 (buy-box offer state changes between
+reads), FLG-050 (the five register values this pass did not reach, queued for next time). Renumbered
+from the originally assigned 041–044 because a parallel session publishing at the same time had
+already used those IDs; no flag was overwritten.
 
 **Not verified this session, and still not claimed:** short-link redirects, the Associates
 agreement and program policy wording (login-gated), whether the tracking ID is issued, whether
@@ -212,7 +214,21 @@ The gate now also fails if a crawl-chunk citation or a bare flag ID appears on a
 reader-facing pages, and if `findability.txt` omits a submitted page. The new rules were written
 after the rewrite, and passing them is what makes the rewrite stay done.
 
-## Verification log (2026-11-20, session arena/ca4af934-affil2 — T-26 independent pass; claimed as T-21 pre-merge, renumbered after ID collisions)
+## Shipped and live
+
+| Where | What |
+|---|---|
+| https://karagemop466-tech.github.io/Affil2/ | Front page in shop voice, dated trust strip, cards tagged by reason-to-buy |
+| `products/*.html` | Reader-voice specs, "what comes with it", "where this link actually goes", related guides |
+| `compare.html` | Five-column table plus the three-question category-aware shortlist |
+| `findability.txt` | Site profile for crawlers and AI agents |
+| `verification.html` | The independent live pass, 33 field rows with per-row status |
+| `flagged.html` | 50 flags, every one sourced; FLG-047–050 are this session's |
+| `suggestions.html` / `questions.html` | SG-33–35 and Q-21–23 from this session |
+
+PR #49 merged (commit `c50a7fa`), CI green, Pages `built`, live pages verified by fetching them.
+
+## Verification log (2026-11-20, session arena/ca4af934-affil2 — T-30 independent pass; claimed as T-21 pre-merge, renumbered after ID collisions)
 Independent line-by-line re-verification against live official pages (this session's own fetches, not inherited):
 
 | Check | Source | Result |
@@ -233,5 +249,5 @@ Independent line-by-line re-verification against live official pages (this sessi
 1. Double-escaped entities (`&plusmn;` `&mdash;` `&nbsp;` `&deg;`) rendered literally in four guide sub/intro strings — replaced with real characters.
 2. Product-intent confirmation record rows (observed target, token, model provenance, observation note, confirmation date) gained row-level links; intended vs observed stay separate (FLG-001).
 3. Compare-table caption carries the five official listing links and the per-column traceability path.
-4. **FLG-051** (cosmetic; earlier renumbered FLG-041→FLG-047→FLG-051 after ID collisions): P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's "TurboFry" name; owner decision to rename or keep.
+4. **FLG-052** (cosmetic; earlier renumbered FLG-041→FLG-047→FLG-051→FLG-052 after ID collisions): P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's "TurboFry" name; owner decision to rename or keep.
 5. Front-page seasonal cluster (Thanksgiving week, USDA doneness panel) and guides-hub topic clusters (Choosing an air fryer / Meat thermometers / Seasonal, with a fail-safe group).

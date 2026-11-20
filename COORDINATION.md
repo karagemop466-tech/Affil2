@@ -24,6 +24,9 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-23 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | done | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
 | T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
+| T-26 | Independent short-link re-check (5 submitted links) + repo gate/test re-run; new flag FLG-051 for non-reproduced redirects; no recorded values changed | done | 614b9fe7 | data/verification-2026-11-20-shortlinks.json, data/flags.json (append only), COORDINATION.md, generated flagged/sources/executive-summary pages |
+| T-28 | AI-powered product research engine: scripts/research_engine.py analyses first-party event data (zero-result searches, guide reads, outbound clicks) and emits ranked research suggestions for the Decision Center | done | 505e685a | scripts/research_engine.py |
+| T-29 | Campaign optimization advisor: scripts/campaign_optimizer.py analyses first-party click data and emits ranked optimization recommendations (content investment, placement review, conversion gaps) | done | 505e685a | scripts/campaign_optimizer.py |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -62,6 +65,10 @@ FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
 | check_site.py | 25 pages | ALL CHECKS PASS |
 
 ## Handoff / conflict log
+
+- 2026-11-20 505e685a (current session, branch arena/505e685a-affil2, base 4ddede54 = main): claimed T-28 and T-29. Added scripts/research_engine.py (product research from first-party events) and scripts/campaign_optimizer.py (campaign optimization from first-party clicks). Verified: python3 scripts/build_site.py builds 36 pages, python3 scripts/check_site.py ALL CHECKS PASS (36 pages, 5 product records, 50 flags, 19 sources), Python and JS test suites pass. GitHub Pages already live at https://karagemop466-tech.github.io/Affil2/ (status: built, source=main, https enforced). No conflicts — edits are limited to new files in own scope; no shared records modified.
+
+## Handoff / conflict log (original)
 - 2026-11-20 530c2e6c: claimed all tasks, repo empty, no conflicts; all tasks merged to main at e1b6750e.
 - 2026-11-20 6e40cecc: took over stale T-09 claim (>60 min old, no new commits); feed.xml language tag fixed; re-verified P-01/P-05 vs official Amazon listings; re-fetched S03/S04; check_site 25 pages ALL CHECKS PASS.
 - PR link + merge result: (to be recorded at T-09 completion)
@@ -1313,19 +1320,49 @@ maximum, not from the last ID seen in a prompt.
 No other session's work was discarded at any point. Every resolution was re-verified with the full
 gate and both test suites before pushing.
 
+## Session `arena/0acc86ad-affil2` — closing record
+
+| Item | Result |
+|------|--------|
+| PR #49 (the work) | MERGED 2026-11-20T06:37:58Z — `c50a7fa` |
+| PR #52 (the record) | MERGED — `4ddede5` |
+| CI on final main commit | `Verify site` success, `pages build and deployment` success |
+| Pages API | `status = built` |
+| Live | https://karagemop466-tech.github.io/Affil2/ |
+
+Everything this session claimed is published and reachable: reader-voice product and category
+pages, `findability.txt` at the site root, the independent live pass on `verification.html`,
+FLG-047…050 on `flagged.html`, SG-33…SG-35 on the Decision Center, and Q-21…Q-23 on Open
+Questions. No task from this session remains open, and no other session's work was discarded.
+
+**For the next session:** claim task IDs from the current maximum in the task board, not from the
+last ID mentioned in a prompt — T-20, T-21 and T-23 each ended up used twice during this session
+because parallel sessions read the same stale prompt. Flag IDs are safe (monotonic to FLG-050).
+## Session `arena/614b9fe7-affil2` (T-26) — short-link re-check
+
+- **Claimed:** T-26, files: data/verification-2026-11-20-shortlinks.json, data/flags.json (append only), COORDINATION.md, regenerated pages.
+- **Sources fetched:** the five submitted links (S15–S19 in data/sources.json), each via fetch on 2026-11-20.
+- **Result:** all five final URLs were `https://www.amazon.com/` (homepage), not the product pages recorded in the observed-destination field. Not reproduced. Recorded observed values were **not** changed; causes unconfirmed. Logged as **FLG-051** (needs review). Does not mean the short links are invalid (FLG-003 remains).
+- **Gate:** `scripts/check_site.py` — 36 pages, 5 product records, 51 flags, 19 sources — ALL CHECKS PASS. `tests/test_site.py` OK; `tests/test_collector.js` PASS.
+- **Not re-verified this session:** Associates agreement wording, tracking-ID issuance, the one-per-product Special Link test (requires the owner's Associates account; FLG-004), analytics endpoint, Search Console.
+- **Conflict log:** none. Branch `arena/614b9fe7-affil2` at `main` 4ddede5 when claimed; no other session's claims touched.
+
+
 ---
 
-## Session `arena/ca4af934-affil2` — third merge conflict round (2026-11-20)
+## Session `arena/ca4af934-affil2` — merge conflict rounds (2026-11-20)
 
-`main` advanced again through PRs #49/#52 (session `0acc86ad`: shop-voice pass, indexable-site pass, live re-verification T-23..T-25, FLG-047..FLG-050, computed reading estimates, "What we would do" verdict labels). Resolved with the same discipline — **no other session's work discarded**:
+PR #47 (this branch → main) met conflicts three times as `main` advanced through parallel sessions' merges (PRs #40–#52: sessions 58c6ca4a, cb967199, c449a2ad, 578ca10d, bba2deed, b6b809da, 0acc86ad). Each round was resolved **without discarding any other session's work**, following the protocol:
 
-1. `scripts/build_site.py` had one conflicting hunk (thermometer-accuracy `sub`/`kicker`): kept this session's entity fix (`±0.5` instead of the double-escaped `&plusmn;`, which renders literally through `esc()`) and upstream's honest kicker standard ("Buying guide" + computed `reading_minutes()`), so both fixes stand.
-2. Generated pages (products/*, guides/*, executive-summary.html, flagged.html, search.html, sources.html, guides.html) taken from `origin/main` and regenerated from the combined generator.
-3. `data/flags.json`: upstream FLG-047..FLG-050 kept as-is; this session's cosmetic slug flag renumbered again — chain FLG-041 → FLG-047 → **FLG-051** (three-way ID collision with parallel sessions; the finding is unchanged and the chain is recorded in the flag detail).
-4. **Task ID:** this task's final label is **T-26** (chain: claimed T-21 → T-23 → T-24 → T-26; T-21..T-25 all taken by parallel sessions for different work — the IDs collided, not the work).
-5. On-page exec bullet relabeled to T-26; README flag counts synced to 51; EXECUTIVE-SUMMARY.md re-appended with renames.
+1. **Round 1** (main through PRs #40–#46): conflicts in COORDINATION.md and generated pages resolved by keeping main's versions and re-appending this session's record; `scripts/build_site.py` auto-merged with both sides intact (this session's entity fixes, seasonal home module, guides clusters, intent-row linkification, compare caption, exec bullet + main's `seasonal_guides` module, `build_verification()`, front-page changes); main's Holiday-2026 guides (`holiday-capacity`, `holiday-roast-thermometer`) added to the guides-hub Seasonal cluster (grouping only; fail-safe "More guides" group retained). `data/flags.json` auto-merged append-only.
+2. **Round 2** (main through PRs #48/#50, session b6b809da): generated pages and shared docs taken from main and re-appended; main's FLG-041..FLG-046 kept; this session's cosmetic slug flag renumbered FLG-041 → FLG-047; merged gate taught this session that `link.amazon` URLs are **citations** (not shoppable) — the three intent-table short-link rows per product switched to `rel="noopener noreferrer"` per the gate's rule (FLG-042 policy). Also logged: `git pull --rebase` linearized this branch's merge history and stalled replaying the root commit ("Could not apply 12d49cd Initial commit"); the rebase was **aborted** (`git rebase --abort`) restoring the pushed merge commit with no work lost, and later syncs used `git fetch` + `git merge origin/main` instead.
+3. **Round 3** (main through PRs #49/#52, session 0acc86ad): one conflicting generator hunk (thermometer-accuracy `sub`/`kicker`) resolved keeping this session's entity fix (`±0.5`, since `esc()` renders `&plusmn;` literally) and upstream's honest-kicker standard ("Buying guide" + computed `reading_minutes()`); upstream FLG-047..FLG-050 kept; the slug flag renumbered again FLG-047 → FLG-051 (a fourth collision with session 614b9fe7's FLG-051 forced the final FLG-052; chain recorded inside the flag detail).
 
-## Session `arena/ca4af934-affil2` — T-26 work record (2026-11-20)
+**ID collision log (IDs collided, not work):** this task was claimed as **T-21** on its branch before main's parallel T-21s (c449a2ad) were visible; relabeled T-23, then T-24, and finally **T-30** (a further collision with session 614b9fe7's T-26 label and FLG-051 forced the last hop) (T-21 = c449a2ad requirements traceability; T-22 = 578ca10d verification addendum; T-23 = b6b809da storefront pass and also 0acc86ad's label; T-24/T-25 = 0acc86ad). The flag ID chain is FLG-041 → FLG-047 → FLG-051 → FLG-052. All renames are recorded here and inside the flag detail; nothing was silently renumbered.
+
+4. **Round 4** (main through PRs #53–#56, sessions 0acc86ad/614b9fe7/505e685a): conflicts limited to COORDINATION.md, EXECUTIVE-SUMMARY.md and data/flags.json; resolved the same way (main's content kept, this record re-appended, flags append-only). Session 614b9fe7's short-link re-check (FLG-051) and the T-26/T-28/T-29 task labels were kept as-is; this session's flag moved to **FLG-052** and its task label to **T-30**.
+
+## Session `arena/ca4af934-affil2` — T-30 work record (2026-11-20)
 
 ### Line-by-line review and independent live re-verification (official sources only)
 
@@ -1348,8 +1385,8 @@ gate and both test suites before pushing.
 1. Double-escaped entities in four guide sub/intro strings (literal `amp;plusmn;` on guides.html) — real characters now.
 2. Intent confirmation record rows gained row-level links (listing/short link); intended vs observed separate (FLG-001).
 3. Compare caption: five official listing links + per-column traceability statement.
-4. **FLG-051** cosmetic slug misspelling (owner decision).
+4. **FLG-052** cosmetic slug misspelling (owner decision).
 5. Front-page Thanksgiving-week cluster (USDA panel, S22) + guides-hub clusters (upstream Holiday-2026 guides grouped under Seasonal; fail-safe group).
 
 ### Irregularities
-FLG-001..FLG-050 (upstream) unchanged; FLG-051 new. Open parallel PRs #28/#29/#34/#35 untouched per protocol. README counts synced.
+FLG-001..FLG-050 (upstream) unchanged; FLG-052 new. Open parallel PRs #28/#29/#34/#35 untouched per protocol. README counts synced.
