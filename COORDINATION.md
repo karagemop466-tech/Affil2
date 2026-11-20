@@ -1124,3 +1124,19 @@ and a `REQUIREMENTS-TRACE.md` while this session worked). Resolved by keeping ma
 re-appending only this session's block — no other session's record was discarded. The branch was force-pushed
 once with `--force-with-lease` after that rebase, on this branch only.
 
+
+### T-23 release record
+
+| Field | Value |
+|---|---|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/48 |
+| CI before merge | `Verify site` run 44688719463 on `arena/b6b809da-affil2` — **success** |
+| Merge | `gh pr merge 48 --merge` — state **MERGED**, 2026-11-20T06:34:38Z, merge commit `4faab7903c73adee7cac51a1df07948f56ac0e34` |
+| Post-merge gate | `Verify site` run 44688784940 on `main` — **success** |
+| Pages | `pages build and deployment` run 44688783949 — **success**; GitHub API reports `status: built`, `build_type: legacy`, `html_url: https://karagemop466-tech.github.io/Affil2/` |
+| Live page check | **Not performed from this sandbox.** `karagemop466-tech.github.io` is not on this environment's reachable-host list and the fetch failed at TLS (`SSL_ERROR_SYSCALL`). Deployment success and the Pages `built` status are confirmed through the GitHub API; the rendered-page read the board's own lesson asks for must be done from a browser. |
+
+Honest limit, repeated: the deploy is confirmed by the GitHub API, not by fetching the deployed HTML from
+here. The next session with network access should open the live homepage, one guide and `flagged.html`
+with a cache-busting query string and confirm the router, the guide product line and FLG-041…FLG-046 render.
+
