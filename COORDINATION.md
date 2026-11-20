@@ -164,3 +164,33 @@ Branch: `arena/990af5de-affil2`. Work is PR #3 (https://github.com/karagemop466-
 - No product data, sourced values, links, or compliance claims changed. Existing unknowns remain flagged.
 - PR #11: https://github.com/karagemop466-tech/Affil2/pull/11 — merged (merge commit d51c04ac301c0c8dc9b9d34142d9391afb9e6c1b).
 - GitHub Pages deploy run 44680641868 for that merge succeeded; Pages API status is `built` at https://karagemop466-tech.github.io/Affil2/.
+
+## Session `5506d56a` — integration pass (2026-11-20)
+
+Branch `arena/5506d56a-affil2`, based on `e1b6750`, rebased onto `05cd053` (PR #12).
+
+Scope: one generated front end over the shared register, plus a stricter gate. No other session's
+records were rewritten.
+
+| Action | File | Note |
+|---|---|---|
+| Read-only | `data/products.json`, `data/sources.json`, `data/reverification-2026-11-20.json` | consumed as the product register; not modified |
+| Added | `data/editorial.json` | this site's voice: headlines, best-for, trade-offs, FAQ. Keeps annotations out of the shared register |
+| Appended | `data/flags.json` | FLG-029 (P-01 quarts vs liters), FLG-030 (certification is a seller claim), FLG-031 (P-02 accessory count), FLG-032 (no hands-on testing), FLG-033 (no named author). Also added `severity`, `links` and `owner_status` to every flag so the page can show a source per row; no existing `title` or `detail` was altered |
+| Added | `scripts/build_site.py` | generator for all 29 pages, sitemap, feed, robots |
+| Rewrote | `scripts/check_site.py` | adds canonical-per-path, single h1, disclosure above `<main>`, tagged Special Links, JSON-LD parsing, sitemap/feed parity, blank-must-be-unverified, and flag referential integrity |
+| Replaced | `assets/style.css`, `assets/app.js` | storefront layout; the original illustration SVGs from `4bbf49bb` are kept and used |
+| Rewrote | `.github/workflows/pages.yml` | regenerates, fails on generator/commit drift, then gates, then deploys. Also runs on pull requests |
+| Added | `.nojekyll` | so `assets/` is served as-is |
+
+Flag renumbering check: every `FLG-nnn` in the generated pages was verified against the register's
+`title`; the earlier draft's hardcoded numbers (which assumed my own numbering) were corrected to
+this register's, e.g. preset conflict is FLG-021, not FLG-014.
+
+Verification run: `python3 scripts/build_site.py` then `python3 scripts/check_site.py` →
+`checked 29 pages, 5 product records, 33 flags, 14 sources — ALL CHECKS PASS`.
+
+Note on process: `main` advanced from `e1b6750` to `05cd053` while this session worked, and three
+of the defects this session was about to fix (title drift, P-03 wattage, malformed feed) were
+independently found and fixed there first. The register from `main` is therefore the record of
+truth, and this pass builds on it instead of competing with it.

@@ -3,97 +3,183 @@
     "id": "FLG-001",
     "title": "Intended ASIN unconfirmed",
     "detail": "Owner has not confirmed intended ASIN per product. Intended field blank; observed field separate. Do not merge.",
-    "links": []
+    "links": [
+      "S10",
+      "S11",
+      "S12",
+      "S13",
+      "S14"
+    ],
+    "severity": "open",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-002",
     "title": "Tracking ID unverified",
     "detail": "shopnow047c-20 matches published shape but issuance/activity cannot be confirmed from any public page.",
-    "links": []
+    "links": [
+      "S01"
+    ],
+    "severity": "open",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-003",
     "title": "Short-link compliance unresolved",
     "detail": "Exact compliance status of link.amazon short links is unresolved. Do not claim they are invalid.",
-    "links": []
+    "links": [
+      "S02",
+      "S01"
+    ],
+    "severity": "policy",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-004",
     "title": "Special Links pending test",
     "detail": "One link per product must be tested in the enrolled Associates workflow and confirmed in the tracking report before scaling.",
-    "links": []
+    "links": [
+      "S10",
+      "S11",
+      "S12",
+      "S13",
+      "S14"
+    ],
+    "severity": "pending-test",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-005",
     "title": "Prices/ratings blank",
     "detail": "No price, rating, review count, BSR or commission shown. Unverified fields left blank per Program Policies §2(b).",
-    "links": []
+    "links": [
+      "S02"
+    ],
+    "severity": "policy",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-006",
     "title": "Canonical host unset",
     "detail": "No custom domain chosen. Canonical tags use placeholder host — update before indexing.",
-    "links": []
+    "links": [
+      "S01"
+    ],
+    "severity": "open",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-007",
     "title": "No licensed product photos",
     "detail": "No Amazon product images used. Visuals are original SVG/CSS illustrations, not product photos.",
-    "links": []
+    "links": [
+      "S02",
+      "S10"
+    ],
+    "severity": "policy",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-008",
     "title": "CHEF iQ battery conflict",
     "detail": "Same listing states 50 hours (About this Item) and 70 hours (Product Description). Both published; neither chosen.",
-    "links": []
+    "links": [
+      "S14"
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-009",
     "title": "Emeril listing conflicts",
     "detail": "Preset count 24 vs 25 and model numbers 4-00675-02 vs 4-00675-02X-VN appear on the same listing. Both published.",
-    "links": []
+    "links": [
+      "S11"
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-010",
     "title": "Analytics local-only",
     "detail": "Click counter runs in-browser until a self-hosted endpoint is deployed. See Q-08.",
-    "links": []
+    "links": [
+      "S03"
+    ],
+    "severity": "pending-test",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-011",
     "title": "Short-link redirects are not stable across attempts",
     "detail": "Re-test on 2026-11-20: link.amazon/B00hJ57DV returned HTTP 500, then the Amazon homepage, then /dp/B08DKYBTPH. link.amazon/B0f3GKalj returned the homepage, then /dp/B0DZFD6R9Z. The destination can change between visits. Each 'observed' ASIN is a snapshot, not a stable mapping. Record the final URL and timestamp for each test. See data/reverification-2026-11-20.json.",
-    "links": []
+    "links": [
+      "S15",
+      "S17",
+      "S19"
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-012",
     "title": "B0c8moW59 not reproduced",
     "detail": "The record maps link.amazon/B0c8moW59 to B0DHZTCNR5 (ThermoMaven 1 Sec). In 4 attempts on 2026-11-20 the link returned HTTP 500 once and an Amazon 'Continue shopping' checkpoint three times. B0DHZTCNR5 itself opens as a product page. Owner: open the link in a normal browser session and confirm the final URL.",
-    "links": []
+    "links": [
+      "S18",
+      "S13"
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-013",
     "title": "Record titles differ from the live page titles",
     "detail": "P-02 (B09B7SB46R): record title 'Emeril Lagasse 26 QT Extra Large Air Fryer, Convection Toaster Oven with French Doors, Stainless Steel'; live page title 'Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven ... 24 One-Touch Preset Options'. P-03 (B08DKYBTPH): record 'Chefman TurboFry Touch Air Fryer, XL 8-Qt...'; live 'Chefman Air Fryer 8 Qt | TurboFry 4-in-1 ...'. P-05 (B0DZFD6R9Z): record includes '[2025 Model]', not in the live title. ASINs match in all three. Titles should be quoted from the live page with a capture date, or marked as paraphrase.",
-    "links": []
+    "links": [
+      "S15",
+      "S16",
+      "S17",
+      "S19"
+    ],
+    "severity": "corrected",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-014",
     "title": "Supplied tokens are 9 characters, not 10-character ASINs",
     "detail": "All five link.amazon path tokens (B04G1MEwY, B02NbDxp3, B00hJ57DV, B0c8moW59, B0f3GKalj) are 9 characters. Third-party references describe ASINs as 10 characters. An official Amazon definition was not found in this pass, so the length rule is unverified. The tokens cannot be treated as ASINs. Intended-ASIN fields remain blank (FLG-001).",
-    "links": []
+    "links": [
+      "S15",
+      "S16",
+      "S17",
+      "S18",
+      "S19"
+    ],
+    "severity": "unverified",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-015",
     "title": "Program Policies §2(e) and §2(g) bear on short-link status",
     "detail": "Commission Income Statement §2(e) disqualifies purchases from a 'Redirecting Link' (one that sends users indirectly through an intermediate site without a customer action). §2(g) disqualifies purchases that are not tracked because links are improperly formatted. These clauses are the concrete tests behind FLG-003. Whether the supplied short links meet either one is not determined. The links are NOT claimed to be invalid. Source: https://affiliate-program.amazon.com/help/operating/policies",
-    "links": []
+    "links": [
+      "S02",
+      "S01"
+    ],
+    "severity": "policy",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-016",
     "title": "Search-referred purchases may be disqualified (§2(d))",
     "detail": "Commission Income Statement §2(d) disqualifies a purchase where the customer was referred to Amazon by a link generated or displayed on a search engine. The clause concerns the route into Amazon. How it applies to a site found through search and then linking out is not determined. Confirm with Associates support before scaling organic search traffic. Source: https://affiliate-program.amazon.com/help/operating/policies",
-    "links": []
+    "links": [
+      "S02",
+      "S01"
+    ],
+    "severity": "policy",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-017",
@@ -101,7 +187,9 @@
     "detail": "The register said 1700 W. The listing (About this item) says 1000 W / 120 V for model RJ38-SQSS-8T. Corrected on all pages.",
     "links": [
       "S12"
-    ]
+    ],
+    "severity": "corrected",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-018",
@@ -109,7 +197,9 @@
     "detail": "About this item gives a 200–400 °F range; the page title says 450 °F Hi-Fry option. Both are published as the listing states them.",
     "links": [
       "S12"
-    ]
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-019",
@@ -117,7 +207,9 @@
     "detail": "The register said a 1-year limited warranty. The listing (About this item) says a two-year assurance from CHEF iQ. Corrected.",
     "links": [
       "S14"
-    ]
+    ],
+    "severity": "corrected",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-020",
@@ -129,7 +221,9 @@
       "S12",
       "S13",
       "S14"
-    ]
+    ],
+    "severity": "corrected",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-021",
@@ -137,7 +231,9 @@
     "detail": "The listing title says 24 One-Touch Preset Options; About this item says 25 cooking pre-sets. Both are published; neither is chosen.",
     "links": [
       "S11"
-    ]
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-022",
@@ -149,7 +245,9 @@
       "S12",
       "S13",
       "S14"
-    ]
+    ],
+    "severity": "unverified",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-023",
@@ -161,19 +259,29 @@
       "S12",
       "S13",
       "S14"
-    ]
+    ],
+    "severity": "corrected",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-024",
     "title": "Comparison table misaligned (fixed)",
     "detail": "The earlier compare table shifted values into the wrong rows for P-04 and P-05. The compare tables are now generated from the same verified data as the product pages.",
-    "links": []
+    "links": [
+      "S01"
+    ],
+    "severity": "resolved-earlier",
+    "owner_status": "Fixed earlier this pass; kept in the log so the correction is traceable."
   },
   {
     "id": "FLG-025",
     "title": "RSS feed was malformed (fixed)",
     "detail": "feed.xml had an unclosed language element and did not parse as XML. Fixed and checked by an XML parser in the build check.",
-    "links": []
+    "links": [
+      "S01"
+    ],
+    "severity": "resolved-earlier",
+    "owner_status": "Fixed earlier this pass; kept in the log so the correction is traceable."
   },
   {
     "id": "FLG-026",
@@ -182,7 +290,9 @@
     "links": [
       "S01",
       "S02"
-    ]
+    ],
+    "severity": "resolved-earlier",
+    "owner_status": "Fixed earlier this pass; kept in the log so the correction is traceable."
   },
   {
     "id": "FLG-027",
@@ -190,12 +300,70 @@
     "detail": "Program Policies §6(w) says you will not use a link-shortening service in a way that makes it unclear that you are linking to an Amazon site. The supplied short links are the owner's links; compliance is not decided here. Review with FLG-003 and FLG-004.",
     "links": [
       "S02"
-    ]
+    ],
+    "severity": "policy",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   },
   {
     "id": "FLG-028",
     "title": "Requested sources S07 and S24 not in this repo",
     "detail": "The task brief references S07 and S24. They are not in data/sources.json and were not found in the repository, so they are not cited.",
-    "links": []
+    "links": [
+      "S01"
+    ],
+    "severity": "open",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-029",
+    "title": "P-01 capacity stated in quarts and liters",
+    "detail": "The listing title says 6 quarts; the product-details capacity field says 6 liters. Six liters is about 6.3 quarts, so the same page carries two different expressions of capacity. Both are shown on the product page; neither is chosen here.",
+    "links": [
+      "S10"
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-030",
+    "title": "Third-party certification is a seller claim on both listings",
+    "detail": "P-01 says cETL approved and P-04 says NIST and NSF under Specification Met. These are statements on the listing, not certificates or test reports. Nothing on this site should be read as independent confirmation of a safety mark.",
+    "links": [
+      "S10",
+      "S13"
+    ],
+    "severity": "unverified",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-031",
+    "title": "P-02 accessory count: six or seven",
+    "detail": "The listing title says six cooking accessories included; the Configuration field says 7; Included Components lists six named items. Both figures are published on the product page and neither is chosen here.",
+    "links": [
+      "S11"
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-032",
+    "title": "No hands-on testing",
+    "detail": "Nobody who wrote this site has used any of the five appliances. Every statement is read from a listing or a public source; nothing is a review, a rating or a durability claim. Copy is written to stay inside that limit.",
+    "links": [
+      "S10",
+      "S13"
+    ],
+    "severity": "policy",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-033",
+    "title": "No named author or editorial owner",
+    "detail": "The site has no named byline, no editor of record and no organisation behind it that a reader could check. Search engines and readers both treat that as a trust signal. An author page with a real name and a stated method is recommended before traffic is scaled.",
+    "links": [
+      "S03"
+    ],
+    "severity": "open",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
   }
 ]
