@@ -12,10 +12,10 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | If you want | Read |
 |---|---|
 | The short version | `EXECUTIVE-SUMMARY.md` |
-| What to decide next | `suggestions.html` — Decision Center, 17 proposals, rankable |
+| What to decide next | `suggestions.html` — Decision Center, 23 proposals, rankable |
 | The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
-| What is still unanswered | `questions.html` — Open Questions, 14 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 35 flags |
+| What is still unanswered | `questions.html` — Open Questions, 18 rows |
+| What could not be verified | `flagged.html` — Flagged for Review, 40 flags, every one sourced |
 | Where every fact came from | `sources.html` — source register |
 | How the site is built | `scripts/build_site.py` |
 
@@ -37,7 +37,8 @@ generator output, and again if the gate fails.
 | `data/sources.json` | every source with what it supports and the date checked |
 | `data/flags.json` | the flag register: severity, detail, resolution, source links |
 | `data/reverification-2026-11-20.json` | attempt-by-attempt record of the short-link tests |
-| `assets/style.css` | storefront stylesheet |
+| `assets/style.css` | storefront stylesheet, including the photo-card layer |
+| `assets/photos/` | generated illustrative imagery, captioned on every page that uses it (FLG-036) |
 | `assets/app.js` | five measured events, search, ranking, CSV export |
 | `scripts/` | generator and gate |
 

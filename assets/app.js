@@ -34,3 +34,31 @@
  for(const hit of hits){const p=document.createElement('p'),a=document.createElement('a');a.href=hit.u;a.textContent=hit.t;p.append(a);document.querySelector('#results').append(p)}
  if(hits.length)try{const events=JSON.parse(localStorage.getItem('sn_events')||'[]');events.push({e:'search',t:Date.now(),results:hits.length});localStorage.setItem('sn_events',JSON.stringify(events.slice(-500)))}catch{}
 })();
+
+// compare page: two-at-a-time head-to-head, rendered from the embedded register view
+(function(){
+ var el=document.getElementById('pairData');if(!el)return;
+ var data={};try{data=JSON.parse(el.textContent||'{}');}catch(e){return;}
+ var a=document.getElementById('pairA'),b=document.getElementById('pairB');
+ var out=document.getElementById('pairView');if(!a||!b||!out)return;
+ function esc(t){return String(t==null?'':t);}
+ function render(){
+  var A=data[a.value],B=data[b.value];
+  if(!A||!B)return;
+  if(a.value===b.value){out.innerHTML='<p class="small">Pick two different products.</p>';return;}
+  var rows=A.rows.map(function(r,i){
+    var other=B.rows[i]?B.rows[i][1]:'';
+    return '<tr><th scope="row">'+r[0]+'</th><td>'+r[1]+'</td><td>'+other+'</td></tr>';
+  }).join('');
+  out.innerHTML='<table class="compare pair"><caption>Same rows, same sources, two columns. '+
+   'Blank-looking cells say why they are blank.</caption><thead><tr><th scope="col">Field</th>'+
+   '<th scope="col"><a href="'+A.url+'">'+A.name+'</a></th>'+
+   '<th scope="col"><a href="'+B.url+'">'+B.name+'</a></th></tr></thead><tbody>'+rows+'</tbody></table>'+
+   '<p class="cta"><a class="btn" rel="sponsored nofollow" href="'+A.buy+'" data-outbound="pair">'+
+   'Check the first on Amazon<span class="btn-sub">paid link</span></a>'+
+   '<a class="btn ghost" rel="sponsored nofollow" href="'+B.buy+'" data-outbound="pair">'+
+   'Check the second<span class="btn-sub">paid link</span></a></p>';
+ }
+ a.addEventListener('change',render);b.addEventListener('change',render);render();
+
+})();

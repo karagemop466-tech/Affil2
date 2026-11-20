@@ -36,18 +36,44 @@ Four of the five short links resolved to a product page when followed. `B0c8moW5
 | FLG-025 | RSS feed was not well-formed XML | parses, 8 items, checked by the gate |
 | FLG-026 | two Associates source URLs were dead | current policy pages, text checked |
 
+## Register fields re-read on 2026-11-20
+
+An earlier pass had marked several fields unverified because they were missing from a partial
+excerpt. Re-reading each official listing found them stated in the product-information tables, so they
+are now published with the section named as their source (FLG-040):
+
+| Product | Field | Value now published | Where on the listing |
+|---|---|---|---|
+| P-02 Emeril 26QT | Model | 4-00675-02X-VN | Item details: Model Number / Part Number |
+| P-02 Emeril 26QT | Temperature | 75–500 °F | Features & Specs: Min 75 °F, Max 500 °F |
+| P-02 Emeril 26QT | Power | 120 V / 1700 W | Features & Specs: Output Wattage, Wattage, Voltage |
+| P-04 ThermoMaven | Model | HT07 | Item details: Model Name / Model / Part Number |
+| P-04 ThermoMaven | Upper temperature | 572 °F | Features & Specs: Upper Temperature Range |
+| P-05 CHEF iQ Sense | Model | CQ60-3C-Z1-E | Item details: Model / Part Number |
+| P-05 CHEF iQ Sense | Probe length | 4.75 in | Immersion Depth; Measurements: Item Length |
+
+Two things came out of the same pass and are published rather than quietly fixed. Three guides had
+stated weights (26.5 lb, 12.8 lb, "around 13 pounds") that no listing carries; those figures were
+removed and the removal is logged (FLG-039). And the CHEF iQ listing now shows a two-year assurance in
+one field and a 3 Year warranty description in another, so both are printed (FLG-038).
+
 ## Listing conflicts a buyer should see
 | Flag | Product | Contradiction |
 |------|---------|---------------|
 | FLG-008 | CHEF iQ Sense | 50 hours battery in About this item, 70 hours in Product Description |
-| FLG-009 | Emeril 26 QT | model number appears in more than one form |
+| FLG-009 | Emeril 26 QT | model number appears in more than one form; the item-details field now reads 4-00675-02X-VN |
+| FLG-038 | CHEF iQ Sense | two-year assurance in About this item, 3 Year warranty description in Item details |
 | FLG-018 | Chefman 8 Qt | 200–400 °F in About this item, 450 °F Hi-Fry in the title |
 | FLG-021 | Emeril 26 QT | 24 presets in the title, 25 in About this item |
 | FLG-034 | Chefman 6 Qt | 6 quarts in the title, 6 liters in the capacity field |
 | FLG-031 | Emeril 26 QT | six accessories in the title, seven in Configuration, six named |
 
 ## Not verified, and published as such
-Intended ASIN per product (FLG-001) · whether the tracking ID is live (FLG-002) · whether the short-link format is permitted for this placement (FLG-003) · the one-per-product Special Link test (FLG-004) · NIST/NSF and cETL certification beyond the listing's own wording (FLG-035) · any hands-on experience (FLG-032) · a named author (FLG-033) · weights and several model numbers that were not in the fetched listing text (FLG-022).
+Intended ASIN per product (FLG-001) · whether the tracking ID is live (FLG-002) · whether the
+short-link format is permitted for this placement (FLG-003) · the one-per-product Special Link test
+(FLG-004) · NIST/NSF and cETL certification beyond the listing's own wording (FLG-035) · any
+hands-on experience (FLG-032) · a named author (FLG-033) · product weights, which no listing we read
+states, so none is printed for any of the five (FLG-022).
 
 ## Decisions that change the numbers
 1. Complete the link test (SG-07) — nothing about revenue can be reported until it passes.
@@ -72,7 +98,7 @@ Zero, and no forecast. No commission rate, click, session or order figure is pre
 ## Open Questions register (beyond Q-14)
 - UF-1: How will an AI-powered research layer identify profitable niches beyond the five submitted products? (Discovery: Creators API eligibility and Commission Income Statement; blocks any niche-expansion automation)
 - UF-2: What organic traffic metrics will define success for the question-shaped guides? (Discovery: Search Console once SG-10 is verified; blocks SG-16)
-- Q-15 and Q-16 as numbered in an earlier draft of this summary were never registered in `questions.html`; the live register ends at Q-14.
+- Q-15 to Q-18 are now registered in `questions.html`; the register runs to Q-18.
 
 ## Verification log (2026-11-20, session arena/436f4dbe-affil2)
 - All 29 pages built successfully by `scripts/build_site.py`.
@@ -88,3 +114,31 @@ Zero, and no forecast. No commission rate, click, session or order figure is pre
 - FTC Endorsement Guides FAQ re-fetched; disclosure-above-the-fold requirement reaffirmed.
 - No register corrections were required. 30 pages build; `check_site.py` passes ALL CHECKS.
 - New: `design-brief.html` — the Design & Traffic Brief (SG-17).
+
+## Storefront and verification pass (session `82c875a9`)
+
+The front end was rebuilt to read as a shop rather than a register, and the register was re-checked
+against the live listings, without adding a single unchecked claim.
+
+| Change | Where |
+|---|---|
+| Shop-style front page: dated issue line, photographed hero, category directory, three-point credibility strip, three picks with badges, latest guides and a five-product index | `index.html` |
+| Product cards rebuilt as shop cards: image band, capability chips, "best for" and "the catch" lines, buy button with a visible `paid link` label | every grid |
+| Category, shop and product pages carry a captioned image instead of a line drawing | `air-fryers.html`, `meat-thermometers.html`, `products/*` |
+| Two-at-a-time head-to-head on the compare page, 17 aligned rows rendered from the same register (SG-21, shipped) | `compare.html` |
+| A dated, reader-facing change log built from the corrected flags (SG-20, shipped) | `sources.html` |
+| Open Graph and Twitter image metadata so a shared link shows a picture | every page |
+| Six new proposals, renumbered SG-18 to SG-23, alongside the design brief at SG-17; four new open questions Q-15 to Q-18 | `suggestions.html`, `questions.html` |
+| Gate rules: every generated photo needs a caption, alt text and intrinsic dimensions; the pair-view data must parse and every buy link must carry the Associates tag | `scripts/check_site.py` |
+
+Seven register fields that an earlier pass had left blank because they were missing from a partial
+excerpt are now published with the section of the listing that states them (FLG-040): the Emeril's
+model, temperature range and wattage; the ThermoMaven's model and 572 °F upper range; the CHEF iQ's
+model and 4.75 in probe length. Two adverse findings are published rather than smoothed over: three
+guides had stated weights no listing carries, and those figures were removed (FLG-039); and the CHEF iQ
+listing contradicts itself on warranty length, so both figures are printed (FLG-038).
+
+Still unverified after all of this: intended ASINs (FLG-001), whether the tracking ID is live (FLG-002),
+the Special Link test (FLG-004), price display (FLG-005), analytics beyond the browser (FLG-010), and a
+named author (FLG-033).
+
