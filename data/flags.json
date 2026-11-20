@@ -535,5 +535,15 @@
   ],
   "severity": "review",
   "owner_status": "Published for review. Does not block publication."
+ },
+ {
+  "id": "FLG-049",
+  "title": "The analytics switch shipped in a file no page loaded",
+  "detail": "assets/config.js documents window.SITE_CONFIG.analyticsEndpoint as the single place to turn cross-visitor measurement on, and disclosure.html and measurement.html both point readers at it. No page included the script, and assets/app.js never read SITE_CONFIG, so setting the endpoint would have done nothing and the site would have kept counting locally while the documentation said otherwise. Fixed: the page shell now loads assets/config.js before assets/app.js, and app.js reads window.SITE_CONFIG.analyticsEndpoint after the explicit window.SN_COLLECT_ENDPOINT and meta-tag overrides. The endpoint remains null in the repository, so no event leaves a reader's browser until the owner deploys a collector and sets it (FLG-010, Q-08). The gate now fails if any page stops loading config.js, loads it after app.js, or if app.js stops reading the setting.",
+  "links": [
+   "S01"
+  ],
+  "severity": "corrected",
+  "owner_status": "Fixed and gated. Does not block publication."
  }
 ]

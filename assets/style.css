@@ -687,45 +687,17 @@ figure.photo.guide-photo img{aspect-ratio:3/2;object-fit:cover}
 figure.photo.guide-photo .photo-cap{max-width:60ch}
 
 /* ------------------------------------------------------------------
-   USDA safety table, badge, evidence chips, decision-page clusters.
-   These classes were emitted by the generator without any rule, so they
-   rendered as unstyled text. Values and wording are untouched.
+   USDA safety table and status pills emitted by the generator with no
+   rule at all. Values and wording are untouched.
    ------------------------------------------------------------------ */
 table.usda{font-size:13.5px}
 table.usda td:nth-child(2){font-variant-numeric:tabular-nums;white-space:nowrap}
 table.usda caption a{color:var(--accent-d)}
-.badge{
-  position:absolute;top:10px;left:10px;z-index:2;
-  background:var(--accent);color:#fff;font-size:10.5px;font-weight:750;
-  letter-spacing:.09em;text-transform:uppercase;padding:4px 9px;border-radius:999px;
-  box-shadow:0 2px 6px rgba(23,20,15,.2)
-}
-.card-media{position:relative}
-.chips{display:grid;gap:6px;margin:12px 0 14px;padding:0}
-.chip{display:flex;gap:8px;align-items:baseline;font-size:13px;line-height:1.4}
-.chip dt{
-  flex:0 0 84px;font-size:10.5px;font-weight:750;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted);margin:0
-}
-.chip dd{margin:0;color:var(--ink-2)}
-.card-blurb{font-size:14.5px!important}
-.bestfor,.catchline{font-size:12.8px!important;line-height:1.45!important;margin:0 0 7px!important}
-.bestfor strong,.catchline strong{color:var(--ink);font-weight:700}
-.micro{font-size:12.8px!important;margin:8px 0 0!important}
-.micro a{font-weight:600;text-decoration:none}
-.micro a:hover{text-decoration:underline}
-.clusters{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:18px 0}
 .pill.partially{background:#fdf6e3;border-color:#e8d7a6;color:#8a6a12}
 .pill.pending-test{background:#fdf0e4;border-color:#eccfa8;color:var(--warn)}
 .pill.open,.pill.code{background:#eef4e0;border-color:#c3d69b;color:var(--ok)}
-.hero-facts{
-  list-style:none;display:flex;flex-wrap:wrap;gap:8px 22px;padding:0;
-  margin:22px 0 0;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px
-}
-.hero-facts strong{color:var(--ink);font-family:var(--serif);font-size:17px;margin-right:4px}
 table.ledger td{font-size:13.5px}
 
 @media(max-width:820px){
-  .chip dt{flex-basis:72px}
   .prodname-lg{font-size:20px}
 }

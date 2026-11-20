@@ -314,6 +314,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
       we could not verify.</p>
   </div>
 </footer>
+<script src="{up}assets/config.js"></script>
 <script src="{up}assets/app.js" defer></script>
 </body>
 </html>

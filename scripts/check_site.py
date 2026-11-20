@@ -496,6 +496,21 @@ else:
             err(f"compare.html pair data buy link for {pid} lacks the Associates tag")
         if len(rec["rows"]) < 12:
             err(f"compare.html pair data for {pid} has only {len(rec['rows'])} rows")
+# ---------------------------------------------------------------- analytics switch is real
+# assets/config.js documents window.SITE_CONFIG.analyticsEndpoint as the way to turn measurement
+# on, and assets/app.js reads it. It shipped unloaded by any page (FLG-049), so check both ends.
+for p in pages:
+    rel_p = str(p.relative_to(ROOT))
+    up_p = "../" * rel_p.count("/")
+    h = p.read_text(encoding="utf-8")
+    if f'src="{up_p}assets/config.js"' not in h:
+        err(f"{rel_p}: assets/config.js is not loaded; window.SITE_CONFIG would be undefined")
+    if h.find(f'src="{up_p}assets/config.js"') > h.find(f'src="{up_p}assets/app.js"'):
+        err(f"{rel_p}: config.js is loaded after app.js and would be read too late")
+_app = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+if "SITE_CONFIG" not in _app or "analyticsEndpoint" not in _app:
+    err("assets/app.js: does not read window.SITE_CONFIG.analyticsEndpoint")
+
 # ---------------------------------------------------------------- search privacy
 app_js = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
 if re.search(r"URLSearchParams\(\s*location\.search", app_js) or ".get('q')" in app_js or '.get("q")' in app_js:

@@ -242,6 +242,10 @@
   <td>Design &amp; Traffic Brief stated shipped counts that had gone stale<br><span class="small pill-sev corrected">corrected</span></td>
   <td>design-brief.html claimed '8 live, 8 proposed' guides, 'RSS feed of guides - done, 8 items' and linked 'the eight live guides', while 11 guides are live and feed.xml carries 11 items. The numbers are now computed from the guide list and the cluster table at build time, so they cannot drift again.</td>
   <td>Fixed (computed at build). Does not block publication.</td>
+  <td class="src"><a href="https://affiliate-program.amazon.com/help/operating/agreement" rel="sponsored nofollow">S01</a></td></tr><tr><td class="nowrap"><strong>FLG-049</strong></td>
+  <td>The analytics switch shipped in a file no page loaded<br><span class="small pill-sev corrected">corrected</span></td>
+  <td>assets/config.js documents window.SITE_CONFIG.analyticsEndpoint as the single place to turn cross-visitor measurement on, and disclosure.html and measurement.html both point readers at it. No page included the script, and assets/app.js never read SITE_CONFIG, so setting the endpoint would have done nothing and the site would have kept counting locally while the documentation said otherwise. Fixed: the page shell now loads assets/config.js before assets/app.js, and app.js reads window.SITE_CONFIG.analyticsEndpoint after the explicit window.SN_COLLECT_ENDPOINT and meta-tag overrides. The endpoint remains null in the repository, so no event leaves a reader's browser until the owner deploys a collector and sets it (FLG-010, Q-08). The gate now fails if any page stops loading config.js, loads it after app.js, or if app.js stops reading the setting.</td>
+  <td>Fixed and gated. Does not block publication.</td>
   <td class="src"><a href="https://affiliate-program.amazon.com/help/operating/agreement" rel="sponsored nofollow">S01</a></td></tr><tr><td class="nowrap"><strong>FLG-012</strong></td>
   <td>B0c8moW59 initially blocked by checkpoint; reproduced on re-test<br><span class="small pill-sev resolved-earlier">resolved-earlier</span></td>
   <td>Earlier four attempts on 2026-11-20 for link.amazon/B0c8moW59 returned HTTP 500 once and 'Continue shopping' checkpoints three times. Follow-up verification on 2026-11-20 resolved link.amazon/B0c8moW59 directly to https://www.amazon.com/dp/B0DHZTCNR5 (ThermoMaven HT07). Intermittent redirect instability remains under FLG-011 and intended ASIN remains blank under FLG-001.</td>
@@ -280,6 +284,7 @@
       we could not verify.</p>
   </div>
 </footer>
+<script src="assets/config.js"></script>
 <script src="assets/app.js" defer></script>
 </body>
 </html>

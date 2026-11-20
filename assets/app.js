@@ -14,6 +14,13 @@
       if (typeof window !== 'undefined' && typeof window.SN_COLLECT_ENDPOINT === 'string' && window.SN_COLLECT_ENDPOINT) {
         return window.SN_COLLECT_ENDPOINT;
       }
+      // assets/config.js is loaded before this file and carries window.SITE_CONFIG.
+      // It shipped without being referenced by any page, so the documented switch did nothing;
+      // reading it here (and loading config.js in the page shell) makes it real (FLG-049).
+      var cfg = (typeof window !== 'undefined' && window.SITE_CONFIG) || null;
+      if (cfg && typeof cfg.analyticsEndpoint === 'string' && cfg.analyticsEndpoint) {
+        return cfg.analyticsEndpoint.trim();
+      }
       var m = document.querySelector('meta[name="sn-collect-endpoint"]');
       if (m && m.content) return m.content.trim();
       var stored = localStorage.getItem('sn_collect_url');
