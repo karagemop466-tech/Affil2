@@ -111,3 +111,103 @@ or unpublished flag exists. CI runs regeneration, drift detection, `check_site.p
 - `python3 -B scripts/check_site.py` passed (`checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`).
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
 - `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).
+
+---
+
+# Session arena/0acc86ad-affil2 — shop voice, one indexable site, independent re-verification
+
+Date 2026-11-20 · Tracking ID `shopnow047c-20` (issuance still unverified, FLG-002) ·
+Live https://karagemop466-tech.github.io/Affil2/ · Branch `arena/0acc86ad-affil2`
+
+## What was wrong with the site (and what changed)
+
+The facts were right; the voice was a newsroom's. Buyer pages carried the project's filing
+system: "chunk 7" crawl citations in 64 places, bare `FLG-0xx` ticket numbers on every product
+card, a "Product-intent confirmation record" heading, and a "Specifications, line by line"
+table that read like an audit workbook. That is the specific thing a reader experiences as
+"an AI site".
+
+| Was | Now |
+|---|---|
+| `Stated in: About this item & Product information — Features & Specs (chunks 4 & 7)` | `Read from the listing bullets on 2026-11-20` |
+| `item weight unstated on listing (FLG-022)` | `the listing does not publish its weight` |
+| `Product-intent confirmation record` | `Where this link actually goes` — the same five fields, in shopper language |
+| `Best for` / `The catch` | `Buy it if` / `Skip it if` |
+| No tags on cards | `Best for two cooks`, `Two baskets`, and a "Why we picked it" line per product |
+| Zero flags cited on buyer pages | Every contradiction stated in words on the page, with a route to the full record |
+
+Every published value is identical to before. Only the wording, and the amount of the project's
+own machinery the reader is asked to look at, changed.
+
+## What a buyer now gets that they did not before
+
+1. **Cards that answer the question a shopper is actually asking.** Each card names the reason to
+   pick it, the reason not to, and one paragraph on why this product is on the site at all.
+2. **A "what comes with it" card** on every product page — box contents, care, warranty — quoted
+   from the listing, with the listing's own contradictions left visible.
+3. **A three-question shortlist** on `compare.html`: what you are shopping for, how many you cook
+   for, how you cook, and how much counter depth you have. It scores only against specifications
+   already published, and it filters by category before it scores, so an air-fryer question never
+   returns a thermometer.
+4. **A dated trust strip** above the fold on the homepage: what was checked, when, and why prices
+   and star ratings are absent, stated as a reason rather than an apology.
+
+## Findability: one site, with a stated reason to rank it
+
+- `findability.txt` now publishes, at the site root: the canonical home, what the site is for,
+  the editorial policy (authorship, review process, no hands-on testing, paid-link marking,
+  corrections), the 24 reader-facing pages separately from the 12 project records, the sitemap,
+  the feed, how to cite a page, and the known limits.
+- `robots.txt` points to it. The sitemap still submits all 36 pages, because the site's own gate
+  requires full coverage and a half-submitted site is worse than an honest one; the split lives
+  in `findability.txt` instead, and `Q-22` puts the choice in front of the owner.
+
+## Independent re-verification performed this session (T-22)
+
+All five official listings were fetched live and re-read with no reuse of earlier notes.
+33 field rows recorded in `data/verification-2026-11-20-live.json`, published in full on
+`verification.html`.
+
+| Product | Confirmed live this pass | Left marked unverified this pass |
+|---|---|---|
+| P-01 `B0CDY277D3` | 13.38×11.81×10.63 in, 200–450 °F, 120 V/1700 W, 1-yr, cETL, capacity 6 L vs 6 qt | item weight |
+| P-02 `B09B7SB46R` | 16.9×15.8×14.8 in, 24 presets in title vs 25 in bullets, capacity 24.6 L vs 26 qt | weight (listing omits it), accessory count not re-counted |
+| P-03 `B08DKYBTPH` | 12.75×13.5×10 in, 8 qt, 200–400 °F vs 450 °F Hi-Fry, 1000 W vs 1700 W, 4 presets, cETL, 1-yr | item weight |
+| P-04 `B0DHZTCNR5` | ±0.5 °F, NIST/NSF as a listing field, 1 s, battery + calibration certificate included, wipe clean | model HT07, 572 °F upper rating |
+| P-05 `B0DZFD6R9Z` | 50 h battery, 1000 °F, 3 probes + hub, Bluetooth/Wi-Fi, 2-yr vs 3-yr warranty | probe length |
+
+Also re-read live: the USDA FSIS Safe Minimum Internal Temperature Chart (page states last
+updated 2025-04-14) and the FTC Endorsement Guides FAQ. Both corroborate what the site already
+cites (S22, S03).
+
+**New findings, added as flags and published on Flagged for Review:** FLG-041 (a long
+`Specification Met` list is a seller self-declaration, not tested certification), FLG-042 (P-03's
+page points to a newer model than the one submitted), FLG-043 (buy-box offer state changes between
+reads), FLG-044 (the five register values this pass did not reach, queued for next time).
+
+**Not verified this session, and still not claimed:** short-link redirects, the Associates
+agreement and program policy wording (login-gated), whether the tracking ID is issued, whether
+`link.amazon` short links are permitted, the one-per-product Special Link test, Search Console,
+and any hands-on performance.
+
+## The decisions this leaves with the owner
+
+| # | Decision | Why it is the one that matters | Where |
+|---|---|---|---|
+| 1 | Run the one-per-product Special Link test | Until a click is recorded in the tracking report, nothing about revenue is knowable | Q-04, FLG-004 |
+| 2 | Verify Search Console and submit `sitemap.xml` | The only route to choosing the next guide from measured queries instead of instinct | Q-20, SG-29 |
+| 3 | Read three rewritten pages and confirm nothing now reads as a test result | Rewording is the one change that can create a compliance problem | Q-21 |
+| 4 | Decide whether the 12 project records stay in the sitemap | Dilution versus auditability; both are defensible | Q-22 |
+| 5 | Decide whether to apply for Creators API access | The only compliant route to showing live price and product imagery | SG-13, SG-31 |
+
+## Verification behind this summary
+
+    python3 scripts/build_site.py        # 36 pages, idempotent
+    python3 scripts/check_site.py        # 36 pages, 5 product records, 44 flags, 19 sources - ALL CHECKS PASS
+    python3 -m unittest discover -s tests -p "test_*.py"     # 3 tests OK
+    node tests/test_collector.js         # ALL JS COLLECTOR AND CLIENT TESTS PASS
+    node --check assets/app.js           # syntax OK
+
+The gate now also fails if a crawl-chunk citation or a bare flag ID appears on any of the 25
+reader-facing pages, and if `findability.txt` omits a submitted page. The new rules were written
+after the rewrite, and passing them is what makes the rewrite stay done.
