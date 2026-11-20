@@ -63,3 +63,10 @@ localStorage only. No cookies, no third-party requests, no analytics script. Rea
 their own event log and click counts as CSV. A self-hosted collector is one function away in
 `assets/app.js` (`send()`), and the privacy statement that must ship with it is drafted in
 `disclosure.html` (FLG-010).
+
+## CI
+
+`.github/workflows/pages.yml` has two jobs. `verify` regenerates every page and fails if the
+committed files differ from the generator, then runs `scripts/check_site.py`. `deploy` runs only on
+`main` and only if `verify` passed. The workflow also runs on pull requests, so a change that breaks
+the gate is caught before merge.

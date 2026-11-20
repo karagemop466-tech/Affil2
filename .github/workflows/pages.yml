@@ -1,17 +1,47 @@
-name: Deploy GitHub Pages
+name: Generate, gate and deploy
+
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
+  verify:
+    name: Regenerate and gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Regenerate every page from data/
+        run: python3 scripts/build_site.py
+
+      - name: Fail if the committed pages differ from the generator output
+        run: |
+          if [ -n "$(git status --porcelain -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt')" ]; then
+            echo "::error::Committed pages are out of sync with scripts/build_site.py."
+            git --no-pager diff --stat -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt'
+            exit 1
+          fi
+          echo "Pages match the generator."
+
+      - name: Compliance and integrity gate
+        run: python3 scripts/check_site.py
+
   deploy:
+    name: Deploy to GitHub Pages
+    needs: verify
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

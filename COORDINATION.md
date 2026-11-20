@@ -322,3 +322,16 @@ generator output.
 - **Associates link test.** Needs Associates Central (FLG-004). Every product page says `PENDING TEST`.
 - **Intended ASINs.** Owner-only (FLG-001).
 - **`scripts/build_content.py`.** Unreferenced now. Delete deliberately, not by accident.
+
+### Corrective follow-up — the workflow was reverted, not shipped
+
+Found on the post-merge check: `main` still carried the old single-job `Deploy GitHub Pages`
+workflow. Cause: an early `git checkout origin/main -- .github/workflows/pages.yml` in this session's
+first integration attempt restored the upstream copy over the hardened one, and the later force-push
+of the rebased branch kept that reverted file. Consequence: PR #15 merged and Pages deployed
+successfully, but the generator-drift check and `check_site.py` never ran in CI. The site itself is
+correct — the gate passes locally — but the enforcement this PR promised was absent.
+
+Fixed in a follow-up PR: the workflow now has a `verify` job (regenerate → fail on drift →
+`check_site.py`) that gates a `deploy` job, and it runs on pull requests as well as on `main`.
+A pull-request run is the proof that this time it actually executes.
