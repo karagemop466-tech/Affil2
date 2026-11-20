@@ -967,6 +967,37 @@ GUIDES = [
          ],
          verdict="""Measure depth, measure the space in front, and weigh whether it will go in a
          cupboard. Pick the unit that survives all three; then look at features."""),
+    dict(slug="first-week-air-fryer", title="Your air fryer's first week: what to cook, what to skip",
+         sub="Three deliberate experiments, two things to skip, and the habit that earns the counter space.",
+         kicker="Getting started · 5 min read", products=["P-01", "P-03", "P-02"],
+         intro="""The fastest way to regret a new appliance is to feed it only frozen fries. A week
+         of deliberate experiments teaches you where the heat sits and what this machine will
+         actually replace in your routine. The practice below is kitchen experience, not product
+         testing &mdash; no performance claim about any of these machines is made here.""",
+         sections=[
+            ("Days one and two: learn the heat", """Start with something cheap and forgiving &mdash;
+            potato wedges or chicken wings. The point is not dinner, it is calibration: a single
+            layer, a shake halfway, and a note on what you would change next time. You are learning
+            how done looks at 400 degrees versus 375 on your counter, not on anyone else's."""),
+            ("Days three and four: cook the meal you repeat", """Now cook the thing you make on busy
+            nights &mdash; one protein and one vegetable. This is where basket layout decides the
+            rhythm: two baskets run a main and a side to the same finish line, one big basket takes
+            the full family portion in a single batch, and an oven-style tray takes the jobs that
+            want a rack rather than a drawer."""),
+            ("What to skip for now", """Wet batters &mdash; moving air strips them before they set.
+            Overcrowded loads &mdash; stacked food steams instead of crisping, and two smaller
+            batches beat one large one every time. High-sugar glazes until you know your hot spots,
+            because sugar burns fast in moving air. None of this is a product claim; it is kitchen
+            practice that holds across machines."""),
+            ("The habit that pays for the counter space", """Once a week, let the appliance win one
+            job from the big oven: reheating, roasting a tray of vegetables, finishing a weeknight
+            protein. If it never wins a job, it becomes cupboard inventory. If it wins one
+            permanently, it earned the space &mdash; and cleanup is half the ownership, which is
+            covered in the cleanup and counter-space guide."""),
+         ],
+         verdict="""Calibrate with something cheap, cook your real weeknight meal by day four, and
+         give the appliance one standing job from the oven. Skip batters and overloaded baskets
+         until the machine is familiar."""),
 ]
 
 
@@ -1213,6 +1244,96 @@ SUGGESTIONS = [
          why="Cadence compounds; sporadic bursts do not.",
          impact="Medium — organic growth", effort="Ongoing", status="Blocked on Search Console",
          verify="Requires Search Console access (SG-10)."),
+    dict(id="SG-17", title="Re-verify listing identities and record the live titles",
+         what="An independent second-session re-verification of the five listing identities and "
+              "live page titles, dated and logged.",
+         why="A register is only as good as its most recent check, and a second reader catches "
+             "titles that drifted since the first pass.",
+         impact="High — evidence", effort="Done", status="Shipped",
+         verify="COORDINATION.md session 42617e35 verification log; title drift already published as FLG-013 and FLG-020."),
+    dict(id="SG-18", title="Publish listing conflicts instead of choosing sides",
+         what="When one listing states 50 hours and 70 hours, print both figures and flag the "
+              "conflict rather than picking a winner.",
+         why="Choosing a side without evidence invents a fact the seller has not even settled.",
+         impact="High — honesty", effort="Done", status="Shipped",
+         verify="FLG-008, FLG-018, FLG-021 and FLG-031 are published as conflicts, not resolved."),
+    dict(id="SG-19", title="Put a government source under every doneness temperature",
+         what="USDA FSIS safe-minimum chart (S22) quoted on thermometer pages; no temperature "
+              "value written from memory.",
+         why="Food-safety numbers are the easiest thing to hallucinate and the costliest to get "
+             "wrong.",
+         impact="High — reader safety", effort="Done", status="Shipped",
+         verify="The build gate requires the USDA block on thermometer pages and forbids it on air-fryer pages."),
+    dict(id="SG-20", title="Record what each short link did, separately from what it was for",
+         what="Observed redirect outcomes live in their own fields and source rows (S15–S19); "
+              "intended ASINs stay in theirs. Never merged.",
+         why="What a link did is evidence. What it was meant to do is intent. One field cannot "
+             "answer both questions.",
+         impact="Required — auditability", effort="Done", status="Shipped",
+         verify="The build gate fails if an intended ASIN is filled before owner confirmation."),
+    dict(id="SG-21", title="Choose guide topics from measured queries, not instinct",
+         what="Site-search counts and Search Console queries decide the next guide topic once "
+              "measurement exists.",
+         why="The measurement layer exists precisely so the editorial calendar stops being a guess.",
+         impact="High — organic growth", effort="Owner action", status="Blocked on Search Console",
+         verify="Local search events already count; query-level reports need SG-29 first."),
+    dict(id="SG-22", title="Deploy the self-hosted analytics collector",
+         what="The endpoint contract and collectors are specified; a host must run one before any "
+              "server-side event is recorded.",
+         why="GitHub Pages cannot run a server function, so server-side data stays blank by "
+             "design rather than quietly wrong.",
+         impact="Medium — measurement", effort="Owner action", status="Blocked on hosting",
+         verify="FLG-010 stays open; a parallel open PR proposes the collector. Nothing server-side is recorded until it is deployed."),
+    dict(id="SG-23", title="Name an editor of record",
+         what="A human byline and a review record for every article published on the site.",
+         why="Anonymous content is the tell of a generated site, and a reader can smell it.",
+         impact="Required — trust", effort="Owner action", status="Blocked on owner",
+         verify="FLG-033 is open; articles currently carry a house byline only."),
+    dict(id="SG-24", title="Feed the campaign ledger from first-party reports",
+         what="Monthly rows from authorised Associates reports with dated provenance. Clicks stay "
+              "clicks; orders come only from reports.",
+         why="Revenue without a first-party report is a forecast, and this site does not make "
+             "forecasts.",
+         impact="High — evidence-based iteration", effort="Owner action", status="Blocked on owner",
+         verify="campaign-ledger.html renders zero rows and explains why (SG-11)."),
+    dict(id="SG-25", title="Confirm the intended ASIN behind each submitted link",
+         what="One owner reply per product turns the blank intended field into a confirmed one, "
+              "with date and source.",
+         why="It is the difference between a register and an assumption, and it is owner-only "
+             "information (FLG-001).",
+         impact="Required — auditability", effort="Owner action", status="Blocked on owner",
+         verify="Intended fields are blank on all five product pages until an answer lands in the questions register."),
+    dict(id="SG-26", title="Add an evergreen first-week guide for new owners",
+         what="A getting-started guide that answers onboarding questions, added to the sitemap and "
+              "feed like every other guide.",
+         why="New owners search what to cook first, not only what to buy first.",
+         impact="Medium — organic traffic", effort="Done", status="Shipped",
+         verify="guides/first-week-air-fryer.html published this pass and included in sitemap.xml and feed.xml."),
+    dict(id="SG-27", title="Nav labels: keep the navigation shopper-first",
+         what="Primary nav reads Air Fryers, Meat Thermometers, All products, Guides, Compare and "
+              "How we choose; every dashboard surface lives in one records group.",
+         why="Shoppers navigate by task. Dashboards are for the desk, not the aisle.",
+         impact="Medium — usability", effort="Done", status="Shipped",
+         verify="Every generated page carries the same masthead; the build gate checks the labels."),
+    dict(id="SG-28", title="The shipped RSS feed",
+         what="feed.xml carries every guide with dates and parses cleanly; robots.txt points at "
+              "the canonical sitemap.",
+         why="One indexable site needs a feed that reflects what actually shipped, not an "
+             "advertisement for more.",
+         impact="Medium — distribution", effort="Done", status="Shipped",
+         verify="The build gate parses the feed and requires an item for every guide."),
+    dict(id="SG-29", title="Search Console property and sitemap submission",
+         what="Verify the github.io property, submit sitemap.xml, and watch which queries bring "
+              "readers.",
+         why="Without it the site cannot see its own audience, and SG-21 has nothing to read.",
+         impact="High — findability", effort="Owner action", status="Blocked on owner",
+         verify="No Search Console property is verified; needs the owner's Google account."),
+    dict(id="SG-30", title="Reader capture: RSS live, email pending",
+         what="RSS works today. An email signup needs the owner's provider choice and the privacy "
+              "wording that goes with it.",
+         why="Repeat readers are the only durable channel a small publication gets.",
+         impact="Medium — retention", effort="Owner action", status="Blocked on owner",
+         verify="feed.xml is live and linked everywhere; no email form is published."),
 ]
 
 
