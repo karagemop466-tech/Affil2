@@ -18,11 +18,11 @@ Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED �
 | T-07 | SEO/findability (sitemap, robots, RSS, JSON-LD, search) + click/analytics layer | done | 530c2e6c | sitemap.xml, robots.txt, feed.xml, assets/app.js |
 | T-08 | Flagged for Review page + campaign ledger (empty, provenance) | done | 530c2e6c | flagged.html, campaign-ledger.html, data/campaign-ledger.json |
 | T-09 | Final integration: build check, broken-link check, GitHub Pages, PR + merge | in progress | 530c2e6c | .github/workflows/pages.yml, COORDINATION.md |
-| T-10 | Independent line-by-line re-verification of register values vs official sources + verification log | in progress | bba2deed | data/verification.json, sources.html, COORDINATION.md |
-| T-11 | Publication polish pass: brand, typography, imagery, seasons, clusters, authorship, nav labels (SG-27) | in progress | bba2deed | index.html, guides.html, guides/*.html, products/*.html, about.html, assets/style.css, assets/img/*, all *.html (nav/footer) |
-| T-12 | Analytics on: five defined events, privacy-preserving outbound-click counter, self-hosted endpoint shipped + tested | in progress | bba2deed | assets/app.js, assets/config.js, analytics/*, disclosure.html |
-| T-13 | Seasonal/question-shaped guides + publishing cadence + sitemap/feed sync (SG-28) | in progress | bba2deed | guides/*.html, guides.html, feed.xml, sitemap.xml |
-| T-14 | Registers: SG-27..SG-30 rows, decision-gate UX, questions completeness (SG-29, SG-30) | in progress | bba2deed | suggestions.html, questions.html |
+| T-10 | Independent line-by-line re-verification of register values vs official sources + verification log | done | bba2deed | data/verification.json, sources.html, COORDINATION.md |
+| T-11 | Publication polish pass: brand, typography, imagery, seasons, clusters, authorship, nav labels (SG-27) | done | bba2deed | index.html, guides.html, guides/*.html, products/*.html, about.html, assets/style.css, assets/img/*, all *.html (nav/footer) |
+| T-12 | Analytics on: five defined events, privacy-preserving outbound-click counter, self-hosted endpoint shipped + tested | done | bba2deed | assets/app.js, assets/config.js, analytics/*, disclosure.html |
+| T-13 | Seasonal/question-shaped guides + publishing cadence + sitemap/feed sync (SG-28) | done | bba2deed | guides/*.html, guides.html, feed.xml, sitemap.xml |
+| T-14 | Registers: SG-27..SG-30 rows, decision-gate UX, questions completeness (SG-29, SG-30) | done | bba2deed | suggestions.html, questions.html |
 | T-15 | Integration: check script extension, JSON-LD fix, PR + merge + Pages confirm, record | in progress | bba2deed | scripts/check_site.py, .github/workflows/*, COORDINATION.md, EXECUTIVE-SUMMARY.md, README.md |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
@@ -32,10 +32,10 @@ Status key: unclaimed / in progress / done / needs review (= published on Flagge
 | Submitted link | Observed destination (separate field) | Official listing checked | Result |
 |---|---|---|---|
 | link.amazon/B04G1MEwY | B0CDY277D3 — CHEFMAN 6 Qt Dual Basket Air Fryer Oven (RJ38-SQPF-3TDB-2W) | https://www.amazon.com/dp/B0CDY277D3 | Title/model/specs match register; price/rating left blank per Program Policies §2(b) |
-| link.amazon/B02NbDxp3 | B09B7SB46R — Emeril Lagasse 26 QT French Door Air Fryer Toaster Oven | https://www.amazon.com/dp/B09B7SB46R | Match; preset-count + model-number conflicts flagged (FLG-010/011) |
+| link.amazon/B02NbDxp3 | B09B7SB46R — Emeril Lagasse 26 QT French Door Air Fryer Toaster Oven | https://www.amazon.com/dp/B09B7SB46R | Match; preset-count + model-number conflicts flagged (FLG-009; canonical numbering in data/flags.json) |
 | link.amazon/B00hJ57DV | B08DKYBTPH — Chefman TurboFry Touch XL 8-Qt (RJ38-SQSS-8T) | https://www.amazon.com/dp/B08DKYBTPH | Match |
 | link.amazon/B0c8moW59 | B0DHZTCNR5 — ThermoMaven Professional Digital Meat Thermometer, 1 Sec (HT07) | https://www.amazon.com/dp/B0DHZTCNR5 | Match |
-| link.amazon/B0f3GKalj | B0DZFD6R9Z — CHEF iQ Sense [2025] Smart Wireless Meat Thermometer, Gen3 (CQ60-3C-Z1-E) | https://www.amazon.com/dp/B0DZFD6R9Z | Match; battery 50h vs 70h conflict flagged (FLG-012) |
+| link.amazon/B0f3GKalj | B0DZFD6R9Z — CHEF iQ Sense [2025] Smart Wireless Meat Thermometer, Gen3 (CQ60-3C-Z1-E) | https://www.amazon.com/dp/B0DZFD6R9Z | Match; battery 50h vs 70h conflict flagged (FLG-008; canonical numbering in data/flags.json) |
 
 Program sources: Amazon Associates Operating Agreement + Program Policies (affiliate-program.amazon.com), FTC Endorsement Guides FAQ (ftc.gov), Google "Qualify outbound links" (developers.google.com). Full register: `sources.html` / `data/sources.json`.
 
@@ -57,6 +57,22 @@ Session `bba2deed` scope note: branched from `12d49cd`, rebased onto `main` @ `e
 - 2026-11-20 530c2e6c: claimed all tasks, repo empty, no conflicts.
 - PR link + merge result: (to be recorded at T-09 completion)
 - 2026-11-20 bba2deed: claimed T-10..T-15 after rebasing onto main @ e1b6750. No conflicts observed.
+
+## T-10..T-15 completion (2026-11-20, session bba2deed)
+
+Sources used (all official, links for manual review): amazon.com listings S10-S14 (fetched 2026-11-20), Amazon Associates Operating Agreement (affiliate-program.amazon.com/help/operating/agreement), Program Policies (affiliate-program.amazon.com/help/node/topic/202131110), FTC Endorsement Guides FAQ (ftc.gov), Google Qualify-outbound-links (developers.google.com), USDA FSIS safe-temperature chart (fsis.usda.gov, used in the holiday roast guide).
+
+Verification performed: every register value re-read row by row (titles, capacities, temperatures, power, dimensions, weights, models, features, warranty, box contents) against the official listings; policy claims checked against the official policy pages; per-value status (confirmed / corroborated / confirmed-conflict / corrected) published in `verification.html` + `data/verification.json`; per-row source links enforced by `scripts/check_site.py` (ALL CHECKS PASS, 29 pages).
+
+Irregularities found by this pass (published on flagged.html; do not block):
+- FLG-011 P-03 wattage conflict: live About-this-item bullet "1000 Watts/120 Volts - RJ38-SQSS-8T" vs product-info mirrors + Chefman manual "1700 watts". Both published; neither chosen.
+- FLG-012 P-03 title drift (TurboFry Touch -> TurboFry 4-in-1 with 450F Hi-Fry Option) + 450F Hi-Fry title claim vs 200-400F bullet range.
+- FLG-013 P-05 warranty: register's "1-year" unconfirmed; listing states "two-year assurance" (corroborated). Corrected with provenance.
+- C-05 feed.xml malformed (<language> unclosed; XML parse error) - fixed; gate now parses the feed as XML.
+- C-06 SG-08 claimed JSON-LD shipped but none existed - JSON-LD added (WebSite/Organization/Article/BreadcrumbList).
+- C-07 stale flag cross-references in the session-530c2e6c log above (FLG-010/011/012 -> canonical FLG-008/009/010) - corrected in place.
+
+Notes: "corroborated" values were read from product-information mirrors of the listing's own spec table (listing Product-details blocks were not reliably extractable in fetch); official listing links provided in every table row for manual review. Short links (FLG-003) remain unresolved and are NOT claimed invalid. Special Link one-per-product tests (FLG-004) still require the enrolled Associates workflow.
 
 ## T-09 completion (2026-11-20)
 - PR: https://github.com/karagemop466-tech/Affil2/pull/1 — merged (merge commit fdb5d79)
