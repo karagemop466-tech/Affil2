@@ -5,10 +5,10 @@ import pathlib
 
 _usda = json.loads((pathlib.Path(__file__).resolve().parent.parent / "data" / "usda-temperatures.json").read_text())
 _rows = "".join(
-    '<tr><th scope="row">%s</th><td>%s</td><td class="src"><a href="%s" rel="sponsored nofollow">USDA FSIS</a></td></tr>'
+    '<tr><th scope="row">%s</th><td>%s</td><td class="src"><a href="%s" rel="noopener noreferrer">USDA FSIS</a></td></tr>'
     % (a, b, _usda["source_url"]) for a, b in _usda["rows"])
 USDA_TABLE = ('<table><caption>USDA Safe Minimum Internal Temperatures. Every row cites the '
-              '<a href="%s" rel="sponsored nofollow">official USDA FSIS chart</a> (source %s, read %s).</caption>'
+              '<a href="%s" rel="noopener noreferrer">official USDA FSIS chart</a> (source %s, read %s).</caption>'
               '<thead><tr><th scope="col">Food</th><th scope="col">Minimum internal temperature</th>'
               '<th scope="col">Source</th></tr></thead><tbody>%s</tbody></table>'
               % (_usda["source_url"], _usda["source_id"], _usda["checked"], _rows))

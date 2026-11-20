@@ -1052,19 +1052,108 @@ FLG-001 intended ASINs · FLG-002 tracking-ID activity · FLG-003 short-link com
 
 ---
 
-## Session `arena/ca4af934-affil2` — merge conflict log (2026-11-20)
+## Session `arena/b6b809da-affil2` — T-23 claim: storefront conversion, asset hygiene, and a decision-path section (2026-11-20)
 
-`gh pr merge 47` refused: `main` had moved through PRs #40–#46 (sessions 58c6ca4a / cb967199 / c449a2ad / 578ca10d / bba2deed contributions: requirements traceability register, `verification.html`, `scripts/seasonal_guides.py` Holiday-2026 guides, front-page copy pass, open-PR reconciliation). Per protocol the merge was stopped and resolved **without discarding any other session's work**:
+**Branch:** `arena/b6b809da-affil2` (platform-bound; this is the only branch this session may write to).
+**Base:** rebased onto `origin/main` `4dd7cdd` (PR #41) at the start of this session; gate green before any edit
+(`36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`, 3 Python tests OK, Node collector tests PASS).
 
-1. Conflicts (COORDINATION.md, executive-summary.html, guides.html, search.html) resolved by keeping `origin/main`'s versions and re-appending this session's record below. No main work lost.
-2. `scripts/build_site.py` auto-merged with both sides intact: this session's entity fixes, seasonal home module, guides clusters, intent-row linkification, compare caption and exec bullet + main's `seasonal_guides` import, `build_verification()`, front-page dashboard-panel removal. This session then added main's two Holiday-2026 guides (`holiday-capacity`, `holiday-roast-thermometer`) to the guides-hub Seasonal cluster (grouping only; the fail-safe "More guides" group remains).
-3. `data/flags.json` auto-merged append-only; this session's FLG-041 is unique (no collision with main).
-4. All generated HTML regenerated from the merged generator (never hand-merged).
-5. **Renumbering:** this session claimed **T-21** on its branch before the collision was visible; T-21 and T-22 are now both taken on main (c449a2ad, 578ca10d). This session's task is renumbered **T-23**.
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-23 | Storefront conversion + asset hygiene + decision-path section (renumbered from T-21: that number was claimed by c449a2ad for the requirements-traceability register while this session worked) | in progress | b6b809da | `scripts/build_site.py`, `scripts/check_site.py`, `scripts/seasonal_guides.py`, `assets/style.css`, `data/flags.json` (append only), `data/editorial.json` (annotations only), regenerated HTML/`sitemap.xml`/`feed.xml`, `COORDINATION.md`, removal of unreferenced duplicate image files under `assets/` |
 
-Post-merge gates on the merged tree: `build_site.py` idempotent (36 pages incl. verification.html and the Holiday-2026 guides); `check_site.py` → checked 36 pages, 5 product records, 41 flags, 19 sources — ALL CHECKS PASS; 3 Python tests OK; `node tests/test_collector.js` PASS; feed/sitemap parse; 0 broken internal links across 36 pages; every page in sitemap, every guide in feed.
+Scope note: `data/products.json`, `data/sources.json` are **read-only** for this session — no product
+fact, listing value or source is changed, and no new claim about Amazon, FTC, Google or USDA policy is
+made. `data/flags.json` is appended to only. The workflow file, `analytics/`, `functions/` and the
+tests are not touched. Open owner-gated items (FLG-001/002/003/004/010/028/033) stay untouched.
 
-## Session `arena/ca4af934-affil2` — T-23 work record (2026-11-20) [claimed as T-21 pre-merge]
+**Constraint on verification this session, stated up front.** This sandbox can only reach
+`github.com`, `codeload.github.com`, `api.github.com`, `registry.npmjs.org`, `pypi.org` and
+`files.pythonhosted.org`. Every other host — `amazon.com`, `affiliate-program.amazon.com`, `ftc.gov`,
+`developers.google.com`, `fsis.usda.gov` — fails TLS from here. **No live source was re-fetched in this
+session.** Consequently this session asserts **no new product, listing or policy fact**, does not
+re-verify any register value, and records no "verified" status for anything it did not read. Work is
+limited to markup, styling, generated navigation, gate rules, and the removal of duplication that can
+be proved from the repository itself. Register values stand on the earlier sessions' dated reads
+(S10–S19, S01–S04, S20–S24); that their text was not re-read today is itself recorded below.
+
+### T-23 completion (session `b6b809da`, 2026-11-20)
+
+Renumbered from T-21: session `c449a2ad` claimed T-21 (requirements traceability, `REQUIREMENTS-TRACE.md`)
+and session `578ca10d` then used T-22 for the final-integration addendum, both while this session worked.
+Those numbers were taken; this session's task is T-23. No other session's work was edited.
+
+**What shipped**
+
+| Area | Change |
+|---|---|
+| Stylesheet integrity | `assets/style.css` line 601 opened `.pdp-art img{` and never closed it, so the `@media(max-width:1000px)` rule after it was parsed as declarations and dropped. Fixed, and the gate now fails on an unbalanced stylesheet or an unclosed `@media` block. |
+| Missing styles | The generator emits `.hero`, `.hero-photo`, `.hero-copy`, `.hero-facts`, `.aisle-photo`, `.pdp-photo`; the November layer renamed the hero to `.cover` and shipped no rule for any of them. Rules added (dark-green cover card with cream type), and the gate now fails on any class the generator emits that has no rule. |
+| Front page | A four-way "start where you actually are" router sits directly under the hero and above the category directory. It answers "which of these am I?" before asking the reader to browse. Gated. |
+| Guides | Every guide now ends on *If this guide decided it for you*: one line per relevant product (choose-it-if + the caveat) and one tagged button. Section headings carry generated step markers; the hand-typed "1." prefixes were removed so the number is not printed twice. |
+| Product pages | Each product page links to the guides that discuss it (previously there was no product→guide link at all). Gated in both directions. |
+| Link semantics | FTC, Google, USDA and Amazon policy/creators-API citations were carrying `rel="sponsored nofollow"`, which marks them as paid placements. Only `amazon.com/dp/` listings are now sponsored; citations use `rel="noopener noreferrer"`. Gated. |
+| Dead files | Six unreferenced images removed (`assets/feature.jpg`, `basket.jpg`, `probe.jpg`, `assets/img/cat-air-fryers.jpg`, `cat-thermometers.jpg`, `hero-kitchen.jpg` — the last three duplicated a file of the same name under `assets/photos/` at a different size). Gated: an image file nothing references now fails the build. |
+| Stale counts | SG-02 said "ten guides … include all ten" against eleven published; the count is now derived from `GUIDES`. README and the executive summary were refreshed to 46 flags / current page count. |
+
+**What was verified, and what could not be**
+
+Reached from this sandbox: GitHub API and the repository itself. Not reached: `amazon.com`,
+`affiliate-program.amazon.com`, `ftc.gov`, `developers.google.com`, `fsis.usda.gov` — all failed at TLS.
+So **no listing, policy page or temperature chart was re-read in this session**, no register value was
+changed, and no value is newly marked verified. Every fact on the site still rests on the dated reads
+recorded against S01–S24 by earlier sessions. Published as **FLG-045** with the same wording on
+`flagged.html`.
+
+Verified by execution instead: `scripts/build_site.py` → 36 pages, idempotent across consecutive runs;
+`scripts/check_site.py` → `checked 36 pages, 5 product records, 46 flags, 19 sources — ALL CHECKS PASS`
+(including the 8 new rules); `python3 -m unittest discover` → 3 tests OK; `node tests/test_collector.js`
+→ ALL JS COLLECTOR AND CLIENT TESTS PASS; a full internal link crawl of all 36 pages → 0 broken links;
+HTTP 200 for home, shop, compare, guides, a guide, a product page, flagged, suggestions, questions,
+sources, every dashboard page, the stylesheet and the images; disclosure confirmed above `<main>` on the
+served homepage; `git diff --check` clean.
+
+**New flags published (append-only; FLG-001–FLG-040 untouched, verified field by field)**
+
+FLG-041 unclosed CSS rule · FLG-042 policy citations mislabelled `rel=sponsored` · FLG-043 six dead image
+files · FLG-044 stale "ten guides" count · FLG-045 no source re-read in this pass (the honest limit) ·
+FLG-046 the masthead name and volume line are editorial devices, not an owned brand.
+
+**Conflict log.** `git pull --rebase` conflicted in `COORDINATION.md` (main gained three session records
+and a `REQUIREMENTS-TRACE.md` while this session worked). Resolved by keeping main's entire file and
+re-appending only this session's block — no other session's record was discarded. The branch was force-pushed
+once with `--force-with-lease` after that rebase, on this branch only.
+
+
+### T-23 release record
+
+| Field | Value |
+|---|---|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/48 |
+| CI before merge | `Verify site` run 44688719463 on `arena/b6b809da-affil2` — **success** |
+| Merge | `gh pr merge 48 --merge` — state **MERGED**, 2026-11-20T06:34:38Z, merge commit `4faab7903c73adee7cac51a1df07948f56ac0e34` |
+| Post-merge gate | `Verify site` run 44688784940 on `main` — **success** |
+| Pages | `pages build and deployment` run 44688783949 — **success**; GitHub API reports `status: built`, `build_type: legacy`, `html_url: https://karagemop466-tech.github.io/Affil2/` |
+| Live page check | **Not performed from this sandbox.** `karagemop466-tech.github.io` is not on this environment's reachable-host list and the fetch failed at TLS (`SSL_ERROR_SYSCALL`). Deployment success and the Pages `built` status are confirmed through the GitHub API; the rendered-page read the board's own lesson asks for must be done from a browser. |
+
+Honest limit, repeated: the deploy is confirmed by the GitHub API, not by fetching the deployed HTML from
+here. The next session with network access should open the live homepage, one guide and `flagged.html`
+with a cache-busting query string and confirm the router, the guide product line and FLG-041…FLG-046 render.
+
+
+---
+
+## Session `arena/ca4af934-affil2` — second merge conflict round (2026-11-20)
+
+After the first merge round (below), `main` moved again through PRs #48/#50 (session `b6b809da`: answer-first router, product line at end of guides, citation `rel` fix, CSS repair, verification-log regeneration, FLG-041..FLG-046, README refresh). `gh pr merge 47` again reported conflicts. Resolved the same way — **no other session's work discarded**:
+
+1. Conflicted generated pages (executive-summary.html, flagged.html, search.html, sources.html) and shared docs (COORDINATION.md, README.md) taken from `origin/main`, then this session's record re-appended below and README counts re-synced (46→47 flags).
+2. `data/flags.json`: main's FLG-041..FLG-046 kept as-is; this session's cosmetic slug flag renumbered **FLG-041 → FLG-047** (ID collision discovered only after the first merge; the flag detail records the chain). All FLG-041 references in this session's records relabeled.
+3. `scripts/build_site.py` auto-merged with both sides intact again (this session's entity fixes, seasonal home module, guides clusters incl. main's Holiday-2026 guides in the Seasonal cluster, intent-row linkification, compare caption, exec bullet + main's router, citation-rel fix, product-line footer). On-page exec bullet relabeled T-21→T-24.
+4. **Task ID chain:** this task was claimed as T-21 (branch claim), relabeled T-23 after the first collision round, and is finally **T-24** (T-21 = c449a2ad requirements traceability; T-22 = 578ca10d verification addendum; T-23 = b6b809da storefront pass).
+5. **Process note (destructive command avoided):** `git pull --rebase` on this branch linearized its merge history and stalled replaying the root commit ("Could not apply 12d49cd Initial commit", README conflict markers). The rebase was **aborted** (`git rebase --abort`), restoring the branch to the pushed merge commit 74e0c54 with no work lost. Subsequent syncs use `git fetch` + `git merge origin/main` (merge-preserving) instead of rebase, and the failure is logged here rather than hidden.
+
+## Session `arena/ca4af934-affil2` — T-24 work record (2026-11-20) [claimed as T-21 pre-merge]
 
 ### Line-by-line review and independent live re-verification (official sources only)
 
@@ -1078,7 +1167,7 @@ Post-merge gates on the merged tree: `build_site.py` idempotent (36 pages incl. 
 | USDA FSIS temperature chart (S22) | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Re-read live; 145 °F + 3-min rest / 160 °F ground meats / 165 °F poultry-leftovers match the site's USDA block; chart dated 2025-04-14 |
 | Thanksgiving 2026-11-26 (seasonal module) | computed: 4th Thursday of November 2026 (Thursdays 5, 12, 19, 26) | Correct |
 
-**Not re-reached in this pass (recorded honestly, nothing re-marked on their behalf):** the P-01/P-02/P-04 deep spec tables — this session's chunk fetches landed on ad modules (pagination drift between fetcher runs); the values stand on the same-day cited captures by sessions 530c2e6c / 937876a6 / 9f19fe6b (`data/products.json` field provenance, `data/reverification-2026-11-20.json`). S01/S02 remain login-gated (FLG-026). Prices/ratings/buy-box deliberately unrecorded (FLG-005).
+**Not re-reached in this pass (recorded honestly, nothing re-marked on their behalf):** the P-01/P-02/P-04 deep spec tables — this session's chunk fetches landed on ad modules (pagination drift between fetcher runs); the values stand on the same-day cited captures by sessions 530c2e6c / 937876a6 / 9f19fe6b (`data/products.json` field provenance, `data/reverification-2026-11-20.json`). S01/S02 remain login-gated (FLG-026). Prices/ratings/buy-box deliberately unrecorded (FLG-005). (Session b6b809da's FLG-045 records the same class of limit from the other side.)
 
 ### Table audit (every row: source link or explicit blank/flag marker)
 333 rows across the 33 pre-merge pages audited: 174 carry direct external source links; 84 carry blank/flag/policy markers; 75 are internal registers (design-brief planning rows, Decision Center, Open Questions, event-schema tables, ledger empty-state) or caption-cited single-source data rows (compare 4, USDA doneness 8). Criteria and exemptions recorded in EXECUTIVE-SUMMARY.md.
@@ -1087,11 +1176,11 @@ Post-merge gates on the merged tree: `build_site.py` idempotent (36 pages incl. 
 1. Double-escaped entities (`&plusmn;` `&mdash;` `&nbsp;` `&deg;`) in four guide `sub`/`intro` strings rendered literally (`amp;plusmn;` visible on guides.html) — replaced with real characters.
 2. Product-intent confirmation record: observed-target, token, model-provenance, observation-note and confirmation-date rows now carry row-level links to the official listing or the supplied short link; intended vs observed fields remain separate (FLG-001).
 3. Compare-table caption now carries all five official listing links and states the per-column traceability path.
-4. **FLG-041** (cosmetic, sourced to S12): P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's TurboFry name; rename would change a published URL, so it is left to the owner.
-5. Publication polish: front-page seasonal cluster "Thanksgiving week" (USDA doneness panel, S22) and guides-hub topic clusters (Choosing an air fryer / Meat thermometers / Seasonal — main's Holiday-2026 guides grouped in Seasonal; fail-safe group ensures no guide can drop out).
+4. **FLG-047** (cosmetic, sourced to S12): P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's TurboFry name; rename would change a published URL, so it is left to the owner.
+5. Publication polish: front-page seasonal cluster "Thanksgiving week" (USDA doneness panel, S22) and guides-hub topic clusters (Choosing an air fryer / Meat thermometers / Seasonal — main's Holiday-2026 guides grouped under Seasonal; the fail-safe group ensures no guide can drop out).
 
 ### Sources
-Product listings and policy links as in the table above; full register unchanged at `sources.html` / `data/sources.json` (19 sources).
+Product listings and policy links as in the table above; full register at `sources.html` / `data/sources.json` (19 sources).
 
 ### Irregularities
-FLG-001..FLG-040 unchanged; FLG-041 new (cosmetic slug). Open parallel PRs #28/#29/#34/#35 (and the pre-merge ones #40–#46 already merged) noted for the owner in EXECUTIVE-SUMMARY.md. Scope: README.md counts synced 40→41 flags; no other session's files touched.
+FLG-001..FLG-046 (main) unchanged; FLG-047 new (cosmetic slug). Open parallel PRs #28/#29/#34/#35 left untouched per protocol and listed for the owner in EXECUTIVE-SUMMARY.md.

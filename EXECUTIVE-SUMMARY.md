@@ -1,4 +1,4 @@
-# Executive Summary — ShopNow Kitchen (Verified Update — through session arena/ca4af934-affil2, T-21)
+# Executive Summary — ShopNow Kitchen (Verified Update — through session arena/ca4af934-affil2, T-24)
 
 Date 2026-11-20 · Tracking ID in use `shopnow047c-20` (issuance unverified, FLG-002)
 Live site https://karagemop466-tech.github.io/Affil2/ · Full version with source links: `executive-summary.html`
@@ -108,11 +108,11 @@ or unpublished flag exists. CI runs regeneration, drift detection, `check_site.p
 - Synced cleanly with `origin/main` (`21424ae`, preserving PRs #17–#36 including `design-brief.html`, storefront photos, `pairCompare`, `guides/first-week-air-fryer.html`, and dated `sources.html` changelog).
 - Verified all 5 `link.amazon/*` short links, deep chunks across all 5 `/dp/` product pages, and official docs (`S01`–`S04`, `S20`–`S24`) live on 2026-11-20.
 - `python3 -B scripts/build_site.py` built all 33 pages idempotently.
-- `python3 -B scripts/check_site.py` passed (`checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`).
+- `python3 -B scripts/check_site.py` passed (`checked 36 pages, 5 product records, 46 flags, 19 sources — ALL CHECKS PASS`).
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
 - `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).
 
-## Verification log (2026-11-20, session arena/ca4af934-affil2 — T-21 independent pass)
+## Verification log (2026-11-20, session arena/ca4af934-affil2 — T-24 independent pass (claimed as T-21 pre-merge; renumbered twice after ID collisions with parallel sessions))
 Independent line-by-line re-verification against live official pages (this session's own fetches,
 not inherited):
 
@@ -127,14 +127,14 @@ not inherited):
 
 **Not re-reached in this pass (inherited from same-day passes by sessions 530c2e6c / 937876a6 / 9f19fe6b, citations already in `data/products.json`):** the P-01, P-02 and P-04 deep spec tables (this session's chunk fetches landed on ad modules due to pagination drift; the earlier cited captures stand, and nothing was re-marked as verified on their behalf). Prices, ratings and buy-box state remain deliberately unrecorded (FLG-005).
 
-## Table audit (2026-11-20, T-21)
+## Table audit (2026-11-20, T-24)
 333 table rows across 33 pages audited: 174 rows carry direct external source links; 84 carry an explicit blank/flag/policy marker (blank values, `PENDING`, "not shown, by policy", FLG- references); the remaining 75 are planning, decision, question, event-schema or ledger rows (internal records with explicit statuses, not product claims) or data rows whose table caption and headers carry the official links (compare view: 4 rows; USDA doneness tables: 8 rows, USDA chart linked in each caption). Every data value row on product pages (spec tables, intent record) now carries a row-level link to the official listing or the supplied short link. Row-level exemptions, all documented: compare-view data rows (traceable via column headers → product pages → row-level sources, plus the five listing links now in the caption), USDA doneness rows (single-source table, USDA chart linked in the caption), the five-event schema tables (the site's own contract, `data/events.json`), and the decision/question/ledger registers (internal records with explicit statuses, not product claims).
 
-## Defects found and fixed by this pass
+## Defects found and fixed by this pass (session arena/ca4af934-affil2)
 1. Double-escaped HTML entities (`&plusmn;`, `&mdash;`, `&nbsp;`, `&deg;`) rendered literally in four guide `sub`/`intro` strings on `guides.html` and guide pages — replaced with real characters (confirmed fixed in generated output).
 2. Product-intent confirmation record rows for the observed redirect target, model provenance, confirmation date, token and observation note lacked row-level links — now each links the official listing or the supplied link (intended vs observed fields remain separate; intended stays blank per FLG-001).
 3. Compare-table caption now carries the five official listing links and states the traceability path per column.
-4. New flag **FLG-041** (cosmetic): the P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's "TurboFry" name. Rename would change a published URL, so it is left to the owner's decision; no data affected.
+4. New flag **FLG-047** (cosmetic; raised as FLG-041 before the ID collision with main's FLG-041..046 was visible, then renumbered): the P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's "TurboFry" name. Rename would change a published URL, so it is left to the owner's decision; no data affected.
 
 ## Manual review links (all official)
 - Product listings: https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z
