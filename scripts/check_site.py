@@ -527,6 +527,49 @@ if errors:
 print("ALL CHECKS PASS")
 
 
+# ---------------------------------------------------------------- reader voice (session 0acc86ad)
+# The site is a shop, not a newsroom. A shopper must never meet the project's filing system:
+# no chunk numbers, no bare flag IDs on the pages a buyer reads. Every flag stays published on
+# flagged.html (generated from data/flags.json), which is the only place IDs belong.
+READER_PAGES = [ROOT / "index.html", ROOT / "shop.html", ROOT / "compare.html",
+                ROOT / "air-fryers.html", ROOT / "meat-thermometers.html",
+                ROOT / "how-we-choose.html", ROOT / "guides.html"]
+READER_PAGES += sorted((ROOT / "products").glob("*.html"))
+READER_PAGES += sorted((ROOT / "guides").glob("*.html"))
+for page in READER_PAGES:
+    if not page.exists():
+        err(f"{page.name}: expected reader-facing page missing")
+        continue
+    txt = page.read_text()
+    if re.search(r"\bchunks?\s*\d", txt, re.I):
+        err(f"{page.relative_to(ROOT)}: internal crawl citation (chunk N) visible to readers")
+    if re.search(r"FLG-\d{3}", txt):
+        err(f"{page.relative_to(ROOT)}: internal flag ID visible to readers "
+            f"(publish the fact in words; keep the ID on flagged.html)")
+    if "Product-intent confirmation record" in txt:
+        err(f"{page.relative_to(ROOT)}: internal intent record heading on a reader page")
+
+# Every product page must still carry the five required provenance facts, in reader language.
+for page in sorted((ROOT / "products").glob("*.html")):
+    txt = page.read_text()
+    for required in ("Intended ASIN", "Observed redirect target", "Special Link we publish",
+                     "Confirmation date"):
+        if required not in txt:
+            err(f"{page.relative_to(ROOT)}: provenance table missing '{required}'")
+
+# findability.txt must exist, name the canonical home, and list every submitted page.
+find = ROOT / "findability.txt"
+if not find.exists():
+    err("findability.txt missing (site profile for crawlers)")
+else:
+    ftxt = find.read_text()
+    if BASE not in ftxt:
+        err("findability.txt: canonical home not stated")
+    for page in pages:
+        if f"{BASE}{page}" not in ftxt:
+            err(f"findability.txt: does not list {page}")
+
+
 # ---------------------------------------------------------------- analytics surface (session bba2deed)
 app = (ROOT / "assets" / "app.js").read_text()
 for ev in ("page_view", "outbound_click", "guide_read", "search", "suggestion_rank"):

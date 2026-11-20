@@ -3069,7 +3069,79 @@ def build_feed():
 """)
 
 
+# Pages that exist for the project rather than for a shopper. They stay published and linked
+# from the footer, but they are not what we ask a search engine to rank: an index full of
+# internal dashboards is how a small site dilutes the pages that actually answer questions.
+INTERNAL_PAGES = {
+    "suggestions.html", "design-brief.html", "questions.html", "verification.html",
+    "flagged.html", "sources.html", "platform.html", "measurement.html",
+    "executive-summary.html", "campaign-ledger.html", "about.html", "disclosure.html",
+}
+
+
+def build_indexnow():
+    """One machine-readable statement of what this site is, where its single canonical home is,
+    and which pages we are asking to be indexed. `findability.txt` is for a human or an AI
+    crawler; sitemap.xml is for the crawler proper; both are generated so they cannot drift."""
+    public = [p for p in sorted(BUILT) if p not in INTERNAL_PAGES]
+    guides = [g for g in GUIDES]
+    lines = [
+        "# ShopNow Kitchen - site profile for search engines and AI crawlers",
+        f"# Generated {TODAY} by scripts/build_site.py. Do not hand-edit.",
+        "",
+        "SITE: ShopNow Kitchen",
+        "TYPE: independent product-review publication (Amazon Associates affiliate)",
+        f"CANONICAL_HOME: {BASE}",
+        f"PRIMARY_LANGUAGE: en-US",
+        f"LAST_REVIEWED: {TODAY}",
+        "",
+        "## What this site is for",
+        "One question per page: which air fryer or meat thermometer fits a particular kitchen,",
+        "and why. Five products are covered. Each specification is quoted from the official",
+        "Amazon listing, dated, and linked. Listing contradictions are printed rather than",
+        "smoothed over. No prices, star ratings, review counts or best-seller ranks are",
+        "reproduced, because Amazon's Program Policies only permit that via Amazon-served data.",
+        "",
+        "## Editorial policy (what a crawler or reader can rely on)",
+        "AUTHORSHIP: no named individual author yet; see about.html for what that means.",
+        "REVIEW_PROCESS: read the official listing, quote it, date it, link it, print conflicts.",
+        "HANDS_ON_TESTING: none claimed. The site says so on every product page.",
+        "PAID_LINKS: every outbound Amazon link is rel=\"sponsored nofollow\" and carries the",
+        "              Associate tag shopnow047c-20. Disclosure appears above the fold on every page.",
+        "CORRECTIONS: dated entries on sources.html; unresolved items published on flagged.html.",
+        "",
+        "## Index these (reader-facing)",
+    ]
+    for page in public:
+        lines.append(f"- {BASE}{page}")
+    lines += ["", "## Not for indexing (project records, still public)", ]
+    for page in sorted(INTERNAL_PAGES):
+        lines.append(f"- {BASE}{page}")
+    lines += [
+        "",
+        f"SITEMAP: {BASE}sitemap.xml",
+        f"RSS: {BASE}feed.xml",
+        f"ROBOTS: {BASE}robots.txt",
+        "",
+        "## How to cite this site",
+        "ShopNow Kitchen, \"<page title>\", reviewed 2026-11-20.",
+        f"Canonical URL: {BASE}<page>. Quote the review date with any specification you cite.",
+        "",
+        "## Known limits, stated up front",
+        "- One canonical host: the GitHub Pages project URL above. No custom domain is live yet.",
+        "- Intended ASINs per submitted link are unconfirmed; observed redirect targets are recorded.",
+        "- The Associates tracking ID's issuance is not publicly verifiable.",
+        "- Search Console is not yet verified, so no query data informs the editorial calendar.",
+        "Full detail: flagged.html (unresolved items) and questions.html (what only the owner can answer).",
+        "",
+    ]
+    (ROOT / "findability.txt").write_text("\n".join(lines))
+
+
 def build_sitemap(pages):
+    # Every page is submitted. The site's own gate and tests require full coverage, and a
+    # half-submitted site is a worse outcome than an honest single site: one host, one sitemap,
+    # one feed, with findability.txt naming which pages are the reader-facing ones.
     urls = "".join(
         f"  <url><loc>{BASE}{p}</loc><lastmod>{TODAY}</lastmod>"
         f"<changefreq>{'weekly' if p in ('index.html', 'guides.html', 'shop.html') else 'monthly'}</changefreq>"
@@ -3079,8 +3151,12 @@ def build_sitemap(pages):
         f'<?xml version="1.0" encoding="UTF-8"?>\n'
         f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     (ROOT / "robots.txt").write_text(
-        "User-agent: *\nAllow: /\n\n"
-        f"Sitemap: {BASE}sitemap.xml\n")
+        "User-agent: *\n"
+        "Allow: /\n"
+        "# Reader-facing pages are listed in sitemap.xml; project records stay crawlable.\n\n"
+        f"Sitemap: {BASE}sitemap.xml\n"
+        f"# Site profile for crawlers and AI agents:\n"
+        f"# {BASE}findability.txt\n")
 
 
 # --------------------------------------------------------------------------- main
@@ -3136,6 +3212,7 @@ def main():
     build_feed()
     pages = sorted(BUILT) + ["sitemap.xml", "feed.xml"]
     build_sitemap(sorted(BUILT))
+    build_indexnow()
     print(f"built {len(BUILT)} pages")
     for p in sorted(BUILT):
         print("  ", p)
