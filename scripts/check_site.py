@@ -171,6 +171,25 @@ for p in prod_pages:
     if len(rows) < 5:
         err(f"{rel}: only {len(rows)} sourced spec rows found")
 
+# ---------------------------------------------------------------- unreferenced weight claims
+# A weight may only appear in prose if some product's weight field is verified with that number.
+# flagged.html is exempt: it is the corrections register and has to be able to quote what was removed.
+WEIGHT_RE = re.compile(r"(\d+(?:\.\d+)?)\s?(?:pounds|pound|lbs?|kg)\b", re.I)
+_prods = json.loads((ROOT / "data" / "products.json").read_text())
+ok_numbers = set()
+for _d in _prods:
+    _f = _d["fields"].get("weight")
+    if _f and _f["st"] == "verified" and _f["v"]:
+        ok_numbers |= set(re.findall(r"\d+(?:\.\d+)?", _f["v"]))
+for p in pages:
+    rel = str(p.relative_to(ROOT))
+    if rel == "flagged.html":
+        continue
+    prose = re.sub(r"<script\b.*?</script>", "", p.read_text(), flags=re.S)
+    for m in WEIGHT_RE.finditer(prose):
+        if m.group(1) not in ok_numbers:
+            err(f"{rel}: weight claim {m.group(0)!r} has no verified weight field behind it")
+
 # ---------------------------------------------------------------- food safety block
 usda = json.loads((ROOT / "data" / "usda-temperatures.json").read_text())
 src_ids_pre = {x["id"] for x in json.loads((ROOT / "data" / "sources.json").read_text())}
@@ -273,6 +292,12 @@ for s in sources:
         err(f"sources.json {s['id']}: url is not https")
 
 # every flag referenced in the HTML must exist, and every defined flag must be published
+# editorial copy is rendered onto the site, so a flag it cites must exist as well
+edit_text = (ROOT / "data" / "editorial.json").read_text()
+for ref in set(re.findall(r"FLG-\d{3}", edit_text)):
+    if ref not in flag_ids:
+        err(f"data/editorial.json cites {ref}, which is not in flags.json")
+
 flag_refs = set()
 for p in pages:
     flag_refs |= set(re.findall(r"FLG-\d{3}", p.read_text()))
@@ -282,6 +307,20 @@ if missing:
 unused = flag_ids - flag_refs
 if unused:
     err(f"flags defined but never published on a page: {sorted(unused)}")
+
+# ---------------------------------------------------------------- front page leads with products
+home = (ROOT / "index.html").read_text()
+above_products = home.split("<h2>The three we would start with</h2>")[0]
+for bad in ("Flagged for Review", "Decision Center", "Open Questions", "Source register"):
+    if bad in above_products:
+        err(f"index.html: '{bad}' appears above the product section; the front page must lead with products")
+card_total = home.count('class="card"')
+if card_total < 3:
+    err("index.html: fewer than three product cards")
+if 'rel="sponsored nofollow"' not in home.split("<h2>Also worth a look</h2>")[0]:
+    err("index.html: no sponsored product link appears before the second product section")
+if "/suggestions.html" in re.sub(r"<footer>.*?</footer>", "", home, flags=re.S):
+    err("index.html: dashboard links belong in the footer, not the body")
 
 # ---------------------------------------------------------------- sitemap + feed
 sm_text = (ROOT / "sitemap.xml").read_text()
