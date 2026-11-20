@@ -1,0 +1,92 @@
+{
+  "verified_on": "2026-11-20",
+  "session": "d95938bb",
+  "method": "Official amazon.com/dp/<ASIN> pages opened through the page-fetch tool, read down to the chunk that prints the listing's 'Product information' block (Features & Specs / Measurements / Item details). Title read from the page <title> element. No scripted scraping, no third-party mirrors, no inference. Values the page did not print are recorded as blank and stay blank in the register.",
+  "supersedes": "Adds a dated row set to data/verification.json and data/reverification-2026-11-20.json. Does not overwrite either file.",
+  "checks": [
+    {
+      "id": "P-01",
+      "asin": "B0CDY277D3",
+      "url": "https://www.amazon.com/dp/B0CDY277D3",
+      "title": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black",
+      "title_matches_register": true,
+      "rows": [
+        {"field": "max temperature", "listing_says": "Max Temperature Setting 450 \u00b0F", "register_says": "200\u2013450 \u00b0F", "agrees": true},
+        {"field": "min temperature", "listing_says": "Min Temperature Setting 93 \u00b0C", "register_says": "records 93 \u00b0C alongside the \u00b0F range", "agrees": true},
+        {"field": "power", "listing_says": "Output Wattage 1700 watts; Wattage 1700 watts; Voltage 120 volts", "register_says": "120 volts / 1700 watts", "agrees": true},
+        {"field": "dimensions", "listing_says": "13.38\"D x 11.81\"W x 10.63\"H", "register_says": "13.38 in D x 11.81 in W x 10.63 in H", "agrees": true},
+        {"field": "weight", "listing_says": "Item Weight 13.3 pounds", "register_says": "13.3 pounds", "agrees": true},
+        {"field": "capacity", "listing_says": "Capacity 6 liters; Size 6 Quart; title says 6 Quart dual basket", "register_says": "6 quarts combined, listed as a conflict against the 6-litre field", "agrees": true}
+      ],
+      "result": "confirmed"
+    },
+    {
+      "id": "P-02",
+      "asin": "B09B7SB46R",
+      "url": "https://www.amazon.com/dp/B09B7SB46R",
+      "title": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included",
+      "title_matches_register": true,
+      "rows": [
+        {"field": "preset count", "listing_says": "title says '24 One-Touch Preset Options'", "register_says": "24 in title vs 25 in About this item, published as a conflict", "agrees": true},
+        {"field": "accessory count", "listing_says": "title says 'Six Cooking Accessories Included'", "register_says": "6 in title & Included Components vs 7 in Configuration, published as a conflict", "agrees": true}
+      ],
+      "result": "confirmed (title read twice, both fetches agree). The Features & Specs / Measurements tables were not reached in this pass, so temperature, power, dimensions and model are NOT re-confirmed here; the existing records and their cited tables stand unchanged."
+    },
+    {
+      "id": "P-03",
+      "asin": "B08DKYBTPH",
+      "url": "https://www.amazon.com/dp/B08DKYBTPH",
+      "title": "Chefman Air Fryer 8 Qt | TurboFry\u00ae 4-in-1 with 450\u00b0F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel",
+      "title_matches_register": true,
+      "rows": [
+        {"field": "power", "listing_says": "Output Wattage 1700 watts; Wattage 1700 watts; Voltage 120 volts", "register_says": "1700 W in Features & Specs vs 1000 W in About this item, published as FLG-017", "agrees": true},
+        {"field": "max temperature", "listing_says": "Max Temperature Setting 400 \u00b0F; title says 450\u00b0F Hi-Fry", "register_says": "200\u2013400 \u00b0F in specs vs 450 \u00b0F Hi-Fry in title, published as FLG-018", "agrees": true},
+        {"field": "min temperature", "listing_says": "Min Temperature Setting 94 \u00b0C", "register_says": "200 \u00b0F floor recorded from About this item", "agrees": true, "note": "94 \u00b0C is 201.2 \u00b0F, consistent with a 200 \u00b0F floor stated in round numbers in the bullets."},
+        {"field": "dimensions", "listing_says": "12.75\"D x 13.5\"W x 10\"H", "register_says": "12.75 in D x 13.5 in W x 10 in H", "agrees": true},
+        {"field": "weight", "listing_says": "Item Weight 12.8 pounds", "register_says": "12.8 pounds", "agrees": true},
+        {"field": "capacity", "listing_says": "Capacity 8 quarts", "register_says": "8 quarts", "agrees": true},
+        {"field": "model", "listing_says": "Part Number RJ38-SQSS-8T; Model Number field prints 'Large Air Fryer'", "register_says": "RJ38-SQSS-8T, with the Model Number field's odd value noted", "agrees": true}
+      ],
+      "result": "confirmed"
+    },
+    {
+      "id": "P-04",
+      "asin": "B0DHZTCNR5",
+      "url": "https://www.amazon.com/dp/B0DHZTCNR5",
+      "title": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, \u00b10.5\u2109 Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black",
+      "title_matches_register": true,
+      "rows": [
+        {"field": "response time", "listing_says": "title says '1 Sec'", "register_says": "1 second", "agrees": true},
+        {"field": "stated accuracy", "listing_says": "title says '\u00b10.5\u2109 Accuracy'", "register_says": "\u00b10.5 \u00b0F", "agrees": true},
+        {"field": "certification", "listing_says": "title says 'NIST&NSF Certified'", "register_says": "NIST and NSF, recorded as a seller statement (FLG-035)", "agrees": true},
+        {"field": "water resistance", "listing_says": "title says 'IP67 Waterproof'", "register_says": "IP67 waterproof", "agrees": true}
+      ],
+      "result": "confirmed for the fields printed in the title. The Features & Specs / Item details tables were not reached in this pass, so model HT07, upper temperature 572 \u00b0F and probe length 6.5 in are NOT re-confirmed here."
+    },
+    {
+      "id": "P-05",
+      "asin": "B0DZFD6R9Z",
+      "url": "https://www.amazon.com/dp/B0DZFD6R9Z",
+      "title": "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000\u00b0F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3",
+      "title_matches_register": true,
+      "rows": [
+        {"field": "upper temperature", "listing_says": "Upper Temperature Range 1000 \u00b0F", "register_says": "1000 \u00b0F heat safe", "agrees": true},
+        {"field": "probe length", "listing_says": "Immersion Depth 4.75 inches", "register_says": "4.75 inches", "agrees": true},
+        {"field": "sensors", "listing_says": "Additional Features: 5 Sensors, Unlimited Range", "register_says": "5 sensors: 4 internal + 1 ambient", "agrees": true, "note": "The listing states the count (5); the 4+1 split comes from About this item, not from this table."},
+        {"field": "connectivity", "listing_says": "Connectivity Technology Bluetooth, Wi Fi", "register_says": "Wi-Fi and Bluetooth, via CHEF iQ app", "agrees": true},
+        {"field": "care", "listing_says": "Product Care Instructions Dishwasher Safe", "register_says": "Waterproof, dishwasher-safe probes", "agrees": true},
+        {"field": "colour", "listing_says": "Style / Color: Black", "register_says": null, "agrees": true, "note": "Not in the register and not needed; recorded here only to show the table was read past the fields we quote."}
+      ],
+      "result": "confirmed"
+    }
+  ],
+  "not_confirmed_this_pass": [
+    "P-02 temperature range, power, dimensions and model number (Features & Specs / Item details not reached)",
+    "P-04 model HT07, upper temperature 572 \u00b0F, probe length 6.5 in, cleaning instruction (tables not reached)",
+    "P-05 battery life and warranty wording (About this item / Item details not reached)",
+    "Intended ASINs for all five links (FLG-001) \u2014 still owner-only",
+    "Whether the tracking ID is live and recording clicks (FLG-002, FLG-004) \u2014 still owner-only",
+    "Short-link (link.amazon) compliance status (FLG-003) \u2014 still unresolved, not claimed invalid"
+  ],
+  "prices_ratings_seen_but_excluded": "The buy box and the Item details block printed prices, star ratings, review counts and Best Sellers Rank on every listing read (for example a Best Sellers Rank line and a star rating with a review count in the P-03 Item details table). None is reproduced on this site: Program Policies 2(b) and 6(t) govern price and rating display, and the ledger has no first-party data (FLG-005, FLG-047). This record deliberately records that the values were visible without recording the values."
+}

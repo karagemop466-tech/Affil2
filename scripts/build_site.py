@@ -842,8 +842,8 @@ def build_compare():
         cells = "".join(f"<td>{fn(p)}</td>" for p in cols)
         return f'<tr><th scope="row">{label}</th>{cells}</tr>'
 
-    head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
-                   f'<br><span class="th-sub">{esc(p["short"])} · {p["id"]}</span>'
+    head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["short"])}</a>'
+                   f'<br><span class="th-sub">{esc(p["brand"])} · {p["id"]}</span>'
                    f'<br><span class="th-sub">{esc(p["headline"])}</span></th>' for p in cols)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Compare", None)])}
@@ -1341,6 +1341,19 @@ def build_verification():
                         f'<thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Status</th>'
                         f'<th scope="col">How it was checked</th><th scope="col">Source</th></tr></thead>'
                         f'<tbody>{rows}</tbody></table>')
+    RV = _json.loads((DATA / "reverification-2026-11-20-session-d95938bb.json").read_text())
+    rv_rows = ""
+    for chk in RV["checks"]:
+        for row in chk["rows"]:
+            listing = esc(row["listing_says"])
+            reg = esc(row["register_says"]) if row["register_says"] else '&mdash; <span class="unverified">not in register</span>'
+            agree = ('<span class="pill shipped">yes</span>' if row["agrees"]
+                     else '<span class="pill blocked">no</span>')
+            note = f'<br><span class="small">{esc(row["note"])}</span>' if row.get("note") else ""
+            rv_rows += (f'<tr><th scope="row">{esc(chk["id"])} · {esc(row["field"])}</th>'
+                        f'<td>{listing}{note}</td><td>{reg}</td><td>{agree}</td>'
+                        f'<td class="src"><a href="{esc(chk["url"])}" rel="sponsored nofollow">listing</a></td>'
+                        f'<td class="src">{esc(chk["id"])} · {esc(chk["result"][:60])}</td></tr>')
     corr = "".join(
         f'<tr><th scope="row">{esc(c["id"])}</th><td>{esc(c["what"])}</td><td>{esc(c["action"])}</td></tr>'
         for c in V["corrections"])
@@ -1368,6 +1381,21 @@ def build_verification():
 <thead><tr><th scope="col">ID</th><th scope="col">Source (official)</th><th scope="col">Claim checked</th><th scope="col">Status</th></tr></thead>
 <tbody>{pol_rows}</tbody></table>
 {prod_blocks}
+<h2>Session re-verification, {esc(RV["verified_on"])}</h2>
+<p class="small">{esc(RV["method"])}</p>
+<table class="reverify">
+  <caption>Fields re-read from the official listing in the {esc(RV["session"])} pass. A field absent
+    from this table was not re-read in this pass and keeps its earlier record.</caption>
+  <thead><tr><th scope="col">Product</th><th scope="col">Field</th><th scope="col">Listing says</th>
+    <th scope="col">Register says</th><th scope="col">Agrees</th><th scope="col">Source</th></tr></thead>
+  <tbody>{rv_rows}</tbody>
+</table>
+<div class="panel">
+  <h3>Not re-confirmed in this pass</h3>
+  <ul class="tight">{"".join(f"<li>{esc(x)}</li>" for x in RV["not_confirmed_this_pass"])}</ul>
+  <p class="small">{esc(RV["prices_ratings_seen_but_excluded"])}</p>
+</div>
+
 <h2>Corrections made in this pass</h2>
 <table><caption>Register corrections (C-IDs). Findings that survived as open contradictions are on the <a href="flagged.html">Flagged for Review</a> page.</caption>
 <thead><tr><th scope="col">ID</th><th scope="col">What was wrong</th><th scope="col">Action taken</th></tr></thead>
