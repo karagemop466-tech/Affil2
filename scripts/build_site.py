@@ -1867,6 +1867,21 @@ SUGGESTIONS = [
          why="Query-driven drafting grows organic search from evidence instead of guesswork.",
          impact="High — organic discovery", effort="Owner action", status="Blocked on Search Console",
          verify="Requires Search Console verification (SG-10, SG-29, Q-20)."),
+    dict(id="SG-33", title="Write every buyer page in shop voice, not audit voice",
+         what="Strip the project's own filing system (crawl chunk numbers, flag IDs, 'intent record') from every page a shopper reads, and replace it with the same facts in plain language: a dated source note per row, a 'what comes with it' card, and a provenance table written as 'what you gave us, where it goes, what we publish'.",
+         why="A reader deciding what to buy does not care which chunk of HTML a number came from. Leaked production detail is the single clearest tell of a generated site.",
+         impact="High — trust and readability", effort="Done in this session", status="Shipped",
+         verify="Live on every product page, category page and guide. Enforced by scripts/check_site.py, which now fails if a chunk citation or bare flag ID appears on a reader page."),
+    dict(id="SG-34", title="Give search engines one site, and a stated reason to rank it",
+         what="Publish findability.txt: canonical home, what the site is for, editorial policy, the reader-facing pages, the feed and sitemap, known limits, and how to cite a page. Point robots.txt at it.",
+         why="A small site competes on clarity, not volume. Telling crawlers and AI agents plainly what the site is, and which pages answer questions, is cheaper than another ten pages.",
+         impact="Medium — discoverability", effort="Done in this session", status="Shipped",
+         verify="findability.txt at the site root; robots.txt references it; the gate fails if a submitted page is missing from it."),
+    dict(id="SG-35", title="Let the reader answer three questions instead of reading a table",
+         what="A shortlist tool on compare.html: category, household size, cooking style and counter depth, scored only against specifications already published on the site.",
+         why="Most visitors arrive with a decision, not a desire to read a matrix. A shortlist converts reading into a next step without inventing a 'best of' verdict.",
+         impact="High — decision support", effort="Done in this session", status="Shipped",
+         verify="compare.html, 'Three questions, then a shortlist'. Weights are visible in the page source; nothing is sent anywhere."),
 ]
 
 
@@ -1942,6 +1957,9 @@ def build_suggestions():
     <tr><td>SG-30</td><td>Decide reader email capture provider alongside RSS</td><td>Owner (decision)</td></tr>
     <tr><td>SG-31</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
     <tr><td>SG-32</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td>SG-33</td><td>Shop voice on every buyer page (no internal citations)</td><td>Shipped &mdash; review the wording</td></tr>
+    <tr><td>SG-34</td><td>Publish findability.txt so one site is the thing being indexed</td><td>Shipped &mdash; submit the sitemap</td></tr>
+    <tr><td>SG-35</td><td>Three-question shortlist on the compare page</td><td>Shipped &mdash; review the questions</td></tr>
   </tbody>
 </table>
 
@@ -2086,6 +2104,18 @@ QUESTIONS = [
      "Without Search Console property verification, organic queries, impressions, and CTR cannot be seen.",
      "Verify the canonical URL in Google Search Console, submit sitemap.xml, and review query reports monthly.",
      "Topic selection and guide cadence (SG-16, SG-29, SG-32)", "Owner", "Blocked on Search Console"),
+    ("Q-21", "Does the shop-voice rewrite change what the site is allowed to claim?",
+     "Rewording can quietly turn a 'seller states' into a fact. This session kept every value identical and cut only the internal citations, but a human should read three pages and confirm nothing now reads as our own test result.",
+     "Read products/p01, p04 and how-we-choose.html. If any sentence implies hands-on testing, mark it on the Flagged page and it gets rewritten before the next build.",
+     "Editorial integrity (SG-33)", "Owner / editor", "Needs a human read"),
+    ("Q-22", "Should the reader-facing pages stay in the sitemap?",
+     "There is one canonical host and 36 submitted URLs, of which 24 are shopper pages and 12 are project records. Dilution is a real risk; hiding records is also a real risk if the owner wants them auditable in search.",
+     "Decide: keep all 36 submitted (current), or keep records crawlable but out of the sitemap. findability.txt already splits the two groups, so either choice is a one-line change.",
+     "Indexing strategy (SG-34, FLG-006)", "Owner", "Not decided"),
+    ("Q-23", "Which three questions should the shortlist ask?",
+     "The shortlist on compare.html currently asks category, household size, cooking style and counter depth. Those were inferred from the listings we cover, not from reader feedback, because there is no reader feedback yet.",
+     "Once Search Console and the collector are live, compare which answers readers actually select against which product pages they open. Replace any question that does not change the shortlist.",
+     "Decision-tool quality (SG-35)", "Owner + measured data", "Waiting on analytics"),
 ]
 
 

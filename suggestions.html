@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Decision Center — ShopNow Kitchen</title>
-<meta name="description" content="32 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<meta name="description" content="35 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
 <link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta property="og:site_name" content="ShopNow Kitchen">
 <meta property="og:title" content="Decision Center — ShopNow Kitchen">
-<meta property="og:description" content="32 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<meta property="og:description" content="35 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta name="twitter:card" content="summary_large_image">
@@ -57,7 +57,7 @@
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>32 proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>35 proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
     <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
@@ -477,6 +477,45 @@
     <button type="button" class="rankbtn" data-down="SG-32" aria-label="Move SG-32 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
+</tr><tr data-sug="SG-33">
+  <td class="nowrap"><strong>SG-33</strong></td>
+  <td><strong>Write every buyer page in shop voice, not audit voice</strong><br><span class="small">Strip the project's own filing system (crawl chunk numbers, flag IDs, 'intent record') from every page a shopper reads, and replace it with the same facts in plain language: a dated source note per row, a 'what comes with it' card, and a provenance table written as 'what you gave us, where it goes, what we publish'.</span></td>
+  <td>A reader deciding what to buy does not care which chunk of HTML a number came from. Leaked production detail is the single clearest tell of a generated site.</td>
+  <td>High — trust and readability</td>
+  <td>Done in this session</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">Live on every product page, category page and guide. Enforced by scripts/check_site.py, which now fails if a chunk citation or bare flag ID appears on a reader page.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-33" aria-label="Move SG-33 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-33" aria-label="Move SG-33 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-34">
+  <td class="nowrap"><strong>SG-34</strong></td>
+  <td><strong>Give search engines one site, and a stated reason to rank it</strong><br><span class="small">Publish findability.txt: canonical home, what the site is for, editorial policy, the reader-facing pages, the feed and sitemap, known limits, and how to cite a page. Point robots.txt at it.</span></td>
+  <td>A small site competes on clarity, not volume. Telling crawlers and AI agents plainly what the site is, and which pages answer questions, is cheaper than another ten pages.</td>
+  <td>Medium — discoverability</td>
+  <td>Done in this session</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">findability.txt at the site root; robots.txt references it; the gate fails if a submitted page is missing from it.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-34" aria-label="Move SG-34 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-34" aria-label="Move SG-34 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-35">
+  <td class="nowrap"><strong>SG-35</strong></td>
+  <td><strong>Let the reader answer three questions instead of reading a table</strong><br><span class="small">A shortlist tool on compare.html: category, household size, cooking style and counter depth, scored only against specifications already published on the site.</span></td>
+  <td>Most visitors arrive with a decision, not a desire to read a matrix. A shortlist converts reading into a next step without inventing a 'best of' verdict.</td>
+  <td>High — decision support</td>
+  <td>Done in this session</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">compare.html, 'Three questions, then a shortlist'. Weights are visible in the page source; nothing is sent anywhere.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-35" aria-label="Move SG-35 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-35" aria-label="Move SG-35 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
 </tr></tbody>
 </table>
 <p class="cta">
@@ -507,6 +546,9 @@
     <tr><td>SG-30</td><td>Decide reader email capture provider alongside RSS</td><td>Owner (decision)</td></tr>
     <tr><td>SG-31</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
     <tr><td>SG-32</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td>SG-33</td><td>Shop voice on every buyer page (no internal citations)</td><td>Shipped &mdash; review the wording</td></tr>
+    <tr><td>SG-34</td><td>Publish findability.txt so one site is the thing being indexed</td><td>Shipped &mdash; submit the sitemap</td></tr>
+    <tr><td>SG-35</td><td>Three-question shortlist on the compare page</td><td>Shipped &mdash; review the questions</td></tr>
   </tbody>
 </table>
 

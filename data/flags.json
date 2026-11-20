@@ -1,450 +1,495 @@
 [
-  {
-    "id": "FLG-001",
-    "title": "Intended ASIN unconfirmed",
-    "detail": "Owner has not confirmed intended ASIN per product. Intended field blank; observed field separate. Do not merge.",
-    "links": [
-      "S10",
-      "S11",
-      "S12",
-      "S13",
-      "S14"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-002",
-    "title": "Tracking ID unverified",
-    "detail": "shopnow047c-20 matches published -20 Store ID pattern but issuance/activity cannot be confirmed from any public page.",
-    "links": [
-      "S01"
-    ],
-    "severity": "unverified",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-003",
-    "title": "Short-link compliance unresolved",
-    "detail": "Exact compliance status of link.amazon short links is unresolved under Operating Agreement & Program Policies. Do not claim they are invalid.",
-    "links": [
-      "S02",
-      "S01"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-004",
-    "title": "Special Links pending test",
-    "detail": "One link per product must be tested in the enrolled Associates workflow and confirmed in the tracking report before scaling.",
-    "links": [
-      "S10",
-      "S11",
-      "S12",
-      "S13",
-      "S14"
-    ],
-    "severity": "pending-test",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-005",
-    "title": "Prices/ratings blank",
-    "detail": "No price, rating, review count, BSR or commission shown. Unverified/policy-restricted fields left blank per Program Policies §2(b) and §6(t).",
-    "links": [
-      "S02"
-    ],
-    "severity": "policy",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-006",
-    "title": "Canonical host unset",
-    "detail": "No custom domain chosen. Canonical tags use the github.io Pages subpath — update canonicals, sitemap and feed before custom-domain launch.",
-    "links": [
-      "S01"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-007",
-    "title": "No licensed product photos",
-    "detail": "No Amazon product images are used. Visuals are original generated editorial photography (FLG-036) and original SVG diagrams in assets/illustrations/, explicitly captioned rather than presented as manufacturer product photography.",
-    "links": [
-      "S02",
-      "S10"
-    ],
-    "severity": "policy",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-008",
-    "title": "CHEF iQ battery conflict",
-    "detail": "About this item states up to 50 hours on a full charge; an earlier capture reported 70 hours in Product Description (absent in current HTML). Both published; neither chosen.",
-    "links": [
-      "S14"
-    ],
-    "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-009",
-    "title": "Emeril model variant discrepancy",
-    "detail": "Live Item details table prints 4-00675-02X-VN for Model Number and Part Number; an earlier listing pass recorded 4-00675-02 (absent from the live HTML). Both noted until manual confirms.",
-    "links": [
-      "S11"
-    ],
-    "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-010",
-    "title": "Analytics collector hosting pending",
-    "detail": "assets/app.js logs five events locally and sends via send() only when a collector endpoint is configured. Self-hosted collector code (analytics/server.js, functions/api/collect.js) ships in repo; GitHub Pages static hosting cannot execute server endpoints until hosted externally (Q-08).",
-    "links": [
-      "S03"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-011",
-    "title": "Short-link redirects are not stable across attempts",
-    "detail": "On 2026-11-20, earlier checks saw link.amazon/B00hJ57DV and link.amazon/B0f3GKalj return HTTP 500, Amazon homepage, or checkpoint before resolving, while follow-up checks resolved all five cleanly. Each observed ASIN is a dated snapshot, not a guaranteed permanent mapping. See data/reverification-2026-11-20.json.",
-    "links": [
-      "S15",
-      "S17",
-      "S18",
-      "S19"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-012",
-    "title": "B0c8moW59 initially blocked by checkpoint; reproduced on re-test",
-    "detail": "Earlier four attempts on 2026-11-20 for link.amazon/B0c8moW59 returned HTTP 500 once and 'Continue shopping' checkpoints three times. Follow-up verification on 2026-11-20 resolved link.amazon/B0c8moW59 directly to https://www.amazon.com/dp/B0DHZTCNR5 (ThermoMaven HT07). Intermittent redirect instability remains under FLG-011 and intended ASIN remains blank under FLG-001.",
-    "links": [
-      "S18",
-      "S13"
-    ],
-    "severity": "resolved-earlier",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-013",
-    "title": "Record titles differed from the live page titles (corrected)",
-    "detail": "Earlier P-02, P-03, and P-05 records carried paraphrased or bracketed titles (e.g. '[2025 Model]') not matching amazon.com. All five product records now quote the live listing titles verbatim and are dated 2026-11-20.",
-    "links": [
-      "S15",
-      "S16",
-      "S17",
-      "S19"
-    ],
-    "severity": "corrected",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-014",
-    "title": "Supplied tokens are 9 characters, not 10-character ASINs",
-    "detail": "All five link.amazon path tokens (B04G1MEwY, B02NbDxp3, B00hJ57DV, B0c8moW59, B0f3GKalj) are 9 characters while the resolved ASINs are 10 characters. Tokens cannot be treated as ASINs; intended-ASIN fields remain blank (FLG-001).",
-    "links": [
-      "S15",
-      "S16",
-      "S17",
-      "S18",
-      "S19"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-015",
-    "title": "Program Policies §2(e) and §2(g) bear on short-link status",
-    "detail": "Commission Income Statement §2(e) disqualifies purchases from a 'Redirecting Link' (sending users indirectly through an intermediate site without customer action). §2(g) disqualifies purchases not tracked due to improperly formatted links. Confirm compliance inside Associates support alongside FLG-003.",
-    "links": [
-      "S02",
-      "S01"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-016",
-    "title": "Search-referred purchases may be disqualified (§2(d))",
-    "detail": "Commission Income Statement §2(d) disqualifies purchases where a customer is referred to Amazon by a link generated or displayed on a search engine. Confirm how Associates applies this clause before running paid search campaigns targeting outbound links directly.",
-    "links": [
-      "S02"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-017",
-    "title": "P-03 power: 1700 W in spec table vs 1000 W in bullets",
-    "detail": "On amazon.com/dp/B08DKYBTPH (2026-11-20), Product information Features & Specs states Output Wattage and Wattage: 1700 watts (120 V), while About this item states '1000 Watts/120 Volts - RJ38-SQSS-8T'. Both figures are published and neither is chosen.",
-    "links": [
-      "S12"
-    ],
-    "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-018",
-    "title": "P-03 temperature: two figures on one listing",
-    "detail": "About this item and Max Temperature Setting spec field state 200–400 °F (Max 400 °F); the page title advertises a 450 °F Hi-Fry option. Both are published as the listing states them.",
-    "links": [
-      "S12"
-    ],
-    "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-019",
-    "title": "P-05 warranty earlier 1-year record corrected",
-    "detail": "Earlier notes recorded a 1-year limited warranty for P-05. Live listing verification on 2026-11-20 surfaced two conflicting figures directly on amazon.com/dp/B0DZFD6R9Z ('two-year assurance' in About this item vs '3 Year' in Item details Warranty Description), now published under FLG-038.",
-    "links": [
-      "S14"
-    ],
-    "severity": "corrected",
-    "owner_status": "Corrected and superseded by FLG-038. Does not block publication."
-  },
-  {
-    "id": "FLG-020",
-    "title": "Register titles were not the listing titles (corrected)",
-    "detail": "Four product titles in the earlier register were paraphrased or edited (e.g. '[2025 Model]' does not appear on the listing). All titles now use the exact listing text verbatim.",
-    "links": [
-      "S10",
-      "S11",
-      "S12",
-      "S13",
-      "S14"
-    ],
-    "severity": "corrected",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-021",
-    "title": "P-02 preset count conflict: 24 vs 25",
-    "detail": "The listing title, Configuration and Product Description say 24 One-Touch Preset Options; About this item says 25 cooking pre-sets. Both are published; neither is chosen.",
-    "links": [
-      "S11"
-    ],
-    "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-022",
-    "title": "Remaining unverified listing specs (P-02 weight and written warranty)",
-    "detail": "Deep Product information tables verified P-01 weight (13.3 lb), P-02 model/temp/power, P-03 weight (12.8 lb), P-04 model/upper temp, and P-05 model/probe length. P-02 item weight and written warranty terms (PDF link only) remain absent from the live listing HTML and stay blank; an unverified Emeril weight claim in earlier editorial prose has been removed.",
-    "links": [
-      "S10",
-      "S11",
-      "S12",
-      "S13",
-      "S14"
-    ],
-    "severity": "unverified",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-023",
-    "title": "Earlier verification log was incomplete (corrected)",
-    "detail": "The earlier verification claimed every listing was checked line by line. Follow-up checks on 2026-11-20 audited every Product information table chunk by chunk, resolved all five short links, exposed live conflicts (FLG-017, FLG-019, FLG-031, FLG-034), and removed unverified weight prose.",
-    "links": [
-      "S10",
-      "S11",
-      "S12",
-      "S13",
-      "S14"
-    ],
-    "severity": "corrected",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-024",
-    "title": "Comparison table misaligned (fixed)",
-    "detail": "The earlier compare table shifted values into the wrong rows for P-04 and P-05. The compare table is now generated from the single product register and verified by the build gate.",
-    "links": [
-      "S01"
-    ],
-    "severity": "corrected",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-025",
-    "title": "RSS feed was malformed (fixed)",
-    "detail": "feed.xml previously had an unclosed language element and failed XML parsing. Fixed and enforced via ElementTree XML parsing in scripts/check_site.py.",
-    "links": [
-      "S01"
-    ],
-    "severity": "corrected",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-026",
-    "title": "Associates source URLs were dead (fixed)",
-    "detail": "Old Associates help-node URLs failed on 2026-11-20. Replaced with the live Operating Agreement and Program Policies pages, checked verbatim.",
-    "links": [
-      "S01",
-      "S02"
-    ],
-    "severity": "corrected",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-027",
-    "title": "Policy point on link shorteners (review)",
-    "detail": "Program Policies Participation Requirements §6(w) states you will not use a link-shortening service in a way that makes it unclear you are linking to an Amazon site, and §6(v) prohibits cloaking. Confirm short-link usage with Associates support alongside FLG-003.",
-    "links": [
-      "S02"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-028",
-    "title": "Requested source S07 not in this repo",
-    "detail": "Earlier cross-session notes referenced source ID S07 which was not present in data/sources.json. Official sources are registered as S01–S04 and S10–S24 and published cleanly on sources.html.",
-    "links": [
-      "S01"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-029",
-    "title": "AI and product-data automation blocked on Creators API & ML-training rules",
-    "detail": "Creators API onboarding (S20) requires an accepted Associates account and qualified sales (PA-API 5 returns HTTP 403, S21). In addition, Program Policies Participation Requirements §5 and IP License §1 & §2(e) prohibit using Special Links, Program Content, or API feeds to develop or train ML/LLM models without express prior written approval, and IP License §4 requires any Agent accessing Program Content to identify as 'Agent/[name]'.",
-    "links": [
-      "S02",
-      "S20",
-      "S21"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Architecture documented on platform.html; does not block publication."
-  },
-  {
-    "id": "FLG-030",
-    "title": "Food-safety minimum temperatures sourced from USDA FSIS",
-    "detail": "Thermometer doneness targets and calibration instructions defer to USDA FSIS Safe Minimum Internal Temperature Chart (S22) and Food Thermometers guide (S24): poultry/leftovers 165 °F, ground meats 160 °F, whole-muscle cuts 145 °F + 3-min rest, fish 145 °F, ice-water test 32 °F.",
-    "links": [
-      "S22",
-      "S24"
-    ],
-    "severity": "resolved-earlier",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-031",
-    "title": "P-02 accessory count: six or seven",
-    "detail": "The listing title says six cooking accessories included; Included Components names six items; Configuration and Product Description state 7 accessories. Both figures are published and neither is chosen.",
-    "links": [
-      "S11"
-    ],
-    "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-032",
-    "title": "No hands-on testing",
-    "detail": "Nobody who wrote this site has cooked with or tested any of the five appliances. Every statement is read from a listing or an official public source; nothing is a hands-on review.",
-    "links": [
-      "S10",
-      "S13"
-    ],
-    "severity": "policy",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-033",
-    "title": "No named author or editorial owner",
-    "detail": "The site has no named human byline or editor of record yet. About & Authorship states this gap explicitly until the site owner designates an editor.",
-    "links": [
-      "S03"
-    ],
-    "severity": "open",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-034",
-    "title": "P-01 capacity stated in quarts and liters",
-    "detail": "The listing title and bullets state 6 quarts combined (two 3-quart baskets); the Measurements field states 6 liters (~6.34 US quarts). Both are shown on the product page; neither is chosen.",
-    "links": [
-      "S10"
-    ],
-    "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-035",
-    "title": "cETL, NIST and NSF are seller statements, not documents we saw",
-    "detail": "P-01 states cETL approved and P-04 states NIST and NSF under Specification Met (plus includes a calibration certificate in the box). We have not examined third-party lab certificates or independent test reports.",
-    "links": [
-      "S10",
-      "S13"
-    ],
-    "severity": "unverified",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-036",
-    "title": "Page imagery is generated illustration, not product photography",
-    "detail": "The photographs on the front page and category pages were generated for this site to establish a storefront look. They show an air fryer and thermometers of no particular make, so they must not be read as pictures of the products reviewed here. Each is captioned accordingly and no Amazon image is used. Licensing for real product photography still depends on the Product Advertising or Creators API (FLG-007).",
-    "links": [
-      "S10",
-      "S13"
-    ],
-    "severity": "policy",
-    "owner_status": "Published on the Flagged for Review page with a visible caption on every image that uses it. Does not block publication."
-  },
-  {
-    "id": "FLG-037",
-    "title": "On-site search was inert: the index existed but nothing queried it",
-    "detail": "On main, search.html carried a generated index and assets/app.js referenced 'search', but no code read the query string or rendered results, so the search box returned nothing on every term. The page and the event were real; the search was not. Fixed in this pass: assets/app.js now parses ?q=, scores title, keyword and description, renders the top matches, and records the 'search' event with the query and hit count, locally only.",
-    "links": [
-      "S04"
-    ],
-    "severity": "corrected",
-    "owner_status": "Fixed on this branch and checked by the build gate. Published here because the earlier claim that the search worked was inaccurate."
-  },
-  {
-    "id": "FLG-038",
-    "title": "P-05 warranty: two years in one field, three in another",
-    "detail": "The CHEF iQ Sense listing states a two-year assurance in About this item and a Warranty Description of 3 Year in the item-details table. Both figures are printed on the product page; neither is chosen here, because the listing itself does not say which applies.",
-    "links": [
-      "S14"
-    ],
-    "severity": "conflict",
-    "owner_status": "Published on the Flagged for Review page. Does not block publication."
-  },
-  {
-    "id": "FLG-039",
-    "title": "Guide copy stated unverified Emeril weight while P-01/P-03 weights were later confirmed",
-    "detail": "Earlier guides stated an unverified item weight for the Emeril (P-02) even though amazon.com/dp/B09B7SB46R omits item weight completely. That unverified Emeril weight figure was purged from all guides and editorial notes (FLG-022). Deep chunk inspection of Product information Measurements tables confirmed P-01 Item Weight as 13.3 pounds and P-03 Item Weight as 12.8 pounds, while P-02, P-04, and P-05 remain unstated/blank.",
-    "links": [
-      "S10",
-      "S11",
-      "S12",
-      "S13"
-    ],
-    "severity": "corrected",
-    "owner_status": "Corrected and published with Measurements table citations."
-  },
-  {
-    "id": "FLG-040",
-    "title": "Register blanks were filled where deep Product information tables stated values",
-    "detail": "Re-reading the full Product information tables on 2026-11-20 confirmed previously omitted fields: P-01 weight (13.3 lb), P-02 model 4-00675-02X-VN / 75–500 °F / 1700 W, P-03 weight (12.8 lb) and 1700 W vs 1000 W conflict, P-04 model HT07 / Upper Temperature Rating 572 °F / 6.5 in, and P-05 model CQ60-3C-Z1-E / Immersion Depth 4.75 in. P-02 weight and HTML warranty terms remain blank because neither listing states them.",
-    "links": [
-      "S10",
-      "S11",
-      "S12",
-      "S13",
-      "S14"
-    ],
-    "severity": "corrected",
-    "owner_status": "Corrected with exact section citations for each value."
-  }
+ {
+  "id": "FLG-001",
+  "title": "Intended ASIN unconfirmed",
+  "detail": "Owner has not confirmed intended ASIN per product. Intended field blank; observed field separate. Do not merge.",
+  "links": [
+   "S10",
+   "S11",
+   "S12",
+   "S13",
+   "S14"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-002",
+  "title": "Tracking ID unverified",
+  "detail": "shopnow047c-20 matches published -20 Store ID pattern but issuance/activity cannot be confirmed from any public page.",
+  "links": [
+   "S01"
+  ],
+  "severity": "unverified",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-003",
+  "title": "Short-link compliance unresolved",
+  "detail": "Exact compliance status of link.amazon short links is unresolved under Operating Agreement & Program Policies. Do not claim they are invalid.",
+  "links": [
+   "S02",
+   "S01"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-004",
+  "title": "Special Links pending test",
+  "detail": "One link per product must be tested in the enrolled Associates workflow and confirmed in the tracking report before scaling.",
+  "links": [
+   "S10",
+   "S11",
+   "S12",
+   "S13",
+   "S14"
+  ],
+  "severity": "pending-test",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-005",
+  "title": "Prices/ratings blank",
+  "detail": "No price, rating, review count, BSR or commission shown. Unverified/policy-restricted fields left blank per Program Policies §2(b) and §6(t).",
+  "links": [
+   "S02"
+  ],
+  "severity": "policy",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-006",
+  "title": "Canonical host unset",
+  "detail": "No custom domain chosen. Canonical tags use the github.io Pages subpath — update canonicals, sitemap and feed before custom-domain launch.",
+  "links": [
+   "S01"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-007",
+  "title": "No licensed product photos",
+  "detail": "No Amazon product images are used. Visuals are original generated editorial photography (FLG-036) and original SVG diagrams in assets/illustrations/, explicitly captioned rather than presented as manufacturer product photography.",
+  "links": [
+   "S02",
+   "S10"
+  ],
+  "severity": "policy",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-008",
+  "title": "CHEF iQ battery conflict",
+  "detail": "About this item states up to 50 hours on a full charge; an earlier capture reported 70 hours in Product Description (absent in current HTML). Both published; neither chosen.",
+  "links": [
+   "S14"
+  ],
+  "severity": "conflict",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-009",
+  "title": "Emeril model variant discrepancy",
+  "detail": "Live Item details table prints 4-00675-02X-VN for Model Number and Part Number; an earlier listing pass recorded 4-00675-02 (absent from the live HTML). Both noted until manual confirms.",
+  "links": [
+   "S11"
+  ],
+  "severity": "conflict",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-010",
+  "title": "Analytics collector hosting pending",
+  "detail": "assets/app.js logs five events locally and sends via send() only when a collector endpoint is configured. Self-hosted collector code (analytics/server.js, functions/api/collect.js) ships in repo; GitHub Pages static hosting cannot execute server endpoints until hosted externally (Q-08).",
+  "links": [
+   "S03"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-011",
+  "title": "Short-link redirects are not stable across attempts",
+  "detail": "On 2026-11-20, earlier checks saw link.amazon/B00hJ57DV and link.amazon/B0f3GKalj return HTTP 500, Amazon homepage, or checkpoint before resolving, while follow-up checks resolved all five cleanly. Each observed ASIN is a dated snapshot, not a guaranteed permanent mapping. See data/reverification-2026-11-20.json.",
+  "links": [
+   "S15",
+   "S17",
+   "S18",
+   "S19"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-012",
+  "title": "B0c8moW59 initially blocked by checkpoint; reproduced on re-test",
+  "detail": "Earlier four attempts on 2026-11-20 for link.amazon/B0c8moW59 returned HTTP 500 once and 'Continue shopping' checkpoints three times. Follow-up verification on 2026-11-20 resolved link.amazon/B0c8moW59 directly to https://www.amazon.com/dp/B0DHZTCNR5 (ThermoMaven HT07). Intermittent redirect instability remains under FLG-011 and intended ASIN remains blank under FLG-001.",
+  "links": [
+   "S18",
+   "S13"
+  ],
+  "severity": "resolved-earlier",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-013",
+  "title": "Record titles differed from the live page titles (corrected)",
+  "detail": "Earlier P-02, P-03, and P-05 records carried paraphrased or bracketed titles (e.g. '[2025 Model]') not matching amazon.com. All five product records now quote the live listing titles verbatim and are dated 2026-11-20.",
+  "links": [
+   "S15",
+   "S16",
+   "S17",
+   "S19"
+  ],
+  "severity": "corrected",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-014",
+  "title": "Supplied tokens are 9 characters, not 10-character ASINs",
+  "detail": "All five link.amazon path tokens (B04G1MEwY, B02NbDxp3, B00hJ57DV, B0c8moW59, B0f3GKalj) are 9 characters while the resolved ASINs are 10 characters. Tokens cannot be treated as ASINs; intended-ASIN fields remain blank (FLG-001).",
+  "links": [
+   "S15",
+   "S16",
+   "S17",
+   "S18",
+   "S19"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-015",
+  "title": "Program Policies §2(e) and §2(g) bear on short-link status",
+  "detail": "Commission Income Statement §2(e) disqualifies purchases from a 'Redirecting Link' (sending users indirectly through an intermediate site without customer action). §2(g) disqualifies purchases not tracked due to improperly formatted links. Confirm compliance inside Associates support alongside FLG-003.",
+  "links": [
+   "S02",
+   "S01"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-016",
+  "title": "Search-referred purchases may be disqualified (§2(d))",
+  "detail": "Commission Income Statement §2(d) disqualifies purchases where a customer is referred to Amazon by a link generated or displayed on a search engine. Confirm how Associates applies this clause before running paid search campaigns targeting outbound links directly.",
+  "links": [
+   "S02"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-017",
+  "title": "P-03 power: 1700 W in spec table vs 1000 W in bullets",
+  "detail": "On amazon.com/dp/B08DKYBTPH (2026-11-20), Product information Features & Specs states Output Wattage and Wattage: 1700 watts (120 V), while About this item states '1000 Watts/120 Volts - RJ38-SQSS-8T'. Both figures are published and neither is chosen.",
+  "links": [
+   "S12"
+  ],
+  "severity": "conflict",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-018",
+  "title": "P-03 temperature: two figures on one listing",
+  "detail": "About this item and Max Temperature Setting spec field state 200–400 °F (Max 400 °F); the page title advertises a 450 °F Hi-Fry option. Both are published as the listing states them.",
+  "links": [
+   "S12"
+  ],
+  "severity": "conflict",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-019",
+  "title": "P-05 warranty earlier 1-year record corrected",
+  "detail": "Earlier notes recorded a 1-year limited warranty for P-05. Live listing verification on 2026-11-20 surfaced two conflicting figures directly on amazon.com/dp/B0DZFD6R9Z ('two-year assurance' in About this item vs '3 Year' in Item details Warranty Description), now published under FLG-038.",
+  "links": [
+   "S14"
+  ],
+  "severity": "corrected",
+  "owner_status": "Corrected and superseded by FLG-038. Does not block publication."
+ },
+ {
+  "id": "FLG-020",
+  "title": "Register titles were not the listing titles (corrected)",
+  "detail": "Four product titles in the earlier register were paraphrased or edited (e.g. '[2025 Model]' does not appear on the listing). All titles now use the exact listing text verbatim.",
+  "links": [
+   "S10",
+   "S11",
+   "S12",
+   "S13",
+   "S14"
+  ],
+  "severity": "corrected",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-021",
+  "title": "P-02 preset count conflict: 24 vs 25",
+  "detail": "The listing title, Configuration and Product Description say 24 One-Touch Preset Options; About this item says 25 cooking pre-sets. Both are published; neither is chosen.",
+  "links": [
+   "S11"
+  ],
+  "severity": "conflict",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-022",
+  "title": "Remaining unverified listing specs (P-02 weight and written warranty)",
+  "detail": "Deep Product information tables verified P-01 weight (13.3 lb), P-02 model/temp/power, P-03 weight (12.8 lb), P-04 model/upper temp, and P-05 model/probe length. P-02 item weight and written warranty terms (PDF link only) remain absent from the live listing HTML and stay blank; an unverified Emeril weight claim in earlier editorial prose has been removed.",
+  "links": [
+   "S10",
+   "S11",
+   "S12",
+   "S13",
+   "S14"
+  ],
+  "severity": "unverified",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-023",
+  "title": "Earlier verification log was incomplete (corrected)",
+  "detail": "The earlier verification claimed every listing was checked line by line. Follow-up checks on 2026-11-20 audited every Product information table chunk by chunk, resolved all five short links, exposed live conflicts (FLG-017, FLG-019, FLG-031, FLG-034), and removed unverified weight prose.",
+  "links": [
+   "S10",
+   "S11",
+   "S12",
+   "S13",
+   "S14"
+  ],
+  "severity": "corrected",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-024",
+  "title": "Comparison table misaligned (fixed)",
+  "detail": "The earlier compare table shifted values into the wrong rows for P-04 and P-05. The compare table is now generated from the single product register and verified by the build gate.",
+  "links": [
+   "S01"
+  ],
+  "severity": "corrected",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-025",
+  "title": "RSS feed was malformed (fixed)",
+  "detail": "feed.xml previously had an unclosed language element and failed XML parsing. Fixed and enforced via ElementTree XML parsing in scripts/check_site.py.",
+  "links": [
+   "S01"
+  ],
+  "severity": "corrected",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-026",
+  "title": "Associates source URLs were dead (fixed)",
+  "detail": "Old Associates help-node URLs failed on 2026-11-20. Replaced with the live Operating Agreement and Program Policies pages, checked verbatim.",
+  "links": [
+   "S01",
+   "S02"
+  ],
+  "severity": "corrected",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-027",
+  "title": "Policy point on link shorteners (review)",
+  "detail": "Program Policies Participation Requirements §6(w) states you will not use a link-shortening service in a way that makes it unclear you are linking to an Amazon site, and §6(v) prohibits cloaking. Confirm short-link usage with Associates support alongside FLG-003.",
+  "links": [
+   "S02"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-028",
+  "title": "Requested source S07 not in this repo",
+  "detail": "Earlier cross-session notes referenced source ID S07 which was not present in data/sources.json. Official sources are registered as S01–S04 and S10–S24 and published cleanly on sources.html.",
+  "links": [
+   "S01"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-029",
+  "title": "AI and product-data automation blocked on Creators API & ML-training rules",
+  "detail": "Creators API onboarding (S20) requires an accepted Associates account and qualified sales (PA-API 5 returns HTTP 403, S21). In addition, Program Policies Participation Requirements §5 and IP License §1 & §2(e) prohibit using Special Links, Program Content, or API feeds to develop or train ML/LLM models without express prior written approval, and IP License §4 requires any Agent accessing Program Content to identify as 'Agent/[name]'.",
+  "links": [
+   "S02",
+   "S20",
+   "S21"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Architecture documented on platform.html; does not block publication."
+ },
+ {
+  "id": "FLG-030",
+  "title": "Food-safety minimum temperatures sourced from USDA FSIS",
+  "detail": "Thermometer doneness targets and calibration instructions defer to USDA FSIS Safe Minimum Internal Temperature Chart (S22) and Food Thermometers guide (S24): poultry/leftovers 165 °F, ground meats 160 °F, whole-muscle cuts 145 °F + 3-min rest, fish 145 °F, ice-water test 32 °F.",
+  "links": [
+   "S22",
+   "S24"
+  ],
+  "severity": "resolved-earlier",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-031",
+  "title": "P-02 accessory count: six or seven",
+  "detail": "The listing title says six cooking accessories included; Included Components names six items; Configuration and Product Description state 7 accessories. Both figures are published and neither is chosen.",
+  "links": [
+   "S11"
+  ],
+  "severity": "conflict",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-032",
+  "title": "No hands-on testing",
+  "detail": "Nobody who wrote this site has cooked with or tested any of the five appliances. Every statement is read from a listing or an official public source; nothing is a hands-on review.",
+  "links": [
+   "S10",
+   "S13"
+  ],
+  "severity": "policy",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-033",
+  "title": "No named author or editorial owner",
+  "detail": "The site has no named human byline or editor of record yet. About & Authorship states this gap explicitly until the site owner designates an editor.",
+  "links": [
+   "S03"
+  ],
+  "severity": "open",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-034",
+  "title": "P-01 capacity stated in quarts and liters",
+  "detail": "The listing title and bullets state 6 quarts combined (two 3-quart baskets); the Measurements field states 6 liters (~6.34 US quarts). Both are shown on the product page; neither is chosen.",
+  "links": [
+   "S10"
+  ],
+  "severity": "conflict",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-035",
+  "title": "cETL, NIST and NSF are seller statements, not documents we saw",
+  "detail": "P-01 states cETL approved and P-04 states NIST and NSF under Specification Met (plus includes a calibration certificate in the box). We have not examined third-party lab certificates or independent test reports.",
+  "links": [
+   "S10",
+   "S13"
+  ],
+  "severity": "unverified",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-036",
+  "title": "Page imagery is generated illustration, not product photography",
+  "detail": "The photographs on the front page and category pages were generated for this site to establish a storefront look. They show an air fryer and thermometers of no particular make, so they must not be read as pictures of the products reviewed here. Each is captioned accordingly and no Amazon image is used. Licensing for real product photography still depends on the Product Advertising or Creators API (FLG-007).",
+  "links": [
+   "S10",
+   "S13"
+  ],
+  "severity": "policy",
+  "owner_status": "Published on the Flagged for Review page with a visible caption on every image that uses it. Does not block publication."
+ },
+ {
+  "id": "FLG-037",
+  "title": "On-site search was inert: the index existed but nothing queried it",
+  "detail": "On main, search.html carried a generated index and assets/app.js referenced 'search', but no code read the query string or rendered results, so the search box returned nothing on every term. The page and the event were real; the search was not. Fixed in this pass: assets/app.js now parses ?q=, scores title, keyword and description, renders the top matches, and records the 'search' event with the query and hit count, locally only.",
+  "links": [
+   "S04"
+  ],
+  "severity": "corrected",
+  "owner_status": "Fixed on this branch and checked by the build gate. Published here because the earlier claim that the search worked was inaccurate."
+ },
+ {
+  "id": "FLG-038",
+  "title": "P-05 warranty: two years in one field, three in another",
+  "detail": "The CHEF iQ Sense listing states a two-year assurance in About this item and a Warranty Description of 3 Year in the item-details table. Both figures are printed on the product page; neither is chosen here, because the listing itself does not say which applies.",
+  "links": [
+   "S14"
+  ],
+  "severity": "conflict",
+  "owner_status": "Published on the Flagged for Review page. Does not block publication."
+ },
+ {
+  "id": "FLG-039",
+  "title": "Guide copy stated unverified Emeril weight while P-01/P-03 weights were later confirmed",
+  "detail": "Earlier guides stated an unverified item weight for the Emeril (P-02) even though amazon.com/dp/B09B7SB46R omits item weight completely. That unverified Emeril weight figure was purged from all guides and editorial notes (FLG-022). Deep chunk inspection of Product information Measurements tables confirmed P-01 Item Weight as 13.3 pounds and P-03 Item Weight as 12.8 pounds, while P-02, P-04, and P-05 remain unstated/blank.",
+  "links": [
+   "S10",
+   "S11",
+   "S12",
+   "S13"
+  ],
+  "severity": "corrected",
+  "owner_status": "Corrected and published with Measurements table citations."
+ },
+ {
+  "id": "FLG-040",
+  "title": "Register blanks were filled where deep Product information tables stated values",
+  "detail": "Re-reading the full Product information tables on 2026-11-20 confirmed previously omitted fields: P-01 weight (13.3 lb), P-02 model 4-00675-02X-VN / 75–500 °F / 1700 W, P-03 weight (12.8 lb) and 1700 W vs 1000 W conflict, P-04 model HT07 / Upper Temperature Rating 572 °F / 6.5 in, and P-05 model CQ60-3C-Z1-E / Immersion Depth 4.75 in. P-02 weight and HTML warranty terms remain blank because neither listing states them.",
+  "links": [
+   "S10",
+   "S11",
+   "S12",
+   "S13",
+   "S14"
+  ],
+  "severity": "corrected",
+  "owner_status": "Corrected with exact section citations for each value."
+ },
+ {
+  "id": "FLG-041",
+  "title": "CHEF iQ listing prints a long 'Specification Met' list as a self-declaration",
+  "detail": "The Product-information 'Specification Met' field on B0DZFD6R9Z prints ANSI, ASME, ASTM, CCC, CE, CSA, EMC, ETL, FCC, FDA, FE, HACCP, ISO 13485, ISO 9000, ISO 9001, NIST, NSF, RoHS, UL and WEEE. A field of this kind is the seller's own declaration; it is not evidence that each standard was independently certified for this unit. The site publishes it as a listing statement and does not present it as tested certification.",
+  "links": [
+   "S13"
+  ],
+  "severity": "needs review",
+  "owner_status": "Published as a seller statement. No certificate or test report has been inspected by this site."
+ },
+ {
+  "id": "FLG-042",
+  "title": "P-03 listing points to a newer model than the one submitted",
+  "detail": "B08DKYBTPH carries a 'There is a newer model of this item' module linking to B0CNY1YVDD (Chefman 6 QT, 4 presets). This site covers the product behind the submitted link (B08DKYBTPH), not the newer model. If the submitted link is later repointed, the published specifications would need re-reading.",
+  "links": [
+   "S12",
+   "S15"
+  ],
+  "severity": "needs review",
+  "owner_status": "No action taken. Which model the owner intends to promote is unconfirmed (see FLG-001)."
+ },
+ {
+  "id": "FLG-043",
+  "title": "Offer state and buying options change between reads",
+  "detail": "On 2026-11-20 the B0CDY277D3 page showed a USED buying option in its offer JSON while other parts of the same page showed new-offer pricing. The stability of the buy box cannot be relied on between visits. This is a further reason no price, condition or availability value is published anywhere on this site.",
+  "links": [
+   "S10"
+  ],
+  "severity": "needs review",
+  "owner_status": "Accepted behaviour. Prices and availability are not displayed."
+ },
+ {
+  "id": "FLG-044",
+  "title": "Some register values were not re-confirmed in the independent live pass",
+  "detail": "The independent pass on 2026-11-20 re-read all five listings but did not reach every field: P-01 and P-03 item weight, P-04 model number (HT07) and upper temperature rating (572 F), and P-05 probe length (4.75 in) come from earlier readings of the Measurements / Item details tables. They remain published. Each is recorded as 'unverified this pass' in data/verification-2026-11-20-live.json so the next pass knows exactly what to re-read first.",
+  "links": [
+   "S10",
+   "S11",
+   "S12",
+   "S13",
+   "S14"
+  ],
+  "severity": "needs review",
+  "owner_status": "Queued for the next verification pass. Not removed, because earlier passes did read them off the official tables."
+ }
 ]
