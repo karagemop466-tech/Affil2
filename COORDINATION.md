@@ -45,6 +45,18 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 > `affiliate-program.amazon.com` from this sandbox (TLS blocked on every request), but the
 > `fetch_page` tool **can**. Verification therefore uses `fetch_page` against the official URLs.
 
+> **Task-ID note (session `c6fa1006`).** This session originally claimed T-26..T-31. By the time
+> it rebased, `main` had already used T-27, T-30 and T-31 for other sessions' work (PR #59,
+> and the `57fc3be0` integration claim above). Rather than overwrite those rows, this session's
+> six tasks are renumbered **T-32..T-37** below. No other session's row was modified.
+
+| T-32 | Independent live re-verification of all five listings + policy sources from official pages (fresh fetch, dated record) | done | c6fa1006 | data/verification-independent-2026-11-20.json, COORDINATION.md |
+| T-33 | Product-intent record: split intended ASIN from observed redirect target; add confirmation date + source per submitted link (brief: "do not merge the two fields") | done | c6fa1006 | data/products.json, products/*.html, scripts/build_site.py, scripts/check_site.py |
+| T-34 | Gate hardening: official-domain check on every source URL, source-link check on every table row, page-date capture, computed-date labelling (I-2..I-5) | done | c6fa1006 | scripts/check_site.py, data/sources.json, scripts/build_site.py, generated pages |
+| T-35 | Measurement on by default: same-origin collector endpoint + self-host path; provider-free reader capture (RSS follow) | done | c6fa1006 | assets/config.js, assets/app.js, analytics/README.md, scripts/build_site.py, scripts/check_site.py |
+| T-36 | Publishing cadence + topic-cluster map published as editorial policy; each guide wired to sitemap + feed (verified by test) | done | c6fa1006 | data/editorial.json, scripts/build_site.py, guides.html, scripts/check_site.py |
+| T-37 | Refresh REQUIREMENTS-TRACE.md against current main with live source checks | done | c6fa1006 | REQUIREMENTS-TRACE.md, COORDINATION.md |
+
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
 ## Verification log (2026-11-20, official sources only)
@@ -1525,3 +1537,40 @@ Branch `arena/a27b2deb-affil2`, single record commit rebased onto the then-curre
 **Still owner-gated (unchanged, not guessed):** FLG-001 intended-ASIN confirmation; FLG-002 tracking-ID activity; FLG-003 short-link compliance status; FLG-004 Special Link test in the enrolled Associates workflow; FLG-010/028/033 collector deployment + Search Console; FLG-019/FLG-032 first-party revenue data.
 
 **PR note (added ~06:55 UTC):** this session's first record PR (#51) was closed at 06:44:21Z without comment while this session was rebuilding it against the fast-moving main (it had been showing CONFLICTING during rebuilds). Re-opened as a fresh PR from the same single-commit branch; contents unchanged except this note.
+
+---
+
+## Session `arena/c6fa1006-affil2` — claim record (2026-11-20, session c6fa1006)
+
+Base: `4ddede54d410da0fe62f1ca413a12aa7a0732897` (`main`, PR #52 merged). Branch: `arena/c6fa1006-affil2`.
+Tracking ID supplied: `shopnow047c-20` (unchanged; activity still unconfirmed — FLG-002).
+
+**Claimed tasks and file scope (this session only).**
+
+| ID | Task | Files in scope |
+|----|------|----------------|
+| T-32 | Independent live re-verification of the five listings + policy sources | `data/verification-independent-2026-11-20.json` (new) |
+| T-33 | Product-intent record split (intended vs observed) | `data/products.json`, `scripts/build_site.py`, `scripts/check_site.py`, generated `products/*.html` |
+| T-34 | Gate hardening: official domains, table-row sourcing, page dates, computed dates | `scripts/check_site.py`, `data/sources.json`, `scripts/build_site.py`, generated pages |
+| T-35 | Measurement on by default + provider-free reader capture | `assets/config.js`, `assets/app.js`, `analytics/README.md`, `scripts/build_site.py`, `scripts/check_site.py` |
+| T-36 | Publishing cadence + topic clusters as published editorial policy | `data/editorial.json`, `scripts/build_site.py`, `scripts/check_site.py`, generated pages |
+| T-37 | Requirements trace refresh | `REQUIREMENTS-TRACE.md` |
+
+Shared files `data/products.json`, `data/sources.json`, `data/flags.json` are edited only where the
+live re-verification (T-32) shows an inaccuracy or a newly confirmed value; `data/flags.json` is
+appended to only, with new IDs continuing from `FLG-050`.
+
+**Not claimed and not touched by this session:** `analytics/server.js`, `analytics/server.py`,
+`functions/api/collect.js`, `data/events.json` (collector stack owned by PR #16's author), and no
+file belonging to the open PRs #47 / #51.
+
+**Open PRs found at claim time.** #47 (`arena/ca4af934-affil2`) and #51 (`arena/a27b2deb-affil2`)
+are OPEN and report CONFLICTING against `main`. #51 changes only `COORDINATION.md`. #47 changes
+generated pages and `scripts/build_site.py` for work that PR #49 already merged. Neither is
+edited here; this session notes the state and resolves them at integration time.
+
+**Network reachability this session.** `amazon.com`, `affiliate-program.amazon.com`, `ftc.gov`,
+`developers.google.com` and `opm.gov` are reachable through the page-fetch tool, so the five
+listings and every policy source can be re-read live from this session. That is a change from
+the earlier pass that recorded TLS failure (FLG-045), and it is why T-32 is a live pass and not
+a desk pass.
