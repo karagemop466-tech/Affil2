@@ -24,6 +24,7 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-23 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | done | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
 | T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
+| T-26 | Live re-check of the five submitted short links (final-URL log kept apart from intent records); live title re-read of the five /dp/ listings; official-domain gate for source URLs (I-4); computed label for the Black Friday date (I-2); official ASIN-definition source search (I-7); REQUIREMENTS-TRACE status update | in progress | 7481731c | `data/link-resolution-2026-11-20.json` (new), `data/flags.json` (append only), `data/sources.json` (append only), `scripts/build_site.py`, `scripts/check_site.py`, `verification.html` / `design-brief.html` (generated), `REQUIREMENTS-TRACE.md`, `COORDINATION.md` |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -1312,3 +1313,11 @@ maximum, not from the last ID seen in a prompt.
 
 No other session's work was discarded at any point. Every resolution was re-verified with the full
 gate and both test suites before pushing.
+
+## Session `arena/7481731c-affil2` — T-26 claim (2026-11-20 UTC)
+
+Branch `arena/7481731c-affil2`, base `4ddede5` (main, after PR #52). Session ID `7481731c`. Task IDs are taken from the current maximum (T-25), per the ID-collision note above.
+
+**Why.** The brief asks for line-by-line verification from official sources and for flags on anything unverified. Three items are in reach from the sandbox now: `fetch_page` reaches amazon.com (earlier sessions could not), the gate can enforce an official-domain rule that I-4 says is missing, and I-2 can be closed by labelling the date as computed. Owner-gated items (Associates Central, Search Console, analytics hosting, author) stay blocked and are not claimed.
+
+**Claimed.** Items listed in the table row above. **Not claimed:** `data/products.json` values, PRs #47, #51 and #53 (open, owned by other sessions), `analytics/`, `functions/`, `data/events.json`.
