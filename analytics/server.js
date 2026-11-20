@@ -1,190 +1,196 @@
-/*
- * ShopNow Kitchen - standalone event collector.
- *
- * The same contract as functions/api/collect.js, but as a dependency-free
- * Node HTTP server for anyone who would rather run their own box than a
- * Cloudflare Pages project. No npm install, no build step.
- *
- *   node analytics/server.js
- *   PORT=8787 LOG=./analytics/events.ndjson node analytics/server.js
- *
- * Storage is newline-delimited JSON appended to a local file. Rotate it with
- * whatever you already use; the server only ever appends one line per event.
- *
- * To point the static site at a collector on another host, add this to the
- * <head> of every page:
- *
- *   <meta name="x-collect-endpoint" content="https://collector.example/collect">
- *
- * Privacy, enforced by the shared sanitize() rules:
- *   - no cookies, no IP address, no user agent, no device fingerprint
- *   - no query strings, hash fragments or referrer URLs are kept
- *   - a search is recorded as a length and a result count, never as text
- *   - a session id is random per page load and is not linked to anything else
- */
+#!/usr/bin/env node
+'use strict';
 
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
+const fs = require('node:fs');
+const http = require('node:http');
+const path = require('node:path');
 
-const ALLOWED_EVENTS = [
-  "page_view",
-  "outbound_click",
-  "guide_read",
-  "search",
-  "suggestion_rank",
-];
+const SCHEMA_PATH = path.resolve(__dirname, '..', 'data', 'events.json');
+let schema;
+try {
+  schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, 'utf8'));
+} catch (_) {
+  schema = {
+    schema_version: '1.0',
+    events: {
+      page_view: { allowed_fields: ['e', 't', 'page'] },
+      outbound_click: { allowed_fields: ['e', 't', 'page', 'product'] },
+      guide_read: { allowed_fields: ['e', 't', 'page'] },
+      search: { allowed_fields: ['e', 't', 'page', 'q_len', 'results'] },
+      suggestion_rank: { allowed_fields: ['e', 't', 'page', 'rank'] }
+    },
+    forbidden_fields: ['ip', 'user_agent', 'referrer', 'cookie', 'fingerprint', 'query_text', 'email', 'session_id']
+  };
+}
 
-const ALLOWED_FIELDS = [
-  "event",
-  "path",
-  "session_id",
-  "ts",
-  "referrer_host",
-  "product_id",
-  "link_position",
-  "guide_id",
-  "query_length",
-  "result_count",
-  "suggestion_id",
-  "position",
-];
-
-const MAX_STRING = 300;
+const ALLOWED_EVENTS = schema.events;
+const FORBIDDEN_FIELDS = new Set(schema.forbidden_fields || []);
 const MAX_BODY_BYTES = 4096;
 
-function sanitize(raw) {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
-
-  const name = typeof raw.event === "string" ? raw.event : "";
-  if (ALLOWED_EVENTS.indexOf(name) === -1) return null;
-
-  const clean = { event: name };
-  for (const key of ALLOWED_FIELDS) {
-    if (key === "event") continue;
-    const value = raw[key];
-    if (typeof value !== "string") continue;
-    clean[key] = value.slice(0, MAX_STRING);
+function validatePayload(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return { ok: false, error: 'Payload must be a JSON object' };
   }
-
-  if (clean.path) {
-    clean.path = clean.path
-      .replace(/^[a-z]+:\/\/[^/]*/i, "")
-      .split("?")[0]
-      .split("#")[0]
-      .slice(0, MAX_STRING);
-  }
-  if (clean.session_id) {
-    clean.session_id = clean.session_id.replace(/[^a-z0-9]/gi, "").slice(0, 32);
-  }
-  if (clean.referrer_host) {
-    const host = clean.referrer_host
-      .replace(/^[a-z]+:\/\//i, "")
-      .split("/")[0]
-      .split("?")[0]
-      .split("#")[0]
-      .replace(/^[^a-z0-9.-]+/i, "");
-    clean.referrer_host = /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(host) ? host.slice(0, 120) : "";
-  }
-  for (const key of ["product_id", "link_position", "guide_id", "suggestion_id"]) {
-    if (clean[key]) clean[key] = clean[key].replace(/[^A-Za-z0-9._-]/g, "").slice(0, 64);
-  }
-  for (const key of ["query_length", "result_count", "position"]) {
-    if (clean[key]) clean[key] = clean[key].replace(/[^0-9]/g, "").slice(0, 6);
-  }
-
-  clean.received_at = new Date().toISOString();
-  return clean;
-}
-
-const PORT = Number(process.env.PORT || 8787);
-const LOG = path.resolve(process.env.LOG || path.join(__dirname, "events.ndjson"));
-const HOST = process.env.HOST || "0.0.0.0";
-
-fs.mkdirSync(path.dirname(LOG), { recursive: true });
-
-function appendEvent(event) {
-  fs.appendFile(LOG, JSON.stringify(event) + "\n", function (err) {
-    if (err) {
-      // Storage failures are logged, never surfaced to the reader.
-      console.error("[collect] write failed:", err.message);
+  for (const key of Object.keys(raw)) {
+    if (FORBIDDEN_FIELDS.has(key)) {
+      return { ok: false, error: `Forbidden privacy field: ${key}` };
     }
-  });
-}
-
-function send(res, status, body, headers) {
-  res.writeHead(status, Object.assign({ "cache-control": "no-store" }, headers || {}));
-  res.end(body === undefined ? "" : body);
-}
-
-const server = http.createServer(function (req, res) {
-  const cors = {
-    "access-control-allow-origin": "*",
-    "access-control-allow-methods": "GET, POST, OPTIONS",
-    "access-control-allow-headers": "content-type",
+  }
+  const eventName = raw.e;
+  if (typeof eventName !== 'string' || !Object.prototype.hasOwnProperty.call(ALLOWED_EVENTS, eventName)) {
+    return { ok: false, error: 'Unknown or missing event name' };
+  }
+  const spec = ALLOWED_EVENTS[eventName];
+  const allowedKeys = new Set(spec.allowed_fields || []);
+  for (const key of Object.keys(raw)) {
+    if (!allowedKeys.has(key)) {
+      return { ok: false, error: `Unexpected field for ${eventName}: ${key}` };
+    }
+  }
+  if (typeof raw.page !== 'string' || !raw.page.startsWith('/') || raw.page.length > 200) {
+    return { ok: false, error: 'Invalid page path' };
+  }
+  const cleanPage = raw.page.split('?')[0].split('#')[0];
+  const clean = {
+    e: eventName,
+    t: Math.floor((typeof raw.t === 'number' && Number.isFinite(raw.t) ? raw.t : Date.now()) / 60000) * 60000,
+    page: cleanPage
   };
 
-  if (req.method === "OPTIONS") {
-    send(res, 204, "", cors);
-    return;
+  if (eventName === 'outbound_click') {
+    if (typeof raw.product !== 'string' || !/^P-0[1-5]$/.test(raw.product)) {
+      return { ok: false, error: 'Invalid product ID for outbound_click' };
+    }
+    clean.product = raw.product;
+  } else if (eventName === 'search') {
+    if (!Number.isInteger(raw.q_len) || raw.q_len < 1 || raw.q_len > 200) {
+      return { ok: false, error: 'Invalid q_len for search' };
+    }
+    if (!Number.isInteger(raw.results) || raw.results < 0 || raw.results > 500) {
+      return { ok: false, error: 'Invalid results count for search' };
+    }
+    clean.q_len = raw.q_len;
+    clean.results = raw.results;
+  } else if (eventName === 'suggestion_rank') {
+    if (!Array.isArray(raw.rank) || raw.rank.length > 30 ||
+        !raw.rank.every((id) => typeof id === 'string' && /^SG-\d{2}$/.test(id))) {
+      return { ok: false, error: 'Invalid rank array for suggestion_rank' };
+    }
+    clean.rank = raw.rank.slice();
   }
 
-  if (req.method === "GET") {
-    send(res, 200, JSON.stringify({ status: "ok", service: "shopnow-kitchen-collect" }), {
-      "content-type": "application/json; charset=utf-8",
-      "access-control-allow-origin": "*",
-    });
-    return;
+  return { ok: true, value: clean };
+}
+
+function createCollectorServer(options = {}) {
+  const logFile = options.logFile || process.env.COLLECT_LOG_FILE || '/tmp/shopnow-events.ndjson';
+  const allowOrigin = options.allowOrigin ?? process.env.COLLECT_ALLOW_ORIGIN ?? '';
+
+  function sendJson(res, status, body) {
+    const headers = {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff'
+    };
+    if (allowOrigin) {
+      headers['Access-Control-Allow-Origin'] = allowOrigin;
+      headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
+      headers['Access-Control-Allow-Headers'] = 'Content-Type';
+    }
+    res.writeHead(status, headers);
+    res.end(JSON.stringify(body));
   }
 
-  if (req.method !== "POST") {
-    send(res, 405, "", cors);
-    return;
-  }
+  return http.createServer((req, res) => {
+    const reqPath = (req.url || '/').split('?')[0];
 
-  let size = 0;
-  let body = "";
-  let aborted = false;
+    if (req.method === 'OPTIONS' && reqPath === '/api/collect') {
+      return sendJson(res, 204, {});
+    }
 
-  req.on("data", function (chunk) {
-    size += chunk.length;
-    if (size > MAX_BODY_BYTES) {
-      aborted = true;
-      send(res, 413, "", cors);
-      req.destroy();
+    if (req.method === 'GET' && (reqPath === '/health' || reqPath === '/api/collect')) {
+      return sendJson(res, 200, {
+        ok: true,
+        mode: 'self-hosted',
+        schema_version: schema.schema_version || '1.0',
+        events: Object.keys(ALLOWED_EVENTS),
+        cookies: false
+      });
+    }
+
+    if (req.method === 'POST' && reqPath === '/api/collect') {
+      const contentLen = Number(req.headers['content-length'] || 0);
+      if (Number.isFinite(contentLen) && contentLen > MAX_BODY_BYTES) {
+        res.writeHead(413, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-store',
+          'Connection': 'close'
+        });
+        res.end(JSON.stringify({ ok: false, error: 'Payload too large' }));
+        req.resume();
+        return;
+      }
+      let size = 0;
+      let tooLarge = false;
+      const chunks = [];
+      req.on('data', (chunk) => {
+        if (tooLarge) return;
+        size += chunk.length;
+        if (size > MAX_BODY_BYTES) {
+          tooLarge = true;
+          chunks.length = 0;
+          if (!res.writableEnded) {
+            res.writeHead(413, {
+              'Content-Type': 'application/json; charset=utf-8',
+              'Cache-Control': 'no-store',
+              'Connection': 'close'
+            });
+            res.end(JSON.stringify({ ok: false, error: 'Payload too large' }));
+          }
+          return;
+        }
+        chunks.push(chunk);
+      });
+      req.on('end', () => {
+        if (tooLarge) return;
+        let parsed;
+        try {
+          parsed = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+        } catch (_) {
+          return sendJson(res, 400, { ok: false, error: 'Malformed JSON body' });
+        }
+        const verdict = validatePayload(parsed);
+        if (!verdict.ok) {
+          return sendJson(res, 400, { ok: false, error: verdict.error });
+        }
+        try {
+          fs.mkdirSync(path.dirname(logFile), { recursive: true });
+          fs.appendFileSync(logFile, JSON.stringify(verdict.value) + '\n', 'utf8');
+        } catch (err) {
+          return sendJson(res, 500, { ok: false, error: 'Failed to persist event' });
+        }
+        return sendJson(res, 202, { ok: true, recorded: verdict.value.e });
+      });
       return;
     }
-    body += chunk;
-  });
 
-  req.on("end", function () {
-    if (aborted) return;
-    let raw;
-    try {
-      raw = JSON.parse(body);
-    } catch (err) {
-      send(res, 400, "", cors);
-      return;
-    }
-    const event = sanitize(raw);
-    if (!event) {
-      send(res, 400, "", cors);
-      return;
-    }
-    appendEvent(event);
-    send(res, 204, "", cors);
-  });
-
-  req.on("error", function () {
-    /* a dropped reader must never produce a stack trace in the log */
-  });
-});
-
-if (require.main === module) {
-  server.listen(PORT, HOST, function () {
-    console.log("[collect] listening on http://" + HOST + ":" + PORT);
-    console.log("[collect] writing events to " + LOG);
+    return sendJson(res, 404, { ok: false, error: 'Not found' });
   });
 }
 
-module.exports = { sanitize, ALLOWED_EVENTS, ALLOWED_FIELDS, server };
+if (require.main === module) {
+  const host = process.env.HOST || '0.0.0.0';
+  const port = Number(process.env.PORT || 8787);
+  const server = createCollectorServer();
+  server.listen(port, host, () => {
+    console.log(`ShopNow collector listening on http://${host}:${port}/api/collect`);
+  });
+}
+
+module.exports = {
+  ALLOWED_EVENTS,
+  FORBIDDEN_FIELDS,
+  MAX_BODY_BYTES,
+  createCollectorServer,
+  validatePayload
+};

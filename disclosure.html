@@ -12,7 +12,10 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/disclosure.html">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="assets/style.css">
+<meta property="og:image" content="https://karagemop466-tech.github.io/Affil2/assets/photos/hero-kitchen.jpg">
+<meta property="og:image:alt" content="Illustrative kitchen image, generated for this site">
+<meta name="twitter:image" content="https://karagemop466-tech.github.io/Affil2/assets/photos/hero-kitchen.jpg">
+<link rel="stylesheet" href="assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Disclosure & Privacy", "url": "https://karagemop466-tech.github.io/Affil2/disclosure.html"}</script>
 </head>
@@ -22,10 +25,10 @@
   <div class="wrap mast">
     <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
     <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> · <a href="measurement.html">Measurement</a> · <a href="platform.html">Platform</a></div></details></nav>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="verification.html">Verification Log</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html" aria-current="page">Disclosure &amp; Privacy</a></div></details></nav>
     <form class="search" action="search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
-      <input id="q" name="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
+      <input id="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
       <button type="submit">Search</button>
     </form>
   </div>
@@ -60,6 +63,7 @@
 
 <h2>What we measure</h2>
 <p>Five events, defined once and used consistently:</p>
+<p><strong>Where they go.</strong> By default the counts stay in your own browser (localStorage) and can be exported as CSV — nothing leaves your device. A self-hosted collector (<code>analytics/server.py</code>) is written, smoke-tested and deliberately switched off in <code>assets/config.js</code> until the owner chooses a host (SG-18 / Q-08). That endpoint never reads IP addresses, writes no access log, stores no identifiers, and keeps only aggregate counts. Either way there are no cookies, no fingerprinting, no referrer capture, and search events carry a result count — never what you typed.</p>
 <table class="events">
   <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
   <tbody>
@@ -67,20 +71,21 @@
     <tr><td><code>outbound_click</code></td><td>A tagged Amazon link is clicked</td>
       <td>Which product a reader actually leaves for</td></tr>
     <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td></tr>
-    <tr><td><code>search</code></td><td>A search query returns results</td>
-      <td>What readers look for and do not find</td></tr>
+    <tr><td><code>search</code></td><td>A built-in search runs</td>
+      <td>Result count only &mdash; the words typed are not recorded</td></tr>
     <tr><td><code>suggestion_rank</code></td><td>A proposal is reordered on the Decision Center</td>
       <td>Which direction is actually preferred</td></tr>
   </tbody>
 </table>
-<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
-  carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
-  pixel and no tag manager on this site. This repository also ships a <strong>self-hosted
-  collector</strong> that could record the same five events server-side &mdash; a Cloudflare Pages
-  Function, a dependency-free Node server and an aggregate-only Worker (see
-  <a href="measurement.html">Measurement</a>). The browser probes that endpoint once per page and
-  stays inert while none answers, so until one is deployed and the site is pointed at it, nothing
-  leaves your device (FLG-036).</p>
+<p>All five are counted in your browser's local storage by default. Search words are held in
+  session storage only long enough to reach the results page; they are not placed in a request URL.
+  Normal page requests still reach the GitHub Pages host as ordinary traffic, and no measured event
+  leaves your device unless you enable a self-hosted endpoint. No cookie is set, no third-party
+  analytics script or pixel runs, and no fingerprinting is used. A zero-dependency self-hosted
+  collector (<code>analytics/server.js</code> and Cloudflare Pages Function <code>functions/api/collect.js</code>)
+  ships in this repository and activates only when configured via <code>sn_collect_url</code> or
+  <code>&lt;meta name="sn-collect-endpoint"&gt;</code> (<a href="measurement.html">Measurement &amp;
+  Collector guide</a>).</p>
 <p>You can clear everything we store by clearing site data for this domain, and you can export it
   first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
 
@@ -93,8 +98,8 @@
 <h2>Cookies, and what we do not use</h2>
 <ul>
   <li>No advertising cookies, no retargeting, no social pixels.</li>
-  <li>The only third-party request is the font stylesheet (Google Fonts, Fraunces + Inter) &mdash;
-    type only: no cookies, no identifiers, no analytics. Everything else loads from this domain.</li>
+  <li>No fonts or scripts loaded from a third-party CDN &mdash; the page loads from this domain
+    only.</li>
   <li>No account, no login, no email capture on this site.</li>
   <li>Clicking a product link takes you to Amazon, where Amazon's own privacy policy applies and
     Amazon's own cookies are set.</li>
@@ -105,18 +110,18 @@
   <div class="wrap">
     <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
-    <p class="dash">Studio &amp; records: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> · <a href="measurement.html">Measurement</a> · <a href="platform.html">Platform</a> ·
+    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="verification.html">Verification Log</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html" aria-current="page">Disclosure &amp; Privacy</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
       Inc. or its affiliates. This site is not endorsed by Amazon. Scenes and diagrams are illustrations,
-      not product photography. Nothing here is a hands-on product test — every specification is read
-      from the official listing and dated. Last verified 2026-11-20.</p>
+      not product photography, and not a picture of the item reviewed. Nothing here is a
+      hands-on product test — every specification is read from the official listing and dated.
+      Last verified 2026-11-20.</p>
     <p class="small">© 2026 ShopNow Kitchen. <a href="flagged.html">Flagged for Review</a> lists everything
       we could not verify.</p>
   </div>
 </footer>
 <script src="assets/app.js" defer></script>
-<script src="assets/js/collect.js" defer></script>
 </body>
 </html>

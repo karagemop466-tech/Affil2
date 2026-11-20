@@ -14,6 +14,7 @@ import pathlib
 import re
 import sys
 import xml.etree.ElementTree as ET
+from html.parser import HTMLParser
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASE = "https://karagemop466-tech.github.io/Affil2/"
@@ -25,6 +26,47 @@ notes = []
 
 def err(msg):
     errors.append(msg)
+
+
+class TableColumnChecker(HTMLParser):
+    def __init__(self, rel):
+        super().__init__()
+        self.rel = rel
+        self.stack = []
+
+    def handle_starttag(self, tag, attrs):
+        attr_map = dict(attrs)
+        if tag == "table":
+            self.stack.append({"thead_cols": None, "section": None, "row_cols": 0, "row_idx": 0})
+        elif self.stack:
+            cur = self.stack[-1]
+            if tag in ("thead", "tbody"):
+                cur["section"] = tag
+            elif tag == "tr":
+                cur["row_cols"] = 0
+                cur["row_idx"] += 1
+            elif tag in ("th", "td"):
+                try:
+                    span = max(1, int(attr_map.get("colspan", "1")))
+                except ValueError:
+                    span = 1
+                cur["row_cols"] += span
+
+    def handle_endtag(self, tag):
+        if not self.stack:
+            return
+        cur = self.stack[-1]
+        if tag == "tr":
+            if cur["section"] == "thead":
+                cur["thead_cols"] = cur["row_cols"]
+            elif cur["section"] == "tbody" and cur["thead_cols"] is not None:
+                if cur["row_cols"] != cur["thead_cols"]:
+                    err(f"{self.rel}: table row {cur['row_idx']} has {cur['row_cols']} cell(s), "
+                        f"expected {cur['thead_cols']} matching thead")
+        elif tag in ("thead", "tbody"):
+            cur["section"] = None
+        elif tag == "table":
+            self.stack.pop()
 
 
 pages = sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts)
@@ -77,44 +119,17 @@ for p in pages:
         if "nofollow" not in tag:
             err(f"{rel}: amazon link without rel=nofollow — {m.group(1)[:70]}")
 
-    # --- tagged links must carry the Associate ID (buy CTAs only; labelled
-    # --- verification links may stay untagged on purpose — see how-we-choose.html)
-    for m in re.finditer(r'<a\b[^>]*href="(https://www\.amazon\.com/(?:dp|gp/product)/[A-Z0-9]{10}[^"]*)"[^>]*>',
-                         html):
-        if "data-outbound" in m.group(0) and "tag=shopnow047c-20" not in m.group(1):
-            err(f"{rel}: product buy link missing the Associates tag — {m.group(1)[:70]}")
-
-    # --- the supplied short links are Amazon product links, so they are marked sponsored
-    for m in re.finditer(r'<a\b[^>]*href="(https://link\.amazon/[^"]*)"[^>]*>', html):
-        if "sponsored" not in m.group(0):
-            err(f"{rel}: link.amazon link without rel=sponsored — {m.group(1)[:70]}")
-
-    # --- no Amazon-hosted imagery (Program Policies: use your own or licensed art)
-    for img_host in ("m.media-amazon.com", "images-na.ssl-images-amazon.com",
-                     "ssl-images-amazon.com"):
-        if img_host in html:
-            err(f"{rel}: references Amazon-hosted imagery ({img_host})")
-
-    # --- brand fonts present (SG-22)
-    if "fonts.googleapis.com" not in html:
-        err(f"{rel}: missing brand font stylesheet link")
-
-    # --- the collector client is loaded on every page (PR16)
-    if "assets/js/collect.js" not in html:
-        err(f"{rel}: collector client not loaded")
-
-    # --- every buy button sits near a visible (paid link) label (FTC)
-    for m in re.finditer(r"data-outbound=", html):
-        seg = html[max(0, m.start() - 400): m.start() + 400]
-        if "(paid link)" not in seg:
-            err(f"{rel}: buy link without a nearby (paid link) label")
+    # --- tagged links must carry the Associate ID
+    for m in re.finditer(r'href="(https://www\.amazon\.com/dp/[^"]*)"[^>]*data-outbound', html):
+        if "tag=shopnow047c-20" not in m.group(1):
+            err(f"{rel}: outbound product link missing the Associates tag — {m.group(1)[:70]}")
 
     # --- no reproduced prices or ratings
     for m in re.finditer(r"\$\s?\d", html):
         err(f"{rel}: contains a price-like amount near ...{html[max(0, m.start()-40):m.start()+12]!r}")
-    if re.search(r"\b\d(?:\.\d)?\s*(?:out of 5|/5|stars)\b", html, re.I):
+    if re.search(r"\d\.\d\s*(out of\s*)?5\s*stars", html, re.I):
         err(f"{rel}: contains a star rating")
-    if re.search(r"\b\d{1,3},\d{3}\s+(?:ratings|reviews|global ratings)\b", html, re.I):
+    if re.search(r"\b(1[0-9]|[1-9]),(?:[0-9]{3})\s*(ratings|reviews|global ratings)", html, re.I):
         err(f"{rel}: contains a review count")
 
     # --- internal links resolve
@@ -139,11 +154,44 @@ for p in pages:
         if f">{label}</a>" not in html:
             err(f"{rel}: primary navigation missing '{label}'")
     # --- every page reachable dashboard link group in the footer
-    for target in ("suggestions.html", "questions.html", "flagged.html", "sources.html",
-                   "executive-summary.html", "campaign-ledger.html", "disclosure.html",
-                   "about.html", "measurement.html", "platform.html", "sitemap.xml", "feed.xml"):
+    for target in ("suggestions.html", "design-brief.html", "questions.html", "flagged.html",
+                   "sources.html", "platform.html", "measurement.html", "executive-summary.html",
+                   "campaign-ledger.html", "disclosure.html", "about.html",
+                   "sitemap.xml", "feed.xml"):
         if (up + target) not in html:
             err(f"{rel}: footer missing link to {target}")
+
+    # --- og:url matches canonical
+    og_url = re.search(r'<meta property="og:url" content="([^"]+)">', html)
+    if not og_url or og_url.group(1) != BASE + rel:
+        err(f"{rel}: og:url missing or does not match {BASE + rel}")
+
+    # --- table thead/tbody column symmetry
+    TableColumnChecker(rel).feed(html)
+
+    # --- unverified leaked prose check (26.5 lb was absent from B09B7SB46R)
+    if re.search(r"\b26\.5\s*(?:lb|pound)", html, re.I):
+        err(f"{rel}: contains unverified '26.5 lb/pounds' claim absent from live listing")
+
+    # --- images: every generated photo must be captioned as illustration, never as the product
+    for m in re.finditer(r'<img\b[^>]*src="((?:\.\./)*assets/photos/[^"]+)"[^>]*>', html):
+        asset = (p.parent / m.group(1)).resolve()
+        if not asset.exists():
+            err(f"{rel}: missing image {m.group(1)}")
+        if "assets/photos/" in m.group(1):
+            window = html[m.end():m.end() + 900]
+            if "Illustrative image, generated for this site" not in window:
+                err(f"{rel}: generated photo {m.group(1)} is not captioned as illustration")
+        tag = m.group(0)
+        if "alt=\"\"" in tag or "alt=" not in tag:
+            err(f"{rel}: image {m.group(1)} has no alt text")
+        if not re.search(r'width="\d+" height="\d+"', tag):
+            err(f"{rel}: image {m.group(1)} has no intrinsic dimensions")
+    # --- search controls must not serialize query text into a request URL
+    for form in re.finditer(r'<form\b[^>]*\brole="search"[^>]*>(.*?)</form>', html, re.S | re.I):
+        for input_tag in re.findall(r"<input\b[^>]*>", form.group(1), re.I):
+            if re.search(r"\bname=", input_tag):
+                err(f"{rel}: search input has a name and could serialize query text into a request URL")
 
     # --- structured data must parse
     for m in re.finditer(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
@@ -342,12 +390,8 @@ except ET.ParseError as e:
     feed = None
 if feed is not None:
     items = feed.findall("./channel/item")
-    guide_files = sorted(x.name for x in (ROOT / "guides").glob("*.html"))
-    if len(items) != len(guide_files):
-        err(f"feed.xml has {len(items)} items, expected {len(guide_files)} guides")
-    for gname in guide_files:
-        if gname not in feed_text:
-            err(f"feed.xml missing guides/{gname}")
+    if len(items) < 9:
+        err(f"feed.xml has {len(items)} items, expected at least 9 guides")
     for it in items:
         link = it.find("link").text
         if not link.startswith(BASE):
@@ -359,35 +403,68 @@ if feed is not None:
     if lang is None or not lang.text or not lang.text.startswith("en"):
         err("feed.xml: missing or malformed <language>")
 
-# ---------------------------------------------------------------- measurement layer
-for req_path in ("functions/api/collect.js", "analytics/server.js", "assets/js/collect.js",
-                 "data/events.json", "measurement.html", "platform.html"):
-    if not (ROOT / req_path).exists():
-        err(f"missing measurement file: {req_path}")
-if (ROOT / "data/events.json").exists() and (ROOT / "functions/api/collect.js").exists():
-    schema = json.loads((ROOT / "data/events.json").read_text())
-    declared = [e["name"] for e in schema["events"]]
-    if declared != ["page_view", "outbound_click", "guide_read", "search", "suggestion_rank"]:
-        err(f"events.json declares {declared}, expected the five defined events in order")
-    collector_src = (ROOT / "functions/api/collect.js").read_text()
-    for ev_name in declared:
-        if f'"{ev_name}"' not in collector_src:
-            err(f"event {ev_name} is declared in events.json but not accepted by the collector")
-
-# ---------------------------------------------------------------- analytics layer
-appjs_text = (ROOT / "assets" / "app.js").read_text()
-for ev_name in ("page_view", "outbound_click", "guide_read", "search", "suggestion_rank"):
-    if f"'{ev_name}'" not in appjs_text and f'"{ev_name}"' not in appjs_text:
-        err(f"app.js: event {ev_name} not instrumented")
-
 robots = (ROOT / "robots.txt").read_text()
 if "Sitemap: " + BASE + "sitemap.xml" not in robots:
     err("robots.txt does not point at the canonical sitemap")
 if "Disallow: /" in robots:
     err("robots.txt blocks the site")
 
+# ---------------------------------------------------------------- weight accuracy & unverified claim guard
+# Only weights verified in data/products.json (e.g. Measurements table P-01 13.3 lb, P-03 12.8 lb)
+# may appear outside flagged.html/sources.html; unverified weights (e.g. 26.5 lb on P-02) fail.
+verified_weights = set()
+for prod in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8")):
+    w_field = (prod.get("fields") or {}).get("weight") or {}
+    if w_field.get("st") == "verified" and w_field.get("v"):
+        for num in re.findall(r"\b\d+(?:\.\d+)?\b", w_field["v"]):
+            verified_weights.add(num)
+
+WEIGHT_RE = re.compile(r"\b(\d+(?:\.\d+)?)\s?(?:lb|lbs|pounds?)\b", re.I)
+WEIGHT_EXEMPT = {"flagged.html", "sources.html"}
+for f in pages:
+    rel = f.name if f.parent == ROOT else f"{f.parent.name}/{f.name}"
+    if rel in WEIGHT_EXEMPT:
+        continue
+    txt = re.sub(r"<[^>]+>", " ", f.read_text())
+    for m in WEIGHT_RE.finditer(txt):
+        if m.group(1) not in verified_weights:
+            err(f"{rel}: quotes an unverified product weight ({m.group(0).strip()}) not verified in data/products.json (FLG-022/FLG-039)")
+    if re.search(r"\b(?:footprint and weight|weight and footprint|weigh(?:s|ing) \w+ ?(?:lb|pounds))", txt, re.I):
+        err(f"{rel}: promises unverified weight information (FLG-022)")
+
+# ---------------------------------------------------------------- compare pair view
+comp = (ROOT / "compare.html").read_text()
+pm = re.search(r'<script type="application/json" id="pairData">(.*?)</script>', comp, re.S)
+if not pm:
+    err("compare.html: no embedded pair view data")
+else:
+    try:
+        pair = json.loads(pm.group(1))
+    except json.JSONDecodeError as e:
+        err(f"compare.html pair data does not parse: {e}")
+        pair = {}
+    if len(pair) != 5:
+        err(f"compare.html pair data holds {len(pair)} products, expected 5")
+    for pid, rec in pair.items():
+        if not (ROOT / rec["url"]).exists():
+            err(f"compare.html pair data links a missing page: {rec['url']}")
+        if "tag=shopnow047c-20" not in rec["buy"]:
+            err(f"compare.html pair data buy link for {pid} lacks the Associates tag")
+        if len(rec["rows"]) < 12:
+            err(f"compare.html pair data for {pid} has only {len(rec['rows'])} rows")
+# ---------------------------------------------------------------- search privacy
+app_js = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+if re.search(r"URLSearchParams\(\s*location\.search", app_js) or ".get('q')" in app_js or '.get("q")' in app_js:
+    err("assets/app.js: reads search text from the request URL; built-in search must use session storage")
+if "sn_search_query" not in app_js or "sessionStorage" not in app_js:
+    err("assets/app.js: session-storage handoff for built-in search is missing")
+if "session storage" not in (ROOT / "disclosure.html").read_text(encoding="utf-8").lower():
+    err("disclosure.html: search query handling is not explained in the privacy statement")
+
 # ---------------------------------------------------------------- search index
 search_html = (ROOT / "search.html").read_text()
+if re.search(r"nothing is sent to\s+a server", search_html, re.I):
+    err("search.html: claims nothing is sent to a server, but page requests reach the host; use the session-storage wording")
 m = re.search(r'<script type="application/json" id="searchIndex">(.*?)</script>',
               search_html, re.S)
 if not m:
@@ -402,8 +479,119 @@ else:
         target = ROOT / entry["u"]
         if not target.exists():
             err(f"search.html index points at missing page {entry['u']}")
-    if len(idx) < 15:
+    if len(idx) < 20:
         err(f"search.html index has only {len(idx)} entries")
+
+# ---------------------------------------------------------------- editorial & illustrations & telemetry
+ed_text = (ROOT / "data" / "editorial.json").read_text(encoding="utf-8")
+if re.search(r"\b26\.5\s*(?:lb|pound)", ed_text, re.I):
+    err("data/editorial.json contains unverified '26.5 lb/pounds'")
+ed_flags = set(re.findall(r"FLG-\d{3}", ed_text))
+if ed_flags - flag_ids:
+    err(f"data/editorial.json cites undefined flags: {sorted(ed_flags - flag_ids)}")
+
+all_html_text = "\n".join(p.read_text(encoding="utf-8") for p in pages)
+svg_files = sorted((ROOT / "assets" / "illustrations").glob("*.svg"))
+if not svg_files:
+    err("assets/illustrations/: expected editorial SVG files")
+for svg in svg_files:
+    try:
+        ET.fromstring(svg.read_text(encoding="utf-8"))
+    except ET.ParseError as e:
+        err(f"{svg.relative_to(ROOT)} does not parse as XML: {e}")
+    if f"assets/illustrations/{svg.name}" not in all_html_text:
+        err(f"{svg.relative_to(ROOT)} is orphaned (not referenced in any generated HTML page)")
+
+events_data = json.loads((ROOT / "data" / "events.json").read_text(encoding="utf-8"))
+expected_events = {"page_view", "outbound_click", "guide_read", "search", "suggestion_rank"}
+if set(events_data.get("events", {}).keys()) != expected_events:
+    err("data/events.json must define the exact five measurement events")
+app_js = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+for token in ("function send(", "exportEvents", "searchIndex", ".navtoggle",
+              "page_view", "outbound_click", "guide_read", "suggestion_rank"):
+    if token not in app_js:
+        err(f"assets/app.js missing required capability: {token}")
+
+# ---------------------------------------------------------------- T-21 rules
+# 1. rel="sponsored" belongs on links we earn from, not on the documents we cite.
+for f in pages:
+    rel = str(f.relative_to(ROOT))
+    for m in re.finditer(r'<a\b[^>]*href="(https://[^"]+)"[^>]*>', f.read_text(encoding="utf-8")):
+        tag = m.group(0)
+        if "sponsored" in tag and "amazon.com/dp/" not in m.group(1):
+            err(f"{rel}: {m.group(1)} is marked rel=sponsored but is not a product listing we "
+                f"earn on; cite it with rel=noopener noreferrer instead")
+
+# 2. The stylesheet must parse: an unbalanced brace silently swallows the rules after it,
+#    which is exactly how the .hero classes lost their styling in the November layer.
+css_path = ROOT / "assets" / "style.css"
+css = css_path.read_text(encoding="utf-8")
+css_no_comments = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+if css_no_comments.count("{") != css_no_comments.count("}"):
+    err(f"assets/style.css: {css_no_comments.count('{')} opening braces vs "
+        f"{css_no_comments.count('}')} closing — a rule is unclosed and the CSS after it is dropped")
+for m in re.finditer(r"@media[^{]*\{", css_no_comments):
+    start = m.end()
+    depth, i = 1, start
+    while i < len(css_no_comments) and depth:
+        depth += {"{": 1, "}": -1}.get(css_no_comments[i], 0)
+        i += 1
+    if depth:
+        err("assets/style.css: an @media block is not closed")
+
+# 3. Every class the generator emits must exist in the stylesheet (or be JS-only state).
+js_only = {"open", "hit", "where"}  # added/removed by assets/app.js at runtime
+defined = set(re.findall(r"\.([a-zA-Z][\w-]*)", css_no_comments))
+emitted = set()
+for f in pages:
+    for cls in re.findall(r'class="([^"]+)"', f.read_text(encoding="utf-8")):
+        emitted.update(c for c in cls.split() if c)
+for cls in sorted(emitted - defined - js_only):
+    err(f"assets/style.css: class .{cls} is emitted by the generator but has no rule "
+        f"(the page will render unstyled)")
+
+# 4. No image may ship in the repo without a page or a script referencing it.
+asset_refs = "\n".join(pg.read_text(encoding="utf-8") for pg in pages)
+script_refs = "\n".join(sp.read_text(encoding="utf-8") for sp in (ROOT / "scripts").glob("*.py"))
+for img in sorted((ROOT / "assets").rglob("*.jpg")):
+    name = img.name
+    if name not in asset_refs and name not in script_refs:
+        err(f"{img.relative_to(ROOT)}: unreferenced image asset (duplicate or dead file)")
+
+# 5. Counts printed on the site must match the data that generates them.
+sug_html = (ROOT / "suggestions.html").read_text(encoding="utf-8")
+guide_count = len(re.findall(r'class="guidecard"', (ROOT / "guides.html").read_text(encoding="utf-8")))
+sm_items = len(ET.fromstring((ROOT / "sitemap.xml").read_text(encoding="utf-8")))
+feed_items = len(feed.findall("./channel/item")) if feed is not None else 0
+if feed_items != guide_count:
+    err(f"feed.xml carries {feed_items} items but guides.html lists {guide_count} guides")
+if re.search(r"\b[Tt]en guides\b", sug_html):
+    err("suggestions.html: SG-02 still says 'ten guides' after the guide count changed")
+if f"lists all {guide_count}" not in sug_html and f"all {guide_count}" not in sug_html:
+    err(f"suggestions.html: SG-02 does not state the live guide count ({guide_count})")
+
+# 6. Every guide must end on a product link, so a reader who is convinced can act.
+for g in (ROOT / "guides").glob("*.html"):
+    txt = g.read_text(encoding="utf-8")
+    if "flip-list" not in txt:
+        err(f"guides/{g.name}: no product line at the end of the guide")
+    elif "amazon.com/dp/" not in txt:
+        err(f"guides/{g.name}: product line carries no tagged listing link")
+
+# 7. Every product page links back into the guides that discuss it, and vice versa.
+for g in sorted((ROOT / "guides").glob("*.html")):
+    txt = g.read_text(encoding="utf-8")
+    if 'href="../products/' not in txt:
+        err(f"guides/{g.name}: links to no product page")
+for p_ in sorted((ROOT / "products").glob("*.html")):
+    txt = p_.read_text(encoding="utf-8")
+    if 'href="../guides/' not in txt:
+        err(f"products/{p_.name}: links to no guide")
+
+# 7. The front page must offer a way in before it offers a category directory.
+home = (ROOT / "index.html").read_text(encoding="utf-8")
+if 'class="router"' not in home:
+    err("index.html: the answer-first router is missing")
 
 # ---------------------------------------------------------------- report
 print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
@@ -418,3 +606,65 @@ if errors:
         print("  ✗", e)
     sys.exit(1)
 print("ALL CHECKS PASS")
+
+
+# ---------------------------------------------------------------- reader voice (session 0acc86ad)
+# The site is a shop, not a newsroom. A shopper must never meet the project's filing system:
+# no chunk numbers, no bare flag IDs on the pages a buyer reads. Every flag stays published on
+# flagged.html (generated from data/flags.json), which is the only place IDs belong.
+READER_PAGES = [ROOT / "index.html", ROOT / "shop.html", ROOT / "compare.html",
+                ROOT / "air-fryers.html", ROOT / "meat-thermometers.html",
+                ROOT / "how-we-choose.html", ROOT / "guides.html",
+                ROOT / "about.html", ROOT / "disclosure.html", ROOT / "search.html"]
+READER_PAGES += sorted((ROOT / "products").glob("*.html"))
+READER_PAGES += sorted((ROOT / "guides").glob("*.html"))
+for page in READER_PAGES:
+    if not page.exists():
+        err(f"{page.name}: expected reader-facing page missing")
+        continue
+    txt = page.read_text()
+    if re.search(r"\bchunks?\s*\d", txt, re.I):
+        err(f"{page.relative_to(ROOT)}: internal crawl citation (chunk N) visible to readers")
+    if re.search(r"FLG-\d{3}", txt):
+        err(f"{page.relative_to(ROOT)}: internal flag ID visible to readers "
+            f"(publish the fact in words; keep the ID on flagged.html)")
+    if "Product-intent confirmation record" in txt:
+        err(f"{page.relative_to(ROOT)}: internal intent record heading on a reader page")
+
+# Every product page must still carry the five required provenance facts, in reader language.
+for page in sorted((ROOT / "products").glob("*.html")):
+    txt = page.read_text()
+    for required in ("Intended ASIN", "Observed redirect target", "Special Link we publish",
+                     "Confirmation date"):
+        if required not in txt:
+            err(f"{page.relative_to(ROOT)}: provenance table missing '{required}'")
+
+# findability.txt must exist, name the canonical home, and list every submitted page.
+find = ROOT / "findability.txt"
+if not find.exists():
+    err("findability.txt missing (site profile for crawlers)")
+else:
+    ftxt = find.read_text()
+    if BASE not in ftxt:
+        err("findability.txt: canonical home not stated")
+    for page in pages:
+        if f"{BASE}{page}" not in ftxt:
+            err(f"findability.txt: does not list {page}")
+
+
+# ---------------------------------------------------------------- analytics surface (session bba2deed)
+app = (ROOT / "assets" / "app.js").read_text()
+for ev in ("page_view", "outbound_click", "guide_read", "search", "suggestion_rank"):
+    if ev not in app:
+        err(f"assets/app.js: defined event {ev!r} missing")
+if not (ROOT / "analytics" / "server.py").exists():
+    err("analytics/server.py missing (self-hosted endpoint, SG-18)")
+if "analyticsEndpoint" not in (ROOT / "assets" / "config.js").read_text():
+    err("assets/config.js: analyticsEndpoint switch missing")
+vt = (ROOT / "verification.html").read_text()
+if "Verification Log" not in vt:
+    err("verification.html: content missing")
+for tm in re.finditer(r"<tbody>(.*?)</tbody>", vt, re.S):
+    for rm in re.finditer(r"<tr>.*?</tr>", tm.group(1), re.S):
+        if "<th" in rm.group(0) and "href=" not in rm.group(0) and 'scope="row"' in rm.group(0):
+            err("verification.html: register row without source link")

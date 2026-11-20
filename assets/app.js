@@ -1,36 +1,448 @@
-// Privacy-preserving measurement: localStorage only, no cookies/trackers. Five events: page_view, outbound_click, guide_read, search, suggestion_rank
-(function(){try{
- var ev=JSON.parse(localStorage.getItem('sn_events')||'[]');
- function log(e,d){ev.push(Object.assign({e:e,t:Date.now(),page:location.pathname},d||{}));localStorage.setItem('sn_events',JSON.stringify(ev.slice(-500)));}
- log('page_view');
- if(/guides\//.test(location.pathname)) log('guide_read',{guide:location.pathname.split('/').pop()});
- document.querySelectorAll('[data-outbound]').forEach(function(a){a.addEventListener('click',function(){log('outbound_click',{product:a.getAttribute('data-outbound')});var c=JSON.parse(localStorage.getItem('sn_clicks')||'{}');c[a.getAttribute('data-outbound')]=(c[a.getAttribute('data-outbound')]||0)+1;localStorage.setItem('sn_clicks',JSON.stringify(c));var el=document.getElementById('localClicks');if(el)el.textContent=Object.values(c).reduce(function(x,y){return x+y},0);});});
- var ex=document.getElementById('exportClicks');if(ex)ex.addEventListener('click',function(){var c=localStorage.getItem('sn_clicks')||'{}';download('clicks.csv','product,clicks\n'+Object.entries(JSON.parse(c)).map(function(x){return x[0]+','+x[1]}).join('\n'));});
- // Suggestions ranking
- var rank=JSON.parse(localStorage.getItem('sn_rank')||'[]');
- function renderRank(){document.querySelectorAll('#sugTable tbody tr').forEach(function(tr,i){var s=tr.querySelector('.rank');if(s)s.textContent=rank.indexOf(tr.getAttribute('data-sug'))>=0?('#'+(rank.indexOf(tr.getAttribute('data-sug'))+1)):'';});}
- if(document.getElementById('sugTable')){if(!rank.length){rank=[].slice.call(document.querySelectorAll('#sugTable tbody tr')).map(function(tr){return tr.getAttribute('data-sug')});}
- document.querySelectorAll('[data-up],[data-down]').forEach(function(b){b.addEventListener('click',function(){var id=b.getAttribute('data-up')||b.getAttribute('data-down');var i=rank.indexOf(id);var j=b.hasAttribute('data-up')?i-1:i+1;if(j<0||j>=rank.length)return;var t=rank[i];rank[i]=rank[j];rank[j]=t;localStorage.setItem('sn_rank',JSON.stringify(rank));log('suggestion_rank',{rank:rank.slice()});renderRank();});});
- renderRank();
- var er=document.getElementById('exportRank');if(er)er.addEventListener('click',function(){download('ranking.csv','rank,suggestion\n'+rank.map(function(s,i){return (i+1)+','+s}).join('\n'));});
- var rr=document.getElementById('resetRank');if(rr)rr.addEventListener('click',function(){localStorage.removeItem('sn_rank');location.reload();});
- var f=document.getElementById('decisionForm');if(f)f.addEventListener('submit',function(e){e.preventDefault();localStorage.setItem('sn_decision',JSON.stringify({chosen:f.chosen.value,why:f.why.value,measure:f.measure.value,t:Date.now()}));document.getElementById('decisionSaved').textContent='Saved locally at '+new Date().toISOString()+'. Export it with your ranking.';});}
- var eventExport=document.getElementById('exportEvents');
- if(eventExport)eventExport.addEventListener('click',()=>{
-   const rows=JSON.parse(localStorage.getItem('sn_events')||'[]');
-   download('events.csv','event,utc,product,result_count\n'+rows.map(r=>[r.e,new Date(r.t).toISOString(),r.product||'',r.results??''].join(',')).join('\n'));
- });
- function download(n,c){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download=n;a.click();}
-}catch(e){}})();
-// Keep navigation and search operational even when browser storage is disabled.
-(() => {
- const toggle=document.querySelector('.navtoggle'), nav=document.querySelector('#primary-nav');
- toggle?.addEventListener('click',()=>toggle.setAttribute('aria-expanded',nav.classList.toggle('open')));
- const index=document.querySelector('#searchIndex'); if(!index)return;
- const q=(new URLSearchParams(location.search).get('q')||'').trim(); document.querySelector('#sq').value=q;
- if(!q)return;
- const tokens=q.toLowerCase().split(/\s+/), hits=JSON.parse(index.textContent).filter(x=>tokens.every(t=>(x.t+' '+x.d+' '+x.k).toLowerCase().includes(t)));
- document.querySelector('#searchMeta').textContent=hits.length?`${hits.length} matching pages`:'No matches. Try “basket”, “wireless” or “capacity”.';
- for(const hit of hits){const p=document.createElement('p'),a=document.createElement('a');a.href=hit.u;a.textContent=hit.t;p.append(a);document.querySelector('#results').append(p)}
- if(q)try{const events=JSON.parse(localStorage.getItem('sn_events')||'[]');events.push({e:'search',t:Date.now(),results:hits.length});localStorage.setItem('sn_events',JSON.stringify(events.slice(-500)))}catch{}
+// Privacy-preserving measurement, search, mobile navigation, pair compare, ranking, and CSV export.
+// Five events: page_view, outbound_click, guide_read, search, suggestion_rank.
+// No cookies, no third-party requests, no fingerprinting, and no search query text in URLs or logs.
+(function () {
+  'use strict';
+  try {
+    var ALLOWED = { page_view: 1, outbound_click: 1, guide_read: 1, search: 1, suggestion_rank: 1 };
+    var FORBIDDEN = {
+      ip: 1, user_agent: 1, referrer: 1, cookie: 1, fingerprint: 1,
+      query_text: 1, email: 1, session_id: 1
+    };
+
+    function getEndpoint() {
+      if (typeof window !== 'undefined' && typeof window.SN_COLLECT_ENDPOINT === 'string' && window.SN_COLLECT_ENDPOINT) {
+        return window.SN_COLLECT_ENDPOINT;
+      }
+      var m = document.querySelector('meta[name="sn-collect-endpoint"]');
+      if (m && m.content) return m.content.trim();
+      var stored = localStorage.getItem('sn_collect_url');
+      return stored ? stored.trim() : '';
+    }
+
+    // Self-hosted collector transport (no-op unless an endpoint is configured; FLG-010).
+    function send(payload) {
+      var endpoint = getEndpoint();
+      if (!endpoint) return false;
+      if (!payload || !ALLOWED[payload.e]) return false;
+      var clean = {};
+      Object.keys(payload).forEach(function (k) {
+        if (!FORBIDDEN[k]) clean[k] = payload[k];
+      });
+      clean.t = Math.floor((clean.t || Date.now()) / 60000) * 60000;
+      var body = JSON.stringify(clean);
+      if (typeof fetch === 'function') {
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: body,
+          keepalive: true,
+          credentials: 'omit'
+        }).catch(function () {});
+        return true;
+      }
+      return false;
+    }
+
+    var ev = [];
+    try { ev = JSON.parse(localStorage.getItem('sn_events') || '[]'); } catch (_) { ev = []; }
+    if (!Array.isArray(ev)) ev = [];
+
+    function log(e, d) {
+      if (!ALLOWED[e]) return;
+      var entry = Object.assign({ e: e, t: Date.now(), page: location.pathname || '/' }, d || {});
+      ev.push(entry);
+      ev = ev.slice(-500);
+      try { localStorage.setItem('sn_events', JSON.stringify(ev)); } catch (_) {}
+      send(entry);
+    }
+
+    function recordOutbound(pid) {
+      if (!pid) return;
+      log('outbound_click', { product: pid });
+      var c = {};
+      try { c = JSON.parse(localStorage.getItem('sn_clicks') || '{}'); } catch (_) { c = {}; }
+      c[pid] = (c[pid] || 0) + 1;
+      try { localStorage.setItem('sn_clicks', JSON.stringify(c)); } catch (_) {}
+      var el = document.getElementById('localClicks');
+      if (el) {
+        el.textContent = Object.values(c).reduce(function (x, y) { return x + y; }, 0);
+      }
+    }
+
+    log('page_view');
+    if (/\/guides\//.test(location.pathname)) log('guide_read');
+
+    // Mobile nav toggle
+    var navBtn = document.querySelector('.navtoggle');
+    var navMenu = document.getElementById('primary-nav');
+    if (navBtn && navMenu) {
+      navBtn.addEventListener('click', function () {
+        var open = navMenu.classList.toggle('open');
+        navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      document.addEventListener('keydown', function (evt) {
+        if (evt.key === 'Escape' && navMenu.classList.contains('open')) {
+          navMenu.classList.remove('open');
+          navBtn.setAttribute('aria-expanded', 'false');
+          navBtn.focus();
+        }
+      });
+    }
+
+    // Outbound affiliate link clicks (static and dynamic)
+    document.querySelectorAll('[data-outbound]').forEach(function (a) {
+      a.addEventListener('click', function () {
+        recordOutbound(a.getAttribute('data-outbound'));
+      });
+    });
+
+    function csvCell(val) {
+      var s = String(val == null ? '' : val);
+      if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    }
+
+    function download(name, content) {
+      var blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    }
+
+    var ex = document.getElementById('exportClicks');
+    if (ex) {
+      ex.addEventListener('click', function () {
+        var c = {};
+        try { c = JSON.parse(localStorage.getItem('sn_clicks') || '{}'); } catch (_) { c = {}; }
+        var lines = ['product,clicks'].concat(
+          Object.entries(c).map(function (x) { return csvCell(x[0]) + ',' + csvCell(x[1]); })
+        );
+        download('clicks.csv', lines.join('\n'));
+      });
+    }
+
+    var exEv = document.getElementById('exportEvents');
+    if (exEv) {
+      exEv.addEventListener('click', function () {
+        var rows = ['event,timestamp_iso,page,detail'];
+        ev.forEach(function (item) {
+          var detail = {};
+          Object.keys(item).forEach(function (k) {
+            if (k !== 'e' && k !== 't' && k !== 'page') detail[k] = item[k];
+          });
+          rows.push([
+            csvCell(item.e),
+            csvCell(new Date(item.t).toISOString()),
+            csvCell(item.page),
+            csvCell(Object.keys(detail).length ? JSON.stringify(detail) : '')
+          ].join(','));
+        });
+        download('events.csv', rows.join('\n'));
+      });
+    }
+
+    // Privacy-preserving built-in search handoff (uses sessionStorage sn_search_query, never URL query strings)
+    var searchIdxEl = document.getElementById('searchIndex');
+    var resultsEl = document.getElementById('results');
+    var searchInput = document.getElementById('sq');
+    var searchMeta = document.getElementById('searchMeta');
+    var indexData = [];
+    if (searchIdxEl) {
+      try { indexData = JSON.parse(searchIdxEl.textContent || '[]'); } catch (_) { indexData = []; }
+    }
+
+    function runSearch(query, recordEvent) {
+      if (!searchIdxEl || !resultsEl || !searchInput) return;
+      var trimmed = (query || '').trim().replace(/\s+/g, ' ').slice(0, 120);
+      searchInput.value = trimmed;
+      var headerInput = document.getElementById('q');
+      if (headerInput && !headerInput.value) headerInput.value = trimmed;
+      while (resultsEl.firstChild) resultsEl.removeChild(resultsEl.firstChild);
+
+      if (!trimmed) {
+        if (searchMeta) {
+          searchMeta.textContent = 'Search matches run in your browser across ' + indexData.length +
+            ' pages. Built-in search terms are carried in session storage, not in the request URL.';
+        }
+        return;
+      }
+
+      var terms = trimmed.toLowerCase().split(/\s+/).filter(Boolean);
+      var scored = [];
+      indexData.forEach(function (entry) {
+        var t = (entry.t || '').toLowerCase();
+        var d = (entry.d || '').toLowerCase();
+        var k = (entry.k || '').toLowerCase();
+        var combined = t + ' ' + k + ' ' + d;
+        var allMatch = terms.every(function (term) { return combined.indexOf(term) !== -1; });
+        if (!allMatch) return;
+        var score = 0;
+        terms.forEach(function (term) {
+          if (t.indexOf(term) !== -1) score += 3;
+          if (k.indexOf(term) !== -1) score += 2;
+          if (d.indexOf(term) !== -1) score += 1;
+        });
+        scored.push({ entry: entry, score: score });
+      });
+      scored.sort(function (a, b) { return b.score - a.score; });
+
+      if (searchMeta) {
+        searchMeta.textContent = scored.length + ' result' + (scored.length === 1 ? '' : 's') +
+          ' across ' + indexData.length + ' pages (matched locally in your browser).';
+      }
+
+      if (!scored.length) {
+        var empty = document.createElement('p');
+        empty.className = 'muted';
+        empty.textContent = 'No matching pages found. Try broader terms like "basket", "450", "wireless", "capacity", or "warranty".';
+        resultsEl.appendChild(empty);
+      } else {
+        scored.forEach(function (hit) {
+          var box = document.createElement('article');
+          box.className = 'hit';
+
+          var where = document.createElement('div');
+          where.className = 'where';
+          where.textContent = hit.entry.k || 'page';
+          box.appendChild(where);
+
+          var h3 = document.createElement('h3');
+          var a = document.createElement('a');
+          a.href = hit.entry.u;
+          a.textContent = hit.entry.t;
+          h3.appendChild(a);
+          box.appendChild(h3);
+
+          var p = document.createElement('p');
+          var snippet = hit.entry.d || '';
+          p.textContent = snippet.length > 220 ? snippet.slice(0, 217) + '...' : snippet;
+          box.appendChild(p);
+
+          resultsEl.appendChild(box);
+        });
+      }
+
+      if (recordEvent) {
+        log('search', { q_len: trimmed.length, results: scored.length });
+      }
+    }
+
+    document.querySelectorAll('form[role="search"]').forEach(function (form) {
+      var field = form.querySelector('input[type="search"]');
+      if (!field) return;
+      form.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+        var query = (field.value || '').trim().replace(/\s+/g, ' ').slice(0, 120);
+        if (!query) return;
+        if (searchIdxEl && resultsEl && searchInput) {
+          runSearch(query, true);
+          return;
+        }
+        try {
+          sessionStorage.setItem('sn_search_query', query);
+        } catch (_) {
+          if (searchMeta) {
+            searchMeta.textContent = 'This browser could not start a local search session. No query was sent.';
+          }
+          return;
+        }
+        location.assign(form.getAttribute('action') || 'search.html');
+      });
+    });
+
+    if (searchIdxEl && resultsEl && searchInput) {
+      var initialQ = '';
+      try {
+        initialQ = sessionStorage.getItem('sn_search_query') || '';
+        sessionStorage.removeItem('sn_search_query');
+      } catch (_) {
+        initialQ = '';
+      }
+      if (initialQ.trim()) {
+        runSearch(initialQ, true);
+      } else {
+        runSearch('', false);
+      }
+    }
+
+    // Two-at-a-time head-to-head compare view (compare.html)
+    var pairEl = document.getElementById('pairData');
+    if (pairEl) {
+      var pairData = {};
+      try { pairData = JSON.parse(pairEl.textContent || '{}'); } catch (_) { pairData = {}; }
+      var pairA = document.getElementById('pairA');
+      var pairB = document.getElementById('pairB');
+      var pairOut = document.getElementById('pairView');
+      if (pairA && pairB && pairOut) {
+        var renderPair = function () {
+          var idA = pairA.value;
+          var idB = pairB.value;
+          var A = pairData[idA];
+          var B = pairData[idB];
+          if (!A || !B) return;
+          if (idA === idB) {
+            pairOut.innerHTML = '<p class="small">Pick two different products.</p>';
+            return;
+          }
+          var rows = A.rows.map(function (r, i) {
+            var other = B.rows[i] ? B.rows[i][1] : '';
+            return '<tr><th scope="row">' + r[0] + '</th><td>' + r[1] + '</td><td>' + other + '</td></tr>';
+          }).join('');
+          pairOut.innerHTML = '<table class="compare pair"><caption>Same rows, same sources, two columns. ' +
+            'Blank-looking cells say why they are blank.</caption><thead><tr><th scope="col">Field</th>' +
+            '<th scope="col"><a href="' + A.url + '">' + A.name + '</a></th>' +
+            '<th scope="col"><a href="' + B.url + '">' + B.name + '</a></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+            '<p class="cta"><a class="btn" rel="sponsored nofollow" href="' + A.buy + '" data-outbound="' + idA + '">' +
+            'Check the first on Amazon<span class="btn-sub">paid link</span></a>' +
+            '<a class="btn ghost" rel="sponsored nofollow" href="' + B.buy + '" data-outbound="' + idB + '">' +
+            'Check the second<span class="btn-sub">paid link</span></a></p>';
+          pairOut.querySelectorAll('[data-outbound]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              recordOutbound(btn.getAttribute('data-outbound'));
+            });
+          });
+        };
+        pairA.addEventListener('change', renderPair);
+        pairB.addEventListener('change', renderPair);
+        renderPair();
+      }
+    }
+
+    // Decision Center suggestions ranking
+    var sugTable = document.getElementById('sugTable');
+    var rank = [];
+    try { rank = JSON.parse(localStorage.getItem('sn_rank') || '[]'); } catch (_) { rank = []; }
+    if (!Array.isArray(rank)) rank = [];
+
+    function renderRank() {
+      document.querySelectorAll('#sugTable tbody tr').forEach(function (tr) {
+        var s = tr.querySelector('.rank');
+        var id = tr.getAttribute('data-sug');
+        if (s) s.textContent = rank.indexOf(id) >= 0 ? ('#' + (rank.indexOf(id) + 1)) : '';
+      });
+    }
+
+    if (sugTable) {
+      var allIds = [].slice.call(document.querySelectorAll('#sugTable tbody tr')).map(function (tr) {
+        return tr.getAttribute('data-sug');
+      });
+      if (!rank.length) {
+        rank = allIds.slice();
+      } else {
+        allIds.forEach(function (id) { if (rank.indexOf(id) === -1) rank.push(id); });
+      }
+      document.querySelectorAll('[data-up],[data-down]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var id = b.getAttribute('data-up') || b.getAttribute('data-down');
+          var i = rank.indexOf(id);
+          var j = b.hasAttribute('data-up') ? i - 1 : i + 1;
+          if (i < 0 || j < 0 || j >= rank.length) return;
+          var t = rank[i];
+          rank[i] = rank[j];
+          rank[j] = t;
+          try { localStorage.setItem('sn_rank', JSON.stringify(rank)); } catch (_) {}
+          log('suggestion_rank', { rank: rank.slice() });
+          renderRank();
+        });
+      });
+      renderRank();
+
+      var er = document.getElementById('exportRank');
+      if (er) {
+        er.addEventListener('click', function () {
+          download('ranking.csv', 'rank,suggestion\n' + rank.map(function (s, i) {
+            return (i + 1) + ',' + csvCell(s);
+          }).join('\n'));
+        });
+      }
+
+      var rr = document.getElementById('resetRank');
+      if (rr) {
+        rr.addEventListener('click', function () {
+          try { localStorage.removeItem('sn_rank'); } catch (_) {}
+          location.reload();
+        });
+      }
+
+      var f = document.getElementById('decisionForm');
+      if (f) {
+        try {
+          var savedDecision = JSON.parse(localStorage.getItem('sn_decision') || 'null');
+          if (savedDecision && f.chosen) {
+            f.chosen.value = savedDecision.chosen || '';
+            f.why.value = savedDecision.why || '';
+            f.measure.value = savedDecision.measure || '';
+          }
+        } catch (_) {}
+        f.addEventListener('submit', function (e) {
+          e.preventDefault();
+          try {
+            localStorage.setItem('sn_decision', JSON.stringify({
+              chosen: f.chosen.value,
+              why: f.why.value,
+              measure: f.measure.value,
+              t: Date.now()
+            }));
+          } catch (_) {}
+          var out = document.getElementById('decisionSaved');
+          if (out) out.textContent = 'Saved locally at ' + new Date().toISOString() + '. Export it with your ranking.';
+        });
+      }
+      // ---------- shortlist picker (compare.html) ----------
+      // Weights live in #pickerWeights so the reasoning is auditable in the HTML, not buried
+      // in this file. Nothing here reads price, rating, or any unpublished signal.
+      var picker = document.getElementById('picker');
+      var resultBox = document.getElementById('pickerResult');
+      var weightsEl = document.getElementById('pickerWeights');
+      var namesEl = document.getElementById('pairData');
+      if (picker && resultBox && weightsEl) {
+        var weights = {};
+        var cats = {};
+        var names = {};
+        try {
+          var parsed = JSON.parse(weightsEl.textContent) || {};
+          weights = parsed.weights || {};
+          cats = parsed.category || {};
+          names = JSON.parse(namesEl ? namesEl.textContent : '{}') || {};
+        } catch (_) { weights = {}; }
+        picker.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var scores = {};
+          var catPicked = picker.querySelector('input[name="category"]:checked');
+          var catWanted = catPicked ? catPicked.value : 'either';
+          ['household', 'style', 'space'].forEach(function (group) {
+            var picked = picker.querySelector('input[name="' + group + '"]:checked');
+            if (!picked) return;
+            Object.keys(weights).forEach(function (id) {
+              if (catWanted !== 'either' && cats[id] !== catWanted) return;
+              scores[id] = (scores[id] || 0) + ((weights[id] && weights[id][picked.value]) || 0);
+            });
+          });
+          var ranked = Object.keys(scores).sort(function (a, b) { return scores[b] - scores[a]; });
+          var top = ranked.slice(0, 2);
+          var rows = '';
+          top.forEach(function (id, i) {
+            var label = (names[id] && names[id].name) || id;
+            var url = (names[id] && names[id].url) || '';
+            rows += '<li><strong>' + (i === 0 ? 'Start here: ' : 'Also worth a look: ') +
+              '</strong><a href="' + url + '">' + label + '</a></li>';
+          });
+          resultBox.innerHTML = '<p>Based only on the three answers above:</p><ol>' + rows +
+            '</ol><p class="small">This is a shortlist, not a verdict. Every product page shows ' +
+            'the full specification table and the caveat that matters, and the comparison table ' +
+            'above lets you check any two side by side.</p>';
+          if (typeof track === 'function') {
+            try { track('search', { qlen: 0, hits: top.length }); } catch (_) {}
+            // shortlist used; counts only, no free text and no identifiers
+          }
+        });
+      }
+    }
+  } catch (e) {}
 })();

@@ -1,187 +1,110 @@
-/*
- * ShopNow Kitchen - self-hosted, privacy-preserving event collector.
- *
- * This is a Cloudflare Pages Function. It is also written as a plain
- * `export async function onRequestPost` module with no imports, so it can be
- * lifted into any edge runtime that speaks the Pages Functions signature.
- *
- * What it does NOT do, by design:
- *   - it never writes a cookie and never reads one
- *   - it never stores an IP address, user agent, referrer URL or device fingerprint
- *   - it never accepts a payload key that could carry personal data
- *   - it never forwards anything to Amazon or to a third party
- *   - it never records a search query, only the shape of the search
- *
- * Storage:
- *   - a Workers KV binding named EVENT_LOG, if present, receives one JSON
- *     object per event. That is the production path on Cloudflare Pages.
- *   - without the binding the function still answers 204 and the events are
- *     dropped, so the site degrades quietly instead of breaking.
- *
- * Endpoint contract (see data/events.json):
- *   POST /api/collect        -> 204 No Content on an accepted event
- *   GET  /api/collect        -> 200 { "status": "ok" } so the browser client
- *                                can decide whether to switch itself on
+/**
+ * Cloudflare Pages Function — privacy-preserving analytics collector (/api/collect).
+ * Mirrors analytics/server.js validation rules with zero cookies, zero IP logging,
+ * and strict field whitelisting. Bind optional KV namespace SN_EVENTS to store summaries.
  */
 
-const ALLOWED_EVENTS = [
-  "page_view",
-  "outbound_click",
-  "guide_read",
-  "search",
-  "suggestion_rank",
-];
-
-// Keys the client is allowed to send. Anything else is dropped rather than
-// stored, so a hostile or buggy client cannot smuggle data in.
-const ALLOWED_FIELDS = {
-  event: "string",
-  path: "string",
-  session_id: "string",
-  ts: "string",
-  referrer_host: "string",
-  product_id: "string",
-  link_position: "string",
-  guide_id: "string",
-  query_length: "string",
-  result_count: "string",
-  suggestion_id: "string",
-  position: "string",
+const ALLOWED_EVENTS = {
+  page_view: ['e', 't', 'page'],
+  outbound_click: ['e', 't', 'page', 'product'],
+  guide_read: ['e', 't', 'page'],
+  search: ['e', 't', 'page', 'q_len', 'results'],
+  suggestion_rank: ['e', 't', 'page', 'rank']
 };
 
-const MAX_STRING = 300;
-const MAX_BODY_BYTES = 4096;
+const FORBIDDEN = new Set([
+  'ip', 'user_agent', 'referrer', 'cookie', 'fingerprint', 'query_text', 'email', 'session_id'
+]);
 
-/**
- * Reduce an incoming event to the allowed fields only.
- * Returns null when the event is not usable.
- */
-export function sanitize(raw) {
-  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
-
-  const name = typeof raw.event === "string" ? raw.event : "";
-  if (ALLOWED_EVENTS.indexOf(name) === -1) return null;
-
-  const clean = { event: name };
-
-  for (const key of Object.keys(ALLOWED_FIELDS)) {
-    if (key === "event") continue;
-    const value = raw[key];
-    if (typeof value !== "string") continue;
-    clean[key] = value.slice(0, MAX_STRING);
+function validate(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return { ok: false, error: 'Payload must be a JSON object' };
   }
-
-  // A path is a site path, never a full URL: strip anything that looks like
-  // a scheme or a query string so a referrer cannot ride along.
-  if (clean.path) {
-    clean.path = clean.path
-      .replace(/^[a-z]+:\/\/[^/]*/i, "")
-      .split("?")[0]
-      .split("#")[0]
-      .slice(0, MAX_STRING);
+  for (const k of Object.keys(raw)) {
+    if (FORBIDDEN.has(k)) return { ok: false, error: `Forbidden privacy field: ${k}` };
   }
-
-  // session_id is a random per-tab value; keep it to a safe alphabet only.
-  if (clean.session_id) {
-    clean.session_id = clean.session_id.replace(/[^a-z0-9]/gi, "").slice(0, 32);
+  const e = raw.e;
+  if (typeof e !== 'string' || !Object.prototype.hasOwnProperty.call(ALLOWED_EVENTS, e)) {
+    return { ok: false, error: 'Unknown or missing event name' };
   }
-
-  // referrer_host is a bare hostname. Drop anything that is not one.
-  if (clean.referrer_host) {
-    const host = clean.referrer_host
-      .replace(/^[a-z]+:\/\//i, "")
-      .split("/")[0]
-      .split("?")[0]
-      .split("#")[0]
-      .replace(/^[^a-z0-9.-]+/i, "");
-    clean.referrer_host = /^[a-z0-9.-]+\.[a-z]{2,}$/i.test(host) ? host.slice(0, 120) : "";
+  const allowed = new Set(ALLOWED_EVENTS[e]);
+  for (const k of Object.keys(raw)) {
+    if (!allowed.has(k)) return { ok: false, error: `Unexpected field: ${k}` };
   }
-
-  // Identifiers are internal codes; keep them to a conservative shape.
-  for (const key of ["product_id", "link_position", "guide_id", "suggestion_id"]) {
-    if (clean[key]) clean[key] = clean[key].replace(/[^A-Za-z0-9._-]/g, "").slice(0, 64);
+  if (typeof raw.page !== 'string' || !raw.page.startsWith('/') || raw.page.length > 200) {
+    return { ok: false, error: 'Invalid page path' };
   }
-
-  // Counts are numbers written as strings; keep only digits.
-  for (const key of ["query_length", "result_count", "position"]) {
-    if (clean[key]) clean[key] = clean[key].replace(/[^0-9]/g, "").slice(0, 6);
-  }
-
-  clean.received_at = new Date().toISOString();
-  return clean;
-}
-
-/**
- * Store one event. Returns true when it was written somewhere.
- */
-async function store(env, event) {
-  const kv = env && env.EVENT_LOG;
-  if (!kv || typeof kv.put !== "function") return false;
-  const key = "evt_" + Date.now() + "_" + Math.random().toString(36).slice(2, 10);
-  await kv.put(key, JSON.stringify(event));
-  return true;
-}
-
-export async function onRequestPost(context) {
-  const { request, env } = context;
-
-  let raw;
-  try {
-    const text = await request.text();
-    if (text.length > MAX_BODY_BYTES) {
-      return new Response(null, { status: 413 });
+  const clean = {
+    e,
+    t: Math.floor((typeof raw.t === 'number' && Number.isFinite(raw.t) ? raw.t : Date.now()) / 60000) * 60000,
+    page: raw.page.split('?')[0].split('#')[0]
+  };
+  if (e === 'outbound_click') {
+    if (typeof raw.product !== 'string' || !/^P-0[1-5]$/.test(raw.product)) {
+      return { ok: false, error: 'Invalid product ID' };
     }
-    raw = JSON.parse(text);
-  } catch (err) {
-    return new Response(null, { status: 400 });
+    clean.product = raw.product;
+  } else if (e === 'search') {
+    if (!Number.isInteger(raw.q_len) || raw.q_len < 1 || raw.q_len > 200 ||
+        !Number.isInteger(raw.results) || raw.results < 0 || raw.results > 500) {
+      return { ok: false, error: 'Invalid search counts' };
+    }
+    clean.q_len = raw.q_len;
+    clean.results = raw.results;
+  } else if (e === 'suggestion_rank') {
+    if (!Array.isArray(raw.rank) || raw.rank.length > 30 ||
+        !raw.rank.every((s) => typeof s === 'string' && /^SG-\d{2}$/.test(s))) {
+      return { ok: false, error: 'Invalid rank array' };
+    }
+    clean.rank = raw.rank.slice();
   }
+  return { ok: true, value: clean };
+}
 
-  const event = sanitize(raw);
-  if (!event) {
-    return new Response(null, { status: 400 });
-  }
-
-  try {
-    await store(env, event);
-  } catch (err) {
-    // A storage failure must not turn into a reader-facing error.
-    return new Response(null, { status: 204 });
-  }
-
-  return new Response(null, { status: 204 });
+function jsonResponse(status, data) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-Content-Type-Options': 'nosniff'
+    }
+  });
 }
 
 export async function onRequestGet() {
-  // A GET on the collector path is the health probe the browser client uses to
-  // decide whether to switch measurement on. It answers with a fixed body and
-  // stores nothing, so a probe is never recorded as an event.
-  return new Response(JSON.stringify({ status: "ok", service: "shopnow-kitchen-collect" }), {
-    status: 200,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-      "access-control-allow-origin": "*",
-    },
+  return jsonResponse(200, {
+    ok: true,
+    mode: 'cloudflare-pages-function',
+    schema_version: '1.0',
+    events: Object.keys(ALLOWED_EVENTS),
+    cookies: false
   });
 }
 
-export async function onRequestOptions() {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      "access-control-allow-origin": "*",
-      "access-control-allow-methods": "GET, POST, OPTIONS",
-      "access-control-allow-headers": "content-type",
-      "access-control-max-age": "86400",
-    },
-  });
+export async function onRequestPost(context) {
+  let rawText;
+  try {
+    rawText = await context.request.text();
+  } catch (_) {
+    return jsonResponse(400, { ok: false, error: 'Unable to read request body' });
+  }
+  if (rawText.length > 4096) {
+    return jsonResponse(413, { ok: false, error: 'Payload too large' });
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(rawText);
+  } catch (_) {
+    return jsonResponse(400, { ok: false, error: 'Malformed JSON body' });
+  }
+  const verdict = validate(parsed);
+  if (!verdict.ok) {
+    return jsonResponse(400, { ok: false, error: verdict.error });
+  }
+  if (context.env && context.env.SN_EVENTS && typeof context.env.SN_EVENTS.put === 'function') {
+    const key = `${verdict.value.t}:${verdict.value.e}:${crypto.randomUUID()}`;
+    await context.env.SN_EVENTS.put(key, JSON.stringify(verdict.value));
+  }
+  return jsonResponse(202, { ok: true, recorded: verdict.value.e });
 }
-
-export default async function handler(context) {
-  const method = (context.request.method || "GET").toUpperCase();
-  if (method === "POST") return onRequestPost(context);
-  if (method === "GET") return onRequestGet(context);
-  return onRequestOptions(context);
-}
-
-export { ALLOWED_EVENTS, ALLOWED_FIELDS };

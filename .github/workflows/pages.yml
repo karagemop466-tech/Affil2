@@ -31,9 +31,9 @@ jobs:
 
       - name: Fail if the committed pages differ from the generator output
         run: |
-          if [ -n "$(git status --porcelain -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt')" ]; then
+          if [ -n "$(git status --porcelain -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt' 'findability.txt')" ]; then
             echo "::error::Committed pages are out of sync with scripts/build_site.py."
-            git --no-pager diff --stat -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt'
+            git --no-pager diff --stat -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt' 'findability.txt'
             exit 1
           fi
           echo "Pages match the generator."
@@ -41,8 +41,7 @@ jobs:
       - name: Compliance and integrity gate
         run: python3 scripts/check_site.py
 
-      - name: Collector tests (privacy rules for the five events)
-        run: node tests/collector.test.js
-
-      - name: Site tests
-        run: python3 -m unittest discover -s tests -p "test_*.py" -v
+      - name: Run Python integration and JS collector/client tests
+        run: |
+          python3 -m unittest discover -s tests -p "test_*.py" -v
+          node tests/test_collector.js

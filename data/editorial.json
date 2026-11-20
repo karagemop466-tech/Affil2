@@ -1,205 +1,205 @@
 {
-  "P-01": {
-    "brand": "Chefman",
-    "headline": "Two baskets, two windows, one finish time",
-    "best_for": "Cooked-for-two households that want a main and a side done at once",
-    "tradeoff": "Two small baskets instead of one big one; 450 °F max, and the listing's own capacity field says 6 liters",
-    "faq": [
-      [
-        "What is the total capacity?",
-        "6 quarts, split into two independent 3-quart baskets, according to the listing title. The product-details capacity field says 6 liters, which is a different figure from 6 quarts, and both are printed on the product page. Flagged as FLG-034."
-      ],
-      [
-        "Does it have a preheat function?",
-        "The listing does not state a preheat step. Presets and a +2 minute button are listed. Do not assume preheat."
-      ],
-      [
-        "What is the maximum temperature?",
-        "450 °F, per the listing's Max Temperature Setting field."
-      ],
-      [
-        "Is it dishwasher safe?",
-        "The listing says the removable non-stick coated baskets are dishwasher safe."
-      ]
-    ],
-    "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
-    "qa": [
-      [
-        "Do you cook a main and a side at the same time?",
-        "If you cook one thing at a time, two 3-quart baskets buy you nothing over one 8-quart basket."
-      ],
-      [
-        "Will 11.81 in of width plus clearance fit your counter?",
-        "Measured width is 11.81 in and depth 13.38 in. Add rear and above clearance for the vents."
-      ],
-      [
-        "Do you want to watch the food cook?",
-        "The windows are the differentiator here versus the 8-quart Chefman. Worth checking you would actually use them."
-      ]
-    ]
-  },
-  "P-02": {
-    "brand": "Emeril Lagasse",
-    "headline": "A countertop oven that happens to air-fry",
-    "best_for": "Households of 4–6 that want one appliance to roast, toast, air-fry and rotisserie",
-    "tradeoff": "16.9 in of depth plus door swing, 26.5 lb, and the listing contradicts itself on preset count and accessory count",
-    "faq": [
-      [
-        "How many presets does it have?",
-        "The listing is inconsistent: the title and Product Description say 24 one-touch presets, while the About this item bullet says 25 cooking pre-sets. Both are published here and neither is chosen. Flagged as FLG-014."
-      ],
-      [
-        "How many accessories are included?",
-        "The title says six cooking accessories, the Configuration field says 7 accessories, and Included Components names six: rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool. Flagged as FLG-015."
-      ],
-      [
-        "Will a 12-inch pizza fit?",
-        "The listing's own About this item bullet says it can bake a 12-inch pizza and rotisserie a 6-lb chicken."
-      ],
-      [
-        "Does it air-fry or is it just a toaster oven?",
-        "The listing has an Air Frying Technology field set to True and describes 360° hot air circulation. It air-fries using oven-style circulation, not a basket."
-      ]
-    ],
-    "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
-    "qa": [
-      [
-        "Do you have 16.9 in of depth, plus room for French doors to swing?",
-        "Depth is the binding constraint on most counters. Doors pull open in front of the unit."
-      ],
-      [
-        "Will you actually rotisserie?",
-        "The spit and fetch tool are part of what you pay for. Unused accessories are still footprint."
-      ],
-      [
-        "Are you willing to leave it in one place?",
-        "At 26.5 lb this is a park-it-and-keep-it appliance, not something you lift into a cupboard."
-      ],
-      [
-        "Do you need a preset count you can rely on?",
-        "The listing says 24 in one place and 25 in another. If a specific preset matters to you, check the current listing before buying."
-      ]
-    ]
-  },
-  "P-03": {
-    "brand": "Chefman",
-    "headline": "One basket, no windows, four buttons",
-    "best_for": "Households cooking one thing at a time who want maximum basket for the footprint",
-    "tradeoff": "No window, single zone, and the listing contradicts itself on top temperature and wattage",
-    "faq": [
-      [
-        "What is the maximum temperature?",
-        "Conflicting: the Max Temperature Setting spec field says 400 °F, while the listing title advertises a 450 °F Hi-Fry option. Both are published; neither is chosen. Flagged as FLG-016."
-      ],
-      [
-        "How many watts?",
-        "The Wattage and Output Wattage spec fields say 1700 watts, but the About this item bullet says 1000 watts. Flagged as FLG-017."
-      ],
-      [
-        "Is the basket dishwasher safe?",
-        "Yes, the listing says the non-stick basket and flat frying tray are both top-rack dishwasher safe."
-      ],
-      [
-        "Does it come with a warranty?",
-        "The listing's warranty field says 1-Year Limited Warranty provided by Chefman."
-      ]
-    ],
-    "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
-    "qa": [
-      [
-        "One basket or two — which matches your weeknight?",
-        "One 8-quart basket beats two 3-quart baskets if you cook in batches rather than in parallel."
-      ],
-      [
-        "Is 400 °F top temperature enough?",
-        "The spec field says 400 °F. The title advertises a 450 °F Hi-Fry option. That gap is flagged; ask the seller or check the manual if high-heat crisping matters."
-      ],
-      [
-        "Do you need to see the food?",
-        "There is no window on this model. You rely on the shake reminder and the timer."
-      ]
-    ]
-  },
-  "P-04": {
-    "brand": "ThermoMaven",
-    "headline": "The one you keep in a drawer and grab",
-    "best_for": "Grill and oven cooks who check temperature at the appliance and want zero setup",
-    "tradeoff": "Accuracy and certification are seller claims, not independent test results; no walk-away monitoring",
-    "faq": [
-      [
-        "How fast is it?",
-        "The listing states a 1 second response time using a thermocouple sensor."
-      ],
-      [
-        "Is the NIST and NSF certification verified?",
-        "The listing states NIST and NSF under Specification Met and ships a calibration certificate. This site has not seen the certificate or an independent test report, so treat it as a seller claim."
-      ],
-      [
-        "What is the highest temperature it reads?",
-        "The listing's own upper-temperature field did not appear in the text we read on 2026-11-20, so this page leaves it blank rather than quoting a figure from elsewhere. Check the listing's Product Details table for the current value (FLG-022)."
-      ],
-      [
-        "Can I put it in the dishwasher?",
-        "The listing's care instruction is wipe clean. Do not assume dishwasher safe."
-      ]
-    ],
-    "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
-    "qa": [
-      [
-        "Do you check at the grill, or do you want to walk away?",
-        "This is a hand-held instant-read. If you want to leave the room, you want P-05 instead."
-      ],
-      [
-        "Do you need a certificate, or is a claim enough?",
-        "The listing includes a calibration certificate in the box. NIST and NSF are listed as specifications met — that is a seller statement, not a test report you can read here."
-      ],
-      [
-        "Will you wipe it rather than wash it?",
-        "The listing's care instruction is wipe clean, even though the title says IP67 waterproof."
-      ]
-    ]
-  },
-  "P-05": {
-    "brand": "CHEF iQ",
-    "headline": "Three probes, no standing at the grill",
-    "best_for": "Smoker and multi-protein cooks who want to monitor from inside the house",
-    "tradeoff": "The listing contradicts itself on battery life and warranty length, and it depends on an app plus WiFi",
-    "faq": [
-      [
-        "How long does the battery last?",
-        "The About this item bullet says up to 50 hours on a full charge. The prior pass recorded 70 hours from a different part of the page that no longer shows that figure. Both are flagged; treat 50 hours as the current listing claim. See FLG-008."
-      ],
-      [
-        "How many probes come in the box?",
-        "Three, plus the hub. Note the listing also sells 1, 2 and 4 probe versions — check the size selector before buying."
-      ],
-      [
-        "Does it work without WiFi?",
-        "The listing says WiFi and Bluetooth. Bluetooth pairing is described in the bullets, but the marketing is built around WiFi range. Do not assume full range without WiFi."
-      ],
-      [
-        "Is it dishwasher safe?",
-        "The listing says the probes are waterproof and dishwasher safe. The hub's care instructions are not stated."
-      ]
-    ],
-    "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
-    "qa": [
-      [
-        "Do you cook several proteins at once?",
-        "Three probes only pay off if you actually use more than one at a time."
-      ],
-      [
-        "Are you fine relying on an app and WiFi for doneness?",
-        "Remote monitoring is the product. If the app or network is a problem for you, P-04 is the safer buy."
-      ],
-      [
-        "Will you charge and clean three probes after every cook?",
-        "The hub charges all three at once, but they still need washing. The listing says the probes are dishwasher safe."
-      ],
-      [
-        "Do you need a warranty figure you can rely on?",
-        "The listing says two years in one place and the prior pass recorded one year. Confirm before you rely on it."
-      ]
-    ]
-  }
+ "P-01": {
+  "brand": "Chefman",
+  "headline": "Two baskets, two windows, one finish time",
+  "best_for": "Cooked-for-two households that want a main and a side done at once",
+  "tradeoff": "Two small baskets instead of one big one; 450 °F max, and the listing's own capacity field says 6 liters",
+  "faq": [
+   [
+    "What is the total capacity?",
+    "Two answers come straight off the listing, and they disagree: the title and bullets say 6 quarts split into two 3-quart baskets, while the specifications table says 6 liters, which is about 6.3 US quarts. Both figures are published rather than picked between, and the difference is under a third of a quart."
+   ],
+   [
+    "Does it have a preheat function?",
+    "The listing does not state a preheat step. Presets and a +2 minute button are listed. Do not assume preheat."
+   ],
+   [
+    "What is the maximum temperature?",
+    "450 °F, per the listing's About this item bullets and Max Temperature Setting field."
+   ],
+   [
+    "Is it dishwasher safe?",
+    "The listing says the removable non-stick coated baskets are dishwasher safe."
+   ]
+  ],
+  "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See.",
+  "qa": [
+   [
+    "Do you cook a main and a side at the same time?",
+    "If you cook one thing at a time, two 3-quart baskets buy you nothing over one 8-quart basket."
+   ],
+   [
+    "Will 11.81 in of width plus clearance fit your counter?",
+    "Measured width is 11.81 in, depth 13.38 in, and weight 13.3 pounds. Add rear and above clearance for the vents."
+   ],
+   [
+    "Do you want to watch the food cook?",
+    "The windows are the differentiator here versus the 8-quart Chefman. Worth checking you would actually use them."
+   ]
+  ]
+ },
+ "P-02": {
+  "brand": "Emeril Lagasse",
+  "headline": "A countertop oven that happens to air-fry",
+  "best_for": "Households of 4–6 that want one appliance to roast, toast, air-fry and rotisserie",
+  "tradeoff": "16.9 in of depth plus French-door swing, item weight unstated on listing, and the listing contradicts itself on preset count and accessory count",
+  "faq": [
+   [
+    "How many presets does it have?",
+    "The listing is inconsistent: the title, Configuration and Product Description say 24 one-touch presets, while the About this item bullet says 25 cooking pre-sets. Both are published here and neither is chosen."
+   ],
+   [
+    "How many accessories are included?",
+    "Three figures appear on the same listing: the title says six cooking accessories, the configuration field and product description say 7, and the included-components list names six (rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool). The conflict is left visible instead of averaged."
+   ],
+   [
+    "Will a 12-inch pizza fit?",
+    "The listing's own About this item bullet says it can bake a 12-inch pizza and rotisserie a 6-lb chicken."
+   ],
+   [
+    "Does it air-fry or is it just a toaster oven?",
+    "The listing has an Air Frying Technology field set to True and describes 360° superheated hot air circulation up to 500 °F at 1700 watts. It air-fries using oven-style circulation, not a basket."
+   ]
+  ],
+  "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See.",
+  "qa": [
+   [
+    "Do you have 16.9 in of depth, plus room for French doors to swing?",
+    "Depth is the binding constraint on most counters. Doors pull open in front of the unit."
+   ],
+   [
+    "Will you actually rotisserie?",
+    "The spit and fetch tool are part of what you pay for. Unused accessories are still footprint."
+   ],
+   [
+    "Are you willing to leave it in one place?",
+    "At 16.9 in deep and 15.8 in wide (with item weight unstated on the listing, FLG-022), this is a park-it-and-keep-it appliance, not something you lift into a cupboard."
+   ],
+   [
+    "Do you need a preset count you can rely on?",
+    "The listing says 24 in one place and 25 in another. If a specific preset matters to you, check the current listing before buying."
+   ]
+  ]
+ },
+ "P-03": {
+  "brand": "Chefman",
+  "headline": "One basket, no windows, four buttons",
+  "best_for": "Households cooking one thing at a time who want maximum basket for the footprint",
+  "tradeoff": "No window, single zone, and the listing contradicts itself on top temperature and wattage",
+  "faq": [
+   [
+    "What is the maximum temperature?",
+    "Conflicting: the About this item bullet and Max Temperature Setting spec field say 400 °F, while the listing title advertises a 450 °F Hi-Fry option. Both are published; neither is chosen."
+   ],
+   [
+    "How many watts?",
+    "Conflicting: the Features & Specs Output Wattage and Wattage fields say 1700 watts, while the About this item bullet says 1000 watts / 120 volts. Both are shown here and"
+   ],
+   [
+    "Is the basket dishwasher safe?",
+    "Yes, the listing says the non-stick basket and flat frying tray are both top-rack dishwasher safe."
+   ],
+   [
+    "Does it come with a warranty?",
+    "The listing's warranty field says 1-Year Limited Warranty provided by Chefman."
+   ]
+  ],
+  "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See.",
+  "qa": [
+   [
+    "One basket or two — which matches your weeknight?",
+    "One 8-quart basket (12.8 lb unit) beats two 3-quart baskets if you cook in batches rather than in parallel."
+   ],
+   [
+    "Is 400 °F top temperature enough?",
+    "The spec field says 400 °F. The title advertises a 450 °F Hi-Fry option. That gap is flagged as FLG-018; check the manual if high-heat crisping matters."
+   ],
+   [
+    "Do you need to see the food?",
+    "There is no window on this model. You rely on the LED shake reminder and the timer."
+   ]
+  ]
+ },
+ "P-04": {
+  "brand": "ThermoMaven",
+  "headline": "The one you keep in a drawer and grab",
+  "best_for": "Grill and oven cooks who check temperature at the appliance and want zero setup",
+  "tradeoff": "Accuracy and certification are seller claims, not independent test results; no walk-away monitoring",
+  "faq": [
+   [
+    "How fast is it?",
+    "The listing states a 1 second response time using a thermocouple sensor (model HT07)."
+   ],
+   [
+    "Is the NIST and NSF certification verified?",
+    "The listing states NIST and NSF under Specification Met and ships a calibration certificate. This site has not seen the certificate or an independent test report, so treat it as a seller claim."
+   ],
+   [
+    "What is the highest temperature it reads?",
+    "572 °F, per the Upper Temperature Rating field in Product information."
+   ],
+   [
+    "Can I put it in the dishwasher?",
+    "The listing's care instruction is Wipe Clean. Do not assume dishwasher safe."
+   ]
+  ],
+  "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See.",
+  "qa": [
+   [
+    "Do you check at the grill, or do you want to walk away?",
+    "This is a hand-held instant-read with a 6.5-inch length/immersion spec. If you want to leave the room, you want P-05 instead."
+   ],
+   [
+    "Do you need a certificate, or is a claim enough?",
+    "The listing includes a calibration certificate in the box. NIST and NSF are listed as specifications met — that is a seller statement, not a test report you can read here (FLG-035)."
+   ],
+   [
+    "Will you wipe it rather than wash it?",
+    "The listing's care instruction is Wipe Clean, even though the title says IP67 waterproof."
+   ]
+  ]
+ },
+ "P-05": {
+  "brand": "CHEF iQ",
+  "headline": "Three probes, no standing at the grill",
+  "best_for": "Smoker and multi-protein cooks who want to monitor from inside the house",
+  "tradeoff": "The listing contradicts itself on battery life and warranty length, and it depends on an app plus WiFi",
+  "faq": [
+   [
+    "How long does the battery last?",
+    "The current listing says up to 50 hours on a full charge, and that is what we publish. An earlier reading of the product description said 70 hours. Both figures come from the same listing at different times, so treat 50 hours as the present claim rather than a measured run time."
+   ],
+   [
+    "How many probes come in the box?",
+    "Three 4.75-inch probes, plus the hub (model CQ60-3C-Z1-E). Note the listing also sells 1, 2 and 4 probe options — check the size selector before buying."
+   ],
+   [
+    "Does it work without WiFi?",
+    "The listing says Wi-Fi and Bluetooth. Bluetooth pairing is described in the bullets, but the marketing is built around Wi-Fi unlimited range. Do not assume full range without Wi-Fi."
+   ],
+   [
+    "Is it dishwasher safe, and what is the warranty?",
+    "The listing says the probes are waterproof and dishwasher safe (hub care is unstated). On warranty, About this item states a two-year assurance while Item details Warranty Description says 3 Year (,)."
+   ]
+  ],
+  "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See.",
+  "qa": [
+   [
+    "Do you cook several proteins at once?",
+    "Three probes only pay off if you actually use more than one at a time."
+   ],
+   [
+    "Are you fine relying on an app and WiFi for doneness?",
+    "Remote monitoring is the product. If the app or network is a problem for you, P-04 is the safer buy."
+   ],
+   [
+    "Will you charge and clean three probes after every cook?",
+    "The hub charges all three at once, but they still need washing. The listing says the probes are dishwasher safe."
+   ],
+   [
+    "Do you need a warranty figure you can rely on?",
+    "The listing states two-year assurance in About this item and 3 Year in Item details (while an earlier register said 1-year). Flagged as FLG-038 / FLG-019; confirm before relying on it."
+   ]
+  ]
+ }
 }
