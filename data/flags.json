@@ -112,7 +112,7 @@
   {
     "id": "FLG-011",
     "title": "Short-link redirects are not stable across attempts",
-    "detail": "On 2026-11-20, earlier checks saw link.amazon/B00hJ57DV and link.amazon/B0f3GKalj return HTTP 500, Amazon homepage, or checkpoint before resolving, while follow-up checks resolved all five cleanly. Each observed ASIN is a dated snapshot, not a guaranteed permanent mapping. See data/reverification-2026-11-20.json.",
+    "detail": "On 2026-11-20, earlier checks saw link.amazon/B00hJ57DV and link.amazon/B0f3GKalj return HTTP 500, Amazon homepage, or checkpoint before resolving, while follow-up checks resolved all five cleanly. Each observed ASIN is a dated snapshot, not a guaranteed permanent mapping. See data/reverification-2026-11-20.json. Third pass on 2026-11-20 (session arena/195d1d32): 3 of 5 tokens re-confirmed their recorded ASINs (B02NbDxp3→B09B7SB46R, B00hJ57DV→B08DKYBTPH, B0f3GKalj→B0DZFD6R9Z); B04G1MEwY and B0c8moW59 landed on the Amazon homepage on 2 of 2 attempts each — both target listings were separately re-confirmed live as /dp/ pages the same day, so no recorded fact changes. Recorded targets retained in separate fields; no validity claim is made about any short link (FLG-003). Dated re-test log: data/reverification-2026-11-20.json → second_follow_up_2026_11_20.",
     "links": [
       "S15",
       "S17",

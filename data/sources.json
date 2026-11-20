@@ -4,28 +4,32 @@
     "name": "Amazon Associates Program Operating Agreement (Section 5: disclosure wording)",
     "url": "https://affiliate-program.amazon.com/help/operating/agreement",
     "used_for": "Mandatory disclosure statement “As an Amazon Associate I earn from qualifying purchases.” (§5). Checked verbatim on 2026-11-20.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "revision": "Updated October 15, 2025 (read in full, chunks 0–2, on 2026-11-20; §5 statement verified verbatim; §12 incorporates the most up-to-date Program Policies)"
   },
   {
     "id": "S02",
     "name": "Amazon Associates Program Policies (Commission Income, Participation Requirements, IP License & Agent Terms)",
     "url": "https://affiliate-program.amazon.com/help/operating/policies",
     "used_for": "Commission Income Statement §2(d)/(e)/(g) (search-referred, redirecting links, improperly formatted links). Participation Requirements §2(a)/(b) (Special Links; prices/availability only via Amazon-served links or API), §5 (no ML model training without express prior written approval), §6(t)/(v)/(w)/(y) (ratings, no cloaking, clear short links, no price tracking). IP License §1, §2(e)/(h)/(i)/(k) (no LLM/ML training, image/PAC caching & attribution), §4 Agent Terms (Agent/[name] user-agent identification).",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "revision": "Updated April 14, 2026 (read in full, chunks 0–10 of 11, on 2026-11-20; Appendix links commission rates to the Associates schedule page, which is login-gated — no rates reproduced on this site; IP License §4 Agent Terms verified verbatim)"
   },
   {
     "id": "S03",
     "name": "FTC — Endorsement Guides: What People Are Asking",
     "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
     "used_for": "Material connections (affiliate/paid links) must be disclosed clearly and conspicuously near the endorsement, not buried on another page.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "revision": "Live on 2026-11-20; reflects the 2023 revision of 16 CFR Part 255 including the 'clearly and conspicuously' definition; links Disclosures 101"
   },
   {
     "id": "S04",
     "name": "Google Search Central — Qualify your outbound links",
     "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
     "used_for": "Use rel=\"sponsored\" (alone or combined with rel=\"nofollow\") for paid and affiliate links.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "revision": "Page last updated 2025-12-10 UTC (per page footer, read 2026-11-20)"
   },
   {
     "id": "S10",
@@ -102,34 +106,39 @@
     "name": "Amazon Creators API — Register for Creators API (onboarding requirements)",
     "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api",
     "used_for": "Access is limited to Associates whose account has been reviewed and received final acceptance into the program, and who have referred qualified sales. Only the primary account owner can register. Checked verbatim on 2026-11-20.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "revision": "Live on 2026-11-20; sign-up requires a reviewed Associates account with final acceptance; max 2 applications per store, 2 credentials per application; primary account owner only"
   },
   {
     "id": "S21",
     "name": "Amazon Creators API — PA-API 5 deprecation notice",
     "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation",
     "used_for": "States that Product Advertising API 5.0 is deprecated and returns HTTP 403 Forbidden (AccessDeniedException); Creators API is the supported successor.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "revision": "Live on 2026-11-20; PA-API 5 deprecated and replaced by the Creators API; remaining PA-API 5 calls receive HTTP 403 AccessDeniedException directing migration"
   },
   {
     "id": "S22",
     "name": "USDA FSIS — Safe Minimum Internal Temperature Chart",
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
     "used_for": "Official minimum internal cooking temperatures: poultry 165 °F (73.9 °C); ground meats 160 °F (71.1 °C); beef, pork, veal and lamb steaks, chops and roasts 145 °F (62.8 °C) with a 3-minute rest; fish and shellfish 145 °F (62.8 °C); leftovers and casseroles 165 °F (73.9 °C).",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "revision": "Page shows 'Last Updated: Apr 14, 2025' (read 2026-11-20)"
   },
   {
     "id": "S23",
     "name": "FTC — Disclosures 101 for Social Media Influencers",
     "url": "https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers",
     "used_for": "Supports the placement rule this site follows: make sure people will see and understand the disclosure, place it so it is hard to miss, and do not bury it at the end of a page or anywhere that requires a click to reveal. Checked verbatim on 2026-11-20.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "revision": "November 2019 (per page footer, read 2026-11-20)"
   },
   {
     "id": "S24",
     "name": "USDA FSIS — Food Thermometers (Calibration & Use)",
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/food-thermometers",
     "used_for": "Official ice-water calibration test (immerse stem ≥2 inches in ice-water slurry for ≥30 seconds; calibrated thermometer reads 32 °F) and proper stem placement.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "revision": "Live on 2026-11-20; calibration and placement guidance confirmed"
   }
 ]

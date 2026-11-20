@@ -9,7 +9,10 @@
       "token_length": 9,
       "record_observed_asin": "B0CDY277D3",
       "attempts": [
-        {"result": "product page: /dp/B0CDY277D3", "title_seen": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black"}
+        {
+          "result": "product page: /dp/B0CDY277D3",
+          "title_seen": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black"
+        }
       ],
       "reproduced": "Yes (1 of 1 attempts)",
       "title_match": "Yes (record title is a prefix of the page title)",
@@ -20,7 +23,10 @@
       "token_length": 9,
       "record_observed_asin": "B09B7SB46R",
       "attempts": [
-        {"result": "product page: /dp/B09B7SB46R", "title_seen": "Amazon.com: Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included : Home & Kitchen"}
+        {
+          "result": "product page: /dp/B09B7SB46R",
+          "title_seen": "Amazon.com: Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included : Home & Kitchen"
+        }
       ],
       "reproduced": "Yes (1 of 1 attempts)",
       "title_match": "No. Record title 'Emeril Lagasse 26 QT Extra Large Air Fryer, Convection Toaster Oven with French Doors, Stainless Steel' does not match the page title (see FLG-013).",
@@ -31,9 +37,16 @@
       "token_length": 9,
       "record_observed_asin": "B08DKYBTPH",
       "attempts": [
-        {"result": "HTTP 500 error"},
-        {"result": "Amazon homepage (no product)"},
-        {"result": "product page: /dp/B08DKYBTPH", "title_seen": "Amazon.com: Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel : Home & Kitchen"}
+        {
+          "result": "HTTP 500 error"
+        },
+        {
+          "result": "Amazon homepage (no product)"
+        },
+        {
+          "result": "product page: /dp/B08DKYBTPH",
+          "title_seen": "Amazon.com: Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel : Home & Kitchen"
+        }
       ],
       "reproduced": "Yes, but only on the 3rd attempt (see FLG-011)",
       "title_match": "Partial. ASIN matches; record title 'Chefman TurboFry Touch Air Fryer, XL 8-Qt...' differs from the page title (see FLG-013).",
@@ -44,10 +57,18 @@
       "token_length": 9,
       "record_observed_asin": "B0DHZTCNR5",
       "attempts": [
-        {"result": "HTTP 500 error"},
-        {"result": "Amazon 'Continue shopping' checkpoint (no product)"},
-        {"result": "Amazon 'Continue shopping' checkpoint (no product)"},
-        {"result": "Amazon 'Continue shopping' checkpoint (no product)"}
+        {
+          "result": "HTTP 500 error"
+        },
+        {
+          "result": "Amazon 'Continue shopping' checkpoint (no product)"
+        },
+        {
+          "result": "Amazon 'Continue shopping' checkpoint (no product)"
+        },
+        {
+          "result": "Amazon 'Continue shopping' checkpoint (no product)"
+        }
       ],
       "reproduced": "No. 0 of 4 attempts reached /dp/B0DHZTCNR5 (see FLG-012)",
       "title_match": "Not applicable",
@@ -58,23 +79,59 @@
       "token_length": 9,
       "record_observed_asin": "B0DZFD6R9Z",
       "attempts": [
-        {"result": "Amazon homepage (no product)"},
-        {"result": "direct fetch of https://www.amazon.com/dp/B0f3GKalj failed (expected: token is not a 10-character ASIN)"},
-        {"result": "product page: /dp/B0DZFD6R9Z", "title_seen": "Amazon.com: CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3: Home & Kitchen"}
+        {
+          "result": "Amazon homepage (no product)"
+        },
+        {
+          "result": "direct fetch of https://www.amazon.com/dp/B0f3GKalj failed (expected: token is not a 10-character ASIN)"
+        },
+        {
+          "result": "product page: /dp/B0DZFD6R9Z",
+          "title_seen": "Amazon.com: CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3: Home & Kitchen"
+        }
       ],
       "reproduced": "Yes, but only on the 3rd attempt (see FLG-011)",
       "title_match": "Partial. ASIN matches; record title includes '[2025 Model]', which does not appear in the page title (see FLG-013).",
       "source": "https://www.amazon.com/dp/B0DZFD6R9Z"
     }
   ],
-  "asin_pages_reached_today": ["B0CDY277D3", "B09B7SB46R", "B08DKYBTPH", "B0DHZTCNR5", "B0DZFD6R9Z"],
+  "asin_pages_reached_today": [
+    "B0CDY277D3",
+    "B09B7SB46R",
+    "B08DKYBTPH",
+    "B0DHZTCNR5",
+    "B0DZFD6R9Z"
+  ],
   "asin_pages_note": "B0DHZTCNR5 was reached directly as a /dp/ page; the short link B0c8moW59 was not (FLG-012).",
-  "new_flags": ["FLG-011", "FLG-012", "FLG-013", "FLG-014", "FLG-015", "FLG-016"],
+  "new_flags": [
+    "FLG-011",
+    "FLG-012",
+    "FLG-013",
+    "FLG-014",
+    "FLG-015",
+    "FLG-016"
+  ],
   "official_sources_rechecked": [
-    {"url": "https://affiliate-program.amazon.com/help/operating/agreement", "checked": "Section 5 identification statement, verbatim", "result": "Matches the statement used on the site"},
-    {"url": "https://affiliate-program.amazon.com/help/operating/policies", "checked": "Commission Income Statement §2(d), §2(e), §2(g)", "result": "Clauses exist as described in FLG-015 and FLG-016. Only the first two chunks of 11 were read."},
-    {"url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links", "checked": "rel=\"sponsored\" for paid links", "result": "Matches"},
-    {"url": "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-B/part-255", "checked": "16 CFR Part 255 table of contents and §255.5 excerpt", "result": "§255.5 requires clear and conspicuous disclosure of material connections; affiliate compensation is named. Full text not read."}
+    {
+      "url": "https://affiliate-program.amazon.com/help/operating/agreement",
+      "checked": "Section 5 identification statement, verbatim",
+      "result": "Matches the statement used on the site"
+    },
+    {
+      "url": "https://affiliate-program.amazon.com/help/operating/policies",
+      "checked": "Commission Income Statement §2(d), §2(e), §2(g)",
+      "result": "Clauses exist as described in FLG-015 and FLG-016. Only the first two chunks of 11 were read."
+    },
+    {
+      "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
+      "checked": "rel=\"sponsored\" for paid links",
+      "result": "Matches"
+    },
+    {
+      "url": "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-B/part-255",
+      "checked": "16 CFR Part 255 table of contents and §255.5 excerpt",
+      "result": "§255.5 requires clear and conspicuous disclosure of material connections; affiliate compensation is named. Full text not read."
+    }
   ],
   "not_rechecked_in_this_pass": [
     "Prices and ratings (FLG-005 stands)",
@@ -88,11 +145,32 @@
     "date": "2026-11-20",
     "scope": "Deep multi-chunk audit of all 5 /dp/ Product information tables (Features & Specs, Measurements, Item details, Warranty & Support), re-test of all 5 link.amazon/* short links, and full read of Operating Agreement §5, Program Policies (chunks 0-9 of 11), Creators API onboarding & PA-API 5 deprecation, FTC Endorsement Guides FAQ, Google outbound-link docs, and USDA FSIS Temperature & Thermometer pages.",
     "short_link_retest": [
-      {"token": "B04G1MEwY", "resolved_to": "https://www.amazon.com/dp/B0CDY277D3", "attempt": 1},
-      {"token": "B02NbDxp3", "resolved_to": "https://www.amazon.com/dp/B09B7SB46R", "attempt": 1},
-      {"token": "B00hJ57DV", "resolved_to": "https://www.amazon.com/dp/B08DKYBTPH", "attempt": 1},
-      {"token": "B0c8moW59", "resolved_to": "https://www.amazon.com/dp/B0DHZTCNR5", "attempt": 1, "note": "Resolved cleanly here while earlier session attempts hit checkpoint/500 (FLG-011, FLG-012)"},
-      {"token": "B0f3GKalj", "resolved_to": "https://www.amazon.com/dp/B0DZFD6R9Z", "attempt": 1}
+      {
+        "token": "B04G1MEwY",
+        "resolved_to": "https://www.amazon.com/dp/B0CDY277D3",
+        "attempt": 1
+      },
+      {
+        "token": "B02NbDxp3",
+        "resolved_to": "https://www.amazon.com/dp/B09B7SB46R",
+        "attempt": 1
+      },
+      {
+        "token": "B00hJ57DV",
+        "resolved_to": "https://www.amazon.com/dp/B08DKYBTPH",
+        "attempt": 1
+      },
+      {
+        "token": "B0c8moW59",
+        "resolved_to": "https://www.amazon.com/dp/B0DHZTCNR5",
+        "attempt": 1,
+        "note": "Resolved cleanly here while earlier session attempts hit checkpoint/500 (FLG-011, FLG-012)"
+      },
+      {
+        "token": "B0f3GKalj",
+        "resolved_to": "https://www.amazon.com/dp/B0DZFD6R9Z",
+        "attempt": 1
+      }
     ],
     "deep_spec_findings": [
       "P-01 B0CDY277D3: verified Item Weight 13.3 pounds (chunk 7); confirmed capacity conflict 6 quarts vs 6 liters (FLG-034).",
@@ -106,6 +184,144 @@
       "Program Policies Commission Income Statement §2(d)/(e)/(g), Participation Requirements §2(a)/(b), §5 (no ML model training without express prior written approval), §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), and §4 Agent Terms (Agent/[name] user-agent string) (S02)",
       "Creators API eligibility & PA-API 5 HTTP 403 deprecation (S20, S21)",
       "USDA FSIS Safe Minimum Internal Temperature Chart & Food Thermometers ice-water 32 °F calibration guidance (S22, S23)"
+    ]
+  },
+  "second_follow_up_2026_11_20": {
+    "session": "arena/195d1d32-affil2",
+    "date": "2026-11-20",
+    "scope": "Third pass: Program Policies read to the end (chunk 10 incl. Appendix + commission-schedule link), re-verification of S03/S04/S20/S21/S22/S23/S24, direct /dp/ re-checks of all five listings, and a third dated re-test of all five link.amazon short links. Prior records above were not modified.",
+    "asin_pages_rechecked": [
+      {
+        "asin": "B0CDY277D3",
+        "result": "live, identity-consistent (P-01 CHEFMAN 6 Qt Dual Basket)"
+      },
+      {
+        "asin": "B09B7SB46R",
+        "result": "live, identity-consistent (P-02 Emeril 26 QT French Door, 24 One-Touch Presets, Six Cooking Accessories in title)"
+      },
+      {
+        "asin": "B08DKYBTPH",
+        "result": "live, identity-consistent (P-03 Chefman TurboFry 4-in-1 with 450°F Hi-Fry in title)"
+      },
+      {
+        "asin": "B0DHZTCNR5",
+        "result": "live, identity-consistent (P-04 ThermoMaven HT07, ±0.5℉, 1 s)"
+      },
+      {
+        "asin": "B0DZFD6R9Z",
+        "result": "live, identity-consistent (P-05 CHEF iQ Sense Gen3, 3 Ultra-Thin Probes, 5 Sensors, 1000°F)"
+      }
+    ],
+    "short_link_retest_third_pass": [
+      {
+        "token": "B04G1MEwY",
+        "record_observed_asin": "B0CDY277D3",
+        "attempts": [
+          {
+            "result": "Amazon homepage (no product)"
+          },
+          {
+            "result": "Amazon homepage (no product)"
+          }
+        ],
+        "reproduced_today": "No (0 of 2 attempts reached /dp/B0CDY277D3; both attempts landed on the amazon.com homepage). Earlier passes recorded 1/1 and 1/1 clean resolutions. Recorded target retained in a separate field; redirect instability remains under FLG-011; no validity claim made (FLG-003)."
+      },
+      {
+        "token": "B02NbDxp3",
+        "record_observed_asin": "B09B7SB46R",
+        "attempts": [
+          {
+            "result": "product page: /dp/B09B7SB46R (Emeril Lagasse 26QT French Door, srctok redirect)"
+          }
+        ],
+        "reproduced_today": "Yes (1 of 1)"
+      },
+      {
+        "token": "B00hJ57DV",
+        "record_observed_asin": "B08DKYBTPH",
+        "attempts": [
+          {
+            "result": "product page: /dp/B08DKYBTPH (Chefman TurboFry 8 Qt, srctok redirect)"
+          }
+        ],
+        "reproduced_today": "Yes (1 of 1)"
+      },
+      {
+        "token": "B0c8moW59",
+        "record_observed_asin": "B0DHZTCNR5",
+        "attempts": [
+          {
+            "result": "Amazon homepage (no product)"
+          },
+          {
+            "result": "Amazon homepage (no product)"
+          }
+        ],
+        "reproduced_today": "No (0 of 2 attempts reached /dp/B0DHZTCNR5). History: checkpoint×3 + HTTP 500 (first pass), clean 1/1 (second pass), homepage ×2 (this pass). Recorded target retained; FLG-012 + FLG-011 cover the history; no validity claim made (FLG-003)."
+      },
+      {
+        "token": "B0f3GKalj",
+        "record_observed_asin": "B0DZFD6R9Z",
+        "attempts": [
+          {
+            "result": "product page: /dp/B0DZFD6R9Z (CHEF iQ Sense Gen3, srctok redirect)"
+          }
+        ],
+        "reproduced_today": "Yes (1 of 1)"
+      }
+    ],
+    "short_link_note": "Across three passes on 2026-11-20 the same token has resolved cleanly, then hit checkpoints/500s, then landed on the homepage — confirming FLG-011 (redirects are not stable across attempts). Three of five tokens re-confirmed their recorded ASINs this pass; the two that did not were directly re-confirmed as live /dp/ pages (B0CDY277D3, B0DHZTCNR5), so the products remain reachable and no recorded fact changes. An in-workflow Associates link test (FLG-004) is still the only valid compliance check.",
+    "official_sources_rechecked": [
+      {
+        "url": "https://affiliate-program.amazon.com/help/operating/policies (chunk 10, Appendix)",
+        "checked": "Appendix contents",
+        "result": "Appendix contains only links: Standard Commission Income and Special Commission Income -> https://affiliate-program.amazon.com/help/operating/schedule"
+      },
+      {
+        "url": "https://affiliate-program.amazon.com/help/operating/schedule",
+        "checked": "Commission-rate schedule",
+        "result": "Login-gated: fetch lands on the Associates sign-in page (ap/signin). Rates cannot be read without the owner account; none are reproduced on this site."
+      },
+      {
+        "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
+        "checked": "S03",
+        "result": "Live; clear-and-conspicuous disclosure of material connections; references 16 CFR Part 255 (2023 revision)"
+      },
+      {
+        "url": "https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers",
+        "checked": "S23",
+        "result": "Live; November 2019; material connection; disclosure hard to miss, simple and clear language"
+      },
+      {
+        "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
+        "checked": "S04",
+        "result": "Live; rel=\"sponsored\" for paid links; multiple rel values allowed; page last updated 2025-12-10"
+      },
+      {
+        "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api",
+        "checked": "S20",
+        "result": "Live; requires final-accepted Associates account; Tools > Creators API > Create Application; max 2 applications/store"
+      },
+      {
+        "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation",
+        "checked": "S21",
+        "result": "Live; PA-API 5 deprecated, replaced by Creators API; legacy calls get HTTP 403 AccessDeniedException"
+      },
+      {
+        "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
+        "checked": "S22",
+        "result": "Live; Last Updated Apr 14, 2025; table matches the USDA rows published on the thermometer product pages (145°F+3min rest, 160°F, 165°F rows)"
+      },
+      {
+        "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/food-thermometers",
+        "checked": "S24",
+        "result": "Live; thermometer-only reliable way; 2–4°F typical accuracy; placement and calibration guidance confirmed"
+      }
+    ],
+    "not_rechecked_in_this_pass": [
+      "eCFR 16 CFR 255 full text (checked in an earlier pass; S03 restates the core duty)",
+      "Associates Special Link test (FLG-004; needs the owner's enrolled account)",
+      "Tracking-ID issuance/activity (FLG-002)"
     ]
   }
 }
