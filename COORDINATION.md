@@ -2202,3 +2202,24 @@ Session totals on main: PRs **#70** (`898652f`), **#73** (`20e4069`), **#74** (`
 (`b2f8ff9`) and this note — each CI-green before merge, each deployed (`status = built`), and the
 final state 43 pages / 5 product records / 67 flags / 22 sources, ALL CHECKS PASS with every rule
 reachable, 22 Python tests OK, JS collector suite PASS.
+
+### Session `arena/19dbf5e2-affil2` — the last audit tell (FLG-068)
+
+Reading the deployed pages rather than the source found one more leak the rules did not cover: the
+register's own keys were visible text on shopper pages — the front-page and shop tables opened with
+`P-01` as a row label, every compare column repeated `P-01 ·` under the brand name, and two product
+pages said *"if you want to leave the room, you want P-05 instead"* and *"if the app or network is a
+problem for you, P-04 is the safer buy"*. The reader-voice rules looked for `FLG-xxx` and crawl
+citations only, so three separate audits had each passed it.
+
+Fixed at the generator: `named()` substitutes each key with the words the listing itself uses (the
+Chefman dual-basket, the Emeril French-door oven, the Chefman 8-quart, the ThermoMaven, the CHEF iQ
+Sense); the overview table's first column is now **Brand**, not **ID**; the compare header lost its
+prefix. No register value, status or date changed, and the audit surfaces keep the keys — on
+`verification.html`, `flagged.html`, `sources.html` and `campaign-ledger.html` they are the point. The
+gate now fails any reader page whose visible text contains a product key, proven by planting
+"Compare P-03 first." on `products/p04` (build rejected it) and removing it (build passes).
+
+Session totals on main: PRs **#70, #73, #74, #75, #76** merged and deployed, plus this pass. Final
+state: 43 pages, 5 product records, 68 flags, 22 sources — **ALL CHECKS PASS** with every rule
+reachable and proven to fire; 22 Python tests OK; JS collector suite PASS; builds byte-identical.

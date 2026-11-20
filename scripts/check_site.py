@@ -769,6 +769,18 @@ for page in READER_PAGES:
     if "Product-intent confirmation record" in txt:
         err(f"{page.relative_to(ROOT)}: internal intent record heading on a reader page")
 
+# The register's own keys (P-01…P-05) are file names, not product names. They used to appear in the
+# middle of shopper sentences — "If you want to leave the room, you want P-05 instead" — the same
+# defect as a bare flag code, which this file only checked for FLG-xxx. Audit surfaces keep the keys.
+PROD_KEY = re.compile(r"\bP-0\d\b")
+for page in READER_PAGES:
+    if not page.exists():
+        continue
+    leaked = sorted(set(PROD_KEY.findall(visible_text(page.read_text(encoding="utf-8")))))
+    if leaked:
+        err(f"{page.relative_to(ROOT)}: internal product key {leaked} visible to readers "
+            "(name the product the way the listing names it)")
+
 # Every product page must still carry the five required provenance facts, in reader language.
 for page in sorted((ROOT / "products").glob("*.html")):
     txt = page.read_text()

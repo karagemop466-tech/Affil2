@@ -154,10 +154,32 @@ def decode_named(t):
     return t
 
 
+# The register's own keys (P-01…P-05) are file names, not product names. They were being printed in
+# the middle of shopper sentences — "If you want to leave the room, you want P-05 instead" — which is
+# the same defect as a bare flag code, and the gate only looked for FLG-xxx. Every word below is taken
+# from the listing title it describes (Dual Basket, French Door, 8 Qt, ThermoMaven, Sense); nothing is
+# invented, and the audit surfaces keep the IDs.
+READER_NAME = {
+    "P-01": "the Chefman dual-basket",
+    "P-02": "the Emeril French-door oven",
+    "P-03": "the Chefman 8-quart",
+    "P-04": "the ThermoMaven",
+    "P-05": "the CHEF iQ Sense",
+}
+PROD_CODE = re.compile(r"\bP-0[1-5]\b")
+
+
+def named(s):
+    """Swap register keys for the words a shopper would use, then tidy the article."""
+    out = PROD_CODE.sub(lambda m: READER_NAME[m.group(0)], str(s))
+    return re.sub(r"\b(the|The) (the) ", r"\1 ", out)
+
+
 def buyer(s):
     """Reader-facing copy: same sentence, no internal ticket number and no raw entity in it."""
     s = FLAG_AS_FLAGGED.sub("is flagged for review", str(s))
     s = FLAG_CODE.sub("", s)
+    s = named(s)
     return re.sub(r"[ \t]+", " ", decode_named(s)).strip()
 
 
@@ -480,7 +502,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
 # --------------------------------------------------------------------------- components
 
 def buybox(p, up, variant="full"):
-    checks = "".join(f"<li>{esc(q)}</li>" for q, _ in p["questions"][:3])
+    checks = "".join(f"<li>{esc(buyer(q))}</li>" for q, _ in p["questions"][:3])
     # Same rule as the cards: a product box shows its own rendering, never a neighbour's.
     photo_key = PHOTO_BY_ID.get(p["id"], "thermo" if p["cat"] == "Meat Thermometers" else "air")
     return f"""<div class="buybox">
@@ -778,7 +800,7 @@ def intent_table(p):
 
 def faq_block(p):
     items = "".join(
-        f"<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q, a in p["faq"]
+        f"<details><summary>{esc(buyer(q))}</summary><p>{esc(buyer(a))}</p></details>" for q, a in p["faq"]
     )
     return f'<h2>Quick answers</h2><div class="faq">{items}</div>'
 
@@ -988,7 +1010,7 @@ def build_home():
 def overview_table():
     rows = ""
     for p in PRODUCTS:
-        rows += (f"<tr><td class=\"nowrap\">{p['id']}</td>"
+        rows += (f"<tr><td class=\"nowrap\">{esc(named(p['brand']))}</td>"
                  f"<td><a href=\"{slug_of(p)}\"><strong>{esc(p['brand'])}</strong> &mdash; "
                  f"{esc(p['headline'])}</a></td>"
                  f"<td>{esc(p['cat'])}</td>"
@@ -998,7 +1020,7 @@ def overview_table():
                  f"data-outbound=\"{p['id']}\" data-event=\"outbound_click\">Amazon (paid link)</a></td></tr>")
     return f"""<table class="overview">
   <caption>Five submitted links, verified {TODAY}. Ranking is by category, not by preference.</caption>
-  <thead><tr><th scope="col">ID</th><th scope="col">Product</th><th scope="col">Category</th>
+  <thead><tr><th scope="col">Brand</th><th scope="col">Product</th><th scope="col">Category</th>
     <th scope="col">Best for</th><th scope="col">The catch</th><th scope="col">Listing</th></tr></thead>
   <tbody>{rows}</tbody>
 </table>"""
@@ -1095,7 +1117,7 @@ def build_product(p):
 
 <h2>Is this the right one for you?</h2>
 <div class="qa">
-{"".join(f'<div class="qa-row"><p class="qa-q">{esc(q)}</p><p class="qa-a">{esc(a)}</p></div>' for q, a in p["questions"])}
+{"".join(f'<div class="qa-row"><p class="qa-q">{esc(buyer(q))}</p><p class="qa-a">{esc(buyer(a))}</p></div>' for q, a in p["questions"])}
 </div>
 
 <h2>The specs that decide it</h2>
@@ -1230,7 +1252,7 @@ def build_compare():
         return f'<tr><th scope="row">{label}</th>{cells}</tr>'
 
     head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
-                   f'<br><span class="th-sub">{p["id"]} · {esc(p["headline"])}</span></th>' for p in cols)
+                   f'<br><span class="th-sub">{esc(p["headline"])}</span></th>' for p in cols)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Compare", None)])}
 <h1>Compare &mdash; without crowning a winner</h1>
