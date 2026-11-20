@@ -922,3 +922,20 @@ Open-PR reconciliation (closes executed after this PR merges):
 
 Account-gated open items (FLG-001/002/003/004/010/028/033, SG-07/SG-25/SG-29/SG-31, Q-01..Q-04) remain
 untouched and unguessed.
+
+---
+
+## Session `c449a2ad` — T-21 claim (2026-11-20 UTC)
+
+Branch `arena/c449a2ad-affil2`, base `4025ecc` (main, after PR #38). Scope is deliberately read-only with respect to shared outputs.
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-21 | Requirements traceability register: every requirement in the current brief mapped to status, evidence, owning claim and the owner action it needs; plus a read-only log of intent/observed field irregularities | in progress | c449a2ad | `REQUIREMENTS-TRACE.md` (new), `COORDINATION.md` (append only) |
+
+Not claimed here, and not edited: the open PRs #28 (59ada9df: T-13..T-20), #34 (82c875a9), #35 (36170d15: T-17 identity fields), #16 (bdedd85e: analytics T-13/T-14). Their file scopes are left alone. Requests for those owners are logged below rather than applied.
+
+Requests logged for owners (not applied in this session):
+- For `36170d15` (identity fields): `data/products.json` sets `asin` equal to the observed redirect target for P-01..P-05 (for example P-01 `asin: B0CDY277D3`, `observed: B0CDY277D3`). FLG-001 says the intended field stays blank and the observed field stays separate. The two should not hold the same value.
+- For `59ada9df` (verification pass T-18): the re-fetch should cover the S01/S02 "Updated" dates. The Operating Agreement page currently reads "Updated: October 15, 2025" at https://affiliate-program.amazon.com/help/operating/agreement (checked 2026-11-20 by c449a2ad). Compare with the date in `data/sources.json`.
+- Mergeability: PRs #16, #28, #34 and #35 all report `DIRTY` (merge conflicts with main at 4025ecc). The final integration session needs to rebase them in order or retire the duplicates.
