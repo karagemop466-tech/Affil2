@@ -1,99 +1,56 @@
-# Affil2 — ShopNow Kitchen
+# ShopNow Kitchen — Amazon affiliate publication
 
-A static, publication-style Amazon affiliate site covering five submitted products: three air
-fryers and two meat thermometers. Specifications are read from the official Amazon listings (including
-deep `Product information` tables), dated and linked. Contradictions between listing fields are
-printed rather than smoothed over. Prices, star ratings and review counts are deliberately excluded
-(Program Policies §2(b), §6(t)).
+A static, publication-style shopping site for five submitted products: three air fryers and two meat thermometers. It is built around buyer questions, official listing facts, readable comparisons, and plain-language caveats—not invented testing, prices, ratings, trends, or performance claims.
 
-Live: https://karagemop466-tech.github.io/Affil2/
+**Live site:** https://karagemop466-tech.github.io/Affil2/
 
-## Start here
+## Reader routes
 
-| If you want | Read |
+| Start here | Purpose |
 |---|---|
-| The short version | `EXECUTIVE-SUMMARY.md` |
-| What to decide next | `suggestions.html` — Decision Center, 32 proposals, rankable |
-| The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
-| What is still unanswered | `questions.html` — Open Questions, 20 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 40 flags, every one sourced |
-| Where every fact came from | `sources.html` — Source Register, 19 official sources + dated changelog |
-| AI platform blueprint & gates | `platform.html` — 7-module architecture & Creators API / ML policy limits (SG-31) |
-| Telemetry & collector guide | `measurement.html` — 5-event privacy schema & Search Console checklist (SG-25) |
-| How the site is built | `scripts/build_site.py` |
+| `index.html` | Publication front page, categories, selected products, and latest guides |
+| `shop.html` | All five products, organized for browsing |
+| `air-fryers.html` / `meat-thermometers.html` | Category shelves |
+| `compare.html` | Side-by-side fields and a three-question shortlist |
+| `guides.html` | Question-shaped buying guides, including seasonal and evergreen topics |
+| `suggestions.html` | Decision center: proposals to review before implementation |
+| `questions.html` | Known, missing, and unverified questions with next steps |
+| `flagged.html` | Flagged for Review, with each open irregularity and its source links |
+| `executive-summary.html` | Reader-facing summary |
 
-## Rebuild and check
+Disclosure appears directly below the masthead and again in the footer on every page. Product links are marked `rel="sponsored nofollow"`. The tracking ID `shopnow047c-20` is present in links, but its issuance/activity is not confirmed (FLG-002). Intended ASINs remain distinct from observed redirect targets; supplied short-link compliance is unresolved, not declared invalid (FLG-001, FLG-003, FLG-004).
 
-    python3 scripts/build_site.py                          # writes 33 pages, sitemap.xml, feed.xml, robots.txt
-    python3 scripts/check_site.py                          # compliance and integrity gate; exits 1 on any problem
-    python3 -m unittest discover -s tests -p "test_*.py" -v
-    node tests/test_collector.js                           # collector server, Cloudflare function & client DOM tests
+## Evidence and limits
 
-Every HTML page is generated. Do not hand-edit a page: change `data/*.json` or the copy in
-`scripts/build_site.py`, rebuild, and commit both. CI fails if the committed pages drift from the
-generator output, if the gate fails, or if the unit/collector tests fail.
+The product register and source register are in `data/products.json` and `data/sources.json`; `data/flags.json` publishes unresolved items. Only claims that can be tied to a source are populated. Unconfirmed values stay blank. No price, rating, review count, sales rank, commission estimate, conversion score, or revenue forecast is published. The campaign ledger is intentionally empty pending authorized first-party reporting. See `sources.html`, `verification.html`, and `campaign-ledger.html` for detail.
 
-## Layout
+Official policy and guidance links for manual review:
 
-| Path | Holds |
-|---|---|
-| `data/products.json` | the shared product register: titles, field values, provenance, status |
-| `data/editorial.json` | this site's voice: headlines, best-for, trade-offs, FAQ |
-| `data/sources.json` | 19 official sources (`S01`–`S04`, `S10`–`S24`) with what each supports and date checked |
-| `data/flags.json` | 40 flags (`FLG-001`–`FLG-040`): severity, detail, owner status, source links |
-| `data/events.json` | canonical 5-event privacy-preserving measurement schema and forbidden fields |
-| `data/reverification-2026-11-20.json` | attempt-by-attempt record of the short-link and deep-table tests |
-| `assets/style.css` | storefront stylesheet, including photo-card and diagram styles |
-| `assets/photos/` | generated illustrative storefront scenes, captioned on every page that uses them (FLG-036) |
-| `assets/illustrations/` | 3 original editorial SVG schematics (`air-fryer.svg`, `air-fryer-oven.svg`, `thermometer.svg`) |
-| `assets/app.js` | five measured events, client search (`search.html`), pair compare (`compare.html`), mobile nav toggle, ranking, CSV export, gated `send()` |
-| `analytics/server.js` | zero-dependency Node.js self-hosted collector (`GET`/`POST /api/collect`) |
-| `functions/api/collect.js` | drop-in Cloudflare Pages Function collector matching `data/events.json` |
-| `scripts/` | single-source generator (`build_site.py`) and compliance gate (`check_site.py`) |
-| `tests/` | Python integration tests (`test_site.py`) and Node.js collector/client tests (`test_collector.js`) |
+- Amazon Associates Operating Agreement: https://affiliate-program.amazon.com/help/operating/agreement
+- Amazon Associates Program Policies: https://affiliate-program.amazon.com/help/operating/policies
+- FTC Endorsement Guides FAQ: https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking
+- Google Search Central, qualify outbound links: https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links
+- USDA FSIS safe minimum internal temperature chart: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart
 
-Cross-session rule: `data/products.json`, `data/sources.json` and `data/flags.json` are shared
-records. Annotations are added to `data/editorial.json`; shared records are only edited when live
-verification shows an inaccuracy or newly confirmed value.
+## Build and quality gates
 
-## Rules the gate enforces
+```sh
+python3 scripts/build_site.py
+python3 scripts/check_site.py
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+node tests/test_collector.js
+```
 
-- The Amazon Associates statement appears twice on every page, the first time above `<main>`.
-- Every `amazon.com` link carries `rel="sponsored nofollow"`; every `amazon.com` anchor carries the
-  tracking ID (`shopnow047c-20`) so every clickable Amazon link is a Special Link (plain official
-  URLs stay unmodified as visible citation text; `link.amazon` evidence links are exempt, FLG-003).
-- Every `<tbody>` claim row cites a source link or carries an explicit `unverified` marker — no
-  anonymous rows.
-- No `$` amount, star rating, review count, cross-row placeholder, or unverified `26.5 lb` claim anywhere.
-- No broken internal links, no missing assets, no orphaned SVG illustrations, no root-relative links.
-- Every generated photo (`assets/photos/`) has an explicit editorial illustration caption, alt text, and intrinsic dimensions.
-- Every `<table>` with `<thead>` matches column counts across all `<tbody>` rows.
-- Every page has one `<h1>`, canonical & `og:url` matching its path, valid JSON-LD, and an entry in
-  `sitemap.xml`; `feed.xml` parses and its items exist.
-- A blank field must be marked `unverified`; a value must name where it was stated.
-- Every flag referenced in HTML or `editorial.json` is defined, and every defined flag is published.
+HTML pages, sitemap, RSS feed, robots file, and findability profile are generated by `scripts/build_site.py`. Make content changes in data or generator inputs, then rebuild; do not hand-edit generated pages. The checker enforces disclosure placement, sponsored affiliate links, sourced records, published flags, metadata, internal-link integrity, and output consistency. CI runs the generator-drift check and tests.
 
-## Measurement & Collector
+## Repository map
 
-Five events — `page_view`, `outbound_click`, `guide_read`, `search`, `suggestion_rank` — are defined
-in `data/events.json` and logged in `localStorage` by default. No cookies, no third-party requests,
-no fingerprinting, and no raw search text logged (`search` logs query length and hit count only).
-Readers can export both click counts and their full event log as CSV on `disclosure.html`.
+- `data/` — product, source, editorial, event, flag, and dated verification records.
+- `scripts/build_site.py` — static-site generator.
+- `scripts/check_site.py` — publication/compliance gate.
+- `products/`, `guides/`, `assets/` — generated product and guide pages, styling, illustrations.
+- `analytics/server.js`, `functions/api/collect.js` — optional self-hosted/Cloudflare event collectors; deployment is not active on GitHub Pages.
+- `tests/` — Python site checks and Node collector/client tests.
+- `COORDINATION.md` — task ownership, verification trail, PR and deployment record.
 
-When deployed outside static GitHub Pages (or configured via `<meta name="sn-collect-endpoint">` or
-`localStorage.sn_collect_url`), `send()` in `assets/app.js` transmits schema-validated cookieless
-events to either:
-
-    HOST=0.0.0.0 PORT=8787 node analytics/server.js
-
-or `functions/api/collect.js` on Cloudflare Pages (`measurement.html`, `FLG-010`, `Q-08`).
-
-## CI
-
-GitHub Pages publishes this repository with its own branch builder (`main`, `/`). It does not need a
-deploy workflow, and `.github/workflows/pages.yml` deliberately does not try to run one; a second
-deployer fighting the branch builder is how you get a half-published site.
-
-The workflow is a gate, not a deployer. It regenerates every page and fails if the committed files
-differ from the generator, runs `scripts/check_site.py`, and executes both the Python and Node.js
-test suites on every push to `main` and every pull request.
+Analytics is privacy-preserving by design. Events can be recorded locally; cross-visitor collection requires separately configured hosting. Search Console verification and Associates account/report access require owner credentials and are explicitly not claimed as completed.

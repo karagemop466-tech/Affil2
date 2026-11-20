@@ -25,7 +25,7 @@
   <div class="wrap mast">
     <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
     <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a></div></details></nav>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html" aria-current="page">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="verification.html">Verification Log</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a></div></details></nav>
     <form class="search" action="search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
       <input id="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
@@ -62,53 +62,33 @@ Amazon affiliate website covering five specific products: three air fryers (Chef
 Basket, Chefman TurboFry 8 Qt, Emeril Lagasse 26QT French Door) and two meat thermometers
 (ThermoMaven 1 Sec instant-read, CHEF iQ Sense Gen3 wireless). Audience: US home cooks who want a
 confident answer to one question, not a catalog. Business goal: earn qualified clicks to Amazon
-through trust, never through pressure.
-
-Design like a small-batch food magazine that happens to sell via affiliate links, not like a
-generated content farm. Requirements:
-
-BRAND. Keep the name ShopNow Kitchen. Masthead with wordmark in a warm serif display face
+through trust, never through pressure. Design like a small-batch food magazine that happens to sell via affiliate links, not like a
+generated content farm. Requirements: BRAND. Keep the name ShopNow Kitchen. Masthead with wordmark in a warm serif display face
 (Georgia, Iowan Old Style or similar) and body copy in a neutral humanist sans. Palette: charcoal
 ink, warm cream paper, one accent of paprika red, used only for links, price-adjacent details and
 the single primary call to action per view. Generous margins, a real baseline grid, 65 to 75
-characters per measure. No gradients, no glassmorphism, no stock-photo-style hero imagery.
-
-FRONT PAGE. In order: dated publication line and Associates disclosure strip; masthead; one-line
+characters per measure. No gradients, no glassmorphism, no stock-photo-style hero imagery. FRONT PAGE. In order: dated publication line and Associates disclosure strip; masthead; one-line
 editorial promise; hero with the single most useful question right now (for example, which air
 fryer fits a family of four); a seasonal spotlight module (Thanksgiving and holiday cooking in
 November and December); category rails for Air Fryers and Meat Thermometers as cards with original
 illustration; a latest-guides rail; a short list of what we will not print; footer with the full
-dashboard group.
-
-COMPONENTS. Product card: original illustration, listing-derived capacity or key stat, one
+dashboard group. COMPONENTS. Product card: original illustration, listing-derived capacity or key stat, one
 trade-off sentence, a question it answers, and a tagged Special Link button labelled as a paid
 link. Comparison module: aligned rows, no star scores. Buy box: explicit question checklist the
 reader answers before clicking out. Disclosure label adjacent to every outbound button, never in a
-tooltip.
-
-TYPE AND TONE. Short declarative headlines. Second person. Sentences a person would say out loud.
+tooltip. TYPE AND TONE. Short declarative headlines. Second person. Sentences a person would say out loud.
 No exclamation marks, no superlatives without evidence, no fake urgency, no countdown timers.
 Never print prices, star ratings or review counts; those come only from Amazon-served links or the
-Creators API.
-
-ILLUSTRATION. Original SVG line-and-wash illustrations in a consistent style: air fryer, thermometer,
+Creators API. ILLUSTRATION. Original SVG line-and-wash illustrations in a consistent style: air fryer, thermometer,
 basket, French doors, oven interior. Never product photos scraped from a listing, never Amazon
-imagery without the licence that comes with the Creators API.
-
-ACCESSIBILITY AND PERFORMANCE. WCAG AA contrast, visible focus states, semantic headings in order,
+imagery without the licence that comes with the Creators API. ACCESSIBILITY AND PERFORMANCE. WCAG AA contrast, visible focus states, semantic headings in order,
 alt text that describes the illustration, no layout shift, total page weight under one megabyte,
-no third-party fonts or trackers. Disclosure readable at 200 percent zoom.
-
-SEO AND STRUCTURED DATA. One canonical host, one h1 per page, JSON-LD (WebPage, Article on guides,
+no third-party fonts or trackers. Disclosure readable at 200 percent zoom. SEO AND STRUCTURED DATA. One canonical host, one h1 per page, JSON-LD (WebPage, Article on guides,
 FAQPage where the FAQ exists), sitemap and RSS regenerated on every build, Search Console-ready
-meta. Internal links favour depth: every guide links to two related guides and one category page.
-
-COMPLIANCE. Amazon Associates statement above the fold on every page; every outbound Amazon link
+meta. Internal links favour depth: every guide links to two related guides and one category page. COMPLIANCE. Amazon Associates statement above the fold on every page; every outbound Amazon link
 rel=sponsored and nofollow and carrying the tag; FTC-clear disclosure next to each call to action;
 intended and observed ASIN fields kept separate; contradictions on a listing are printed, not
-smoothed over.
-
-FORBIDDEN. Fake countdowns, invented scarcity, fabricated expert quotes, fabricated hands-on
+smoothed over. FORBIDDEN. Fake countdowns, invented scarcity, fabricated expert quotes, fabricated hands-on
 testing claims, fabricated search-volume numbers, placeholder filler text, emoji bullets, and any
 phrase that reads like it was produced by filling in a template.</pre>
 
@@ -141,7 +121,7 @@ phrase that reads like it was produced by filling in a template.</pre>
   <caption>Topic clusters. "Live" means the guide exists today; "Proposed" means it is a candidate only.</caption>
   <thead><tr><th scope="col">Cluster</th><th scope="col">Title (working)</th>
     <th scope="col">Target</th><th scope="col">Status</th><th scope="col">Why it is here</th></tr></thead>
-  <tbody><tr><td>A · Air fryer buying</td><td>Basket or oven-style: what to compare first</td><td><a href="guides/basket-vs-oven.html">guides/basket-vs-oven.html</a></td><td>Live</td><td>Anchor guide, links to all three air fryer pages<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>A · Air fryer buying</td><td>A no-hype checklist for comparing air fryer capacity</td><td><a href="guides/capacity-checklist.html">guides/capacity-checklist.html</a></td><td>Live</td><td>Feeds compare.html<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>A · Air fryer buying</td><td>How to assess cleanup and counter-space trade-offs</td><td><a href="guides/cleanup-counter-space.html">guides/cleanup-counter-space.html</a></td><td>Live</td><td>Cross-links air fryer pages<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>A · Air fryer buying</td><td>Air fryer for a small kitchen: three measurements</td><td><a href="guides/small-kitchen-air-fryer.html">guides/small-kitchen-air-fryer.html</a></td><td>Live</td><td>Captures apartment queries<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>A · Air fryer buying</td><td>Basket or oven-style: which fits a family of four</td><td>Not written</td><td>Proposed</td><td>Search Console may confirm or kill this title<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>B · Holiday and seasonal</td><td>Air fryer at Thanksgiving: what actually fits</td><td><a href="guides/air-fryer-thanksgiving.html">guides/air-fryer-thanksgiving.html</a></td><td>Live</td><td>Seasonal spike, Nov 2026<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>B · Holiday and seasonal</td><td>Turkey thermometer maths: the USDA minimums</td><td>Not written</td><td>Proposed</td><td>USDA chart is already the source of record (S22)<br><a href="sources.html#S22">S22</a></td></tr><tr><td>B · Holiday and seasonal</td><td>Black Friday air fryer shortlist for gifting</td><td>Not written</td><td>Proposed, no prices</td><td>Black Friday is 2026-11-27; must not print prices (SG-13)<br><a href="suggestions.html#SG-13">SG-13</a></td></tr><tr><td>B · Holiday and seasonal</td><td>Wireless or instant-read for a long smoker cook</td><td><a href="guides/instant-vs-wireless.html">guides/instant-vs-wireless.html</a></td><td>Live</td><td>Holiday brisket and turkey season<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>C · Thermometer education</td><td>How to read accuracy claims: plus-or-minus 0.5 and NIST</td><td><a href="guides/thermometer-accuracy.html">guides/thermometer-accuracy.html</a></td><td>Live</td><td>Trust content, supports both thermometer pages<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>C · Thermometer education</td><td>Is NIST certification on a listing a guarantee</td><td>Not written</td><td>Proposed</td><td>Honest answer: it is a seller statement (FLG-035)<br><a href="flagged.html#FLG-035">FLG-035</a></td></tr><tr><td>C · Thermometer education</td><td>USDA doneness temperatures for the holiday bird</td><td>Not written</td><td>Proposed</td><td>Reuses S22; strong internal-link target<br><a href="sources.html#S22">S22</a></td></tr><tr><td>D · Multi-function appliances</td><td>Questions to ask before buying a multi-function appliance</td><td><a href="guides/multi-function-questions.html">guides/multi-function-questions.html</a></td><td>Live</td><td>Umbrella guide for the oven category<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>D · Multi-function appliances</td><td>Emeril 26QT: 24 or 25 presets, and why it matters less than fit</td><td>Not written</td><td>Proposed</td><td>Turns FLG-021 into the article<br><a href="flagged.html#FLG-021">FLG-021</a></td></tr><tr><td>D · Multi-function appliances</td><td>Chefman dual basket versus the 8-quart: the counter-space decision</td><td>Not written</td><td>Proposed</td><td>Compares P-01 and P-03 without crowning a winner<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr></tbody>
+  <tbody><tr><td>A · Air fryer buying</td><td>Basket or oven-style: what to compare first</td><td><a href="guides/basket-vs-oven.html">guides/basket-vs-oven.html</a></td><td>Live</td><td>Anchor guide, links to all three air fryer pages<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>A · Air fryer buying</td><td>A no-hype checklist for comparing air fryer capacity</td><td><a href="guides/capacity-checklist.html">guides/capacity-checklist.html</a></td><td>Live</td><td>Feeds compare.html<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>A · Air fryer buying</td><td>How to assess cleanup and counter-space trade-offs</td><td><a href="guides/cleanup-counter-space.html">guides/cleanup-counter-space.html</a></td><td>Live</td><td>Cross-links air fryer pages<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>A · Air fryer buying</td><td>Air fryer for a small kitchen: three measurements</td><td><a href="guides/small-kitchen-air-fryer.html">guides/small-kitchen-air-fryer.html</a></td><td>Live</td><td>Captures apartment queries<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>A · Air fryer buying</td><td>Basket or oven-style: which fits a family of four</td><td>Not written</td><td>Proposed</td><td>Search Console may confirm or kill this title<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>B · Holiday and seasonal</td><td>Air fryer at Thanksgiving: what actually fits</td><td><a href="guides/air-fryer-thanksgiving.html">guides/air-fryer-thanksgiving.html</a></td><td>Live</td><td>Seasonal spike, Nov 2026<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>B · Holiday and seasonal</td><td>Turkey thermometer maths: the USDA minimums</td><td>Not written</td><td>Proposed</td><td>USDA chart is already the source of record (S22)<br><a href="sources.html#S22">S22</a></td></tr><tr><td>B · Holiday and seasonal</td><td>Black Friday air fryer shortlist for gifting</td><td>Not written</td><td>Proposed, no prices</td><td>Black Friday is 2026-11-27; must not print prices (SG-13)<br><a href="suggestions.html#SG-13">SG-13</a></td></tr><tr><td>B · Holiday and seasonal</td><td>Wireless or instant-read for a long smoker cook</td><td><a href="guides/instant-vs-wireless.html">guides/instant-vs-wireless.html</a></td><td>Live</td><td>Holiday brisket and turkey season<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>C · Thermometer education</td><td>How to read accuracy claims: plus-or-minus 0.5 and NIST</td><td><a href="guides/thermometer-accuracy.html">guides/thermometer-accuracy.html</a></td><td>Live</td><td>Trust content, supports both thermometer pages<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>C · Thermometer education</td><td>Is NIST certification on a listing a guarantee</td><td>Not written</td><td>Proposed</td><td>Honest answer: it is a seller statement<br><a href="flagged.html#FLG-035">FLG-035</a></td></tr><tr><td>C · Thermometer education</td><td>USDA doneness temperatures for the holiday bird</td><td>Not written</td><td>Proposed</td><td>Reuses S22; strong internal-link target<br><a href="sources.html#S22">S22</a></td></tr><tr><td>D · Multi-function appliances</td><td>Questions to ask before buying a multi-function appliance</td><td><a href="guides/multi-function-questions.html">guides/multi-function-questions.html</a></td><td>Live</td><td>Umbrella guide for the oven category<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr><tr><td>D · Multi-function appliances</td><td>Emeril 26QT: 24 or 25 presets, and why it matters less than fit</td><td>Not written</td><td>Proposed</td><td>Turns into the article<br><a href="flagged.html#FLG-021">FLG-021</a></td></tr><tr><td>D · Multi-function appliances</td><td>Chefman dual basket versus the 8-quart: the counter-space decision</td><td>Not written</td><td>Proposed</td><td>Compares P-01 and P-03 without crowning a winner<br><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td></tr></tbody>
 </table>
 
 <h3>Internal linking rules</h3>
@@ -203,19 +183,19 @@ phrase that reads like it was produced by filling in a template.</pre>
 </table>
 
 <p class="cta"><a class="btn" href="suggestions.html">Rank SG-17 in the Decision Center</a>
-  <a class="btn ghost" href="guides.html">Read the eight live guides</a></p>
+  <a class="btn ghost" href="guides.html">Read the live guides</a></p>
 
 </main>
 <footer>
   <div class="wrap">
     <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
-    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html" aria-current="page">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="verification.html">Verification Log</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
       Inc. or its affiliates. This site is not endorsed by Amazon. Scenes and diagrams are illustrations,
-      not product photography, and not a picture of the item reviewed (FLG-036). Nothing here is a
+      not product photography, and not a picture of the item reviewed. Nothing here is a
       hands-on product test — every specification is read from the official listing and dated.
       Last verified 2026-11-20.</p>
     <p class="small">© 2026 ShopNow Kitchen. <a href="flagged.html">Flagged for Review</a> lists everything

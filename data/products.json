@@ -22,7 +22,7 @@
         "v": "6 quarts combined — 2 independent 3-quart baskets (Measurements table prints 6 liters)",
         "src": "Page title & About this item (6 quarts / two 3Qt baskets) vs Measurements table (6 liters, chunk 7)",
         "st": "conflict",
-        "note": "Both expressions appear on the listing (FLG-034); 6 liters is ~6.34 US quarts."
+        "note": "Both expressions appear on the listing; 6 liters is ~6.34 US quarts."
       },
       "temperature": {
         "v": "200–450 °F (Features & Specs prints Min 93 °C / Max 450 °F)",
@@ -99,7 +99,7 @@
         "v": "4-00675-02X-VN (prior listing capture noted 4-00675-02, absent from live page)",
         "src": "Product information — Item details table (Model Number & Part Number, chunk 10)",
         "st": "conflict",
-        "note": "Live Item details table lists 4-00675-02X-VN; earlier records cited 4-00675-02 (FLG-009)."
+        "note": "Live Item details table lists 4-00675-02X-VN; earlier records cited 4-00675-02."
       },
       "capacity": {
         "v": "26 quarts (Measurements table: 24.6 liters)",
@@ -129,25 +129,25 @@
         "v": null,
         "src": "Product information — Measurements table (no item weight stated on listing, chunk 10)",
         "st": "unverified",
-        "note": "No item weight is printed on amazon.com/dp/B09B7SB46R — left blank (FLG-022)."
+        "note": "No item weight is printed on amazon.com/dp/B09B7SB46R — left blank."
       },
       "presets": {
         "v": "24 (page title, Product Description & Configuration) vs 25 (About this item)",
         "src": "Page title & Product Description vs About this item (chunks 0, 4, 8, 12)",
         "st": "conflict",
-        "note": "Listing states both 24 One-Touch Preset Options and 25 cooking pre-sets (FLG-021)."
+        "note": "Listing states both 24 One-Touch Preset Options and 25 cooking pre-sets."
       },
       "accessories": {
         "v": "6 accessories (Title & Included Components: Rack, Bake Pan, Drip Tray, Crisper Basket, Rotisserie Spit, Fetch Tool) vs 7 accessories (Configuration & Product Description)",
-        "src": "Page title & Included Components vs Configuration & Product Description (FLG-031)",
+        "src": "Page title & Included Components vs Configuration & Product Description",
         "st": "conflict",
-        "note": "Title and Included Components list 6 accessories while Configuration and Product Description say 7 (FLG-031)."
+        "note": "Title and Included Components list 6 accessories while Configuration and Product Description say 7."
       },
       "warranty": {
         "v": null,
         "src": "Warranty & Support links a PDF file only; duration and terms are not in the HTML listing text",
         "st": "unverified",
-        "note": "Warranty duration not printed in HTML listing text — left blank (FLG-022)."
+        "note": "Warranty duration not printed in HTML listing text — left blank."
       },
       "features": {
         "v": "French doors open with a single pull; 360° superheated air circulation (Air Frying Technology: True); rotisserie a 6-lb chicken; bake a 12-inch pizza; stainless steel interior & exterior",
@@ -206,13 +206,13 @@
         "v": "200–400 °F (About this item & Features & Specs Max 400 °F) vs 450 °F Hi-Fry option (page title)",
         "src": "About this item & Features & Specs (chunks 4 & 7) vs page title (chunk 0)",
         "st": "conflict",
-        "note": "Both figures appear on the listing (FLG-018). Both published."
+        "note": "Both figures appear on the listing. Both published."
       },
       "power": {
         "v": "120 volts / 1700 watts (Features & Specs: Output Wattage & Wattage) vs 1000 watts (About this item)",
         "src": "Product information — Features & Specs (chunk 7) vs About this item (chunk 4)",
         "st": "conflict",
-        "note": "Same listing prints both 1700 watts (Features & Specs) and 1000 watts (About this item) (FLG-017). Both shown."
+        "note": "Same listing prints both 1700 watts (Features & Specs) and 1000 watts (About this item). Both shown."
       },
       "dimensions": {
         "v": "12.75 in D × 13.5 in W × 10 in H",
@@ -248,7 +248,7 @@
     "card": [
       [
         "Capacity",
-        "8 quarts (12.8 lb)"
+        "8 quarts (single basket)"
       ],
       [
         "Temperature",
@@ -274,7 +274,7 @@
     "submitted": "https://link.amazon/B0c8moW59",
     "token": "B0c8moW59",
     "observed": "B0DHZTCNR5",
-    "observed_status": "Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages (FLG-012); fresh fetch in follow-up verification resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent redirect instability remains under FLG-011; intended ASIN remains blank under FLG-001)",
+    "observed_status": "Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages; fresh fetch in follow-up verification resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent redirect instability remains under; intended ASIN remains blank under)",
     "asin": "B0DHZTCNR5",
     "listing": "https://www.amazon.com/dp/B0DHZTCNR5",
     "title": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black",
@@ -310,7 +310,7 @@
         "note": ""
       },
       "certification": {
-        "v": "NIST and NSF (seller statement in Specification Met; certificates not independently inspected — FLG-035)",
+        "v": "NIST and NSF (seller statement in Specification Met; certificates not independently inspected —)",
         "src": "About this item & Product information — Features & Specs (chunks 3 & 11)",
         "st": "verified",
         "note": ""
@@ -405,10 +405,10 @@
         "note": ""
       },
       "battery": {
-        "v": "Up to 50 hours on a full charge (About this item); 70 hours reported on an earlier capture of Product Description (FLG-008)",
-        "src": "About this item (chunk 4) vs earlier capture of Product Description (FLG-008)",
+        "v": "Up to 50 hours on a full charge (About this item); 70 hours reported on an earlier capture of Product Description",
+        "src": "About this item (chunk 4) vs earlier capture of Product Description",
         "st": "conflict",
-        "note": "Both figures are published as reported; neither is chosen. The 70-hour text was reported by an earlier verification (FLG-008) and is not in the fetched HTML."
+        "note": "Both figures are published as reported; neither is chosen. The 70-hour text was reported by an earlier verification and is not in the fetched HTML."
       },
       "probe_length": {
         "v": "4.75 inches (Immersion Depth & Item Length)",
@@ -420,7 +420,7 @@
         "v": "Two-year assurance provided by CHEF iQ (About this item) vs 3 Year (Item details Warranty Description)",
         "src": "About this item (chunk 4) vs Product information — Item details Warranty Description (chunk 8)",
         "st": "conflict",
-        "note": "Same listing states two-year assurance in About this item and 3 Year in Item details (prior register said 1-year) (FLG-038, FLG-019)."
+        "note": "Same listing states two-year assurance in About this item and 3 Year in Item details (prior register said 1-year) (,)."
       },
       "care": {
         "v": "Waterproof, dishwasher-safe probes",

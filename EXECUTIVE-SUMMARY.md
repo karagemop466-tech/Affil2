@@ -1,113 +1,52 @@
-# Executive Summary — ShopNow Kitchen (Verified Update — Session arena/9f19fe6b-affil2)
+# Executive Summary — ShopNow Kitchen
 
-Date 2026-11-20 · Tracking ID in use `shopnow047c-20` (issuance unverified, FLG-002)
-Live site https://karagemop466-tech.github.io/Affil2/ · Full version with source links: `executive-summary.html`
+**Updated:** 2026-11-20
+**Live:** https://karagemop466-tech.github.io/Affil2/
+**Selected tracking ID:** `shopnow047c-20` (issuance/activity unconfirmed; see FLG-002)
 
-## What this is
-A static publication-style Amazon affiliate site covering five submitted products in two categories:
-three air fryers and two meat thermometers across 33 generated HTML pages (including 9 buying guides). Every specification is read
-from the official Amazon listing (including deep `Product information` tables), dated and linked.
-Where two parts of one listing disagree, both figures are printed and the disagreement is flagged.
-No price, star rating, review count or best-seller rank is reproduced, because Amazon's Program
-Policies Participation Requirements §2(b) and §6(t) only permit that when Amazon serves the link or
-the data comes through the Product Advertising / Creators API.
+## What is published
 
-## The five products, as observed on 2026-11-20
-| ID | Submitted link | Observed ASIN | Official listing |
-|----|----------------|---------------|------------------|
-| P-01 | link.amazon/B04G1MEwY | B0CDY277D3 | https://www.amazon.com/dp/B0CDY277D3 |
-| P-02 | link.amazon/B02NbDxp3 | B09B7SB46R | https://www.amazon.com/dp/B09B7SB46R |
-| P-03 | link.amazon/B00hJ57DV | B08DKYBTPH | https://www.amazon.com/dp/B08DKYBTPH |
-| P-04 | link.amazon/B0c8moW59 | B0DHZTCNR5 | https://www.amazon.com/dp/B0DHZTCNR5 |
-| P-05 | link.amazon/B0f3GKalj | B0DZFD6R9Z | https://www.amazon.com/dp/B0DZFD6R9Z |
+ShopNow Kitchen is a static Amazon affiliate publication for five submitted product links: three air fryers and two meat thermometers. The publication includes category shelves, product pages, comparison and shortlist tools, question-shaped buying guides, a suggestions/decision center, an open-questions register, an empty campaign ledger, and a clearly labeled Flagged for Review page.
 
-Earlier attempts on 2026-11-20 resolved four short links while `link.amazon/B0c8moW59` hit
-Amazon checkpoint/HTTP 500 pages four times (FLG-012). On follow-up re-test (`arena/9f19fe6b-affil2`,
-2026-11-20), all five short links resolved cleanly to their respective `/dp/<ASIN>` pages, including
-`B0c8moW59 -> B0DHZTCNR5`. Redirects can still behave inconsistently between visits (FLG-011), so each
-observed ASIN remains a dated snapshot rather than owner-confirmed intent (FLG-001).
+The site prioritizes useful purchase questions and official-listing facts. No hands-on testing is represented. Prices, ratings, review counts, sales ranks, commission estimates, forecasts, and conversion scores are omitted. Unconfirmed fields remain blank and are identified as unverified. Product links carry `rel="sponsored nofollow"`; the disclosure sits below the masthead and repeats in every footer.
 
-## Sources (19 official sources in `data/sources.json`)
-- S01 Operating Agreement §5 — https://affiliate-program.amazon.com/help/operating/agreement
-- S02 Program Policies (Commission Income §2(d)/(e)/(g), Participation §2(a)/(b), §5 ML restriction, §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), §4 Agent Terms) — https://affiliate-program.amazon.com/help/operating/policies
-- S03 FTC Endorsement Guides FAQ — https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking
-- S04 Google, Qualify your outbound links — https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links
-- S10–S14 the five `/dp/` Amazon product listings; S15–S19 the five supplied `link.amazon` short links
-- S20 Amazon Creators API onboarding — https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api
-- S21 PA-API 5 deprecation notice — https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation
-- S22 USDA FSIS Safe Minimum Internal Temperature Chart; S23 FTC Disclosures 101; S24 USDA FSIS Food Thermometers calibration guide
+## Submitted links and observed destinations
 
-## Register fields verified from deep Product information tables on 2026-11-20
-| Product | Field | Value now published | Where on the listing |
+| Product | Submitted URL | Observed ASIN | Official listing |
 |---|---|---|---|
-| P-01 Chefman 6 Qt | Item Weight | 13.3 pounds | Product information — Measurements table |
-| P-02 Emeril 26QT | Model | 4-00675-02X-VN | Item details: Model Number / Part Number (conflict vs earlier `4-00675-02`, FLG-009) |
-| P-02 Emeril 26QT | Temperature | 75–500 °F | Features & Specs: Min 75 °F, Max 500 °F |
-| P-02 Emeril 26QT | Power | 120 V / 1700 W | Features & Specs: Output Wattage, Wattage, Voltage |
-| P-03 Chefman 8 Qt | Item Weight | 12.8 pounds | Product information — Measurements table |
-| P-03 Chefman 8 Qt | Power | 1700 W vs 1000 W | Features & Specs (`1700 W`) vs About this item (`1000 W`, FLG-017) |
-| P-04 ThermoMaven | Model | HT07 | Item details: Model Name / Model / Part Number |
-| P-04 ThermoMaven | Upper temperature | 572 °F | Features & Specs: Upper Temperature Rating (also `6.5 in` depth, `Wipe Clean`) |
-| P-05 CHEF iQ Sense | Model | CQ60-3C-Z1-E | Item details: Model / Part Number |
-| P-05 CHEF iQ Sense | Probe length | 4.75 in | Immersion Depth; Measurements: Item Length |
-| P-05 CHEF iQ Sense | Warranty | 2-yr vs 3 Year | About this item (`two-year`) vs Item details (`3 Year`, FLG-038 / FLG-019) |
+| P-01 | https://link.amazon/B04G1MEwY | B0CDY277D3 | https://www.amazon.com/dp/B0CDY277D3 |
+| P-02 | https://link.amazon/B02NbDxp3 | B09B7SB46R | https://www.amazon.com/dp/B09B7SB46R |
+| P-03 | https://link.amazon/B00hJ57DV | B08DKYBTPH | https://www.amazon.com/dp/B08DKYBTPH |
+| P-04 | https://link.amazon/B0c8moW59 | B0DHZTCNR5 | https://www.amazon.com/dp/B0DHZTCNR5 |
+| P-05 | https://link.amazon/B0f3GKalj | B0DZFD6R9Z | https://www.amazon.com/dp/B0DZFD6R9Z |
 
-An unverified Emeril (P-02) weight figure (`26.5 lb`) previously in three guides was purged because
-`B09B7SB46R` omits item weight (FLG-022, FLG-039), while `P-01` (`13.3 lb`) and `P-03` (`12.8 lb`)
-were confirmed directly in their `Measurements` tables.
+Observed destinations are recorded separately from owner-confirmed intent. The owner has not confirmed intended ASINs. The short-link format's status is unresolved; this summary does not characterize the supplied URLs as invalid. Before scaling, test one compliant Special Link per product in the enrolled Associates workflow and check its destination and account report (FLG-001, FLG-003, FLG-004).
 
-## Active listing conflicts published to buyers
-| Flag | Product | Contradiction |
-|------|---------|---------------|
-| FLG-008 | CHEF iQ Sense | 50 hours battery in About this item vs 70 hours in an earlier Product Description capture |
-| FLG-009 | Emeril 26 QT | `4-00675-02X-VN` in live Item details vs `4-00675-02` in an earlier capture |
-| FLG-017 | Chefman 8 Qt | `1700 W` in Features & Specs vs `1000 W` in About this item |
-| FLG-018 | Chefman 8 Qt | `400 °F` max in About this item & spec field vs `450 °F Hi-Fry` in title |
-| FLG-038 | CHEF iQ Sense | `two-year assurance` in About this item vs `3 Year` in Item details (prior register FLG-019) |
-| FLG-021 | Emeril 26 QT | 24 presets in title, Configuration & Description vs 25 in About this item |
-| FLG-031 | Emeril 26 QT | Six accessories in title & Included Components vs 7 in Configuration & Description |
-| FLG-034 | Chefman 6 Qt | 6 quarts in title & bullets vs 6 liters in Measurements field |
+## Evidence and open gates
 
-## Not verified, and published as such
-Intended ASIN per product (FLG-001) · whether the tracking ID is live (FLG-002) · whether the
-short-link format is permitted for this placement (FLG-003) · the one-per-product Special Link test
-(FLG-004) · P-02 item weight & HTML warranty terms (FLG-022) · NIST/NSF and cETL certification
-beyond listing statements (FLG-035) · any hands-on experience (FLG-032) · a named author (FLG-033).
+The product facts and their provenance are in `data/products.json`; official sources are catalogued in `data/sources.json`. Listing contradictions and other unresolved matters are published on `flagged.html`. The 51-item review register is generated from `data/flags.json`; 19 official source records are listed in `sources.html`. Dates refer to evidence capture, not an assurance that a listing never changes.
 
-## Decisions that change the numbers
-1. Complete the link test (SG-07, Q-04) — nothing about revenue can be reported until it passes.
-2. Amazon Creators API access (SG-13, SG-31, Q-19) — the only compliant route to showing prices, product images, and automated catalog data (with ML training barred under Program Policies §5 / IP §1 & §2(e)).
-3. Search Console verification (SG-10, SG-29, SG-32, Q-20) — the only way to pick future guides from measured organic queries.
-4. Self-hosted analytics hosting (SG-25, Q-08) — deploy `analytics/server.js` or `functions/api/collect.js` beyond static GitHub Pages.
-5. A custom domain (SG-14, FLG-006, Q-05) — canonicals currently point at the Pages subpath.
+Key owner-gated items: confirm intended products, confirm tracking-ID access/activity, perform the enrolled Special Link test, provide first-party reporting before entering campaign results, configure analytics hosting if cross-visitor measurement is wanted, and verify Search Console before using query data to select future articles. The campaign ledger remains empty by design. No revenue or conversion rate is claimed.
 
-## Honest position on revenue
-Zero, and no forecast. No commission rate, click, session or order figure is presented because nothing
-from an authorised first-party report exists yet. `campaign-ledger.html` is intentionally empty, with
-its schema and provenance rule written down so the first real row can be added without redesigning
-the page.
+Amazon Associates' official agreement and policies, the FTC Endorsement Guides FAQ, Google's outbound-link guidance, and USDA FSIS food-safety guidance are linked from `sources.html` and `README.md` for manual review. The current policies must be reread before operational scaling; this publication is not legal advice.
 
-## How the site is kept honest
-`scripts/build_site.py` generates all 33 HTML pages from `data/*.json`; nothing is hand-edited.
-`scripts/check_site.py` fails the build if the disclosure is missing or below the fold, if any
-`amazon.com` link lacks `rel="sponsored nofollow"`, if a price, star rating, cross-row placeholder, or
-unverified weight claim appears, if a link or asset is broken, if any SVG schematic is orphaned, if
-any generated photo lacks a caption/alt/dimensions, if any table has mismatched `<thead>`/`<tbody>`
-column counts, if a page is missing from the sitemap, if JSON-LD does not parse, or if an undefined
-or unpublished flag exists. CI runs regeneration, drift detection, `check_site.py`, Python unit tests
-(`tests/test_site.py`), and Node.js collector/client tests (`tests/test_collector.js`).
+## Build and publication status
 
-## Suggestions & Open Questions across sessions (`SG-17..SG-32`, `Q-15..Q-20`)
-- `SG-17` (`design-brief.html`): Publication design prompt, 4-cluster topic plan, seasonal calendar, and 10 editorial standards — shipped.
-- `SG-18`–`SG-24`, `SG-26`–`SG-30`, `Q-15`–`Q-18`: Storefront issue calendar, intent pages, dated reader change log (`sources.html`), 2-product compare (`compare.html`), first-week air fryer guide (`guides/first-week-air-fryer.html`), editor decision, hands-on policy, RSS/Search Console tracking, imagery & jurisdiction questions — shipped/tracked cleanly.
-- `SG-25` (`measurement.html`): Zero-dependency `analytics/server.js`, Cloudflare Pages `functions/api/collect.js`, `data/events.json`, RFC-4180 CSV export, and `assets/app.js` `send()` shipped in repo; external hosting remains pending (`FLG-010`, `Q-08`).
-- `SG-31` (`platform.html`) / `Q-19`: AI affiliate platform blueprint and compliance matrix shipped; automated catalog ingestion remains blocked until Creators API acceptance (`S20`, `S21`, `FLG-029`).
-- `SG-32` / `Q-20`: Question-shaped article generation from Search Console queries (blocked until SG-10 / SG-29 verification).
+The static site generator is `scripts/build_site.py`; `scripts/check_site.py` enforces disclosure, affiliate-link marking, sourced data, completeness of review flags, and page integrity. Python integration tests and Node collector/client tests are in `tests/`. GitHub Pages currently reports a successful build on `main` at https://karagemop466-tech.github.io/Affil2/.
 
-## Verification log (2026-11-20, session arena/9f19fe6b-affil2)
-- Synced cleanly with `origin/main` (`21424ae`, preserving PRs #17–#36 including `design-brief.html`, storefront photos, `pairCompare`, `guides/first-week-air-fryer.html`, and dated `sources.html` changelog).
-- Verified all 5 `link.amazon/*` short links, deep chunks across all 5 `/dp/` product pages, and official docs (`S01`–`S04`, `S20`–`S24`) live on 2026-11-20.
-- `python3 -B scripts/build_site.py` built all 33 pages idempotently.
-- `python3 -B scripts/check_site.py` passed (`checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`).
-- `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
-- `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).
+To rebuild and validate locally:
+
+```sh
+python3 scripts/build_site.py
+python3 scripts/check_site.py
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+node tests/test_collector.js
+```
+
+## Practical next decisions
+
+1. In the enrolled Associates account, validate a Special Link for each intended product before promoting it.
+2. Verify tracking ID issuance and inspect first-party reports; keep the campaign ledger empty until eligible sessions, clicks, orders, and revenue are available with provenance.
+3. Decide whether to host the prepared collector and verify Search Console. Do not describe either as active until independently confirmed.
+4. Review article topics and publication cadence in `suggestions.html`; use real query data once available rather than asserting trend or conversion potential without evidence.
+5. Recheck listing claims and policy sources whenever products or operational practices change.

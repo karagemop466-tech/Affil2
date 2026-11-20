@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-20",
+  "session": "57fc3be0",
+  "purpose": "Independent live check of official product listing identities and currently published policy/guidance sources.",
+  "method": "Fetched official public pages with Arena fetch_page. Only claims expressly surfaced in the fetched content are marked confirmed here. This record does not replace deeper field-by-field verification captures.",
+  "products": [
+    {"id":"P-01","url":"https://www.amazon.com/dp/B0CDY277D3","observed_asin":"B0CDY277D3","title":"CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black","result":"Official page title identifies the observed ASIN and product family; no additional specification fields were verified in this pass.","intent_confirmed":false},
+    {"id":"P-02","url":"https://www.amazon.com/dp/B09B7SB46R","observed_asin":"B09B7SB46R","title":"Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included","result":"Official page title identifies the observed ASIN and product family; no additional specification fields were verified in this pass.","intent_confirmed":false},
+    {"id":"P-03","url":"https://www.amazon.com/dp/B08DKYBTPH","observed_asin":"B08DKYBTPH","title":"Chefman Air Fryer 8 Qt | TurboFry 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel","result":"Official page title identifies the observed ASIN and product family; no additional specification fields were verified in this pass.","intent_confirmed":false},
+    {"id":"P-04","url":"https://www.amazon.com/dp/B0DHZTCNR5","observed_asin":"B0DHZTCNR5","title":"ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black","result":"Official page title identifies the observed ASIN and product family; title statements are not independently validated certifications or performance results.","intent_confirmed":false},
+    {"id":"P-05","url":"https://www.amazon.com/dp/B0DZFD6R9Z","observed_asin":"B0DZFD6R9Z","title":"CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3","result":"Official page title identifies the observed ASIN and product family; title statements are not independently validated performance results.","intent_confirmed":false}
+  ],
+  "policy_sources": [
+    {"id":"S01","url":"https://affiliate-program.amazon.com/help/operating/agreement","checked":"2026-11-20","result":"Public page fetched. Agreement displayed update date 2025-10-15 and explains that tagged Special Links must comply with the agreement. Full terms are account/policy context; reread before operational launch."},
+    {"id":"S02","url":"https://affiliate-program.amazon.com/help/operating/policies","checked":"2026-11-20","result":"Public page fetched. Program Policies displayed update date 2026-04-14. This pass confirms page availability and date only; detailed policy assertions should be checked directly against the current full policy text before action."},
+    {"id":"S03","url":"https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking","checked":"2026-11-20","result":"FTC page fetched. It states endorsements must be honest and not misleading and material connections should be disclosed clearly and conspicuously; page notes 2023 Guides revision."},
+    {"id":"S04","url":"https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links","checked":"2026-11-20","result":"Google Search Central page fetched. It recommends rel=sponsored for advertisements or paid placements and permits multiple rel values separated by spaces or commas."}
+  ],
+  "limitations": [
+    "The five supplied link.amazon short links were not re-tested in this pass.",
+    "This was not a complete product-spec field re-verification; prior dated field-level captures remain the source for those fields.",
+    "Amazon listing titles and seller-provided statements do not constitute independent certification or product testing.",
+    "This public-page check cannot verify Associates enrollment, tracking-ID issuance, Special Link reporting, or account-reported conversions."
+  ]
+}

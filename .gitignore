@@ -3,3 +3,5 @@
 __pycache__/
 analytics-state.json
 node_modules/
+
+analytics/data/
