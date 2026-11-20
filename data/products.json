@@ -13,19 +13,19 @@
     "specs": [
       [
         "Capacity",
-        "6 quarts total \u2014 two independent 3-quart baskets"
+        "6 quarts total — two independent 3-quart baskets"
       ],
       [
         "Temperature range",
-        "200\u2013450 \u00b0F (listing)"
+        "200–450 °F (listing)"
       ],
       [
         "Power",
         "1700 watts / 120 volts"
       ],
       [
-        "Dimensions (D\u00d7W\u00d7H)",
-        "13.38 \u00d7 11.81 \u00d7 10.63 inches"
+        "Dimensions (D×W×H)",
+        "13.38 × 11.81 × 10.63 inches"
       ],
       [
         "Weight",
@@ -44,7 +44,7 @@
         "Automatic shutoff; cETL approved (listing)"
       ]
     ],
-    "blurb": "Two baskets you can watch through the windows, timed to finish together. The question is not whether it fries \u2014 it is whether two 3-quart baskets fit the way you actually cook.",
+    "blurb": "Two baskets you can watch through the windows, timed to finish together. The question is not whether it fries — it is whether two 3-quart baskets fit the way you actually cook.",
     "questions": [
       "Do you cook a main and a side at the same time, or one thing at a time?",
       "Will 11.81 inches of width fit your counter, with clearance above?",
@@ -59,7 +59,7 @@
     "observed": "B09B7SB46R",
     "title": "Emeril Lagasse 26 QT Extra Large Air Fryer, Convection Toaster Oven with French Doors, Stainless Steel",
     "brand": "Emeril Lagasse",
-    "model": "4-00675-02 (listing also shows 4-00675-02X-VN \u2014 see FLG-009)",
+    "model": "4-00675-02 (listing also shows 4-00675-02X-VN — see FLG-009)",
     "cat": "Air Fryers",
     "catfile": "air-fryers.html",
     "specs": [
@@ -69,15 +69,15 @@
       ],
       [
         "Temperature range",
-        "Up to 500 \u00b0F (listing)"
+        "Up to 500 °F (listing)"
       ],
       [
         "Power",
         "1700 watts / 120 volts"
       ],
       [
-        "Dimensions (D\u00d7W\u00d7H)",
-        "16.9 \u00d7 15.8 \u00d7 14.8 inches"
+        "Dimensions (D×W×H)",
+        "16.9 × 15.8 × 14.8 inches"
       ],
       [
         "Weight",
@@ -93,7 +93,7 @@
       ],
       [
         "Presets",
-        "24 or 25 \u2014 listing conflicts, see FLG-009"
+        "24 or 25 — listing conflicts, see FLG-009"
       ]
     ],
     "blurb": "A countertop oven that air-fries. The trade-off is footprint and weight: this is a 26-quart appliance, not a compact basket fryer.",
@@ -109,7 +109,7 @@
     "submitted": "https://link.amazon/B00hJ57DV",
     "token": "B00hJ57DV",
     "observed": "B08DKYBTPH",
-    "title": "Chefman TurboFry Touch Air Fryer, XL 8-Qt Family Size, One-Touch Digital Control Presets, Stainless Steel",
+    "title": "Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel",
     "brand": "Chefman",
     "model": "RJ38-SQSS-8T",
     "cat": "Air Fryers",
@@ -121,15 +121,15 @@
       ],
       [
         "Temperature range",
-        "200\u2013400 \u00b0F (listing)"
+        "200–400 °F (About this item); title advertises a 450 °F Hi-Fry option — see FLG-012"
       ],
       [
         "Power",
-        "1700 watts / 120 volts"
+        "1000 watts / 120 volts (live About this item, 2026-11-20) vs 1700 watts (product-info mirrors + Chefman manual) — conflict, see FLG-011"
       ],
       [
-        "Dimensions (D\u00d7W\u00d7H)",
-        "12.75 \u00d7 13.5 \u00d7 10 inches"
+        "Dimensions (D×W×H)",
+        "12.75 × 13.5 × 10 inches"
       ],
       [
         "Weight",
@@ -148,10 +148,10 @@
         "LED shake reminder"
       ]
     ],
-    "blurb": "One big basket, four presets, no windows. Simpler than dual-basket \u2014 and the right choice if you cook one thing at a time for a household.",
+    "blurb": "One big basket, four presets, no windows. Simpler than dual-basket — and the right choice if you cook one thing at a time for a household.",
     "questions": [
-      "One basket or two \u2014 which matches your weeknight routine?",
-      "Is 400 \u00b0F top temperature enough for what you cook?",
+      "One basket or two — which matches your weeknight routine?",
+      "Is 400 °F top temperature enough for what you cook?",
       "Do you want presets, or do you prefer manual control?"
     ]
   },
@@ -161,7 +161,7 @@
     "submitted": "https://link.amazon/B0c8moW59",
     "token": "B0c8moW59",
     "observed": "B0DHZTCNR5",
-    "title": "ThermoMaven Professional Digital Meat Thermometer, 1 Sec Instant Read, \u00b10.5 \u00b0F Accuracy, NIST & NSF Certified",
+    "title": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Black",
     "brand": "ThermoMaven",
     "model": "HT07",
     "cat": "Meat Thermometers",
@@ -173,7 +173,7 @@
       ],
       [
         "Accuracy",
-        "\u00b10.5 \u00b0F (listing)"
+        "±0.5 °F (listing)"
       ],
       [
         "Certification stated",
@@ -181,7 +181,7 @@
       ],
       [
         "Upper temperature range",
-        "572 \u00b0F (listing)"
+        "572 °F (listing)"
       ],
       [
         "Display",
@@ -192,15 +192,15 @@
         "Highly waterproof (listing)"
       ],
       [
-        "Power",
-        "1 \u00d7 AAA battery included (listing)"
+        "Waterproof",
+        "IP67 waterproof (listing title); ‘Fully Waterproof’ bullet"
       ],
       [
         "In the box",
         "Thermometer, AAA battery, user manual, calibration certificate"
       ]
     ],
-    "blurb": "The instant-read you keep by the grill. Speed and accuracy are the whole point \u2014 everything else is secondary.",
+    "blurb": "The instant-read you keep by the grill. Speed and accuracy are the whole point — everything else is secondary.",
     "questions": [
       "Do you check temperature at the grill, or do you want to walk away?",
       "Will you calibrate it, and how often?",
@@ -213,7 +213,7 @@
     "submitted": "https://link.amazon/B0f3GKalj",
     "token": "B0f3GKalj",
     "observed": "B0DZFD6R9Z",
-    "title": "CHEF iQ Sense [2025 Model] Smart Wireless Meat Thermometer, 3 Ultra-Thin Probes, WiFi Unlimited Range, 1000 \u00b0F Heat Safe, 5 Sensors, Gen3",
+    "title": "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3",
     "brand": "CHEF iQ",
     "model": "CQ60-3C-Z1-E",
     "cat": "Meat Thermometers",
@@ -229,7 +229,7 @@
       ],
       [
         "Heat rating",
-        "1000 \u00b0F heat safe (listing)"
+        "1000 °F heat safe (listing)"
       ],
       [
         "Sensors",
@@ -237,7 +237,7 @@
       ],
       [
         "Battery",
-        "50 hours vs 70 hours \u2014 listing conflicts, see FLG-008"
+        "50 hours vs 70 hours — listing conflicts, see FLG-008"
       ],
       [
         "Probe length",
@@ -249,7 +249,7 @@
       ],
       [
         "Warranty stated",
-        "1-year limited warranty (listing)"
+        "Two-year assurance (About this item, 2026-11-20) — prior register value ‘1-year’ unconfirmed, see FLG-013"
       ]
     ],
     "blurb": "Three proteins, three donenesses, no standing by the grill. The cost of that freedom is an app, a hub, and charging.",

@@ -1,0 +1,108 @@
+{
+  "verified_on": "2026-11-20",
+  "session": "bba2deed",
+  "supersedes": "Session 530c2e6c verification log (2026-11-20); independently re-checked row by row against official listings and policy pages.",
+  "method_legend": {
+    "listing-fetch": "Value read directly from the official amazon.com listing page fetched 2026-11-20 (title, overview table, or About this item).",
+    "listing-mirror": "Value read from a product-information table that mirrors the official listing's Product details block; primary source is the listing itself (manual-review link provided). Status 'corroborated'.",
+    "policy-fetch": "Value read directly from the official policy page fetched 2026-11-20.",
+    "policy-quote": "Section text quoted by secondary sources; official policy URL provided for manual review."
+  },
+  "products": [
+    {
+      "id": "P-01", "asin_observed": "B0CDY277D3", "source_id": "S10",
+      "source_url": "https://www.amazon.com/dp/B0CDY277D3",
+      "rows": [
+        {"field": "title", "value": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black", "method": "listing-fetch", "status": "confirmed"},
+        {"field": "capacity", "value": "6 quarts total — two independent 3-quart baskets", "method": "listing-fetch", "status": "confirmed", "note": "About this item: 'combined 6-quart large air fryer capacity', 'individual 3-quart ... baskets'. Overview table shows '6 liters' — listing-internal unit mismatch logged, quarts claim taken from title + bullets."},
+        {"field": "temperature range", "value": "200-450 °F", "method": "listing-fetch", "status": "confirmed", "note": "About this item: 'temperature settings from 200-450°F'."},
+        {"field": "power", "value": "1700 watts / 120 volts", "method": "listing-fetch", "status": "confirmed", "note": "RESOURCES bullet: '120 Volts/1700 Watts'."},
+        {"field": "dimensions", "value": "13.38 x 11.81 x 10.63 in (D x W x H)", "method": "listing-fetch", "status": "confirmed", "note": "Overview table: Product Dimensions 13.38\"D x 11.81\"W x 10.63\"H."},
+        {"field": "weight", "value": "13.3 pounds", "method": "listing-mirror", "status": "corroborated", "note": "Spec-table mirrors quoting this ASIN show Item Weight 13.3 lb. Primary: listing Product details table (not extracted in fetch) — manual review."},
+        {"field": "model", "value": "RJ38-SQPF-3TDB-2W", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors quoting this ASIN show Item model number RJ38-SQPF-3TDB-2W. Manual review link provided."},
+        {"field": "baskets", "value": "Nonstick, dishwasher-safe", "method": "listing-fetch", "status": "confirmed", "note": "Title + EASY CLEANUP bullet."},
+        {"field": "controls", "value": "Touch / digital", "method": "listing-fetch", "status": "confirmed", "note": "Title 'Digital Double Air Fryer'; bullet 'touchscreen presets'."},
+        {"field": "safety", "value": "Automatic shutoff; cETL approved", "method": "listing-fetch", "status": "confirmed", "note": "Special Feature 'Automatic Shut-Off'; RESOURCES bullet 'cETL approved'."}
+      ]
+    },
+    {
+      "id": "P-02", "asin_observed": "B09B7SB46R", "source_id": "S11",
+      "source_url": "https://www.amazon.com/dp/B09B7SB46R",
+      "rows": [
+        {"field": "title", "value": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included", "method": "listing-fetch", "status": "confirmed"},
+        {"field": "capacity", "value": "26 quarts (24.6 litres)", "method": "listing-fetch", "status": "confirmed", "note": "Overview table: Capacity 24.6 liters; About this item: '26-QUART CAPACITY ... 4-6 people ... rotisserie a 6-lb chicken, bake a 12\" pizza'."},
+        {"field": "temperature range", "value": "Up to 500 °F", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Max Temperature Setting 500 °F. Manual review link provided."},
+        {"field": "power", "value": "1700 watts / 120 volts", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Wattage 1700 watts, Voltage 120 V."},
+        {"field": "dimensions", "value": "16.9 x 15.8 x 14.8 in (D x W x H)", "method": "listing-fetch", "status": "confirmed", "note": "Overview table: 16.9\"D x 15.8\"W x 14.8\"H."},
+        {"field": "weight", "value": "26.5 pounds", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Item Weight 26.5 pounds (assembled weight ~29.2-29.4 lb appears on reseller pages — different metric, not used)."},
+        {"field": "exterior", "value": "Stainless steel", "method": "listing-fetch", "status": "confirmed", "note": "Overview table + STAINLESS STEEL EXTERIOR bullet."},
+        {"field": "accessories", "value": "Grill plate, rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool", "method": "listing-mirror", "status": "confirmed-conflict", "note": "Listing title says 'Six Cooking Accessories Included'; enumeration (incl. grill plate, fetch tool) appears across the listing and mirrors with 6-7 items. Count conflict folded into FLG-009."},
+        {"field": "presets", "value": "24 or 25 — listing conflicts", "method": "listing-fetch", "status": "confirmed-conflict", "note": "Re-verified live: title '24 One-Touch Preset Options' vs About this item '25 COOKING PRE-SETS'. FLG-009 stands."},
+        {"field": "model", "value": "4-00675-02 (also 4-00675-02X-VN)", "method": "listing-mirror", "status": "confirmed-conflict", "note": "Spec mirrors show both Item model numbers for this ASIN. FLG-009 stands."}
+      ]
+    },
+    {
+      "id": "P-03", "asin_observed": "B08DKYBTPH", "source_id": "S12",
+      "source_url": "https://www.amazon.com/dp/B08DKYBTPH",
+      "rows": [
+        {"field": "title", "value": "Chefman Air Fryer 8 Qt | TurboFry 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel", "method": "listing-fetch", "status": "corrected", "note": "Register previously held an earlier listing title ('TurboFry Touch ... One-Touch Digital Control Presets ...') still visible in product-info mirrors. Title updated to the live listing title 2026-11-20 (FLG-012)."},
+        {"field": "capacity", "value": "8 quarts", "method": "listing-fetch", "status": "confirmed", "note": "Overview table: Capacity 8 quarts; Size selector 8 quarts."},
+        {"field": "temperature range", "value": "200-400 °F (About this item); title advertises a 450°F Hi-Fry option", "method": "listing-fetch", "status": "confirmed-conflict", "note": "Bullet: 'temperature range from 200-400°F'. Title: '450°F Hi-Fry Option'. Both published; FLG-012."},
+        {"field": "power", "value": "1000 watts / 120 volts (live About this item) vs 1700 watts (product-info mirrors + Chefman manual)", "method": "listing-fetch", "status": "confirmed-conflict", "note": "Live RESOURCES bullet 2026-11-20: '1000 Watts/120 Volts - RJ38-SQSS-8T'. Mirrors of the listing's Product information block and the Chefman user manual state 1700 watts. Register previously showed 1700 W only. Both claims now published; FLG-011."},
+        {"field": "dimensions", "value": "12.75 x 13.5 x 10 in (D x W x H)", "method": "listing-fetch", "status": "confirmed", "note": "Overview table: 12.75\"D x 13.5\"W x 10\"H."},
+        {"field": "weight", "value": "12.8 pounds", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Item Weight 12.8 pounds."},
+        {"field": "presets", "value": "Four preset functions (fries, chicken, meat, fish)", "method": "listing-fetch", "status": "confirmed", "note": "About this item: 'Four presets ... French fries, chicken, meat, and fish'."},
+        {"field": "basket", "value": "Nonstick, dishwasher-safe parts", "method": "listing-fetch", "status": "confirmed", "note": "About this item: '8-quart non-stick basket and flat frying tray are both top rack dishwasher safe'."},
+        {"field": "reminder", "value": "LED shake reminder", "method": "listing-fetch", "status": "confirmed", "note": "Special Feature 'LED Shake Reminder'; bullet 'LED sake reminder' (listing typo)."},
+        {"field": "model", "value": "RJ38-SQSS-8T", "method": "listing-fetch", "status": "confirmed", "note": "RESOURCES bullet ends '... - RJ38-SQSS-8T'."}
+      ]
+    },
+    {
+      "id": "P-04", "asin_observed": "B0DHZTCNR5", "source_id": "S13",
+      "source_url": "https://www.amazon.com/dp/B0DHZTCNR5",
+      "rows": [
+        {"field": "title", "value": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5F Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black", "method": "listing-fetch", "status": "confirmed", "note": "Register paraphrase normalized to the live listing title 2026-11-20."},
+        {"field": "response time", "value": "1 second", "method": "listing-fetch", "status": "confirmed", "note": "About this item: 'readings in just 1 second'; Product information: Response Time 1 seconds."},
+        {"field": "accuracy", "value": "±0.5 °F (NIST-certified claim)", "method": "listing-fetch", "status": "confirmed", "note": "About this item: 'NIST certification for its ±0.5F accuracy'."},
+        {"field": "certification stated", "value": "NIST & NSF", "method": "listing-fetch", "status": "confirmed", "note": "Overview table: Specification Met NIST, NSF."},
+        {"field": "upper temperature range", "value": "572 °F", "method": "listing-mirror", "status": "corroborated", "note": "Product-information mirrors (model HT07): Upper Temperature Range 572 °F. Manual review link provided."},
+        {"field": "display", "value": "Digital, auto-rotate bright LED screen", "method": "listing-fetch", "status": "confirmed", "note": "About this item: upgraded LED screen; motion-activated auto-rotating display."},
+        {"field": "waterproof", "value": "IP67 waterproof (listing title); 'Fully Waterproof' bullet", "method": "listing-fetch", "status": "confirmed", "note": "Register previously said 'Highly waterproof' — normalized to the listing's own claim."},
+        {"field": "power", "value": "1 x AAA battery included", "method": "listing-fetch", "status": "confirmed", "note": "Overview table: Included Components 1*Meat Thermometer, 1*AAA Battery, 1*User Manual, 1*Calibration Certificate."},
+        {"field": "in the box", "value": "Thermometer, AAA battery, user manual, calibration certificate", "method": "listing-fetch", "status": "confirmed", "note": "Overview table — exact match."},
+        {"field": "model", "value": "HT07", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Model Name/Model HT07."}
+      ]
+    },
+    {
+      "id": "P-05", "asin_observed": "B0DZFD6R9Z", "source_id": "S14",
+      "source_url": "https://www.amazon.com/dp/B0DZFD6R9Z",
+      "rows": [
+        {"field": "title", "value": "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3", "method": "listing-fetch", "status": "confirmed", "note": "Register's '[2025 Model]' prefix is not in the live title — normalized 2026-11-20."},
+        {"field": "probes", "value": "3 ultra-thin probes + hub", "method": "listing-fetch", "status": "confirmed", "note": "Overview: Included Components 3 Probes, Hub; THREE PROBES INCLUDED bullet."},
+        {"field": "connectivity", "value": "WiFi / Bluetooth via CHEF iQ app", "method": "listing-fetch", "status": "confirmed", "note": "Overview: Connectivity Technology Bluetooth, Wi Fi; UNLIMITED WIRELESS RANGE bullet."},
+        {"field": "heat rating", "value": "1000 °F heat safe", "method": "listing-fetch", "status": "confirmed", "note": "Title + ENGINEERED FOR DURABILITY bullet."},
+        {"field": "sensors", "value": "5 sensors (4 internal + ambient)", "method": "listing-fetch", "status": "confirmed", "note": "FIVE SENSORS bullet."},
+        {"field": "battery", "value": "50 hours (About this item) vs 70 hours (Product Description) — listing conflicts", "method": "listing-fetch", "status": "confirmed-conflict", "note": "Re-verified live: bullet 'running for up to 50 hours on a full charge'; Product Description/mirrors '70+ hours of probe use'. FLG-008 stands."},
+        {"field": "probe length", "value": "4.75 inches", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Immersion Depth / Item Length 4.75 inches."},
+        {"field": "care", "value": "Waterproof, dishwasher-safe probes", "method": "listing-fetch", "status": "confirmed", "note": "EASY TO CLEAN bullet; Product Care Instructions Dishwasher Safe."},
+        {"field": "warranty stated", "value": "Two-year assurance (About this item)", "method": "listing-fetch", "status": "corrected", "note": "Register previously said '1-year limited warranty' — NOT found on the live listing. RESOURCES bullet: 'two-year assurance provided by CHEF iQ'; mirrors agree. Prior value unconfirmed and replaced; FLG-013."},
+        {"field": "model", "value": "CQ60-3C-Z1-E", "method": "listing-mirror", "status": "corroborated", "note": "Spec mirrors: Part/Model Number CQ60-3C-Z1-E."}
+      ]
+    }
+  ],
+  "policy_sources": [
+    {"id": "S01", "name": "Amazon Associates Program Operating Agreement, Section 5", "url": "https://affiliate-program.amazon.com/help/operating/agreement", "method": "policy-quote", "status": "confirmed", "verified": "Section 5 'Identifying Yourself as an Associate' requires the statement \"As an Amazon Associate I earn from qualifying purchases.\" (official page text retrieved 2026-11-20). Legacy URL https://affiliate-program.amazon.com/help/node/topic/202093820 also cited in S-register."},
+    {"id": "S02", "name": "Amazon Associates Program Policies, Section 2(b)", "url": "https://affiliate-program.amazon.com/help/node/topic/202131110", "method": "policy-quote", "status": "corroborated", "verified": "Two independent sources quote Section 2(b): prices/availability may be shown only if Amazon serves them with the link or via Creators/Product Advertising API; inaccurate or misleading claims prohibited. Full section text not re-fetched — official URL provided for manual review."},
+    {"id": "S03", "name": "FTC Endorsement Guides — What People Are Asking", "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking", "method": "policy-fetch", "status": "confirmed", "verified": "Page fetched 2026-11-20: material connections that a significant minority of consumers wouldn't expect must be disclosed 'clearly and conspicuously'; includes 'What About Affiliate or Network Marketing?' section."},
+    {"id": "S04", "name": "Google Search Central — Qualify your outbound links", "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links", "method": "policy-fetch", "status": "confirmed", "verified": "Page fetched 2026-11-20: rel=\"sponsored\" marks advertisements/paid placements ('commonly called paid links'); multiple rel values may be combined (e.g. 'sponsored nofollow')."}
+  ],
+  "corrections": [
+    {"id": "C-01", "what": "P-03 power shown as '1700 watts' only", "action": "Both claims published (1000 W live bullet vs 1700 W mirrors/manual); FLG-011 opened. No single value chosen."},
+    {"id": "C-02", "what": "P-05 warranty shown as '1-year limited warranty'", "action": "Replaced with the listing's own 'two-year assurance' claim (multi-source); prior value recorded as unconfirmed. FLG-013 opened."},
+    {"id": "C-03", "what": "P-03 product title stale (earlier listing variant)", "action": "Title updated to live listing title; prior variant retained in this ledger. FLG-012 covers title/Hi-Fry nuance."},
+    {"id": "C-04", "what": "P-04/P-05 titles paraphrased in register", "action": "Normalized to live listing titles 2026-11-20."},
+    {"id": "C-05", "what": "feed.xml malformed (<language> tag unclosed; XML parse error line 9)", "action": "Fixed in T-15 integration pass."},
+    {"id": "C-06", "what": "SG-08 register claimed 'JSON-LD' shipped; no application/ld+json block existed on any page", "action": "JSON-LD (WebSite/Organization/Article/BreadcrumbList) added in T-15; SG-08 status corrected."},
+    {"id": "C-07", "what": "COORDINATION.md session-530c2e6c log cross-referenced FLG-010/011/012 for Emeril/CHEF-iQ conflicts; canonical data/flags.json numbers those FLG-008/009 (FLG-010 = analytics local-only)", "action": "COORDINATION.md corrected to the canonical flag numbering; new findings appended as FLG-011..FLG-013."}
+  ]
+}

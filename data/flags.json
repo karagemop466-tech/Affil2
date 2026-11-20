@@ -47,6 +47,21 @@
   {
     "id": "FLG-010",
     "title": "Analytics local-only",
-    "detail": "Click counter runs in-browser until a self-hosted endpoint is deployed. See Q-08."
+    "detail": "Click counter runs in-browser until a self-hosted endpoint is deployed. Endpoint code ships in analytics/ (T-12); production host still gated on Q-08. See Q-08."
+  },
+  {
+    "id": "FLG-011",
+    "title": "P-03 wattage conflict (1000 W vs 1700 W)",
+    "detail": "Live About this item bullet (fetched 2026-11-20) states '1000 Watts/120 Volts - RJ38-SQSS-8T' while product-information mirrors and the Chefman user manual state 1700 watts for the same model. Both claims published; neither chosen."
+  },
+  {
+    "id": "FLG-012",
+    "title": "P-03 title drift and Hi-Fry temperature nuance",
+    "detail": "Listing title changed from the 'TurboFry Touch ... One-Touch Digital Control Presets' variant to 'TurboFry 4-in-1 with 450\u00b0F Hi-Fry Option'. About this item states 200-400\u00b0F while the title advertises a 450\u00b0F Hi-Fry option. Both published."
+  },
+  {
+    "id": "FLG-013",
+    "title": "P-05 warranty claim corrected (register said 1-year)",
+    "detail": "Register previously showed '1-year limited warranty', which could not be confirmed. The listing's RESOURCES bullet states a 'two-year assurance provided by CHEF iQ' (corroborated across mirrors). Corrected 2026-11-20; prior value recorded as unconfirmed in data/verification.json."
   }
 ]
