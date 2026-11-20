@@ -773,3 +773,12 @@ Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`0b509ab`, pr
 - `python3 -B scripts/check_site.py`: `checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`.
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
 - `node tests/test_collector.js`: `ALL JS COLLECTOR AND CLIENT TESTS PASS`.
+
+
+## PR + merge result (session bba2deed)
+
+- PR: https://github.com/karagemop466-tech/Affil2/pull/29 — merged via `gh pr merge 29 --merge`, merge commit `1d2ed6e` on `main`, state MERGED.
+- Gate at merge: `python3 scripts/check_site.py` ALL CHECKS PASS (36 pages, 5 product records, 40 flags, 19 sources); `python3 tests/test_site.py` OK (page-count expectation updated 33 → 36 for the three added pages: two Holiday 2026 guides + the Verification Log).
+- GitHub Pages: `pages-build-deployment` run 44687038495 for merge commit `1d2ed6e` — build 8s ✓, deploy 11s ✓, report ✓. Live: https://karagemop466-tech.github.io/Affil2/ (source = main).
+- Flagged items FLG-001..FLG-040 published on https://karagemop466-tech.github.io/Affil2/flagged.html — none block; short-link compliance (FLG-003) remains unresolved and is not claimed invalid.
+- Notes: `analytics/server.py` (session bba2deed, Python) and `analytics/server.js` (parallel collector stack with tests) both ship; the live site continues to use whichever the owner deploys, switched in `assets/config.js`. `analytics/data/` is git-ignored (event data must not enter git).
