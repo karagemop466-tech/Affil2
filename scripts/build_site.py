@@ -292,7 +292,7 @@ def buybox(p, up, variant="full"):
     checks = "".join(f"<li>{esc(q)}</li>" for q, _ in p["questions"][:3])
     photo_key = "thermo" if p["cat"] == "Meat Thermometers" else "air"
     return f"""<div class="buybox">
-  <div class="buybox-art">{photo(photo_key, up, caption=True)}</div>
+  <div class="buybox-art">{photo(photo_key, up, caption=True, short=True)}</div>
   <div class="buybox-body">
     <p class="kicker">{esc(p['cat'])} · {esc(p['brand'])}</p>
     <h3>{esc(p['headline'])}</h3>
@@ -485,7 +485,7 @@ def build_home():
 
 <section id="the-picks">
   <div class="sec-head">
-    <h2>This week&rsquo;s three picks</h2>
+    <h2>The three we&rsquo;d start with</h2>
     <p class="muted">Not the whole market &mdash; just the five links we were asked to cover. These
       are the three we would start with, and the reason is on each card.</p>
   </div>
