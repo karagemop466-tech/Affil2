@@ -385,5 +385,16 @@
     ],
     "severity": "unverified",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-036",
+    "title": "Page imagery is generated illustration, not product photography",
+    "detail": "The photographs on the front page and category pages were generated for this site to establish a storefront look. They show an air fryer and thermometers of no particular make, so they must not be read as pictures of the products reviewed here. Each is captioned accordingly and no Amazon image is used. Licensing for real product photography still depends on the Product Advertising or Creators API (FLG-007).",
+    "links": [
+      "S10",
+      "S13"
+    ],
+    "severity": "policy",
+    "owner_status": "Published on the Flagged for Review page with a visible caption on every image that uses it. Does not block publication."
   }
 ]

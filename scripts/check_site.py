@@ -118,6 +118,21 @@ for p in pages:
         if (up + target) not in html:
             err(f"{rel}: footer missing link to {target}")
 
+    # --- images: every generated photo must be captioned as illustration, never as the product
+    for m in re.finditer(r'<img\b[^>]*src="((?:\.\./)*assets/photos/[^"]+)"[^>]*>', html):
+        asset = (p.parent / m.group(1)).resolve()
+        if not asset.exists():
+            err(f"{rel}: missing image {m.group(1)}")
+        if "assets/photos/" in m.group(1):
+            window = html[m.end():m.end() + 900]
+            if "Illustrative image, generated for this site" not in window:
+                err(f"{rel}: generated photo {m.group(1)} is not captioned as illustration")
+        tag = m.group(0)
+        if "alt=\"\"" in tag or "alt=" not in tag:
+            err(f"{rel}: image {m.group(1)} has no alt text")
+        if not re.search(r'width="\d+" height="\d+"', tag):
+            err(f"{rel}: image {m.group(1)} has no intrinsic dimensions")
+
     # --- structured data must parse
     for m in re.finditer(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
         try:
