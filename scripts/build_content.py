@@ -129,10 +129,31 @@ def product_main(p):
 <tr><th>Source</th><td>{listing_link(p)} · {a(p['submitted'], p['submitted'], True)}</td></tr>
 <tr><th>Associates test status</th><td>PENDING — test one link in the enrolled workflow; confirm destination and tracking report (FLG-004)</td></tr>
 </tbody></table>
+{usda_doneness_block() if p['cat'] == 'Meat Thermometers' else ''}
 <h2>What this page does not claim</h2>
 <p>No price, rating, review count, sales rank, commission or “best” claim is made. Those fields are not shown because Program Policies §2(b) limits price display, and they change by time and location. Check the live listing for current details.</p>
 <p><a href="../{p['catfile']}">← Back to {esc(p['cat'])}</a> · <a href="../compare.html">Compare all products</a> · <a href="../flagged.html">Flagged for Review</a></p>
 </main>"""
+
+
+USDA_URL = "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart"
+
+
+def usda_doneness_block():
+    """A thermometer page should send the reader to the food-safety authority, not
+    to a number we typed from memory. S22 is the registered source."""
+    return f"""<h2>Doneness targets come from the USDA, not from us</h2>
+<p>This is a thermometer, so the numbers that matter are food-safety numbers. We do not restate them from memory. The USDA FSIS <a href="{USDA_URL}">Safe Minimum Internal Temperature Chart</a> (source S22, checked {CHECKED}) gives these minimums, as measured with a food thermometer:</p>
+<table><caption><a href="{USDA_URL}">USDA FSIS — Safe Minimum Internal Temperature Chart</a> (S22)</caption>
+<thead><tr><th>Food</th><th>Minimum internal temperature</th></tr></thead><tbody>
+<tr><td>Poultry — breasts, whole bird, legs, thighs, wings, ground poultry, giblets, stuffing</td><td>165&nbsp;°F (73.9&nbsp;°C)</td></tr>
+<tr><td>Ground meats</td><td>160&nbsp;°F (71.1&nbsp;°C)</td></tr>
+<tr><td>Beef, pork, veal and lamb steaks, chops and roasts</td><td>145&nbsp;°F (62.8&nbsp;°C) with a rest of at least 3 minutes</td></tr>
+<tr><td>Fish and shellfish</td><td>145&nbsp;°F (62.8&nbsp;°C)</td></tr>
+<tr><td>Leftovers and casseroles</td><td>165&nbsp;°F (73.9&nbsp;°C)</td></tr>
+</tbody></table>
+<p class="small">Read the chart itself before relying on any number here: <a href="{USDA_URL}">fsis.usda.gov</a>. Registered as S22 in the <a href="../sources.html">source register</a>.</p>
+"""
 
 
 def table(headers, rows, caption):

@@ -197,5 +197,22 @@
     "title": "Requested sources S07 and S24 not in this repo",
     "detail": "The task brief references S07 and S24. They are not in data/sources.json and were not found in the repository, so they are not cited.",
     "links": []
+  },
+  {
+    "id": "FLG-029",
+    "title": "Product-data automation is blocked until the Associates account is finally accepted",
+    "detail": "The brief asks for automated product research, trend detection and price analysis. Amazon's Creators API onboarding page states that registration is available only to Associates whose account has been reviewed and received final acceptance into the program and who have referred qualified sales, and that only the primary account owner can register. Separately, the PA-API 5 deprecation notice states that PA-API 5 now returns HTTP 403 Forbidden. Both were read verbatim on 2026-11-20. No product-data automation is claimed to be running on this site, and none can run until that acceptance exists. This does not affect the published pages, which use static, sourced values.",
+    "links": [
+      "S20",
+      "S21"
+    ]
+  },
+  {
+    "id": "FLG-030",
+    "title": "No food-safety source was cited before now",
+    "detail": "The thermometer pages discuss doneness. Doneness targets are a food-safety matter and must come from an official source, not from memory or from a manufacturer listing. S22 (USDA FSIS Safe Minimum Internal Temperature Chart) is now registered and should be cited wherever a target temperature is stated. Checked on 2026-11-20: poultry 165 F, ground meats 160 F, whole-muscle cuts 145 F with a 3-minute rest, fish 145 F, leftovers 165 F.",
+    "links": [
+      "S22"
+    ]
   }
 ]

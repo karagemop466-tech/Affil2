@@ -164,3 +164,65 @@ Branch: `arena/990af5de-affil2`. Work is PR #3 (https://github.com/karagemop466-
 - No product data, sourced values, links, or compliance claims changed. Existing unknowns remain flagged.
 - PR #11: https://github.com/karagemop466-tech/Affil2/pull/11 — merged (merge commit d51c04ac301c0c8dc9b9d34142d9391afb9e6c1b).
 - GitHub Pages deploy run 44680641868 for that merge succeeded; Pages API status is `built` at https://karagemop466-tech.github.io/Affil2/.
+
+---
+
+## Session `arena/9397cc0c-affil2` — additive pass (2026-11-20)
+
+**Branch:** `arena/9397cc0c-affil2` (platform-bound; cannot create per-task branches)
+**Base:** `981db91` (main, after PR #9)
+
+### What this session did first, and got wrong
+
+It built a **second, parallel site** (`docs/`, `build.js`, `content/`, `assets/`) before reading the
+board closely enough to notice that `main` already contained a merged, live site from sessions
+`530c2e6c`, `6e40cecc`, `937876a6` and `4bbf49bb`. It then opened PR #10.
+
+**Resolution:** PR #10 was **closed unmerged** (https://github.com/karagemop466-tech/Affil2/pull/10).
+The parallel site was not merged and no `main` work was discarded. This is recorded rather than
+quietly deleted, because the coordination rule exists precisely to prevent this and it was broken.
+
+What the duplicate did produce that was genuinely new — and which `main` did not contain — is below.
+
+### What was added (append-only; no existing row edited or removed)
+
+| Added | Where | Why it was missing |
+|-------|-------|--------------------|
+| `S20` Creators API registration/eligibility | `data/sources.json` | The site described a research/automation capability but no source documented the gate on it. |
+| `S21` PA-API 5 deprecation notice | `data/sources.json` | PA-API 5 is the API most affiliate tooling assumes exists. It now returns HTTP 403. Not previously cited anywhere. |
+| `S22` USDA FSIS Safe Minimum Internal Temperature Chart | `data/sources.json` | Thermometer pages discuss doneness with no food-safety authority cited. |
+| `FLG-029` Automation blocked until final acceptance | `data/flags.json` | Follows from S20 + S21. |
+| `FLG-030` No food-safety source cited until now | `data/flags.json` | Follows from S22. |
+| USDA doneness table on both thermometer product pages | `scripts/build_content.py` (`usda_doneness_block()`) | Added in the generator, not by hand-editing generated HTML; scoped to `cat == 'Meat Thermometers'`; verified idempotent across three consecutive generator runs. |
+
+### Verification performed this session (2026-11-20)
+
+| Item | Official source | Result |
+|------|-----------------|--------|
+| Creators API eligibility | https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api | "before you register … you must have an Amazon Associates account that has been reviewed and received final acceptance"; "available only to associates who have referred qualified sales"; "Only the primary account owner … can sign up" |
+| Creators API introduction | https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction | Prerequisite list states "at least 10 qualifying sales within the past 30 days to access the PA API through the Creators API" |
+| PA-API 5 status | https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation | "has been deprecated"; callers receive HTTP `403 Forbidden` / `AccessDeniedException`; migrate to Creators API |
+| USDA temperatures | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | 165 / 160 / 145+3min / 145 / 165 °F, quoted verbatim |
+| Store ID suffix | https://www.amazon.com/b?node=51812349011 | Amazon: "our software automatically adds "-20" to the end of all Store IDs" — corroborates FLG-002 (format only; issuance still unverified) |
+
+### Independent corroboration of existing flags
+
+This session's own link testing agrees with `main` rather than contradicting it:
+
+- `link.amazon/B0c8moW59` resolved to `B0DHZTCNR5` once and to the Amazon homepage on a second attempt — consistent with `main`'s FLG-012 and FLG-011.
+- All five supplied tokens are 9 characters while the observed ASINs are 10 — matches `main`'s FLG-014.
+
+Both observations were reached separately, which raises confidence in them.
+
+### Gate status after this change
+
+- `python3 scripts/build_content.py` — runs clean, idempotent
+- `python3 scripts/check_site.py` — **checked 25 pages, ALL CHECKS PASS**
+- `sitemap.xml` and `feed.xml` — parse as valid XML
+- No new pages added, so the sitemap requires no new entry
+
+### Still not done, and why
+
+- **Analytics endpoint.** Unchanged. `assets/app.js` still logs the five events to `localStorage` only. Deploying a self-hosted endpoint needs hosting that GitHub Pages cannot provide (existing FLG-010 / Q-08).
+- **Capture form.** No email provider exists, so none was added.
+- **Associates test.** Cannot be performed without access to Associates Central (existing FLG-004).
