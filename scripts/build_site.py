@@ -1584,8 +1584,11 @@ def build_guides_index():
 def reading_minutes(g):
     """An honest reading estimate, computed from the words on the page rather than asserted."""
     import re as _r
+    # Count the whole page, tables and checklists included: an estimate that ignores half the words
+    # on the page is a number printed for cheerfulness, not a measurement.
     words = len(_r.sub(r"<[^>]+>", " ", g.get("intro", "") + " " + g.get("verdict", "") +
-                       " " + " ".join(h + " " + t for h, t in g.get("sections", []))).split())
+                       " " + " ".join(h + " " + t for h, t in g.get("sections", [])) +
+                       " " + g.get("extra", "")).split())
     return f"{max(2, round(words / 220))} min"
 
 

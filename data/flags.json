@@ -619,5 +619,15 @@
     ],
     "severity": "corrected",
     "owner_status": "Repaired on 2026-11-20. Tests are stronger than before, not loosened."
+  },
+  {
+    "id": "FLG-057",
+    "title": "The reading-time estimate counted only part of the page",
+    "detail": "The generator computed an honest estimate from intro, verdict and section prose, then printed it beside pages that also carry a table, a checklist and a sources panel: a 970-word guide was labelled 2 minutes. Found on 2026-11-20 while publishing the November wave. The estimate now counts the whole rendered page, stripped of markup, so the number on the line matches the words below it. If an estimate cannot include a section, it should not be printed next to it.",
+    "links": [
+      "S10"
+    ],
+    "severity": "corrected",
+    "owner_status": "Repaired on 2026-11-20 in scripts/build_site.py. Estimates rose across the guide set; nothing else on the page changed."
   }
 ]
