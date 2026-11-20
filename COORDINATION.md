@@ -242,3 +242,83 @@ Both observations were reached separately, which raises confidence in them.
 - **Analytics endpoint.** Unchanged. `assets/app.js` still logs the five events to `localStorage` only. Deploying a self-hosted endpoint needs hosting that GitHub Pages cannot provide (existing FLG-010 / Q-08).
 - **Capture form.** No email provider exists, so none was added.
 - **Associates test.** Cannot be performed without access to Associates Central (existing FLG-004).
+
+---
+
+## Session `5506d56a` — one generator over the shared register
+
+Branch `arena/5506d56a-affil2`. Base `e1b6750`, merged forward from `15aee5c` before opening the PR.
+Task board: this session claimed T-10..T-16 and built the single-generator front end. Nothing below
+rewrites another session's records.
+
+### What changed, and what deliberately did not
+
+| File | Change |
+|---|---|
+| `data/products.json`, `data/sources.json`, `data/reverification-2026-11-20.json` | **read-only.** Consumed as the record of truth. `git diff` against `main` on these three files is empty |
+| `data/editorial.json` | **new.** This site's voice — headline, best-for, trade-off, FAQ per product — so annotations live outside the shared register |
+| `data/usda-temperatures.json` | **new.** The FSIS table (S22) as data, so the numbers are rendered, not typed into prose. Ported from the block `9397cc0c` added to the thermometer pages, which this generator would otherwise have overwritten |
+| `data/flags.json` | **appended only.** Added FLG-031 (P-02 accessory count), FLG-032 (no hands-on testing), FLG-033 (no named author), FLG-034 (P-01 quarts vs litres), FLG-035 (certification is a seller statement). Added `severity`, `links` and `owner_status` to every record so each row can cite a source. No existing `title` or `detail` was modified — checked field by field against `main` |
+| `scripts/build_site.py` | **new.** Generates all 29 pages, `sitemap.xml`, `feed.xml`, `robots.txt` |
+| `scripts/build_content.py` | **superseded.** Left on disk, unreferenced by CI. `build_site.py` is now the only generator. Removing it is safe but was not done here, to avoid deleting another session's file |
+| `scripts/check_site.py` | rewritten (below) |
+| `assets/style.css`, `assets/app.js` | rebuilt for the generated markup. The illustrations from `4bbf49bb` are kept and used |
+| `.github/workflows/pages.yml` | regenerate → fail on drift → gate → deploy; also runs on pull requests |
+| `.nojekyll` | added so `assets/` is served as-is |
+
+### Conflict resolution, stated plainly
+
+`main` advanced from `e1b6750` to `15aee5c` (through PR #14) while this session worked. Three of the
+defects this session set out to fix — listing title drift, P-03 wattage, the malformed feed — had
+already been found and fixed there. `main`'s register was therefore adopted rather than duplicated.
+
+Two numeric collisions were resolved in `main`'s favour:
+
+- My FLG-029 (P-01 quarts vs litres) clashed with `main`'s FLG-029 (product-data automation blocked).
+  Mine was renumbered **FLG-034**.
+- My FLG-030 (certification) clashed with `main`'s FLG-030 (food-safety source). Mine became
+  **FLG-035**.
+
+Every `FLG-nnn` written into page copy was then re-checked against the register's `title`, and the
+hardcoded numbers that assumed an older numbering were corrected. A gate rule now fails the build if
+a page cites a flag that is not defined, or if a defined flag is never published.
+
+### The gate, as it now stands
+
+Page level: doctype, `lang`, canonical matching the page's own path, one `<h1>`, the Associates
+statement twice with the first occurrence above `<main>`, nav and footer completeness, no
+root-relative links, no broken internal link or asset, JSON-LD that parses, no template debris.
+
+Compliance level: every `amazon.com` link carries `rel="sponsored nofollow"`; every outbound product
+link carries `tag=shopnow047c-20`; no `$` amount, star rating or review count anywhere.
+
+Data level: a blank field must be marked `unverified`; every flag needs a source that exists in
+`sources.json`; every defined flag must be published and every published flag must be defined;
+thermometer pages must carry the USDA block and air-fryer pages must not.
+
+Build level: every page in `sitemap.xml` and every sitemap entry backed by a file; `feed.xml` parses
+and its items exist; `robots.txt` points at the canonical sitemap; the embedded search index parses
+and its URLs exist. CI additionally regenerates and fails if the committed pages differ from the
+generator output.
+
+### Run
+
+    python3 scripts/build_site.py
+    python3 scripts/check_site.py
+    → checked 29 pages, 5 product records, 35 flags, 17 sources — ALL CHECKS PASS
+
+### PR and deploy
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/15 |
+| Merge | merged into `main`; Pages deploy result recorded below in the next commit |
+| Open items | FLG-001 to FLG-035 published on `flagged.html`; none blocks publication |
+
+### Still not done
+
+- **Analytics endpoint.** Unchanged: `assets/app.js` logs five events to `localStorage` and its
+  `send()` is a no-op. Needs hosting GitHub Pages cannot provide (FLG-010, Q-08).
+- **Associates link test.** Needs Associates Central (FLG-004). Every product page says `PENDING TEST`.
+- **Intended ASINs.** Owner-only (FLG-001).
+- **`scripts/build_content.py`.** Unreferenced now. Delete deliberately, not by accident.

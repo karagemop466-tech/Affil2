@@ -1,18 +1,118 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Disclosure, Privacy &amp; Analytics — ShopNow Kitchen</title><meta name="description" content="How we disclose affiliate relationships, handle privacy, and measure clicks.">
-<link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/disclosure.html"><meta property="og:title" content="Disclosure, Privacy &amp; Analytics — ShopNow Kitchen"><meta property="og:description" content="How we disclose affiliate relationships, handle privacy, and measure clicks."><meta property="og:type" content="website">
-<link rel="stylesheet" href="assets/style.css"><link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml"></head><body>
-<header class="masthead"><div class="wrap mast"><a class="brand" href="index.html">ShopNow <span>Kitchen</span></a><nav aria-label="Primary"><a href="index.html">Home</a><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="flagged.html">Flagged for Review</a></nav>
-<form class="search" action="search.html" method="get" role="search"><label class="sr" for="q">Search guides and products</label><input id="q" name="q" type="search" placeholder="Search: basket, capacity, thermometer…"><button type="submit">Search</button></form></div></header>
-<div class="disclosure" role="note"><div class="wrap">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links — if you buy through them, we may earn a commission at no extra cost to you. <a href="disclosure.html">How we disclose</a></div></div>
-<main class="wrap">
-<h1>Disclosure, Privacy &amp; Analytics</h1>
-<h2>Affiliate disclosure</h2><p>As an Amazon Associate I earn from qualifying purchases. Every page carries this statement above the fold (under the masthead) and again in the footer. Every outbound Amazon link is labelled <strong>(paid link)</strong> next to the button and carries <code>rel="sponsored nofollow"</code>, per Google guidance (S04) and FTC guidance (S03): clear, conspicuous, and near the link.</p>
-<h2>What we do not show</h2><p>Prices and availability are not displayed (Program Policies §2(b): only via Amazon-served links or Creators/PA API). Customer ratings and reviews are not copied. “Best” claims are not made without evidence.</p>
-<h2>Privacy-preserving measurement</h2><p>Five events are defined: <code>page_view</code>, <code>outbound_click</code>, <code>guide_read</code>, <code>search</code>, <code>suggestion_rank</code>. The current implementation stores counts only in your browser (localStorage) — no cookies, no third-party trackers, no fingerprinting. A self-hosted endpoint (Q-08) will replace local storage when deployed; until then, server-side conversion data is blank by design.</p>
-<h2>Product-intent records</h2><p>For each submitted link we store intended ASIN (blank until owner confirms), observed redirect target, official listing URL, confirmation date, and source — in separate fields. See any product page.</p>
-</main><footer><div class="wrap"><p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links — if you buy through them, we may earn a commission at no extra cost to you.</p>
-<nav aria-label="Footer"><a href="index.html">Home</a><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="flagged.html">Flagged for Review</a></nav><p class="dash">Dashboard &amp; records: <a href="executive-summary.html">Executive Summary</a> · <a href="sources.html">Sources</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Privacy &amp; Analytics</a> · <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS Feed</a></p>
-<p class="small">Prices and availability are not shown on this site. Check the live listing on Amazon for current details. Product names and Amazon are trademarks of Amazon.com, Inc. or its affiliates. This site is not endorsed by Amazon. Illustrations are original artwork, not product photographs. Listing checked: 2026-11-20. Values not confirmed on the listing are left blank.</p>
-<p class="small">© 2026 ShopNow Kitchen. Original editorial content. <a href="flagged.html">Flagged for Review</a> lists everything we could not verify.</p></div></footer>
-<script src="assets/app.js" defer></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Disclosure & Privacy — ShopNow Kitchen</title>
+<meta name="description" content="The affiliate disclosure, why prices and ratings are not shown, the five measured events, and what is stored in your browser.">
+<link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/disclosure.html">
+<meta property="og:site_name" content="ShopNow Kitchen">
+<meta property="og:title" content="Disclosure &amp; Privacy — ShopNow Kitchen">
+<meta property="og:description" content="The affiliate disclosure, why prices and ratings are not shown, the five measured events, and what is stored in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/disclosure.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Disclosure & Privacy", "url": "https://karagemop466-tech.github.io/Affil2/disclosure.html"}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="masthead">
+  <div class="wrap mast">
+    <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
+    <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
+    <form class="search" action="search.html" method="get" role="search">
+      <label class="sr" for="q">Search products and guides</label>
+      <input id="q" name="q" type="search" placeholder="Search air fryers, thermometers, guides" autocomplete="off">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+</header>
+<div class="disclosure" role="note"><div class="wrap">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.
+  <a href="disclosure.html">How we disclose</a></div></div>
+<main id="main" class="wrap">
+
+<p class="crumbs"><a href="index.html">Home</a> &rsaquo; <span>Disclosure &amp; Privacy</span></p>
+<h1>Disclosure, privacy and measurement</h1>
+<p class="lede">This page explains the words at the top of every page, what we are not allowed to
+  show, and exactly what happens to anything you do here.</p>
+
+<h2>The affiliate disclosure</h2>
+<p class="statement">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
+<p>The wording is the statement Amazon's Operating Agreement Section 5 requires, and it appears on
+  every page directly under the masthead, then again in the footer. FTC guidance on disclosures says a
+  disclosure placed only on an about page or at the end of a page is likely to be missed, so it
+  appears before the first product link rather than after it.</p>
+<p>Every outbound product link is labelled <strong>(paid link)</strong> next to the button and carries
+  <code>rel="sponsored nofollow"</code>, per Google's guidance on qualifying paid links. Where a
+  product page offers a second link to the same listing without our tag, it is labelled as the
+  untagged listing so you can verify the product yourself without sending us a click.</p>
+
+<h2>What we are not allowed to show</h2>
+<p>Amazon's Program Policies section 2(b) lets a site show prices and availability only if Amazon
+  serves the link the price appears in, or if the data comes through the Product Advertising or
+  Creators API. This site does neither, so no price, availability, star rating, review count or
+  best-seller rank is displayed anywhere. Where those values were visible on a listing when we read
+  it, they were recorded in the working data and deliberately excluded from the pages. That is why
+  the price column on the comparison table says "not shown, by policy" rather than being empty.</p>
+
+<h2>What we measure</h2>
+<p>Five events, defined once and used consistently:</p>
+<table class="events">
+  <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
+  <tbody>
+    <tr><td><code>page_view</code></td><td>Any page loads</td><td>Which pages are reached at all</td></tr>
+    <tr><td><code>outbound_click</code></td><td>A tagged Amazon link is clicked</td>
+      <td>Which product a reader actually leaves for</td></tr>
+    <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td></tr>
+    <tr><td><code>search</code></td><td>A search query returns results</td>
+      <td>What readers look for and do not find</td></tr>
+    <tr><td><code>suggestion_rank</code></td><td>A proposal is reordered on the Decision Center</td>
+      <td>Which direction is actually preferred</td></tr>
+  </tbody>
+</table>
+<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
+  carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
+  pixel and no tag manager on this site. A self-hosted endpoint could replace local storage later,
+  and the event names are fixed so that swap would not require editing any page &mdash; but until
+  that endpoint exists, nothing leaves your device.</p>
+<p>You can clear everything we store by clearing site data for this domain, and you can export it
+  first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
+
+<h2>Product-intent records</h2>
+<p>For each of the five submitted links, the <em>intended</em> ASIN and the <em>observed</em> redirect
+  target are stored in separate fields on the product page and are never merged. Merging them would
+  assert an intention only the owner can confirm. Each product page also carries the date the values
+  were read and a link to the official listing.</p>
+
+<h2>Cookies, and what we do not use</h2>
+<ul>
+  <li>No advertising cookies, no retargeting, no social pixels.</li>
+  <li>No fonts or scripts loaded from a third-party CDN &mdash; the page loads from this domain
+    only.</li>
+  <li>No account, no login, no email capture on this site.</li>
+  <li>Clicking a product link takes you to Amazon, where Amazon's own privacy policy applies and
+    Amazon's own cookies are set.</li>
+</ul>
+
+</main>
+<footer>
+  <div class="wrap">
+    <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
+    <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
+    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+      <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
+    <p class="small">Prices and availability are not shown on this site; check the live listing for
+      current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
+      Inc. or its affiliates. This site is not endorsed by Amazon. Artwork is original illustration,
+      not product photography. Nothing here is a hands-on product test — every specification is read
+      from the official listing and dated. Last verified 2026-11-20.</p>
+    <p class="small">© 2026 ShopNow Kitchen. <a href="flagged.html">Flagged for Review</a> lists everything
+      we could not verify.</p>
+  </div>
+</footer>
+<script src="assets/app.js" defer></script>
+</body>
+</html>
