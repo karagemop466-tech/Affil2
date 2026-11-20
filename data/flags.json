@@ -1,0 +1,52 @@
+[
+  {
+    "id": "FLG-001",
+    "title": "Intended ASIN unconfirmed",
+    "detail": "Owner has not confirmed intended ASIN per product. Intended field blank; observed field separate. Do not merge."
+  },
+  {
+    "id": "FLG-002",
+    "title": "Tracking ID unverified",
+    "detail": "shopnow047c-20 matches published shape but issuance/activity cannot be confirmed from any public page."
+  },
+  {
+    "id": "FLG-003",
+    "title": "Short-link compliance unresolved",
+    "detail": "Exact compliance status of link.amazon short links is unresolved. Do not claim they are invalid."
+  },
+  {
+    "id": "FLG-004",
+    "title": "Special Links pending test",
+    "detail": "One link per product must be tested in the enrolled Associates workflow and confirmed in the tracking report before scaling."
+  },
+  {
+    "id": "FLG-005",
+    "title": "Prices/ratings blank",
+    "detail": "No price, rating, review count, BSR or commission shown. Unverified fields left blank per Program Policies \u00a72(b)."
+  },
+  {
+    "id": "FLG-006",
+    "title": "Canonical host unset",
+    "detail": "No custom domain chosen. Canonical tags use placeholder host \u2014 update before indexing."
+  },
+  {
+    "id": "FLG-007",
+    "title": "No licensed product photos",
+    "detail": "No Amazon product images used. Visuals are original SVG/CSS illustrations, not product photos."
+  },
+  {
+    "id": "FLG-008",
+    "title": "CHEF iQ battery conflict",
+    "detail": "Same listing states 50 hours (About this Item) and 70 hours (Product Description). Both published; neither chosen."
+  },
+  {
+    "id": "FLG-009",
+    "title": "Emeril listing conflicts",
+    "detail": "Preset count 24 vs 25 and model numbers 4-00675-02 vs 4-00675-02X-VN appear on the same listing. Both published."
+  },
+  {
+    "id": "FLG-010",
+    "title": "Analytics local-only",
+    "detail": "Click counter runs in-browser until a self-hosted endpoint is deployed. See Q-08."
+  }
+]
