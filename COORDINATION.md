@@ -24,9 +24,25 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-23 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | done | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
 | T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
-| T-26 | Independent short-link re-check (5 submitted links) + repo gate/test re-run; new flag FLG-051 for non-reproduced redirects; no recorded values changed | done | 614b9fe7 | data/verification-2026-11-20-shortlinks.json, data/flags.json (append only), COORDINATION.md, generated flagged/sources/executive-summary pages |
-| T-28 | AI-powered product research engine: scripts/research_engine.py analyses first-party event data (zero-result searches, guide reads, outbound clicks) and emits ranked research suggestions for the Decision Center | done | 505e685a | scripts/research_engine.py |
-| T-29 | Campaign optimization advisor: scripts/campaign_optimizer.py analyses first-party click data and emits ranked optimization recommendations (content investment, placement review, conversion gaps) | done | 505e685a | scripts/campaign_optimizer.py |
+| T-27 | Reconcile open PRs (#47, #51, #53) and record dispositions | done | a150712 | COORDINATION.md only |
+| T-30 | Final integration: documentation reconciliation, official-source pass, gates, PR and Pages verification | in progress | 57fc3be0 | COORDINATION.md, README.md, EXECUTIVE-SUMMARY.md, data/verification-2026-11-20-pass3.json |
+
+> **Session `57fc3be0` claim (2026-11-20).** Branch `arena/57fc3be0-affil2`, base `4ddede5` (main).
+> This session takes the **final-integration** role described in the brief: it re-verifies the combined
+> data line by line against official sources, reconciles the open PRs left by earlier sessions, makes
+> the published counts self-generating so they cannot drift, confirms the site builds with no broken
+> links, and publishes to GitHub Pages.
+> **Scope claimed:** `COORDINATION.md`, `README.md`, `EXECUTIVE-SUMMARY.md`,
+> `data/verification-2026-11-20-pass3.json` (new), and the verification section of
+> `scripts/build_site.py` + `scripts/check_site.py`.
+> **Scope NOT claimed (not edited by this session):** `data/products.json`, `data/sources.json`,
+> `data/editorial.json`, `data/events.json`, `analytics/`, `functions/`, `assets/app.js`,
+> `assets/style.css` — shared records owned by other sessions. Requests against them are logged here.
+> Shared outputs (data tables, index, navigation) are changed by this integration session **only
+> after** the other tasks above are done, per the brief.
+> Live-source note: `curl` cannot reach `amazon.com` / `ftc.gov` / `developers.google.com` /
+> `affiliate-program.amazon.com` from this sandbox (TLS blocked on every request), but the
+> `fetch_page` tool **can**. Verification therefore uses `fetch_page` against the official URLs.
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
