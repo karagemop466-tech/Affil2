@@ -746,21 +746,6 @@ for token in ("promptAssemble", "promptDefaultIds", "data-pick", "copyPrompt"):
     if token not in app_js:
         err(f"assets/app.js: build-prompt capability missing ({token})")
 
-# ---------------------------------------------------------------- report
-print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
-      f"{len(flags)} flags, {len(sources)} sources")
-if notes:
-    print("\nnotes (not failures):")
-    for n in notes:
-        print("  -", n)
-if errors:
-    print(f"\n{len(errors)} PROBLEM(S):")
-    for e in errors:
-        print("  ✗", e)
-    sys.exit(1)
-print("ALL CHECKS PASS")
-
-
 # ---------------------------------------------------------------- reader voice (session 0acc86ad)
 # The site is a shop, not a newsroom. A shopper must never meet the project's filing system:
 # no chunk numbers, no bare flag IDs on the pages a buyer reads. Every flag stays published on
@@ -801,7 +786,9 @@ else:
     if BASE not in ftxt:
         err("findability.txt: canonical home not stated")
     for page in pages:
-        if f"{BASE}{page}" not in ftxt:
+        # relative to the site root — `page` is an absolute Path, and f"{BASE}{page}" could never
+        # match anything, so this rule was silently satisfied by nothing (found 2026-11-20)
+        if f"{BASE}{page.relative_to(ROOT)}" not in ftxt:
             err(f"findability.txt: does not list {page}")
 
 
@@ -821,3 +808,18 @@ for tm in re.finditer(r"<tbody>(.*?)</tbody>", vt, re.S):
     for rm in re.finditer(r"<tr>.*?</tr>", tm.group(1), re.S):
         if "<th" in rm.group(0) and "href=" not in rm.group(0) and 'scope="row"' in rm.group(0):
             err("verification.html: register row without source link")
+
+
+# ---------------------------------------------------------------- report
+print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
+      f"{len(flags)} flags, {len(sources)} sources")
+if notes:
+    print("\nnotes (not failures):")
+    for n in notes:
+        print("  -", n)
+if errors:
+    print(f"\n{len(errors)} PROBLEM(S):")
+    for e in errors:
+        print("  ✗", e)
+    sys.exit(1)
+print("ALL CHECKS PASS")

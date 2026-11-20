@@ -693,5 +693,37 @@
     ],
     "severity": "open",
     "owner_status": "Queued for owner decision (Q-29). Nothing on the site depends on the register entry; the guide's link is live and its wording is attributed to OSHA."
+  },
+  {
+    "id": "FLG-064",
+    "title": "Half the build gate ran after the report, so those rules had never failed a build",
+    "detail": "scripts/check_site.py printed its verdict and called sys.exit(1) in the middle of the file. Everything written below that line \u2014 the reader-voice rules (no register codes, no chunk citations, no internal headings on buyer pages), the verification-table 'every row links to a source' rule, the findability.txt coverage rule and the provenance-field checks \u2014 executed after the verdict had already been printed and never affected the exit code. They had been passing for days because nothing read their result, not because the site satisfied them. Moved on 2026-11-20 so the report is the last thing the script does. The first honest run produced 97 real problems: 44 verification rows with no source link (the page claimed 'The official listing link is in every table row', which was untrue for three of its tables), 10 audit artefacts on the five product pages, and a coverage rule that compared paths wrongly. All 97 are fixed in the same pass (FLG-065, FLG-066), and the site now passes the whole file.",
+    "links": [
+      "S01"
+    ],
+    "severity": "corrected",
+    "owner_status": "Repaired on 2026-11-20. Request to whoever owns the gate next: the report block should be structurally last \u2014 a function that prints the verdict and exits, called from the end of the file \u2014 so no future rule can be appended into dead code."
+  },
+  {
+    "id": "FLG-065",
+    "title": "Two gate rules could never fail, so the problems they described stayed unfixed",
+    "detail": "Found while repairing FLG-064. (1) The findability.txt coverage rule tested f'{BASE}{page}' where `page` is an absolute filesystem path, producing strings like 'https://site/Affil2//home/user/repo/index.html' that no file can contain; the rule passed only because its result was never read. Fixed to compare the repo-relative path, and findability.txt does list all 43 submitted pages. (2) The verification rule that requires a source link in every register row was equally unread: three of the page's tables (the live pass per-product reads, the new-observations table, the corrections table) had no link column at all, while the page's own prose promised a link in every row. The tables now carry Source / Read against / Record columns, and the claim is true.",
+    "links": [
+      "S10",
+      "S22"
+    ],
+    "severity": "corrected",
+    "owner_status": "Repaired on 2026-11-20, in the generator rather than by loosening the rules."
+  },
+  {
+    "id": "FLG-066",
+    "title": "Every product page printed the same provenance record twice, once in audit language",
+    "detail": "The product template rendered both intent_table() and ledger_block(): the same five fields, once as an internal register extract \u2014 headed 'Product-intent confirmation record', carrying bare codes such as '(FLG-001)', '(FLG-004)' and 'see FLG-022' \u2014 and once in the shop-voice version the reader-voice pass had introduced. The buyer saw the audit copy first. This is the exact pattern the owner asked to have removed, and it survived because the rule that forbids it was unreachable (FLG-064). The audit table is no longer emitted on buyer pages; intent_table() is kept for internal surfaces and now has a test asserting it still agrees with the register, so it cannot quietly drift out of use. The five required fields \u2014 submitted link, intended ASIN, observed redirect target, Special Link we publish, confirmation date, plus the Associates test status \u2014 remain on every product page, in reader language, exactly once.",
+    "links": [
+      "S01",
+      "S02"
+    ],
+    "severity": "corrected",
+    "owner_status": "Repaired on 2026-11-20 with a regression test. Nothing was deleted from the record: the codes live on flagged.html, the facts live on the product page."
   }
 ]
