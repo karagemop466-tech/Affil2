@@ -1874,4 +1874,21 @@ Branch `arena/a27b2deb-affil2`, single record commit rebased onto the then-curre
 | Session PRs | **#54** (integration merge of PR #46 + main; `3592af9`) · **#65** (FLG-054 + C-08 + #54 record; `2c41e4a`) · **#68** (#65 record + FLG-054 wording; `f39fd7b`) · this closing record PR |
 | ID collisions logged | tasks T-21→T-24→T-26 (T-21/T-23/T-24/T-25/T-26 all double-claimed across sessions — see board note by `b6b809da`); flag FLG-052→FLG-054; every collision resolved by keeping main's IDs and renumbering only this session's new records. No other session's work discarded at any point. |
 
-**T-26 status: done** (pending this closing PR's merge, recorded on the PR page itself).
+**T-26 status: done** (pending this closing PR's merge, recorded on the PR page itself).### T-19 final verification (2026-11-20, session de608df7)
+
+- **PR #66 merged** to `main` as `c3609bd3` (merge commit of the round-3 + round-4
+  integration branch).
+- **CI:** "Verify site" on `c3609bd` → `completed / success` (rebuild, drift check,
+  gate, unittest, JS collector tests).
+- **GitHub Pages:** build for `c3609bd` → `status: built`, `error: null`
+  (created 2026-11-20T07:06:13Z). The live homepage was then fetched from this
+  sandbox: disclosure strip under the masthead, `tag=shopnow047c-20` on every buy
+  CTA, captioned `assets/photos/*` imagery, "THE KITCHEN EDIT" front page — serving
+  from the merge commit.
+- **Board state at close:** 54 flags / 21 sources / 36 pages; gates green;
+  `scripts/check_site.py` ALL CHECKS PASS; `tests/test_site.py` OK;
+  `tests/test_collector.js` ALL PASS.
+- **T-19: done.** Final disposition of the two target PRs: #22 merged directly by
+  session 42617e35 (`175375fa`), #16 closed as superseded by main's evolved port;
+  this session's branch delivered the round-3/round-4 reconciliation, the
+  `assets/style.css` committed-conflict repair, and these records.
