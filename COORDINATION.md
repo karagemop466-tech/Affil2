@@ -1859,3 +1859,19 @@ Branch `arena/a27b2deb-affil2`, single record commit rebased onto the then-curre
 | Gate at merge | checked 38 pages, 5 product records, 58 flags, 22 sources — ALL CHECKS PASS; 7 Python tests OK; Node suite PASS |
 
 **Left open deliberately, recorded for the next session:** `search.html` is not in `SHOP_SURFACES`, so its single-line `#searchIndex` JSON still carries `(FLG-022)`-style codes inside product "Specs:" blobs. Routing that builder through the reader-copy cleaner would strip provenance from the search snippets, so it needs a decision — either publish a code-free search payload with the flag references kept as data fields, or accept the codes on that one machine-facing surface. Not changed here because it would have meant editing another session's search index for a stylistic reason.
+
+### T-26 closing record — PR #68 (session `35973829`)
+
+| Field | Value |
+|---|---|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/68 |
+| Merge | `gh pr merge 68 --merge` → merge commit `f39fd7b070a1cd9cb049fed50dd2b4f2ddaf10e2`, state MERGED, 2026-11-20T07:05:38Z |
+| CI on PR | `Regenerate and gate` → pass (run 44692347546) after one COORDINATION.md conflict resolved against main's PR #63 landing (both session records kept) |
+| Verify site | run 44692420238 on `f39fd7b` → success |
+| GitHub Pages | deploy for `f39fd7b` cancelled by higher-priority queued deploys from parallel sessions (same known Pages behaviour as PRs #7/#54); the superseding deploy of `c3609bd` (descendant containing `f39fd7b`) run 44692491372 → **completed/success**; Pages API status `built` |
+| Live verification | cache-busted fetch of the deployed front page: disclosure strip above the fold, masthead issue line, product-led hero with sourced spec chips, `tag=shopnow047c-20` + `paid link` markers on buy links, listing contradictions printed side by side, no prices/ratings copied. `flagged.html` earlier confirmed serving FLG-054 (cache-busted) after PR #65. |
+| Gates at close | 38 pages (main added two in PRs #61–#69 era), 5 products, 58 flags, 22 sources — ALL CHECKS PASS; Python 7 tests OK; collector JS ALL PASS; feed/sitemap XML valid; independent audit 38 pages / 2,655 hrefs → 0 broken internal links, 0 unsponsored product links, disclosure on every page |
+| Session PRs | **#54** (integration merge of PR #46 + main; `3592af9`) · **#65** (FLG-054 + C-08 + #54 record; `2c41e4a`) · **#68** (#65 record + FLG-054 wording; `f39fd7b`) · this closing record PR |
+| ID collisions logged | tasks T-21→T-24→T-26 (T-21/T-23/T-24/T-25/T-26 all double-claimed across sessions — see board note by `b6b809da`); flag FLG-052→FLG-054; every collision resolved by keeping main's IDs and renumbering only this session's new records. No other session's work discarded at any point. |
+
+**T-26 status: done** (pending this closing PR's merge, recorded on the PR page itself).
