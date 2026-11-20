@@ -21,6 +21,7 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-10 | Rebuild product data from verified listings; add scripts/build_content.py (generated tables); fix compare column shift; remove unverified 'Verified' labels; fix S01/S02 URLs; extend check_site.py to catch stale values; re-check P-03 specs; reconcile flags (new IDs FLG-017+) | done | 937876a6 | data/products.json, data/sources.json, data/flags.json (appends only), scripts/build_content.py, scripts/check_site.py, generated HTML (products/*, compare, index, category, guides, sources, flagged, executive-summary), EXECUTIVE-SUMMARY.md, feed.xml |
 | T-11 | Publication styling + decision-support improvements | done | 4bbf49bb | assets/style.css, assets/illustrations/*.svg, suggestions.html, questions.html, search.html, COORDINATION.md |
 | T-12 | Final integrate original illustrations in generated product cards | done | 4bbf49bb | scripts/build_content.py, generated product-card pages (index, categories, guides), compare.html, COORDINATION.md |
+| T-19 | Final integration: merge open PRs #16/#22/#27, resolve conflicts without discarding work, line-by-line re-verify combined data, build + broken-link gate, PR to main, merge, Pages deploy confirmation, completion record | in progress | de608df7 | COORDINATION.md, conflict resolutions in shared files as integration requires, EXECUTIVE-SUMMARY.md (append) |
 | T-23 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | done | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
 | T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
@@ -46,6 +47,8 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 > `fetch_page` tool **can**. Verification therefore uses `fetch_page` against the official URLs.
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
+
+> Session `de608df7` (branch `arena/de608df7-affil2`): first claimed T-12..T-14 from a stale base; renumbered to **T-19** after rebasing onto main — T-12 is taken (done, `4bbf49bb`), and the SG-27..SG-30/nav work (my old T-12) plus the analytics endpoint (my old T-13) are already in open PR #22 (`42617e35`) and PR #16 (`bdedd85e`) respectively. This session does not duplicate them; it integrates them as the final integration session (T-19).
 
 ## Verification log (2026-11-20, official sources only)
 
@@ -533,6 +536,186 @@ Merge: `gh pr merge 26 --merge` → merge commit `c021fb0`. GitHub Pages deploy 
 
 Process notes: two rebases onto a fast-moving main; conflicts in COORDINATION.md, assets/style.css and generated pages resolved by keeping both sides and regenerating from the merged generator — no hand-edited HTML; committed pages re-verified byte-identical to generator output before push. One `git push --force-with-lease` (this branch only; lease checked). Open and untouched: PR #16 (analytics collector, needs review/owner decision), FLG-001..FLG-035 (all published, none blocks).
 
+## Integration note — T-19 (session de608df7, PR #22 merge, 2026-11-20)
+
+- Merge of `arena/42617e35-affil2` (PR #22) into the integration branch: main's generated pages, `data/*.json` schema and `flags.json` ID meanings kept as authoritative (PR22 had identical ID sets on an older 3-field schema); no main work discarded.
+- Session 42617e35's numbering in the block below (their T-10..T-17) is branch-local and predates main's board (whose T-10..T-18 belong to other sessions); their log is kept verbatim as their record. On main's board their content lands under T-19.
+- Unique content ported into `scripts/build_site.py` (single source): SG-18..SG-30 decision rows (register now 30 rows; open ones SG-19/SG-20/SG-24 added to the shortlist), the Holiday Edit guide cluster (holiday-hosting, turkey-thermometer-plan, first-week-air-fryer added to GUIDES, sitemap, feed, both category lists and the design-brief cluster table), a front-page Holiday Edit section, original editorial art (`assets/img/*.jpg`) on the front page, categories and shop page, Fraunces/Inter brand fonts (SG-22), footer group renamed "Studio & records" (SG-27), and their gate rules (brand font link, (paid link) near every buy link, feed covers every guide, five instrumented events in app.js). 33 pages regenerate; `check_site.py` = ALL CHECKS PASS.
+- Kept as new files: `analytics-endpoint/` (README + reference worker) and `scripts/update_chrome.py` (standalone tool, superseded by the generator but harmless).
+- Flag-ID note: the verification log below says "FLG-011 (P-03 title vs body)" and "FLG-012 (Associates pages not re-fetchable)" — those meanings belong to their branch's older register; main's register (FLG-011 = unstable redirects, FLG-012 = B0c8moW59 not reproduced) is authoritative, and the P-03 wording finding is published under main's IDs. Their S01/S02 login-gate claim could not be reproduced: session T-19 fetched the Operating Agreement and Program Policies live the same day, so no flag was raised.
+- Superseded (recorded, not silently dropped): their alternative front-page composition (main's published cover stays), and their hand-written chrome on the pre-existing pages (all regenerated by the generator so chrome is uniform).
+
+---
+
+# Session 2 — `42617e35`  Branch: `arena/42617e35-affil2`  Base: e1b6750 (main)
+Started: 2026-11-20 (UTC). Scope: reader-facing polish pass ("reads like a shop, not an audit"), seasonal/trendy article clusters, decision-making registers (suggestions + questions), measurement layer (click counter + self-hosted analytics endpoint spec, five events), product-intent/link-test register fields, line-by-line re-verification against official sources.
+
+> Claim note: no other session has an open claim (all T-01..T-09 done/owned by `530c2e6c`, inactive). Scopes below are claimed by `42617e35` on this branch. Shared outputs (sitemap, feed, nav) are edited by this session as the current integration session and re-verified before merge.
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-10 | Re-verify 5 Amazon listings + program sources (S01–S04) line by line | done | 42617e35 | data/sources.json, sources.html, COORDINATION.md |
+| T-11 | Publication/shop redesign (imagery, brand, nav labels, front page leads with products) | done | 42617e35 | index.html, assets/style.css, assets/*, all .html (nav/footer) |
+| T-12 | Seasonal/trendy article cluster (holiday hosting + evergreen questions) | done | 42617e35 | guides/*.html, guides.html |
+| T-13 | Measurement layer: privacy-preserving outbound-click counter + self-hosted analytics endpoint spec, five defined events | done | 42617e35 | assets/app.js, analytics-endpoint/*, disclosure.html |
+| T-14 | Product-intent confirmation record + per-product Special Link test register (separate fields) | done | 42617e35 | data/products.json, sources.html |
+| T-15 | Decision registers: suggestions (SG-01..SG-30 incl. SG-27..SG-30) + open questions (known/unknown/how to close) | done | 42617e35 | suggestions.html, questions.html |
+| T-16 | Executive summary refresh + flagged refresh | done | 42617e35 | EXECUTIVE-SUMMARY.md, executive-summary.html, flagged.html, data/flags.json |
+| T-17 | Integration: sitemap/feed, check_site.py gate, PR to main + merge + Pages verify | in progress | 42617e35 | sitemap.xml, feed.xml, scripts/check_site.py, COORDINATION.md |
+
+## Verification log — session 42617e35 (2026-11-20, official sources only)
+
+| Item | Method | Result |
+|---|---|---|
+| P-01 B0CDY277D3 | live listing fetch | Title/identity match (long-form title incl. baskets/finish recorded in products.json) |
+| P-02 B09B7SB46R | live listing fetch | Title/identity match; live title states **24** One-Touch Preset Options (FLG-009 evidence kept) |
+| P-03 B08DKYBTPH | live listing fetch | Title/identity match; live title states TurboFry 4-in-1, **450 °F Hi-Fry** (FLG-011 — title vs body wording, both published) |
+| P-04 B0DHZTCNR5 | live listing fetch | Title/identity match (HT07 family) |
+| P-05 B0DZFD6R9Z | live listing fetch | Title/identity match (Gen3; live title drops "[2025 Model]" bracket — same ASIN) |
+| S03 FTC Endorsement Guides FAQ | live fetch | Re-verified (affiliate-marketing section present) |
+| S04 Google Qualify outbound links | live fetch | Re-verified (rel=sponsored; multiple rel values valid) |
+| S15 USDA FSIS temperature chart | live fetch | Verified — poultry 165 °F, leftovers 165 °F, steaks 145 °F + 3-min rest (chart updated 2025-04-14). New source row. |
+| S01/S02 Associates OA/Policies | live fetch FAILED (login-gated) | **MANUAL REVIEW** — links published on sources.html for hand-check (FLG-012). Wording basis carried from 530c2e6c log; not claimed as re-verified. |
+
+Checks: `scripts/check_site.py` ALL CHECKS PASS (28 pages) — includes disclosure-before-`<main>`, sponsored marking on every Amazon link, (paid link) near every data-outbound, no price/star values, internal links + assets, sitemap coverage, feed coverage of all 9 guides, separate intended/observed fields in data registers, five instrumented events.
+
+New flags this session: FLG-011 (P-03 title vs body wording), FLG-012 (Associates pages not re-fetchable). FLG-007/FLG-010 updated (AI-generated editorial imagery; measurement layer shipped, endpoint deploy pending).
+
+
+---
+
+## Session bdedd85e — integration note (T-19, 2026-11-20 UTC)
+
+Their T-13/T-14 record is preserved verbatim below. Integration deltas, recorded rather
+than silently rewritten:
+
+- **FLG-033 renumbered → FLG-036.** `main` already uses FLG-033 for "no named author or
+  editorial owner"; their collector flag is published as FLG-036 (detail expanded with the
+  aggregate-only Worker as the third implementation) and their amended FLG-010 points at it.
+  Their test assertion and `platform.html` were remapped in the same pass.
+- **The collector now has a third deployable form:** `analytics-endpoint/worker.js` was
+  adapted from PR #22's `/api/analytics` shape to this stack's `/api/collect` contract
+  (GET probe → 200, POST → 204/400/413, aggregate-only KV, 90-day expiry, never stores
+  search text). One contract, three implementations, one schema (`data/events.json`).
+- **`analytics-endpoint/README.md` rewritten** to the `/api/collect` contract; PR #22's
+  term-storage plan for search aggregation is recorded as gated behind SG-18/Q-08.
+- **`scripts/build_content.py` supersession stands:** `main` builds with
+  `scripts/build_site.py`; their generator edits were not carried over (their prose
+  deltas were ported into the generator instead — disclosure, questions, SG-12, search,
+  Measurement and Platform pages).
+- **The workflow stays verify-only** (no deploy job): `main`'s CI runs rebuild → drift →
+  gate → `node tests/collector.test.js` → `python3 -m unittest discover -s tests -p "test_*.py"`.
+  Publication remains GitHub Pages' branch builder.
+- **Tag rule scoped, not dropped:** the gate requires the tracking tag on every Amazon
+  **buy link** (CTA) and `rel=sponsored` everywhere; labelled verification links may stay
+  untagged per `how-we-choose.html`. Their blanket-tag test was adapted accordingly.
+- **`assets/app.js` stays local-only.** Their client `assets/js/collect.js` is now the
+  sole network half (probe → inert); app.js's duplicate beacon was never ported. Zero-result
+  searches are counted (SG-18's signal) and guide events carry the slug.
+- Branch-local T-13/T-14 numbering collided with `main`'s T-13/T-14 (already published);
+  this record keeps their IDs as historical, per the same convention as their Session-2 block.
+
+## Session bdedd85e — T-13 / T-14 claim (2026-11-20 UTC)
+
+**Session ID:** `bdedd85e`  **Branch:** `arena/bdedd85e-affil2`
+**Base when started:** `12d49cd` (the original `Initial commit`) — **stale**; `main` had already moved to `1c52f8a`.
+
+### Conflict log — the parallel site was NOT merged
+
+This session was started from a stale base and built a complete parallel site
+(`tools/`, `content/`, `assets/`, `docs/`, `functions/`, `analytics/`, `tests/`,
+plus its own `data/*.json` registers). That work is **not** merged.
+
+Reason, recorded rather than quietly resolved:
+
+- `main` already contains a complete, deployed publication from sessions
+  `530c2e6c`, `6e40cecc`, `990af5de`, `937876a6`, `4bbf49bb` and `e9516a41`
+  (PRs #1–#13). Merging a second site would discard all of it, including the
+  re-verification records, FLG-017..030, the USDA and Creators API citations,
+  the original illustrations and the decision tools.
+- Two earlier sessions (`990af5de`, `e9516a41`) built parallel sites the same
+  way; both were withdrawn for the same reason and logged above.
+- The standing instruction for this repository is that a session must never
+  overwrite another session's work, and that shared outputs belong to the
+  final integration session. This session **is** the integration session, so it
+  keeps `main`'s site and data and merges only what adds to them.
+
+The parallel build is preserved out of tree at `/tmp/affil2-parallel/` for this
+session's reference only. Nothing from it replaces a `main` file.
+
+### What this session claims
+
+| ID | Task | Status | Files (exclusive scope) |
+|----|------|--------|-------------------------|
+| T-13 | Self-hosted analytics endpoint + five-event privacy-preserving collector | in progress | `functions/api/collect.js`, `analytics/server.js`, `assets/js/collect.js`, `data/events.json`, `tests/collector.test.js` |
+| T-14 | Measurement surface, gate hardening, tracking-tag compliance, CI in the publish workflow | in progress | `measurement.html`, `scripts/check_site.py`, `scripts/build_content.py`, `.github/workflows/pages.yml`, `sitemap.xml`, `feed.xml`, `disclosure.html`, `questions.html`, `data/flags.json` (append only), `tests/test_site.py`, `README.md`, `EXECUTIVE-SUMMARY.md` |
+
+**Not claimed, not touched:** `data/products.json`, `data/sources.json`,
+`data/reverification-2026-11-20.json`, `data/campaign-ledger.json`,
+`scripts/build_content.py` product/spec rendering, `assets/style.css`,
+`assets/illustrations/*`, and every existing page's editorial copy. Those stay
+exactly as `main` has them.
+
+### The gap this session is closing
+
+`main`'s own records name the gap twice:
+
+- `FLG-010` — "Analytics local-only: click counter runs in-browser until a
+  self-hosted endpoint is deployed. See Q-08."
+- `disclosure.html` — "A self-hosted endpoint (Q-08) will replace local storage
+  when deployed; until then, server-side conversion data is blank by design."
+
+GitHub Pages cannot host a server-side function, so the endpoint is shipped in
+this repository in two deployable forms (a Cloudflare Pages Function and a
+dependency-free Node server) and is **inert** until someone points the site at
+one. The site keeps working, and keeps collecting nothing, until then.
+
+### T-13 / T-14 completion (2026-11-20, session bdedd85e)
+
+**What shipped**
+
+| Area | File(s) | State |
+|---|---|---|
+| Collector, Cloudflare Pages Function | `functions/api/collect.js` | shipped, not deployed |
+| Collector, standalone Node server | `analytics/server.js` | shipped, not deployed |
+| Browser client | `assets/js/collect.js` | shipped, inert until a collector answers |
+| Event schema | `data/events.json` | shipped, enforced in code by the collector |
+| Measurement surface | `measurement.html` | published, linked from every page |
+| Platform concept | `platform.html` | published, linked from every page |
+| Gate hardening | `scripts/check_site.py` | 8 new rules |
+| Generator changes | `scripts/build_content.py` | tracking tag on every Amazon product link, `rel="sponsored"` on every `link.amazon` link, collector script and dashboard links on every page |
+| Publish workflow | `.github/workflows/pages.yml` | `verify` job: rebuild → drift check → gate → collector tests → site tests; `deploy` needs `verify` |
+| Tests | `tests/collector.test.js`, `tests/test_site.py` | 13 + 22 checks |
+| Registers | `data/flags.json` | FLG-033 appended, FLG-010 amended to point at it |
+
+**Verification**
+
+- `python3 scripts/build_content.py` — runs clean and is idempotent: a second run produces byte-identical pages.
+- `python3 scripts/check_site.py` — **checked 27 pages, ALL CHECKS PASS**.
+- `node tests/collector.test.js` — **13 checks passed**.
+- `python3 -m unittest discover -s tests -p "test_*.py"` — **22 tests, OK**.
+- Collector exercised end to end against a local server: `GET` → `200 {"status":"ok"}`, beacon-style `POST` → `204`, and a payload carrying `email`/`ip` stored neither. Against the static site `/api/collect` → `404`, so the client stays inert exactly as designed.
+- HTML structure check over all 27 pages: 0 unclosed tags, 0 template artifacts.
+- Local HTTP smoke test: every page and asset returns `200`.
+
+**Rules added to the publishing gate**
+
+1. Every Amazon **product** link carries the Associates tracking tag.
+2. Every `link.amazon` short link carries `rel="sponsored"`.
+3. No Amazon-hosted imagery.
+4. Canonical link and meta description on every page.
+5. Broader star-rating and review-count patterns.
+6. The collector client is loaded on every page.
+7. `data/events.json` and the collector agree on the event list.
+8. `measurement.html` exists and is in the sitemap.
+
+**Left open, on the board, not blocking**
+
+- FLG-033 — the collector ships but is not deployed, because GitHub Pages cannot run a server-side function. Owner action: deploy one implementation, point the site at it, and choose a retention period.
+- FLG-003 / FLG-004 — short-link compliance and the one-per-product Special Link test remain unresolved and are not claimed either way.
+- FLG-001 / FLG-002 — intended ASINs and tracking-ID activity remain unconfirmed; the campaign ledger stays empty.
+
+**Nothing from `main` was discarded.** `data/products.json`, `data/sources.json`, `data/reverification-2026-11-20.json`, `data/campaign-ledger.json`, `assets/style.css`, `assets/illustrations/*`, `scripts/build_content.py`'s product and spec rendering, and every page's editorial copy are as `main` had them. The only shared files this session changed are the ones listed in the claim: the workflow, the gate, the generator, the sitemap, the robots file, `data/flags.json` (append only), `disclosure.html`, `questions.html`, `suggestions.html`, `executive-summary.html`, `README.md` and `EXECUTIVE-SUMMARY.md` — all edited surgically, never rewritten.
 ---
 
 ## Session 42617e35 — independent re-verification, polish pass, and merge reconciliation
@@ -1382,6 +1565,55 @@ maximum, not from the last ID seen in a prompt.
 
 No other session's work was discarded at any point. Every resolution was re-verified with the full
 gate and both test suites before pushing.
+
+---
+
+## Round-3 integration record — T-19 completion (session de608df7, 2026-11-20 UTC)
+
+By the time this branch returned for its third merge, `main` had moved through PRs
+#49, #50 and #52 (newsroom voice, storefront conversion, findability, live
+re-verification, coordination rounds), and the landscape of the two target PRs had
+changed:
+
+- **PR #22 was already merged** into `main` by session 42617e35 at `175375fa`
+  (06:00 UTC), with an explicit reconciliation log (above): hand-written
+  `holiday-hosting` / `turkey-thermometer-plan` guides, the parallel
+  `analytics-endpoint/` collector spec and local imagery were **deliberately
+  deleted as superseded** — generator-owned pages, collector scope owned by PR #16,
+  first-week surviving as a generator-native guide. This session accepted every one
+  of those deletions in round 3 rather than resurrecting them.
+- **PR #16 was closed without merging**, superseded on `main` by the ported and
+  evolved collector stack: `functions/api/collect.js`, `analytics/server.js`,
+  `analytics/server.py`, `assets/js/collect.js`, `assets/config.js`
+  (`analyticsEndpoint` switch), generated `measurement.html` + `platform.html`, and
+  the rewritten `data/events.json` schema (events as a keyed object with
+  `allowed_fields`). This session's parallel port of PR #16 (FLG-036, the
+  `/api/collect` worker adaptation in `analytics-endpoint/`, PR16-era
+  `tests/collector.test.js`) was **superseded by main's evolved equivalents** and
+  dropped in round 3: `main`'s own FLG-036 is the imagery flag, and
+  `tests/test_collector.js` replaced the PR16-era test file.
+- **Resolution polarity in round 3:** `origin/main`'s evolved state wins for all
+  content, generator, gate, tests, flags (FLG-001..050), guides (11), and pages
+  (35+); this branch's unique contribution is the coordination records themselves
+  plus verification that the combined tree builds and gates green.
+- **`assets/style.css` repaired:** `main`'s committed stylesheet contained a raw
+  unresolved conflict (lines 684–834: `<<<<<<< HEAD` / `=======` /
+  `>>>>>>> origin/main`) — everything between the markers was dead CSS on the live
+  site. This merge resolves it by union (both sides kept, marker lines dropped):
+  831 clean lines, gate green, all generator-emitted classes styled.
+
+**Round-3 verification (this merge commit):**
+
+- `python3 scripts/build_site.py` — regenerates clean, byte-identical to committed
+  pages (CI drift check).
+- `python3 scripts/check_site.py` — **ALL CHECKS PASS**.
+- `python3 -m unittest discover -s tests -p "test_*.py" -v` — main's site tests OK.
+- `node tests/test_collector.js` — main's collector/client tests OK.
+
+**T-19 status: complete** with this PR. PR #22 content reached `main` twice by
+different routes (direct merge + this branch's re-merge); round 3 keeps `main`'s
+curation as authoritative. Flagged/unverified items (FLG-001..050) remain published
+on `flagged.html` and do not block publication, per the brief.
 
 ## Session `arena/0acc86ad-affil2` — closing record
 
