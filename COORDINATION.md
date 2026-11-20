@@ -1429,3 +1429,42 @@ because parallel sessions read the same stale prompt. Flag IDs are safe (monoton
 **PR reconciliation:** PR #53 is merged (confirmed); its docs work is included in main history. PR #47 and PR #51 were closed after review: #47's unrelated divergent tree diff would remove substantial current functionality (including analytics, findability, compliance checks, and shared records); #51's narrative is coordination-only. Their own branches were not merged, and neither closure changes the standing verification data or the unresolved status of submitted short links. The closure rationale and the narrower live pass are retained here.
 
 **Local validation (2026-11-20):** `python3 scripts/build_site.py` → built 36 pages; `python3 scripts/check_site.py` → 36 pages, 5 products, 51 flags, 19 sources, ALL CHECKS PASS; Python unittest → 3 tests OK; `node tests/test_collector.js` → ALL JS COLLECTOR AND CLIENT TESTS PASS. Additional internal href/src scan found zero missing local targets. GitHub Pages API reported `built`, source `main`, URL `https://karagemop466-tech.github.io/Affil2/` before the latest documentation-only changes; deployment for PR #57 is pending.
+
+## Session `arena/19dbf5e2-affil2` — claim (2026-11-20 UTC, task IDs renumbered T-31..T-34)
+
+Branch `arena/19dbf5e2-affil2`, base `4ddede5` at claim time, rebased onto `b1362ba` (main after
+PRs #55–#57) before work began; the first claim commit `80b3e45` used T-26..T-29, which had been
+taken upstream in the meantime — the work is unchanged, the numbers were renumbered to the current
+maximum +1 per this board's own instruction. Session ID `19dbf5e2`.
+
+**Why.** The facts are verified and gated. What the owner still cannot see is a *shop*: three
+reused images carry 36 pages (the loudest remaining generated-site tell), the editorial calendar
+stops at 11 decision guides with nothing timely for the next six weeks of real search demand, and
+the automation loop stops at "recommendations" — `research_engine.py` and `campaign_optimizer.py`
+say what to write, but nothing turns an approved topic into a gated draft. The Decision Center
+lists 35 proposals but never assembles them into a path.
+
+**Claimed (non-overlapping with the one open claim, T-30 / `57fc3be0`).**
+- **T-31 — traffic engine.** New editorial wave in `scripts/traffic_guides.py` (new module) plus one
+  import line in `scripts/build_site.py`; regenerated `guides.html`, `feed.xml`, `sitemap.xml`,
+  `findability.txt` and the front-page rails. Every product figure is read from `data/products.json`,
+  every food-safety figure from `data/usda-temperatures.json`; nothing is invented, priced or rated.
+- **T-32 — imagery layer.** Five distinct product renderings in `assets/photos/` (original,
+  generated for this site, never Amazon photography), the `PHOTOS` map, per-product card and
+  product-page images, and a real `og:image` per product page — all in `scripts/build_site.py`.
+- **T-33 — decision paths and the missing-information register.** A "choose a path" block in the
+  Decision Center (`build_suggestions` region of `scripts/build_site.py`), new `SG-` rows, new `Q-`
+  rows, appended `FLG-052`+ in `data/flags.json` (append-only), and `S25` in `data/sources.json`
+  if an external standard is cited in a guide.
+- **T-34 — gated draft pipeline.** `scripts/draft_guide.py` (new), `data/drafts/` (new),
+  `tests/test_draft_guide.py` (new): topic brief → draft guide record → hard compliance lint
+  (no price, no rating, no figure that the register does not mark verified, no unsourced claim) →
+  written as `unapproved`. A draft becomes a page only when a human edits its status field.
+
+**Not claimed / not touched.** `README.md`, `EXECUTIVE-SUMMARY.md`,
+`data/verification-2026-11-20-pass3.json` and the **verification section** of `scripts/build_site.py`
+and `scripts/check_site.py` (all owned by T-30 / `57fc3be0`). Also untouched: `analytics/`,
+`functions/`, `data/events.json`, `assets/app.js`, `data/products.json` values, `data/editorial.json`
+values, `scripts/research_engine.py`, `scripts/campaign_optimizer.py` (T-28/T-29, `505e685a`),
+existing flags `FLG-001..051` and existing `SG-`/`Q-` rows. Generated HTML is never hand-merged:
+the merged generator is re-run and the gate decides.
