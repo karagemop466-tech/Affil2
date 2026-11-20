@@ -1612,3 +1612,18 @@ Branch `arena/a27b2deb-affil2`, single record commit rebased onto the then-curre
   amazon.com homepage on the 2026-11-20 re-check; FLG-003 still stands — that is not a finding that the
   links are invalid), FLG-050, FLG-053, FLG-054 (stale verification-log weight rows) and the T-30/T-31
   integration passes.
+
+---
+
+### Session `arena/93894704-affil2` (T-32) — PR, merge and deploy result
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/63 (2 commits: `69419b1`, `b9baf50`, then the two merge commits `3636da3`/`2609561`) |
+| Merge | merged into `main` as `985beb2777271401a03f6a4db59c60492a40fa1e` (REST `PUT /pulls/63/merge`, `sha` pinned to the pushed head) |
+| CI before merge | `Verify site` reported **no check on the PR branch**; it ran on `main` for the merge commit and passed — "Merge pull request #63 … Verify site — success". The four local commands were therefore run against the exact pushed commit and all pass (see above). |
+| Pages | `pages/builds/latest` → `status: built`, `error: null`, `commit: 985beb277…`, created `2026-11-20T07:03:20Z`; `pages build and deployment` run `44692134407` completed success |
+| Live content check | Fetched https://karagemop466-tech.github.io/Affil2/guides/thermometer-ice-test.html — headline, kicker `How-to · food safety · 6 min read · verified 2026-11-20`, the byline line `By The Kitchen Desk / Verified against the official listing on 2026-11-20 / Who writes this / How we work`, USDA steps and type table all render, and the copy shows real characters (`±0.5 °F`, `2–4 degrees F`) with no leaked entity markup. `flagged.html` renders the full register, including FLG-055…FLG-058 and the other sessions' FLG-051/053/054 rows. |
+| Gate at merge | checked 38 pages, 5 product records, 58 flags, 22 sources — ALL CHECKS PASS; 7 Python tests OK; Node suite PASS |
+
+**Left open deliberately, recorded for the next session:** `search.html` is not in `SHOP_SURFACES`, so its single-line `#searchIndex` JSON still carries `(FLG-022)`-style codes inside product "Specs:" blobs. Routing that builder through the reader-copy cleaner would strip provenance from the search snippets, so it needs a decision — either publish a code-free search payload with the flag references kept as data fields, or accept the codes on that one machine-facing surface. Not changed here because it would have meant editing another session's search index for a stylistic reason.
