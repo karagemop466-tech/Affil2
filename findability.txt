@@ -1,0 +1,78 @@
+# ShopNow Kitchen - site profile for search engines and AI crawlers
+# Generated 2026-11-20 by scripts/build_site.py. Do not hand-edit.
+
+SITE: ShopNow Kitchen
+TYPE: independent product-review publication (Amazon Associates affiliate)
+CANONICAL_HOME: https://karagemop466-tech.github.io/Affil2/
+PRIMARY_LANGUAGE: en-US
+LAST_REVIEWED: 2026-11-20
+
+## What this site is for
+One question per page: which air fryer or meat thermometer fits a particular kitchen,
+and why. Five products are covered. Each specification is quoted from the official
+Amazon listing, dated, and linked. Listing contradictions are printed rather than
+smoothed over. No prices, star ratings, review counts or best-seller ranks are
+reproduced, because Amazon's Program Policies only permit that via Amazon-served data.
+
+## Editorial policy (what a crawler or reader can rely on)
+AUTHORSHIP: no named individual author yet; see about.html for what that means.
+REVIEW_PROCESS: read the official listing, quote it, date it, link it, print conflicts.
+HANDS_ON_TESTING: none claimed. The site says so on every product page.
+PAID_LINKS: every outbound Amazon link is rel="sponsored nofollow" and carries the
+              Associate tag shopnow047c-20. Disclosure appears above the fold on every page.
+CORRECTIONS: dated entries on sources.html; unresolved items published on flagged.html.
+
+## Index these (reader-facing)
+- https://karagemop466-tech.github.io/Affil2/air-fryers.html
+- https://karagemop466-tech.github.io/Affil2/compare.html
+- https://karagemop466-tech.github.io/Affil2/guides.html
+- https://karagemop466-tech.github.io/Affil2/guides/air-fryer-thanksgiving.html
+- https://karagemop466-tech.github.io/Affil2/guides/basket-vs-oven.html
+- https://karagemop466-tech.github.io/Affil2/guides/capacity-checklist.html
+- https://karagemop466-tech.github.io/Affil2/guides/cleanup-counter-space.html
+- https://karagemop466-tech.github.io/Affil2/guides/first-week-air-fryer.html
+- https://karagemop466-tech.github.io/Affil2/guides/holiday-capacity.html
+- https://karagemop466-tech.github.io/Affil2/guides/holiday-roast-thermometer.html
+- https://karagemop466-tech.github.io/Affil2/guides/instant-vs-wireless.html
+- https://karagemop466-tech.github.io/Affil2/guides/multi-function-questions.html
+- https://karagemop466-tech.github.io/Affil2/guides/small-kitchen-air-fryer.html
+- https://karagemop466-tech.github.io/Affil2/guides/thermometer-accuracy.html
+- https://karagemop466-tech.github.io/Affil2/how-we-choose.html
+- https://karagemop466-tech.github.io/Affil2/index.html
+- https://karagemop466-tech.github.io/Affil2/meat-thermometers.html
+- https://karagemop466-tech.github.io/Affil2/products/p01-chefman-6qt-dual-basket.html
+- https://karagemop466-tech.github.io/Affil2/products/p02-emeril-26qt-french-door.html
+- https://karagemop466-tech.github.io/Affil2/products/p03-chefman-8qt-turbrofry.html
+- https://karagemop466-tech.github.io/Affil2/products/p04-thermomaven-1sec.html
+- https://karagemop466-tech.github.io/Affil2/products/p05-chefiq-sense-gen3.html
+- https://karagemop466-tech.github.io/Affil2/search.html
+- https://karagemop466-tech.github.io/Affil2/shop.html
+
+## Not for indexing (project records, still public)
+- https://karagemop466-tech.github.io/Affil2/about.html
+- https://karagemop466-tech.github.io/Affil2/campaign-ledger.html
+- https://karagemop466-tech.github.io/Affil2/design-brief.html
+- https://karagemop466-tech.github.io/Affil2/disclosure.html
+- https://karagemop466-tech.github.io/Affil2/executive-summary.html
+- https://karagemop466-tech.github.io/Affil2/flagged.html
+- https://karagemop466-tech.github.io/Affil2/measurement.html
+- https://karagemop466-tech.github.io/Affil2/platform.html
+- https://karagemop466-tech.github.io/Affil2/questions.html
+- https://karagemop466-tech.github.io/Affil2/sources.html
+- https://karagemop466-tech.github.io/Affil2/suggestions.html
+- https://karagemop466-tech.github.io/Affil2/verification.html
+
+SITEMAP: https://karagemop466-tech.github.io/Affil2/sitemap.xml
+RSS: https://karagemop466-tech.github.io/Affil2/feed.xml
+ROBOTS: https://karagemop466-tech.github.io/Affil2/robots.txt
+
+## How to cite this site
+ShopNow Kitchen, "<page title>", reviewed 2026-11-20.
+Canonical URL: https://karagemop466-tech.github.io/Affil2/<page>. Quote the review date with any specification you cite.
+
+## Known limits, stated up front
+- One canonical host: the GitHub Pages project URL above. No custom domain is live yet.
+- Intended ASINs per submitted link are unconfirmed; observed redirect targets are recorded.
+- The Associates tracking ID's issuance is not publicly verifiable.
+- Search Console is not yet verified, so no query data informs the editorial calendar.
+Full detail: flagged.html (unresolved items) and questions.html (what only the owner can answer).

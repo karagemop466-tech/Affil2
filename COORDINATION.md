@@ -21,6 +21,9 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-10 | Rebuild product data from verified listings; add scripts/build_content.py (generated tables); fix compare column shift; remove unverified 'Verified' labels; fix S01/S02 URLs; extend check_site.py to catch stale values; re-check P-03 specs; reconcile flags (new IDs FLG-017+) | done | 937876a6 | data/products.json, data/sources.json, data/flags.json (appends only), scripts/build_content.py, scripts/check_site.py, generated HTML (products/*, compare, index, category, guides, sources, flagged, executive-summary), EXECUTIVE-SUMMARY.md, feed.xml |
 | T-11 | Publication styling + decision-support improvements | done | 4bbf49bb | assets/style.css, assets/illustrations/*.svg, suggestions.html, questions.html, search.html, COORDINATION.md |
 | T-12 | Final integrate original illustrations in generated product cards | done | 4bbf49bb | scripts/build_content.py, generated product-card pages (index, categories, guides), compare.html, COORDINATION.md |
+| T-23 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | done | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
+| T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
+| T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -985,7 +988,7 @@ Requests logged for owners (not applied in this session):
 
 | ID | Task | Status | Owner | Files touched |
 |----|------|--------|-------|---------------|
-| T-23 | Final integration: land PR #46 (T-22 re-verification addendum) on top of current main, re-run all gates + broken-link check, PR → main, merge, Pages confirmation, record (renumbered from T-21: c449a2ad took T-21, 578ca10d took T-22) | in progress | 35973829 | `COORDINATION.md`, and via merge only the PR #46 scope (`data/verification.json` additive, `scripts/build_site.py`, `verification.html` regenerated) |
+| T-26 | Final integration: land PR #46 (T-22 re-verification addendum) on top of current main, re-run all gates + broken-link check, PR → main, merge, Pages confirmation, record (renumbered twice: c449a2ad took T-21, 578ca10d took T-22, b6b809da took T-23, 0acc86ad took T-24/T-25 — see collision log) | in progress | 35973829 | `COORDINATION.md`, and via merge only the PR #46 scope (`data/verification.json` additive, `scripts/build_site.py`, `verification.html` regenerated) |
 
 - Branch `arena/35973829-affil2`, base `c8b8926` (main, after PR #31), integrating forward through `f1e84b6` (main, after PR #45).
 - Baseline at claim time: `build_site.py` + `check_site.py` pass on 33 pages; Python (3) and Node collector tests pass; feed/sitemap XML parse; Pages `main` built with green Verify site + deploy runs.
@@ -1063,7 +1066,7 @@ FLG-001 intended ASINs · FLG-002 tracking-ID activity · FLG-003 short-link com
 - PR: (recorded after merge below)
 - GitHub Pages: (recorded after merge below)
 
-### T-23 verification record (session `35973829`, 2026-11-20 UTC)
+### T-26 verification record (session `35973829`, 2026-11-20 UTC)
 
 Scope executed: merged `origin/main` (`f1e84b6`, after PR #45) and PR #46's branch (`arena/578ca10d-affil2`, T-22 re-verification addendum) into `arena/35973829-affil2`. Two COORDINATION.md conflicts resolved by keeping every session's record block once (nothing discarded). No product, source, flag or editorial value was authored or altered by this session.
 
@@ -1093,6 +1096,284 @@ Sources fetched live by this session (official only):
 
 Irregularities: none new found by this pass. Owner-gated items unchanged (FLG-001/002/003/004/010/019/028/032/033); all 40 flags remain published on `flagged.html` and none blocks merge. Minor observation, not flagged: `REQUIREMENTS-TRACE.md` (T-21 doc) is served on Pages but is not an HTML page and is not listed in `sitemap.xml` — consistent with the gate's page definition.
 
-### T-23 status
+### T-26 status
 
 in progress → PR opened and merged; Pages confirmation and PR link recorded in the follow-up block below.
+---
+
+## Session `arena/b6b809da-affil2` — T-23 claim: storefront conversion, asset hygiene, and a decision-path section (2026-11-20)
+
+**Branch:** `arena/b6b809da-affil2` (platform-bound; this is the only branch this session may write to).
+**Base:** rebased onto `origin/main` `4dd7cdd` (PR #41) at the start of this session; gate green before any edit
+(`36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`, 3 Python tests OK, Node collector tests PASS).
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-23 | Storefront conversion + asset hygiene + decision-path section (renumbered from T-21: that number was claimed by c449a2ad for the requirements-traceability register while this session worked) | in progress | b6b809da | `scripts/build_site.py`, `scripts/check_site.py`, `scripts/seasonal_guides.py`, `assets/style.css`, `data/flags.json` (append only), `data/editorial.json` (annotations only), regenerated HTML/`sitemap.xml`/`feed.xml`, `COORDINATION.md`, removal of unreferenced duplicate image files under `assets/` |
+
+Scope note: `data/products.json`, `data/sources.json` are **read-only** for this session — no product
+fact, listing value or source is changed, and no new claim about Amazon, FTC, Google or USDA policy is
+made. `data/flags.json` is appended to only. The workflow file, `analytics/`, `functions/` and the
+tests are not touched. Open owner-gated items (FLG-001/002/003/004/010/028/033) stay untouched.
+
+**Constraint on verification this session, stated up front.** This sandbox can only reach
+`github.com`, `codeload.github.com`, `api.github.com`, `registry.npmjs.org`, `pypi.org` and
+`files.pythonhosted.org`. Every other host — `amazon.com`, `affiliate-program.amazon.com`, `ftc.gov`,
+`developers.google.com`, `fsis.usda.gov` — fails TLS from here. **No live source was re-fetched in this
+session.** Consequently this session asserts **no new product, listing or policy fact**, does not
+re-verify any register value, and records no "verified" status for anything it did not read. Work is
+limited to markup, styling, generated navigation, gate rules, and the removal of duplication that can
+be proved from the repository itself. Register values stand on the earlier sessions' dated reads
+(S10–S19, S01–S04, S20–S24); that their text was not re-read today is itself recorded below.
+
+### T-23 completion (session `b6b809da`, 2026-11-20)
+
+Renumbered from T-21: session `c449a2ad` claimed T-21 (requirements traceability, `REQUIREMENTS-TRACE.md`)
+and session `578ca10d` then used T-22 for the final-integration addendum, both while this session worked.
+Those numbers were taken; this session's task is T-23. No other session's work was edited.
+
+**What shipped**
+
+| Area | Change |
+|---|---|
+| Stylesheet integrity | `assets/style.css` line 601 opened `.pdp-art img{` and never closed it, so the `@media(max-width:1000px)` rule after it was parsed as declarations and dropped. Fixed, and the gate now fails on an unbalanced stylesheet or an unclosed `@media` block. |
+| Missing styles | The generator emits `.hero`, `.hero-photo`, `.hero-copy`, `.hero-facts`, `.aisle-photo`, `.pdp-photo`; the November layer renamed the hero to `.cover` and shipped no rule for any of them. Rules added (dark-green cover card with cream type), and the gate now fails on any class the generator emits that has no rule. |
+| Front page | A four-way "start where you actually are" router sits directly under the hero and above the category directory. It answers "which of these am I?" before asking the reader to browse. Gated. |
+| Guides | Every guide now ends on *If this guide decided it for you*: one line per relevant product (choose-it-if + the caveat) and one tagged button. Section headings carry generated step markers; the hand-typed "1." prefixes were removed so the number is not printed twice. |
+| Product pages | Each product page links to the guides that discuss it (previously there was no product→guide link at all). Gated in both directions. |
+| Link semantics | FTC, Google, USDA and Amazon policy/creators-API citations were carrying `rel="sponsored nofollow"`, which marks them as paid placements. Only `amazon.com/dp/` listings are now sponsored; citations use `rel="noopener noreferrer"`. Gated. |
+| Dead files | Six unreferenced images removed (`assets/feature.jpg`, `basket.jpg`, `probe.jpg`, `assets/img/cat-air-fryers.jpg`, `cat-thermometers.jpg`, `hero-kitchen.jpg` — the last three duplicated a file of the same name under `assets/photos/` at a different size). Gated: an image file nothing references now fails the build. |
+| Stale counts | SG-02 said "ten guides … include all ten" against eleven published; the count is now derived from `GUIDES`. README and the executive summary were refreshed to 46 flags / current page count. |
+
+**What was verified, and what could not be**
+
+Reached from this sandbox: GitHub API and the repository itself. Not reached: `amazon.com`,
+`affiliate-program.amazon.com`, `ftc.gov`, `developers.google.com`, `fsis.usda.gov` — all failed at TLS.
+So **no listing, policy page or temperature chart was re-read in this session**, no register value was
+changed, and no value is newly marked verified. Every fact on the site still rests on the dated reads
+recorded against S01–S24 by earlier sessions. Published as **FLG-045** with the same wording on
+`flagged.html`.
+
+Verified by execution instead: `scripts/build_site.py` → 36 pages, idempotent across consecutive runs;
+`scripts/check_site.py` → `checked 36 pages, 5 product records, 46 flags, 19 sources — ALL CHECKS PASS`
+(including the 8 new rules); `python3 -m unittest discover` → 3 tests OK; `node tests/test_collector.js`
+→ ALL JS COLLECTOR AND CLIENT TESTS PASS; a full internal link crawl of all 36 pages → 0 broken links;
+HTTP 200 for home, shop, compare, guides, a guide, a product page, flagged, suggestions, questions,
+sources, every dashboard page, the stylesheet and the images; disclosure confirmed above `<main>` on the
+served homepage; `git diff --check` clean.
+
+**New flags published (append-only; FLG-001–FLG-040 untouched, verified field by field)**
+
+FLG-041 unclosed CSS rule · FLG-042 policy citations mislabelled `rel=sponsored` · FLG-043 six dead image
+files · FLG-044 stale "ten guides" count · FLG-045 no source re-read in this pass (the honest limit) ·
+FLG-046 the masthead name and volume line are editorial devices, not an owned brand.
+
+**Conflict log.** `git pull --rebase` conflicted in `COORDINATION.md` (main gained three session records
+and a `REQUIREMENTS-TRACE.md` while this session worked). Resolved by keeping main's entire file and
+re-appending only this session's block — no other session's record was discarded. The branch was force-pushed
+once with `--force-with-lease` after that rebase, on this branch only.
+
+
+### T-23 release record
+
+| Field | Value |
+|---|---|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/48 |
+| CI before merge | `Verify site` run 44688719463 on `arena/b6b809da-affil2` — **success** |
+| Merge | `gh pr merge 48 --merge` — state **MERGED**, 2026-11-20T06:34:38Z, merge commit `4faab7903c73adee7cac51a1df07948f56ac0e34` |
+| Post-merge gate | `Verify site` run 44688784940 on `main` — **success** |
+| Pages | `pages build and deployment` run 44688783949 — **success**; GitHub API reports `status: built`, `build_type: legacy`, `html_url: https://karagemop466-tech.github.io/Affil2/` |
+| Live page check | **Not performed from this sandbox.** `karagemop466-tech.github.io` is not on this environment's reachable-host list and the fetch failed at TLS (`SSL_ERROR_SYSCALL`). Deployment success and the Pages `built` status are confirmed through the GitHub API; the rendered-page read the board's own lesson asks for must be done from a browser. |
+
+Honest limit, repeated: the deploy is confirmed by the GitHub API, not by fetching the deployed HTML from
+here. The next session with network access should open the live homepage, one guide and `flagged.html`
+with a cache-busting query string and confirm the router, the guide product line and FLG-041…FLG-046 render.
+
+## Session `arena/0acc86ad-affil2` — claim (2026-11-20; T-IDs renumbered T-23..T-25 upstream)
+
+Branch `arena/0acc86ad-affil2`, base `66ccda9` (main, after PR #39). Session ID `0acc86ad`.
+
+**Why.** The owner's brief for this session is a *voice* brief, not a data brief: "Make it read like a shop, not an audit." The site's factual spine is already verified and gated; what remains is that buyer-facing pages leak production artifacts into the copy — "chunk 7", inline `FLG-0xx` IDs, "Product-intent confirmation record", "Specifications, line by line". A shopper should never see the newsroom.
+
+**Claimed (non-overlapping).**
+- T-23 — voice pass inside `scripts/build_site.py` render functions + `assets/style.css` additions + `data/editorial.json` copy; regenerated HTML. Every published fact, source link, disclosure placement, sponsored marking and gate rule is preserved; only the reader-facing wording and layout change.
+- T-24 — `findability.txt` at the repo root and the generator/check rules that keep robots, sitemap and feed consistent with it.
+- T-25 — a dated live re-verification record of the five listings' *published* spec values and the policy sources, appended as new evidence; no existing flag is deleted or downgraded.
+
+**Not claimed / untouched.** `data/flags.json` numbering and existing entries, `data/products.json` field values (unless live verification contradicts them, in which case the conflict is logged as a new flag and the value is left as published with both figures), the open collector work in PR #16, and every owner-gated item (FLG-001/002/003/004/010/028/033). Anything another session claimed first is theirs; I will log a request instead of editing.
+
+**Test plan.** `python3 scripts/build_site.py` (idempotent), `python3 scripts/check_site.py`, `python3 -m unittest discover -s tests`, `node tests/test_collector.js`, plus a browser-level read of the three highest-traffic pages (home, a category page, a product page) to confirm no internal token reaches a reader.
+
+## Session `arena/0acc86ad-affil2` — completion record (2026-11-20)
+
+Branch `arena/0acc86ad-affil2`, based on `66ccda9`. Three tasks claimed at the start of the session (originally claimed as T-20..T-22; renumbered to T-23..T-25 because session 58c6ca4a already used T-20 for its own verification pass — the IDs, not the work, collided):
+each committed and pushed separately; scope stayed inside the claim.
+
+### T-23 — shop voice on every buyer page (done)
+
+**Problem found.** The facts were right; the voice was a newsroom's. Measured before the change:
+64 crawl-chunk citations ("chunk 7"), 305 occurrences of bare `FLG-0xx` ticket numbers across 36
+files, a "Product-intent confirmation record" heading on all five product pages, and a
+"Specifications, line by line" table heading.
+
+**What changed (generator, not hand-edited HTML).**
+- `go_clean()` in `scripts/build_site.py` strips crawl-chunk citations and flag IDs from every
+  string that passes through `esc()`. Internal records are untouched; `flagged.html` is generated
+  from `data/flags.json` and never passes through it, so every flag is still published in full.
+- `source_note()` turns "Stated in: About this item & Product information — Features & Specs
+  (chunks 4 & 7)" into "Read from the listing bullets on 2026-11-20", with a link to the source
+  register. No value changed.
+- `ledger_block()` replaces the intent record with a shopper-facing table that keeps all five
+  required fields visible and separate: intended ASIN, observed redirect target, Special Link,
+  confirmation date, Associates test status.
+- `deals_block()` adds a "What comes with it" card (box contents, care, warranty) quoted from the
+  listing's own fields.
+- `card()` gains shop tags (`Best for two cooks`, `Two baskets`) and a "Why we picked it" line per
+  product; "Best for"/"The catch" became "Buy it if"/"Skip it if".
+- Reader-facing language in `data/products.json` and `data/editorial.json` rewritten where it
+  carried citations. Two FAQ answers were rewritten after the citation strip exposed that they no
+  longer named their own conflict — the gate caught this, which is the gate working.
+- `how-we-choose`, `about`, `disclosure` and the search index were swept too.
+
+**Verification.** `build_site.py` idempotent (36 pages); `check_site.py` ALL CHECKS PASS (36 pages,
+5 product records, 44 flags, 19 sources); 3 Python tests OK; `node tests/test_collector.js` PASS;
+`node --check assets/app.js` OK. Zero `chunk` citations and zero bare flag IDs remain on all 25
+reader-facing pages (`grep` verified, and now enforced by the gate).
+
+### T-24 — one indexable site with a stated reason to rank (done)
+
+- `findability.txt` generated at the site root: canonical home, purpose, editorial policy
+  (authorship, review process, no hands-on testing, paid-link marking, corrections), the 24
+  reader-facing pages separately from the 12 project records, sitemap, feed, citation form, and
+  known limits. `robots.txt` points at it.
+- Sitemap deliberately still submits all 36 pages: the gate and an existing test require full
+  coverage, and a half-submitted site is worse than an honest single site. The split lives in
+  `findability.txt` and the choice is recorded as **Q-22** for the owner.
+- Gate additions: all pages in `sitemap.xml` must appear in `findability.txt`; reader pages may not
+  contain a chunk citation or a flag ID. CI now also fails on drift in `findability.txt`.
+
+### T-25 — independent live re-verification (done)
+
+All five official listings fetched live this session and re-read without reusing earlier notes.
+33 field rows recorded in `data/verification-2026-11-20-live.json` and published as an
+"Independent live pass" section on `verification.html`.
+
+| Source | Result |
+|---|---|
+| `/dp/B0CDY277D3` | dimensions, 200–450 °F, 120 V/1700 W, 1-yr, cETL, capacity 6 L vs 6 qt — confirmed |
+| `/dp/B09B7SB46R` | 16.9×15.8×14.8 in, 24 vs 25 presets, 24.6 L vs 26 qt — confirmed |
+| `/dp/B08DKYBTPH` | 12.75×13.5×10 in, 8 qt, 200–400 °F vs 450 °F Hi-Fry, 1000 W vs 1700 W, 4 presets — confirmed |
+| `/dp/B0DHZTCNR5` | ±0.5 °F, NIST/NSF as a listing field, 1 s, battery + calibration certificate, wipe clean — confirmed |
+| `/dp/B0DZFD6R9Z` | 50 h, 1000 °F, 3 probes + hub, Bluetooth/Wi-Fi, 2-yr vs 3-yr — confirmed |
+| USDA FSIS temperature chart | re-read; page states last updated 2025-04-14; 145 °F + 3-min rest, 160 °F, 165 °F, 165 °F, 145 °F confirmed |
+| FTC Endorsement Guides FAQ | re-read; material connection must be disclosed clearly and conspicuously |
+
+Values this pass did **not** reach are recorded as `unverified this pass` rather than copied from
+the register: P-01/P-03 item weight, P-04 model HT07 and 572 °F, P-05 probe length.
+
+**New flags (appended, nothing deleted or downgraded):** FLG-041 (a long `Specification Met` list is
+a seller self-declaration), FLG-042 (P-03 points to a newer model than the submitted one), FLG-043
+(buy-box offer state changes between reads), FLG-044 (the five values not re-reached).
+
+**Not re-verified, still not claimed:** short-link redirects, Associates agreement / program policy
+wording (login-gated), tracking-ID issuance, `link.amazon` compliance, the one-per-product Special
+Link test, Search Console, and any hands-on performance.
+
+### Decision-register additions (same session, non-overlapping)
+
+- **SG-33** shop voice on buyer pages (Shipped) · **SG-34** `findability.txt` (Shipped) ·
+  **SG-35** three-question shortlist (Shipped).
+- **Q-21** does the rewrite change what the site may claim? (needs a human read of three pages)
+- **Q-22** should the 12 project records stay in the sitemap? (owner)
+- **Q-23** which three questions should the shortlist ask? (waiting on measured data)
+
+### Handoff / conflict log
+
+- Rebased onto `origin/main` at `66ccda9` (PR #39) cleanly before claiming. No other session held a
+  live claim on `scripts/build_site.py`, `scripts/check_site.py`, `assets/style.css` or `assets/app.js`
+  during this session, so no request had to be logged against another owner.
+- Open PRs #16, #28, #34, #35 were left untouched. #16 owns the collector; nothing in this session
+  edits `analytics/`, `functions/` or `data/events.json`.
+- No file owned by another session was modified. `data/flags.json` was appended to only
+  (FLG-041..044); `data/sources.json` was not edited.
+
+### Merge resolution vs origin/main (this branch)
+
+`origin/main` advanced to `3ceebb0` (PRs #40–#46) while this branch was in progress. `git merge
+origin/main` conflicted in six files. Resolution, without discarding upstream work:
+
+- `scripts/build_site.py` auto-merged and carries both sides (this session's `go_clean`,
+  `findability.txt`, picker, shop cards, reading estimate; upstream's verification-addendum block).
+- The five conflicted generated pages (`index.html`, `shop.html`, `verification.html`,
+  `products/p01…`, `products/p02…`) were resolved by taking upstream's committed output and
+  **re-running the merged generator**, which reproduces upstream's addendum rows (R-01…, from
+  `data/verification.json`) and this session's reader-voice output in one pass. Generated files are
+  never hand-merged.
+- This file keeps upstream's records and appends this session's claim and completion records.
+- Re-ran the gate after regeneration: 36 pages, 5 product records, 44 flags, 19 sources — ALL CHECKS PASS.
+
+### Merge resolution vs origin/main at 4faab79
+
+Upstream advanced again (PRs #47–#48, session b6b809da, which also claimed an ID called T-23 and
+added its own FLG-041…045). Resolution, keeping both sides:
+
+- `scripts/build_site.py`, `scripts/check_site.py` auto-merged; upstream's CSS/class gate and
+  bidirectional product-link work are intact alongside this session's reader-voice helpers.
+- `data/flags.json`: merged by ID as a union (upstream 46, this session 4) — and because upstream
+  had already used FLG-041…045, **this session's four findings were renumbered to FLG-047…050**
+  rather than overwriting anyone's IDs. 50 flags total.
+- `assets/style.css`: both sides' additions kept. Upstream's new "every emitted class needs a rule"
+  gate immediately caught four status tokens this session emits (`.ok`, `.warn`, `.muted`,
+  `.needs`); rules were added rather than the gate loosened.
+- All conflicted generated pages were resolved by re-running the merged generator.
+- Gate after regeneration: 36 pages, 5 product records, 50 flags, 19 sources — ALL CHECKS PASS.
+
+**ID collision log:** T-20, T-21 and T-23 are all now used by more than one session for different
+work (this session's claim originally used T-20..T-22; this session's work is recorded as T-23..T-25).
+Flag IDs are unique and monotonic; task IDs are not. Future sessions should claim from the current
+maximum, not from the last ID seen in a prompt.
+
+## Session `arena/0acc86ad-affil2` — PR, merge and deploy result
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/49 |
+| Merge | merged into `main` 2026-11-20T06:37:58Z as merge commit `c50a7fa761dca963a2952ca169ae6ccfc79cdb76` |
+| CI before merge | "Regenerate and gate" — **pass** (run 44689101755) |
+| Pages | `status=built`, https://karagemop466-tech.github.io/Affil2/ |
+| Live verification | `findability.txt` fetched live and complete; product page fetched live and confirmed serving the reader-voice version ("Buy it if", "The specs that decide it", "Where this link actually goes", "Read from the listing bullets on 2026-11-20") with zero chunk citations or flag IDs |
+| Gate at merge | 36 pages, 5 product records, 50 flags, 19 sources — ALL CHECKS PASS |
+| Tests at merge | 3 Python tests OK; ALL JS COLLECTOR AND CLIENT TESTS PASS |
+
+### Merge rounds required (main moved four times during this session)
+
+1. `66ccda9` — clean rebase at claim time.
+2. `3ceebb0` (PRs #40–#46) — six-file conflict; merged generator kept both sides, generated pages
+   regenerated, upstream verification addendum R-01… preserved.
+3. `4faab79` (PRs #47–#48, session b6b809da) — 17-file conflict; upstream had also used
+   FLG-041…045, so **this session's four findings were renumbered to FLG-047…050**; upstream's new
+   CSS/class gate caught four missing status-token rules, which were added rather than the gate
+   being loosened.
+4. `9af864b` (PR #50) — COORDINATION.md only; both sides kept.
+
+No other session's work was discarded at any point. Every resolution was re-verified with the full
+gate and both test suites before pushing.
+
+## Session `arena/0acc86ad-affil2` — closing record
+
+| Item | Result |
+|------|--------|
+| PR #49 (the work) | MERGED 2026-11-20T06:37:58Z — `c50a7fa` |
+| PR #52 (the record) | MERGED — `4ddede5` |
+| CI on final main commit | `Verify site` success, `pages build and deployment` success |
+| Pages API | `status = built` |
+| Live | https://karagemop466-tech.github.io/Affil2/ |
+
+Everything this session claimed is published and reachable: reader-voice product and category
+pages, `findability.txt` at the site root, the independent live pass on `verification.html`,
+FLG-047…050 on `flagged.html`, SG-33…SG-35 on the Decision Center, and Q-21…Q-23 on Open
+Questions. No task from this session remains open, and no other session's work was discarded.
+
+**For the next session:** claim task IDs from the current maximum in the task board, not from the
+last ID mentioned in a prompt — T-20, T-21 and T-23 each ended up used twice during this session
+because parallel sessions read the same stale prompt. Flag IDs are safe (monotonic to FLG-050).
