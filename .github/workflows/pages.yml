@@ -1,26 +1,42 @@
-name: Deploy GitHub Pages
+name: Verify site
+
+# Publication is handled by GitHub Pages' own builder, which is configured for this
+# repository as "deploy from a branch" (main, /). This workflow does not deploy; it exists
+# to stop a change that breaks the generator or the compliance gate from being the version
+# that gets published. A failure here is a red X, not a rollback, so read it before merging.
+
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
-  pages: write
-  id-token: write
+
 concurrency:
-  group: pages
+  group: verify-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  verify:
+    name: Regenerate and gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: "."
-      - id: deployment
-        uses: actions/deploy-pages@v4
+
+      - name: Regenerate every page from data/
+        run: python3 scripts/build_site.py
+
+      - name: Fail if the committed pages differ from the generator output
+        run: |
+          if [ -n "$(git status --porcelain -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt')" ]; then
+            echo "::error::Committed pages are out of sync with scripts/build_site.py."
+            git --no-pager diff --stat -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt'
+            exit 1
+          fi
+          echo "Pages match the generator."
+
+      - name: Compliance and integrity gate
+        run: python3 scripts/check_site.py

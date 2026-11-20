@@ -322,3 +322,22 @@ generator output.
 - **Associates link test.** Needs Associates Central (FLG-004). Every product page says `PENDING TEST`.
 - **Intended ASINs.** Owner-only (FLG-001).
 - **`scripts/build_content.py`.** Unreferenced now. Delete deliberately, not by accident.
+
+### Corrective follow-up — the workflow was reverted, not shipped
+
+Found on the post-merge check: `main` still carried the old single-job `Deploy GitHub Pages`
+workflow. Cause: an early `git checkout origin/main -- .github/workflows/pages.yml` in this session's
+first integration attempt restored the upstream copy over the hardened one, and the later force-push
+of the rebased branch kept that reverted file. Consequence: PR #15 merged and Pages deployed
+successfully, but the generator-drift check and `check_site.py` never ran in CI. The site itself is
+correct — the gate passes locally — but the enforcement this PR promised was absent.
+
+Fixed in a follow-up PR: the workflow is now a single `verify` job (regenerate → fail on drift →
+`check_site.py`) that runs on pull requests and on pushes to `main`.
+
+It does not deploy, on purpose. This repository's Pages site is configured as **legacy**
+(`build_type: legacy`, `main` /), so GitHub's own branch builder publishes every push. Adding
+`actions/deploy-pages` on top of that would fail against a legacy site and duplicate the deployer.
+Given that the branch builder publishes whatever lands on `main`, the gate cannot block a merge by
+itself; it makes a breakage loud and immediate instead, which is what a repository without branch
+protection can actually support.
