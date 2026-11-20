@@ -35,8 +35,10 @@ CORRECTIONS: dated entries on sources.html; unresolved items published on flagge
 - https://karagemop466-tech.github.io/Affil2/guides/holiday-roast-thermometer.html
 - https://karagemop466-tech.github.io/Affil2/guides/instant-vs-wireless.html
 - https://karagemop466-tech.github.io/Affil2/guides/multi-function-questions.html
+- https://karagemop466-tech.github.io/Affil2/guides/read-an-air-fryer-listing.html
 - https://karagemop466-tech.github.io/Affil2/guides/small-kitchen-air-fryer.html
 - https://karagemop466-tech.github.io/Affil2/guides/thermometer-accuracy.html
+- https://karagemop466-tech.github.io/Affil2/guides/thermometer-ice-test.html
 - https://karagemop466-tech.github.io/Affil2/how-we-choose.html
 - https://karagemop466-tech.github.io/Affil2/index.html
 - https://karagemop466-tech.github.io/Affil2/meat-thermometers.html
