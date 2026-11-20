@@ -315,6 +315,27 @@ if "Sitemap: " + BASE + "sitemap.xml" not in robots:
 if "Disallow: /" in robots:
     err("robots.txt blocks the site")
 
+# ---------------------------------------------------------------- compare pair view
+comp = (ROOT / "compare.html").read_text()
+pm = re.search(r'<script type="application/json" id="pairData">(.*?)</script>', comp, re.S)
+if not pm:
+    err("compare.html: no embedded pair view data")
+else:
+    try:
+        pair = json.loads(pm.group(1))
+    except json.JSONDecodeError as e:
+        err(f"compare.html pair data does not parse: {e}")
+        pair = {}
+    if len(pair) != 5:
+        err(f"compare.html pair data holds {len(pair)} products, expected 5")
+    for pid, rec in pair.items():
+        if not (ROOT / rec["url"]).exists():
+            err(f"compare.html pair data links a missing page: {rec['url']}")
+        if "tag=shopnow047c-20" not in rec["buy"]:
+            err(f"compare.html pair data buy link for {pid} lacks the Associates tag")
+        if len(rec["rows"]) < 12:
+            err(f"compare.html pair data for {pid} has only {len(rec['rows'])} rows")
+
 # ---------------------------------------------------------------- search index
 search_html = (ROOT / "search.html").read_text()
 m = re.search(r'<script type="application/json" id="searchIndex">(.*?)</script>',

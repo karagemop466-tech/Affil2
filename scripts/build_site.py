@@ -736,22 +736,48 @@ def build_product(p):
 
 
 # ---- compare
+NOCAP = "— <span class=\"unverified\">n/a, not a capacity appliance</span>"
+NOWEIGHT = ("— <span class='unverified'>not stated on any listing we read "
+            "(FLG-022)</span>")
+
+
+def spec(p, key, other="— <span class=\"unverified\">not stated on the listing</span>"):
+    f = p["fields"].get(key)
+    if not f or f["v"] is None:
+        return other
+    txt = esc(f["v"])
+    if f["st"] == "conflict":
+        txt += ' <span class="token conflict">see flags</span>'
+    return txt
+
+
+# the rows a head-to-head view compares, in order; label -> how to render
+PAIR_ROWS = [
+    ("Best for", lambda p: esc(p["best_for"])),
+    ("The catch", lambda p: esc(p["tradeoff"])),
+    ("Capacity", lambda p: spec(p, "capacity", NOCAP)),
+    ("Temperature range", lambda p: spec(p, "temperature", NOCAP)),
+    ("Power / battery", lambda p: spec(p, "power", "see battery row")),
+    ("Presets", lambda p: spec(p, "presets", "— <span class=\"unverified\">no preset count on the listing</span>")),
+    ("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOCAP)),
+    ("Weight", lambda p: spec(p, "weight", NOWEIGHT)),
+    ("Probes", lambda p: spec(p, "probes", "— n/a")),
+    ("Response time", lambda p: spec(p, "response", "— n/a")),
+    ("Stated accuracy", lambda p: spec(p, "accuracy", "— n/a")),
+    ("Heat rating", lambda p: spec(p, "heat", "— n/a")),
+    ("Connectivity", lambda p: spec(p, "connectivity", "— n/a")),
+    ("Model on listing", lambda p: spec(p, "model", "— not on the fetched text")),
+    ("Warranty", lambda p: spec(p, "warranty", "— <span class=\"unverified\">not stated on the listing</span>")),
+    ("Price", lambda p: "— not shown, by policy"),
+    ("Star rating", lambda p: "— not shown, by policy"),
+]
+
+
 def build_compare():
     cols = PRODUCTS
     def row(label, fn):
         cells = "".join(f"<td>{fn(p)}</td>" for p in cols)
         return f'<tr><th scope="row">{label}</th>{cells}</tr>'
-
-    def spec(p, key, other="— <span class=\"unverified\">not stated on the listing</span>"):
-        f = p["fields"].get(key)
-        if not f or f["v"] is None:
-            return other
-        txt = esc(f["v"])
-        if f["st"] == "conflict":
-            txt += ' <span class="token conflict">see flags</span>'
-        return txt
-
-    NOCAP = "— <span class=\"unverified\">n/a, not a capacity appliance</span>"
 
     head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
                    f'<br><span class="th-sub">{p["id"]} · {esc(p["headline"])}</span></th>' for p in cols)
@@ -773,7 +799,7 @@ def build_compare():
     {row("Temperature range", lambda p: spec(p, "temperature", NOCAP))}
     {row("Power / battery", lambda p: spec(p, "power", "see battery row"))}
     {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOCAP))}
-    {row("Weight", lambda p: spec(p, "weight", NOCAP))}
+    {row("Weight", lambda p: spec(p, "weight", NOWEIGHT))}
     {row("Model on listing", lambda p: spec(p, "model", "— not on the fetched text"))}
     {row("Price", lambda p: "— not shown, by policy")}
     {row("Star rating", lambda p: "— not shown, by policy")}
@@ -781,6 +807,23 @@ def build_compare():
     {row("Buy link", lambda p: f'<a href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p["id"]}" data-event="outbound_click">Amazon (paid link)</a>')}
   </tbody>
 </table>
+<h2>Two at a time</h2>
+<div class="pairpick">
+  <label>Compare
+    <select id="pairA">
+      {"".join(f'<option value="{p["id"]}">{esc(p["brand"])} — {esc(p["headline"])}</option>' for p in cols)}
+    </select>
+  </label>
+  <label>with
+    <select id="pairB">
+      {"".join(f'<option value="{p["id"]}"{" selected" if i == 3 else ""}>{esc(p["brand"])} — {esc(p["headline"])}</option>' for i, p in enumerate(cols))}
+    </select>
+  </label>
+</div>
+<div id="pairView" aria-live="polite"></div>
+<noscript><p class="small">The two-at-a-time view needs JavaScript. The full table above carries the
+  same rows.</p></noscript>
+
 <h2>How to read this table</h2>
 <ol>
   <li><strong>Filter by form first.</strong> Two baskets, one basket, or an oven &mdash; that decision
@@ -793,11 +836,22 @@ def build_compare():
 <p class="small">Where a listing contradicts itself, the conflicting figures both appear in the
   cell and the flag ID is on the <a href="flagged.html">Flagged for Review</a> page.</p>
 """
+    pair_data = {}
+    for p in cols:
+        pair_data[p["id"]] = {
+            "name": esc(p["brand"]) + " — " + esc(p["headline"]),
+            "url": slug_of(p),
+            "buy": aff(p),
+            "rows": [[label, fn(p)] for label, fn in PAIR_ROWS],
+        }
+    pair_json = json.dumps(pair_data, ensure_ascii=False).replace("</", "<\\/")
+    extra = (f'<script type="application/json" id="pairData">{pair_json}</script>')
     BUILT.append(page("compare.html", f"Compare all five — {SITE}",
                       "Side-by-side table of all five products, aligned by field, with prices and "
                       "ratings deliberately omitted and conflicts left visible.",
-                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
-                                    "name": "Compare", "url": BASE + "compare.html"}))
+                      body, extra_head=extra,
+                      jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                              "name": "Compare", "url": BASE + "compare.html"}))
 
 
 # ---- guides
@@ -822,14 +876,15 @@ GUIDES = [
             is easy to forget when you are measuring a gap between a toaster and a coffee maker."""),
             ("Think about how you load it, and how you clean it", """Pulling a drawer out towards you is
             one movement. Opening two doors, sliding a rack out, and lifting a tray is several. The
-            basket units are lighter and easier to move; the 26-quart oven weighs 26.5 pounds and is
-            realistically going to stay where you put it. If you clean in the sink, a removable
+            basket units are lighter and easier to move. An appliance this size is realistically going
+            to stay where you put it &mdash; but note that neither listing we read states a weight, so
+            we print none (FLG-022). If you clean in the sink, a removable
             nonstick basket is simpler than a stainless cavity and racks."""),
             ("Where each one wins", """Choose the dual-basket unit if you routinely cook a main and a
             side together and want them to finish together. Choose the single 8-quart basket if you
             cook one thing at a time in quantity and want the simplest possible operation. Choose the
             oven if you also want to roast, toast, and rotisserie, and you have the counter depth and
-            the appetite for a 26.5-pound appliance that stays put."""),
+            the appetite for an appliance that stays put."""),
          ],
          verdict="""Measure your counter depth first, then decide between a drawer and a door. If
          both fit, pick by what you cook: two things at once means two baskets, one big tray of
@@ -883,9 +938,10 @@ GUIDES = [
             dual-basket Chefman says the removable non-stick coated baskets are dishwasher safe. The
             oven does not make a dishwasher claim about its cavity, and it would not be realistic if
             it did."""),
-            ("Weight decides where it lives", """At 26.5 pounds the Emeril is a fixture. The two basket
-            units are around 13 pounds, which is heavy but movable. If you plan to put the appliance
-            away between uses, weight is the number that decides whether that actually happens."""),
+            ("Weight decides where it lives", """A 26-quart oven is a fixture; a basket unit is
+            movable. No weight appears in the fetched text of any of the three listings, so this site
+            does not print a number for any of them (FLG-022). Check the shipping weight on the listing
+            if lifting it matters to you, and measure the space it has to live in."""),
             ("Measure depth, swing and clearance together", """Depth alone is not enough. Add the air
             gap behind, the headroom needed above the vents, and &mdash; for a door-style oven &mdash;
             the space the doors occupy when open. Write all four numbers down before you move
@@ -1030,8 +1086,9 @@ GUIDES = [
             French doors need room in front for two doors to open and stay open. In a narrow galley
             that difference decides whether the appliance is usable at all."""),
             ("3. Where it lives between uses", """If it goes in a cupboard, weight decides whether that
-            happens twice or never. The 8-quart Chefman is 12.8 pounds; the Emeril is 26.5. Neither
-            is a one-hand lift, but only one of them is realistically movable."""),
+            happens twice or never. A 26-quart oven is not a one-hand lift; a basket unit is the one
+            you can realistically move. No listing here states a weight, so none is printed
+            (FLG-022)."""),
             ("What to give up first", """Windows, presets, and a second basket are all things you can
             live without. Depth and weight are not. If the counter is tight, a single-basket unit
             with no window is the honest choice, and it is also the cheapest of the three here."""),
@@ -1317,14 +1374,14 @@ SUGGESTIONS = [
          status="Recommended for approval",
          verify="Would be a new section on the sources page; the data already exists in data/flags.json."),
     dict(id="SG-20", title="Add a two-product head-to-head view",
-         what="Pick any two of the five and see their verified rows aligned, generated from the same "
-              "register as compare.html.",
+         what="Pick any two of the five on the compare page and see their verified rows side by side, "
+              "built from the same register as the five-column table.",
          why="Most real decisions are a choice between two, not five. A five-column table on a phone "
              "is hard to read; a pair view is the same data at the size people actually use.",
          impact="Medium — decision speed", effort="Small",
-         status="Recommended for approval",
-         verify="compare.html already renders all five aligned by field; this is a view over that data, "
-                "not new content."),
+         status="Shipped",
+         verify="compare.html, \"Two at a time\": two selectors, rows rendered from the embedded "
+                "register view. No new facts, no new links."),
     dict(id="SG-21", title="Name an editor and decide the hands-on policy",
          what="Either name a real person who owns the copy, or state permanently that this is a "
               "documentation site with no hands-on testing. Both are defensible; silence is not.",

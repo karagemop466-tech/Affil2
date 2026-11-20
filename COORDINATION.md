@@ -358,3 +358,32 @@ session. Any new flag is appended to `data/flags.json` only if an existing one d
 the finding; no existing title or detail is modified. `data/editorial.json` gets image/season
 annotations only. Baseline before this session: `build_site.py` + `check_site.py` both clean,
 29 pages, ALL CHECKS PASS.
+
+### T-17 result — storefront rebuild (session `82c875a9`)
+
+| Field | Value |
+|---|---|
+| Pages rebuilt | 29 (all generated) |
+| Gate | `build_site.py` clean, `check_site.py` **ALL CHECKS PASS** — 29 pages, 5 products, 37 flags, 17 sources |
+| New gate rule | every generated photo must be captioned as illustration, carry alt text and intrinsic dimensions |
+| New flag | FLG-037 — on-site search was inert on `main`; the index existed but nothing read the query. Fixed and published. |
+| New proposal IDs | SG-17..SG-22 (front-page rotation, intent landing pages, change log, head-to-head view, editor decision, hands-on policy) |
+| New question IDs | Q-15..Q-18 (imagery approval, basis for the picks, one-sentence purpose, jurisdictional disclosure) |
+
+**Verification performed this session.** Re-fetched and re-read: the Amazon Associates Program Policies
+page (S02, "Updated: April 14, 2026"), FTC *Disclosures 101* (S03 supporting document — disclosure must
+be hard to miss, not buried at the end of a page or behind a click), Google *Qualify your outbound
+links* (S04, `rel="sponsored"`, multiple values allowed, last updated 2025-12-10), the USDA FSIS safe
+temperature chart (S22, last updated Apr 14 2025 — all ten rows still match `data/usda-temperatures.json`),
+and listings B0CDY277D3 and B08DKYBTPH, both of which still serve the titles recorded in the register.
+No register value was changed on the strength of this pass; nothing needed correcting.
+
+**Irregularity found and not fixed here.** `guides/instant-vs-wireless.html` describes the ThermoMaven's
+upper range as "572 °F", but `data/products.json` marks that field `unverified` with the note that 572 °F
+was removed because it was not in the fetched listing text. The guide copy therefore states a figure the
+register has withdrawn. It is page copy inside the single generator, which this session owns, but it
+touches a spec claim, so it is logged here rather than silently rewritten — see the follow-up commit on
+this branch.
+
+**Files not touched.** `data/products.json`, `data/sources.json` read-only. `data/flags.json` appended only
+(FLG-036, FLG-037). No other session's work was modified or reverted.

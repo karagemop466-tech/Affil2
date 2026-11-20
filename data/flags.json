@@ -406,5 +406,40 @@
     ],
     "severity": "corrected",
     "owner_status": "Fixed on this branch and checked by the build gate. Published here because the earlier claim that the search worked was inaccurate."
+  },
+  {
+    "id": "FLG-038",
+    "title": "P-05 warranty: two years in one field, three in another",
+    "detail": "The CHEF iQ Sense listing states a two-year assurance in About this item and a Warranty Description of 3 Year in the item-details table. Both figures are printed on the product page; neither is chosen here, because the listing itself does not say which applies.",
+    "links": [
+      "S14"
+    ],
+    "severity": "conflict",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-039",
+    "title": "Guide copy stated product weights that no listing carries",
+    "detail": "Three guides described the Emeril as 26.5 pounds, the 8-quart Chefman as 12.8 pounds and the basket units as around 13 pounds. None of those figures appears in the fetched text of the listings, and data/products.json correctly marks weight as unverified for every product. The prose contradicted the register. Corrected in session 82c875a9: every weight figure was removed from the guide copy and replaced with a statement that no weight is published, pointing at this flag.",
+    "links": [
+      "S10",
+      "S11",
+      "S12",
+      "S13"
+    ],
+    "severity": "corrected",
+    "owner_status": "Corrected and published. The register itself was right; the prose was not."
+  },
+  {
+    "id": "FLG-040",
+    "title": "Register blanks were published while the listings did state the values",
+    "detail": "The product register marked model, upper temperature, probe length, and the Emeril's temperature range and wattage as unverified because they were not in an earlier fetched excerpt. Re-reading the official listings on 2026-11-20 found each of them stated in the product-information tables: Emeril model 4-00675-02X-VN, 75-500 F, 1700 W; ThermoMaven model HT07 and Upper Temperature Range 572 F; CHEF iQ model CQ60-3C-Z1-E and Immersion Depth 4.75 in. Those fields are now filled with their section named as the source. Weight remains blank for all five because no listing stated it.",
+    "links": [
+      "S11",
+      "S13",
+      "S14"
+    ],
+    "severity": "corrected",
+    "owner_status": "Corrected with the section named for each value. Does not block publication."
   }
 ]
