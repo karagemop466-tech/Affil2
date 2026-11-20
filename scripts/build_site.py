@@ -215,10 +215,10 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
   <div class="wrap mast">
     <a class="brand" href="{up}index.html">ShopNow<span>Kitchen</span></a>
     <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary">{nav}</nav>
+    <nav id="primary-nav" aria-label="Primary">{nav}<details class="records"><summary>Records</summary><div>{dash}</div></details></nav>
     <form class="search" action="{up}search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
-      <input id="q" name="q" type="search" placeholder="Search air fryers, thermometers, guides" autocomplete="off">
+      <input id="q" name="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
       <button type="submit">Search</button>
     </form>
   </div>
@@ -236,7 +236,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
       <a href="{up}sitemap.xml">Sitemap</a> · <a href="{up}feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
-      Inc. or its affiliates. This site is not endorsed by Amazon. Artwork is original illustration,
+      Inc. or its affiliates. This site is not endorsed by Amazon. Scenes and diagrams are illustrations,
       not product photography. Nothing here is a hands-on product test — every specification is read
       from the official listing and dated. Last verified {TODAY}.</p>
     <p class="small">© 2026 {SITE}. <a href="{up}flagged.html">Flagged for Review</a> lists everything
@@ -404,29 +404,20 @@ BUILT = []
 def build_home():
     featured = [BY_ID["P-01"], BY_ID["P-03"], BY_ID["P-04"]]
     body = f"""
-<section class="hero">
-  <div class="hero-copy">
-    <p class="kicker">Issue 01 · updated {TODAY}</p>
-    <h1>Buy the air fryer that fits your counter, not the one with the loudest listing.</h1>
-    <p class="lede">Five appliances. Two categories. Every number below is read off the official
-      Amazon listing and dated, every conflict is printed instead of smoothed over, and no price or
-      star rating is quoted. Start with the decision you actually have to make.</p>
-    <p class="cta">
-      <a class="btn" href="guides.html">Find my air fryer</a>
-      <a class="btn ghost" href="compare.html">Compare all five</a>
-    </p>
-    <p class="small">Two baskets or one? Instant-read or wireless? Those are the real questions.</p>
-  </div>
-  <div class="hero-art" aria-hidden="true">
-    <div class="hero-tile">{AIRFRYER_GLYPH}</div>
-    <div class="hero-tile">{THERMO_GLYPH}</div>
-  </div>
+<div class="issue"><b>THE KITCHEN EDIT</b><span></span> VOL. 01 &nbsp; / &nbsp; NOVEMBER 2026</div>
+<section class="cover">
+ <div class="cover-copy"><p class="eyebrow">● &nbsp; THE WEEKEND GUIDE</p>
+ <h1>One basket,<br>two baskets,<br><em>or an oven?</em></h1>
+ <p>Start with dinner. A tray of roast potatoes and two sides that need different temperatures ask different things of an air fryer.</p>
+ <a class="cover-link" href="guides/basket-vs-oven.html">Read the buying guide &nbsp; →</a></div>
+ <img src="assets/feature.jpg" alt="Illustrated kitchen scene with roast potatoes and a basket air fryer" fetchpriority="high">
 </section>
-
+<section class="dept"><p class="kicker">THE SHOP DIRECTORY</p><h2>Shop by category</h2>
+<div class="aisles"><a href="air-fryers.html"><img src="assets/basket.jpg" alt=""><span>01 / APPLIANCES<strong>Air fryers ↗</strong></span></a>
+<a href="meat-thermometers.html"><img src="assets/probe.jpg" alt=""><span>02 / TOOLS<strong>Meat thermometers ↗</strong></span></a></div></section>
 <section>
-  <h2>The three that earn a recommendation</h2>
-  <p class="muted">Not the whole market &mdash; these five are the ones we cover. These are
-    the three we would start with, and the reason is written on each card.</p>
+  <p class="kicker">FROM THE BUYING DESK</p><h2>Three places to start</h2>
+  <p class="muted">Not the whole market &mdash; these five are the ones we cover. These are the three we would start with, and the reason is written on each card.</p>
   <div class="grid">
     {"".join(card(p, "") for p in featured)}
   </div>
