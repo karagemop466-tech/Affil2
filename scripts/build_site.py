@@ -1138,7 +1138,7 @@ def build_compare():
 GUIDES = [
     dict(slug="basket-vs-oven", title="Basket or oven-style air fryer: what should you compare?",
          sub="Form factor decides footprint, loading, and what fits. Start there, not with wattage.",
-         kicker="Buying guide · 6 min read", products=["P-01", "P-02", "P-03"],
+         kicker="Buying guide", products=["P-01", "P-02", "P-03"],
          intro="""The single biggest fork in the road is not brand, capacity or wattage. It is whether
          you want a drawer you pull out or a door you open. That choice decides how the appliance
          sits on your counter, how you load it, how you clean it, and whether you will still be using
@@ -1172,7 +1172,7 @@ GUIDES = [
          something means a single basket or an oven."""),
     dict(slug="capacity-checklist", title="A no-hype checklist for comparing air fryer capacity",
          sub="Quarts describe a cavity, not a meal. Six checks before any number convinces you.",
-         kicker="Buying guide · 5 min read", products=["P-01", "P-02", "P-03"],
+         kicker="Buying guide", products=["P-01", "P-02", "P-03"],
          intro="""Capacity numbers are the easiest thing to compare and the least useful thing to
          decide on. A quart is a volume, and volume tells you nothing about whether a whole chicken
          fits, whether chips can sit in one layer, or whether two baskets are better than one big
@@ -1205,7 +1205,7 @@ GUIDES = [
          do not help with those three."""),
     dict(slug="cleanup-counter-space", title="How to assess cleanup and counter-space trade-offs",
          sub="Dishwasher-safe describes a part. It does not describe your evening.",
-         kicker="Buying guide · 5 min read", products=["P-01", "P-02", "P-03"],
+         kicker="Buying guide", products=["P-01", "P-02", "P-03"],
          intro="""Nobody buys an air fryer for the washing up, and almost everybody under-estimates it.
          The appliance you keep using is the one whose cleanup fits the way you already load a
          dishwasher. Counter space works the same way: it is a permanent cost you pay every day, not
@@ -1237,7 +1237,7 @@ GUIDES = [
          space you actually have, at the weight you can actually lift."""),
     dict(slug="multi-function-questions", title="Questions to ask before buying a multi-function kitchen appliance",
          sub="Every extra preset is a control, a part and a failure point. Which three will you use?",
-         kicker="Buying guide · 5 min read", products=["P-02", "P-03"],
+         kicker="Buying guide", products=["P-02", "P-03"],
          intro="""Multi-function appliances sell on the functions you might use. The honest test is
          narrower: name the three you will use every week, and check that those three are good. The
          rest is storage, controls and cleaning you did not ask for.""",
@@ -1266,7 +1266,7 @@ GUIDES = [
          good at those three, the rest of the feature list is decoration."""),
     dict(slug="instant-vs-wireless", title="Instant-read or wireless thermometer: which do you actually need?",
          sub="Speed in your hand versus the freedom to walk away. Two different products.",
-         kicker="Buying guide · 6 min read", products=["P-04", "P-05"],
+         kicker="Buying guide", products=["P-04", "P-05"],
          intro="""These two thermometers are not competitors. One is a tool you hold for one second;
          the other is a monitoring system you leave in the meat for hours. Buying the wrong one is
          the most common mistake in this category, and it has nothing to do with accuracy.""",
@@ -1300,7 +1300,7 @@ GUIDES = [
          do both, they are not substitutes for each other."""),
     dict(slug="thermometer-accuracy", title="How to assess thermometer accuracy claims",
          sub="What &plusmn;0.5 °F, NIST and NSF mean on a listing — and what they do not.",
-         kicker="Buying guide · 5 min read", products=["P-04", "P-05"],
+         kicker="Buying guide", products=["P-04", "P-05"],
          intro="""Accuracy is the one specification you cannot check by reading harder. A listing can
          say &plusmn;0.5&nbsp;&deg;F and reference NIST and NSF, and every word of that can be true
          while telling you less than you think. Here is a calmer way to read it.""",
@@ -1334,7 +1334,7 @@ GUIDES = [
          see, treat the number as a claim and verify it yourself with an ice-water test."""),
     dict(slug="air-fryer-thanksgiving", title="Air fryer at Thanksgiving: what actually fits",
          sub="A 12-inch pizza claim tells you more about usable size than a quart figure does.",
-         kicker="Seasonal guide · 4 min read", products=["P-02", "P-01", "P-03"],
+         kicker="Seasonal guide", products=["P-02", "P-01", "P-03"],
          intro="""Thanksgiving is the one day a year when counter space and usable volume both
          matter at once. The useful question is not how many quarts the appliance has &mdash; it is
          which of the day's jobs it can take off the oven, and which it cannot.""",
@@ -1360,7 +1360,7 @@ GUIDES = [
          check what else is on the circuit before you plug in a second 1700-watt unit."""),
     dict(slug="small-kitchen-air-fryer", title="Air fryer for a small kitchen: the three measurements that decide it",
          sub="Depth, door swing and where it lives when it is not in use.",
-         kicker="Buying guide · 4 min read", products=["P-03", "P-01", "P-02"],
+         kicker="Buying guide", products=["P-03", "P-01", "P-02"],
          intro="""In a small kitchen the constraint is never features. It is the 13 inches between
          the kettle and the wall. Three measurements settle almost every decision, and none of them
          is capacity.""",
@@ -1384,7 +1384,7 @@ GUIDES = [
          cupboard. Pick the unit that survives all three; then look at features."""),
     dict(slug="first-week-air-fryer", title="Your air fryer's first week: what to cook, what to skip",
          sub="Three deliberate experiments, two things to skip, and the habit that earns the counter space.",
-         kicker="Getting started · 5 min read", products=["P-01", "P-03", "P-02"],
+         kicker="Getting started", products=["P-01", "P-03", "P-02"],
          intro="""The fastest way to regret a new appliance is to feed it only frozen fries. A week
          of deliberate experiments teaches you where the heat sits and what this machine will
          actually replace in your routine. The practice below is kitchen experience, not product
@@ -1454,6 +1454,14 @@ def build_guides_index():
                       body, jsonld=ld))
 
 
+def reading_minutes(g):
+    """An honest reading estimate, computed from the words on the page rather than asserted."""
+    import re as _r
+    words = len(_r.sub(r"<[^>]+>", " ", g.get("intro", "") + " " + g.get("verdict", "") +
+                       " " + " ".join(h + " " + t for h, t in g.get("sections", []))).split())
+    return f"{max(2, round(words / 220))} min"
+
+
 def build_guide(g):
     rel = [BY_ID[x] for x in g["products"]]
     secs = "".join(f"<h2>{esc(h)}</h2><p>{t}</p>" for h, t in g["sections"])
@@ -1462,11 +1470,11 @@ def build_guide(g):
         f'<span>{esc(p["best_for"])}</span></li>' for p in rel)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (g['title'][:40] + "…", None)], "../")}
-<p class="kicker">{esc(g['kicker'])} · verified {TODAY}</p>
+<p class="kicker">{esc(g['kicker'])} · about {reading_minutes(g)} of reading · checked {TODAY}</p>
 <h1>{esc(g['title'])}</h1>
 <p class="lede">{esc(g['intro'])}</p>
 <div class="verdict-box">
-  <p class="kicker">The short answer</p>
+  <p class="kicker">What we would do</p>
   <p>{esc(g['verdict'])}</p>
 </div>
 {secs}
