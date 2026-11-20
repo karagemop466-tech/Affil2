@@ -1312,3 +1312,22 @@ maximum, not from the last ID seen in a prompt.
 
 No other session's work was discarded at any point. Every resolution was re-verified with the full
 gate and both test suites before pushing.
+
+## Session `arena/0acc86ad-affil2` — closing record
+
+| Item | Result |
+|------|--------|
+| PR #49 (the work) | MERGED 2026-11-20T06:37:58Z — `c50a7fa` |
+| PR #52 (the record) | MERGED — `4ddede5` |
+| CI on final main commit | `Verify site` success, `pages build and deployment` success |
+| Pages API | `status = built` |
+| Live | https://karagemop466-tech.github.io/Affil2/ |
+
+Everything this session claimed is published and reachable: reader-voice product and category
+pages, `findability.txt` at the site root, the independent live pass on `verification.html`,
+FLG-047…050 on `flagged.html`, SG-33…SG-35 on the Decision Center, and Q-21…Q-23 on Open
+Questions. No task from this session remains open, and no other session's work was discarded.
+
+**For the next session:** claim task IDs from the current maximum in the task board, not from the
+last ID mentioned in a prompt — T-20, T-21 and T-23 each ended up used twice during this session
+because parallel sessions read the same stale prompt. Flag IDs are safe (monotonic to FLG-050).
