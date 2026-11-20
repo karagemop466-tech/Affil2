@@ -136,6 +136,12 @@ for p in pages:
     if len(h1s) != 1:
         err(f"{rel}: {len(h1s)} h1 elements, expected exactly 1")
 
+    # --- no cross-row placeholders: a cell must not point at another row
+    for bad in ("see battery row", "see flags row", "n/a, not a capacity appliance",
+                "TODO", "TBD"):
+        if bad in html:
+            err(f"{rel}: placeholder cell text {bad!r}")
+
     # --- no placeholder or template debris (outside script bodies, which hold JSON)
     prose = re.sub(r"<script\b.*?</script>", "", html, flags=re.S)
     prose = re.sub(r"<style\b.*?</style>", "", prose, flags=re.S)
