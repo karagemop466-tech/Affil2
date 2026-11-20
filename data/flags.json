@@ -512,8 +512,53 @@
   },
   {
     "id": "FLG-047",
+    "title": "CHEF iQ listing prints a long 'Specification Met' list as a self-declaration",
+    "detail": "The Product-information 'Specification Met' field on B0DZFD6R9Z prints ANSI, ASME, ASTM, CCC, CE, CSA, EMC, ETL, FCC, FDA, FE, HACCP, ISO 13485, ISO 9000, ISO 9001, NIST, NSF, RoHS, UL and WEEE. A field of this kind is the seller's own declaration; it is not evidence that each standard was independently certified for this unit. The site publishes it as a listing statement and does not present it as tested certification.",
+    "links": [
+      "S13"
+    ],
+    "severity": "needs review",
+    "owner_status": "Published as a seller statement. No certificate or test report has been inspected by this site."
+  },
+  {
+    "id": "FLG-048",
+    "title": "P-03 listing points to a newer model than the one submitted",
+    "detail": "B08DKYBTPH carries a 'There is a newer model of this item' module linking to B0CNY1YVDD (Chefman 6 QT, 4 presets). This site covers the product behind the submitted link (B08DKYBTPH), not the newer model. If the submitted link is later repointed, the published specifications would need re-reading.",
+    "links": [
+      "S12",
+      "S15"
+    ],
+    "severity": "needs review",
+    "owner_status": "No action taken. Which model the owner intends to promote is unconfirmed (see FLG-001)."
+  },
+  {
+    "id": "FLG-049",
+    "title": "Offer state and buying options change between reads",
+    "detail": "On 2026-11-20 the B0CDY277D3 page showed a USED buying option in its offer JSON while other parts of the same page showed new-offer pricing. The stability of the buy box cannot be relied on between visits. This is a further reason no price, condition or availability value is published anywhere on this site.",
+    "links": [
+      "S10"
+    ],
+    "severity": "needs review",
+    "owner_status": "Accepted behaviour. Prices and availability are not displayed."
+  },
+  {
+    "id": "FLG-050",
+    "title": "Five register values were not re-confirmed in the independent live pass",
+    "detail": "The independent pass on 2026-11-20 re-read all five listings but did not reach every field: P-01 and P-03 item weight, P-04 model number (HT07) and upper temperature rating (572 F), and P-05 probe length (4.75 in) come from earlier readings of the Measurements / Item details tables. They remain published. Each is recorded as 'unverified this pass' in data/verification-2026-11-20-live.json so the next pass knows exactly what to re-read first.",
+    "links": [
+      "S10",
+      "S11",
+      "S12",
+      "S13",
+      "S14"
+    ],
+    "severity": "needs review",
+    "owner_status": "Queued for the next verification pass. Not removed, because earlier passes did read them off the official tables."
+  },
+  {
+    "id": "FLG-051",
     "title": "P-03 page slug misspells the listing's TurboFry name",
-    "detail": "The published URL products/p03-chefman-8qt-turbrofry.html spells the product line 'turbrofry', while the live listing title says TurboFry (registered mark on the listing). Renaming the file would change a published URL, so the spelling is kept for now and the decision is left to the owner: rename it in one coordinated pass across generator, sitemap and feed, or keep the slug as a stable identifier. Cosmetic only; no product data is affected. (Raised as FLG-041 by session ca4af934 before the ID collision with main's FLG-041..046 was visible; renumbered FLG-047.)",
+    "detail": "The published URL products/p03-chefman-8qt-turbrofry.html spells the product line 'turbrofry', while the live listing title says TurboFry (registered mark on the listing). Renaming the file would change a published URL, so the spelling is kept for now and the decision is left to the owner: rename it in one coordinated pass across generator, sitemap and feed, or keep the slug as a stable identifier. Cosmetic only; no product data is affected. (Raised by session ca4af934 as FLG-041, renumbered FLG-047 then FLG-051 after ID collisions with parallel sessions' flags; the finding itself is unchanged.)",
     "links": [
       "S12"
     ],

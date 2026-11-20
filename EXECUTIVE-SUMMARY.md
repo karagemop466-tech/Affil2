@@ -1,4 +1,4 @@
-# Executive Summary — ShopNow Kitchen (Verified Update — through session arena/ca4af934-affil2, T-24)
+# Executive Summary — ShopNow Kitchen (Verified Update — Session arena/9f19fe6b-affil2)
 
 Date 2026-11-20 · Tracking ID in use `shopnow047c-20` (issuance unverified, FLG-002)
 Live site https://karagemop466-tech.github.io/Affil2/ · Full version with source links: `executive-summary.html`
@@ -112,38 +112,126 @@ or unpublished flag exists. CI runs regeneration, drift detection, `check_site.p
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
 - `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).
 
-## Verification log (2026-11-20, session arena/ca4af934-affil2 — T-24 independent pass (claimed as T-21 pre-merge; renumbered twice after ID collisions with parallel sessions))
-Independent line-by-line re-verification against live official pages (this session's own fetches,
-not inherited):
+---
+
+# Session arena/0acc86ad-affil2 — shop voice, one indexable site, independent re-verification
+
+Date 2026-11-20 · Tracking ID `shopnow047c-20` (issuance still unverified, FLG-002) ·
+Live https://karagemop466-tech.github.io/Affil2/ · Branch `arena/0acc86ad-affil2`
+
+## What was wrong with the site (and what changed)
+
+The facts were right; the voice was a newsroom's. Buyer pages carried the project's filing
+system: "chunk 7" crawl citations in 64 places, bare `FLG-0xx` ticket numbers on every product
+card, a "Product-intent confirmation record" heading, and a "Specifications, line by line"
+table that read like an audit workbook. That is the specific thing a reader experiences as
+"an AI site".
+
+| Was | Now |
+|---|---|
+| `Stated in: About this item & Product information — Features & Specs (chunks 4 & 7)` | `Read from the listing bullets on 2026-11-20` |
+| `item weight unstated on listing (FLG-022)` | `the listing does not publish its weight` |
+| `Product-intent confirmation record` | `Where this link actually goes` — the same five fields, in shopper language |
+| `Best for` / `The catch` | `Buy it if` / `Skip it if` |
+| No tags on cards | `Best for two cooks`, `Two baskets`, and a "Why we picked it" line per product |
+| Zero flags cited on buyer pages | Every contradiction stated in words on the page, with a route to the full record |
+
+Every published value is identical to before. Only the wording, and the amount of the project's
+own machinery the reader is asked to look at, changed.
+
+## What a buyer now gets that they did not before
+
+1. **Cards that answer the question a shopper is actually asking.** Each card names the reason to
+   pick it, the reason not to, and one paragraph on why this product is on the site at all.
+2. **A "what comes with it" card** on every product page — box contents, care, warranty — quoted
+   from the listing, with the listing's own contradictions left visible.
+3. **A three-question shortlist** on `compare.html`: what you are shopping for, how many you cook
+   for, how you cook, and how much counter depth you have. It scores only against specifications
+   already published, and it filters by category before it scores, so an air-fryer question never
+   returns a thermometer.
+4. **A dated trust strip** above the fold on the homepage: what was checked, when, and why prices
+   and star ratings are absent, stated as a reason rather than an apology.
+
+## Findability: one site, with a stated reason to rank it
+
+- `findability.txt` now publishes, at the site root: the canonical home, what the site is for,
+  the editorial policy (authorship, review process, no hands-on testing, paid-link marking,
+  corrections), the 24 reader-facing pages separately from the 12 project records, the sitemap,
+  the feed, how to cite a page, and the known limits.
+- `robots.txt` points to it. The sitemap still submits all 36 pages, because the site's own gate
+  requires full coverage and a half-submitted site is worse than an honest one; the split lives
+  in `findability.txt` instead, and `Q-22` puts the choice in front of the owner.
+
+## Independent re-verification performed this session (T-22)
+
+All five official listings were fetched live and re-read with no reuse of earlier notes.
+33 field rows recorded in `data/verification-2026-11-20-live.json`, published in full on
+`verification.html`.
+
+| Product | Confirmed live this pass | Left marked unverified this pass |
+|---|---|---|
+| P-01 `B0CDY277D3` | 13.38×11.81×10.63 in, 200–450 °F, 120 V/1700 W, 1-yr, cETL, capacity 6 L vs 6 qt | item weight |
+| P-02 `B09B7SB46R` | 16.9×15.8×14.8 in, 24 presets in title vs 25 in bullets, capacity 24.6 L vs 26 qt | weight (listing omits it), accessory count not re-counted |
+| P-03 `B08DKYBTPH` | 12.75×13.5×10 in, 8 qt, 200–400 °F vs 450 °F Hi-Fry, 1000 W vs 1700 W, 4 presets, cETL, 1-yr | item weight |
+| P-04 `B0DHZTCNR5` | ±0.5 °F, NIST/NSF as a listing field, 1 s, battery + calibration certificate included, wipe clean | model HT07, 572 °F upper rating |
+| P-05 `B0DZFD6R9Z` | 50 h battery, 1000 °F, 3 probes + hub, Bluetooth/Wi-Fi, 2-yr vs 3-yr warranty | probe length |
+
+Also re-read live: the USDA FSIS Safe Minimum Internal Temperature Chart (page states last
+updated 2025-04-14) and the FTC Endorsement Guides FAQ. Both corroborate what the site already
+cites (S22, S03).
+
+**New findings, added as flags and published on Flagged for Review:** FLG-041 (a long
+`Specification Met` list is a seller self-declaration, not tested certification), FLG-042 (P-03's
+page points to a newer model than the one submitted), FLG-043 (buy-box offer state changes between
+reads), FLG-044 (the five register values this pass did not reach, queued for next time).
+
+**Not verified this session, and still not claimed:** short-link redirects, the Associates
+agreement and program policy wording (login-gated), whether the tracking ID is issued, whether
+`link.amazon` short links are permitted, the one-per-product Special Link test, Search Console,
+and any hands-on performance.
+
+## The decisions this leaves with the owner
+
+| # | Decision | Why it is the one that matters | Where |
+|---|---|---|---|
+| 1 | Run the one-per-product Special Link test | Until a click is recorded in the tracking report, nothing about revenue is knowable | Q-04, FLG-004 |
+| 2 | Verify Search Console and submit `sitemap.xml` | The only route to choosing the next guide from measured queries instead of instinct | Q-20, SG-29 |
+| 3 | Read three rewritten pages and confirm nothing now reads as a test result | Rewording is the one change that can create a compliance problem | Q-21 |
+| 4 | Decide whether the 12 project records stay in the sitemap | Dilution versus auditability; both are defensible | Q-22 |
+| 5 | Decide whether to apply for Creators API access | The only compliant route to showing live price and product imagery | SG-13, SG-31 |
+
+## Verification behind this summary
+
+    python3 scripts/build_site.py        # 36 pages, idempotent
+    python3 scripts/check_site.py        # 36 pages, 5 product records, 44 flags, 19 sources - ALL CHECKS PASS
+    python3 -m unittest discover -s tests -p "test_*.py"     # 3 tests OK
+    node tests/test_collector.js         # ALL JS COLLECTOR AND CLIENT TESTS PASS
+    node --check assets/app.js           # syntax OK
+
+The gate now also fails if a crawl-chunk citation or a bare flag ID appears on any of the 25
+reader-facing pages, and if `findability.txt` omits a submitted page. The new rules were written
+after the rewrite, and passing them is what makes the rewrite stay done.
+
+## Verification log (2026-11-20, session arena/ca4af934-affil2 — T-26 independent pass; claimed as T-21 pre-merge, renumbered after ID collisions)
+Independent line-by-line re-verification against live official pages (this session's own fetches, not inherited):
 
 | Check | Source | Result |
 |---|---|---|
 | P-01..P-05 listing titles | https://www.amazon.com/dp/B0CDY277D3 · /dp/B09B7SB46R · /dp/B08DKYBTPH · /dp/B0DHZTCNR5 · /dp/B0DZFD6R9Z | All five live titles match the register strings exactly |
-| P-03 Product information tables | https://www.amazon.com/dp/B08DKYBTPH | Line-by-line match: Item Weight 12.8 pounds; Dimensions 12.75"D x 13.5"W x 10"H; Capacity 8 quarts; Output Wattage/Wattage 1700 watts; Voltage 120 volts; Max Temperature Setting 400 °F; Part Number RJ38-SQSS-8T; Warranty Description 1-Year Limited Warranty; the 1700 W vs 1000 W conflict (FLG-017) and the 400/450 °F conflict (FLG-018) remain as published |
-| P-05 Features & Specs | https://www.amazon.com/dp/B0DZFD6R9Z | Line-by-line match: Upper Temperature Range 1000 °F; Immersion Depth 4.75 inches; 5 Sensors; Bluetooth + Wi Fi; Dishwasher Safe |
-| FTC Endorsement Guides FAQ (S03) | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Live; disclosure wording relied on ("connection … disclosed clearly and conspicuously") confirmed |
-| Google qualify outbound links (S04) | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | Live; rel="sponsored" for paid links and multiple rel values confirmed |
-| USDA FSIS temperature chart (S22) | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Live; 145 °F + 3-min rest (steaks), 160 °F (ground meats), 165 °F (poultry, leftovers) match the site's USDA table; chart dated 2025-04-14 |
+| P-03 Product information tables | https://www.amazon.com/dp/B08DKYBTPH | Line-by-line match: 12.8 pounds; 12.75"D x 13.5"W x 10"H; 8 quarts; 1700 watts / 120 volts; Max 400 °F; Part Number RJ38-SQSS-8T; 1-Year Limited Warranty. FLG-017/FLG-018 conflicts remain as published |
+| P-05 Features & Specs | https://www.amazon.com/dp/B0DZFD6R9Z | Line-by-line match: 1000 °F upper range; 4.75 in probe; 5 sensors; Bluetooth + Wi Fi; Dishwasher Safe |
+| FTC Endorsement Guides FAQ (S03) | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Live; "connection … disclosed clearly and conspicuously" confirmed |
+| Google qualify outbound links (S04) | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | Live; rel="sponsored" for paid links; multiple rel values valid |
+| USDA FSIS chart (S22) | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Live; 145 °F + 3-min rest / 160 °F / 165 °F match the site's USDA block; chart dated 2025-04-14 |
 
-**Not re-reached in this pass (inherited from same-day passes by sessions 530c2e6c / 937876a6 / 9f19fe6b, citations already in `data/products.json`):** the P-01, P-02 and P-04 deep spec tables (this session's chunk fetches landed on ad modules due to pagination drift; the earlier cited captures stand, and nothing was re-marked as verified on their behalf). Prices, ratings and buy-box state remain deliberately unrecorded (FLG-005).
+**Not re-reached in this pass:** the P-01/P-02/P-04 deep spec tables (chunk fetches landed on ad modules; values stand on same-day cited captures by earlier sessions — see FLG-050 for the parallel note). S01/S02 login-gated (FLG-026). No prices/ratings recorded (FLG-005).
 
-## Table audit (2026-11-20, T-24)
-333 table rows across 33 pages audited: 174 rows carry direct external source links; 84 carry an explicit blank/flag/policy marker (blank values, `PENDING`, "not shown, by policy", FLG- references); the remaining 75 are planning, decision, question, event-schema or ledger rows (internal records with explicit statuses, not product claims) or data rows whose table caption and headers carry the official links (compare view: 4 rows; USDA doneness tables: 8 rows, USDA chart linked in each caption). Every data value row on product pages (spec tables, intent record) now carries a row-level link to the official listing or the supplied short link. Row-level exemptions, all documented: compare-view data rows (traceable via column headers → product pages → row-level sources, plus the five listing links now in the caption), USDA doneness rows (single-source table, USDA chart linked in the caption), the five-event schema tables (the site's own contract, `data/events.json`), and the decision/question/ledger registers (internal records with explicit statuses, not product claims).
+## Table audit (2026-11-20, session ca4af934)
+333 rows across 33 pre-merge pages: 174 rows carry direct external source links; 84 carry blank/flag/policy markers; 75 are internal registers (planning, decisions, questions, event schema, ledger empty-state) or caption-cited single-source rows (compare 4, USDA doneness 8). Product-page spec and intent tables carry row-level links to the official listing or the supplied short link.
 
-## Defects found and fixed by this pass (session arena/ca4af934-affil2)
-1. Double-escaped HTML entities (`&plusmn;`, `&mdash;`, `&nbsp;`, `&deg;`) rendered literally in four guide `sub`/`intro` strings on `guides.html` and guide pages — replaced with real characters (confirmed fixed in generated output).
-2. Product-intent confirmation record rows for the observed redirect target, model provenance, confirmation date, token and observation note lacked row-level links — now each links the official listing or the supplied link (intended vs observed fields remain separate; intended stays blank per FLG-001).
-3. Compare-table caption now carries the five official listing links and states the traceability path per column.
-4. New flag **FLG-047** (cosmetic; raised as FLG-041 before the ID collision with main's FLG-041..046 was visible, then renumbered): the P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's "TurboFry" name. Rename would change a published URL, so it is left to the owner's decision; no data affected.
-
-## Manual review links (all official)
-- Product listings: https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z
-- Supplied short links: https://link.amazon/B04G1MEwY · https://link.amazon/B02NbDxp3 · https://link.amazon/B00hJ57DV · https://link.amazon/B0c8moW59 · https://link.amazon/B0f3GKalj
-- Amazon Associates Operating Agreement: https://affiliate-program.amazon.com/help/operating/agreement (S01) · Program Policies: https://affiliate-program.amazon.com/help/operating/policies (S02) — both login-gated; wording left for manual review (FLG-026 covers URL health)
-- FTC Endorsement Guides FAQ: https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking (S03) · FTC Disclosures 101: https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers (S23)
-- Google qualify outbound links: https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links (S04)
-- Creators API onboarding: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api (S20) · PA-API 5 deprecation: https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation (S21)
-- USDA FSIS temperature chart: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart (S22) · thermometer calibration: https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/food-thermometers (S24)
-
-## Open parallel pull requests (owner review; untouched by this session)
-PRs #28 (`59ada9df`), #29 (`bba2deed`), #34 (`82c875a9`) and #35 (`36170d15`) were opened by earlier parallel sessions and left open. Per the coordination protocol this session neither merged nor closed another session's claimed work; several of their themes are already covered on `main` (collector stack in PR #31, storefront in PR #30). Review links: https://github.com/karagemop466-tech/Affil2/pulls
+## Defects found and fixed by this session (generator-level; outputs regenerated)
+1. Double-escaped entities (`&plusmn;` `&mdash;` `&nbsp;` `&deg;`) rendered literally in four guide sub/intro strings — replaced with real characters.
+2. Product-intent confirmation record rows (observed target, token, model provenance, observation note, confirmation date) gained row-level links; intended vs observed stay separate (FLG-001).
+3. Compare-table caption carries the five official listing links and the per-column traceability path.
+4. **FLG-051** (cosmetic; earlier renumbered FLG-041→FLG-047→FLG-051 after ID collisions): P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's "TurboFry" name; owner decision to rename or keep.
+5. Front-page seasonal cluster (Thanksgiving week, USDA doneness panel) and guides-hub topic clusters (Choosing an air fryer / Meat thermometers / Seasonal, with a fail-safe group).

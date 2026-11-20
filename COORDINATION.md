@@ -21,6 +21,9 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-10 | Rebuild product data from verified listings; add scripts/build_content.py (generated tables); fix compare column shift; remove unverified 'Verified' labels; fix S01/S02 URLs; extend check_site.py to catch stale values; re-check P-03 specs; reconcile flags (new IDs FLG-017+) | done | 937876a6 | data/products.json, data/sources.json, data/flags.json (appends only), scripts/build_content.py, scripts/check_site.py, generated HTML (products/*, compare, index, category, guides, sources, flagged, executive-summary), EXECUTIVE-SUMMARY.md, feed.xml |
 | T-11 | Publication styling + decision-support improvements | done | 4bbf49bb | assets/style.css, assets/illustrations/*.svg, suggestions.html, questions.html, search.html, COORDINATION.md |
 | T-12 | Final integrate original illustrations in generated product cards | done | 4bbf49bb | scripts/build_content.py, generated product-card pages (index, categories, guides), compare.html, COORDINATION.md |
+| T-23 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | done | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
+| T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
+| T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -1140,47 +1143,213 @@ Honest limit, repeated: the deploy is confirmed by the GitHub API, not by fetchi
 here. The next session with network access should open the live homepage, one guide and `flagged.html`
 with a cache-busting query string and confirm the router, the guide product line and FLG-041…FLG-046 render.
 
+## Session `arena/0acc86ad-affil2` — claim (2026-11-20; T-IDs renumbered T-23..T-25 upstream)
+
+Branch `arena/0acc86ad-affil2`, base `66ccda9` (main, after PR #39). Session ID `0acc86ad`.
+
+**Why.** The owner's brief for this session is a *voice* brief, not a data brief: "Make it read like a shop, not an audit." The site's factual spine is already verified and gated; what remains is that buyer-facing pages leak production artifacts into the copy — "chunk 7", inline `FLG-0xx` IDs, "Product-intent confirmation record", "Specifications, line by line". A shopper should never see the newsroom.
+
+**Claimed (non-overlapping).**
+- T-23 — voice pass inside `scripts/build_site.py` render functions + `assets/style.css` additions + `data/editorial.json` copy; regenerated HTML. Every published fact, source link, disclosure placement, sponsored marking and gate rule is preserved; only the reader-facing wording and layout change.
+- T-24 — `findability.txt` at the repo root and the generator/check rules that keep robots, sitemap and feed consistent with it.
+- T-25 — a dated live re-verification record of the five listings' *published* spec values and the policy sources, appended as new evidence; no existing flag is deleted or downgraded.
+
+**Not claimed / untouched.** `data/flags.json` numbering and existing entries, `data/products.json` field values (unless live verification contradicts them, in which case the conflict is logged as a new flag and the value is left as published with both figures), the open collector work in PR #16, and every owner-gated item (FLG-001/002/003/004/010/028/033). Anything another session claimed first is theirs; I will log a request instead of editing.
+
+**Test plan.** `python3 scripts/build_site.py` (idempotent), `python3 scripts/check_site.py`, `python3 -m unittest discover -s tests`, `node tests/test_collector.js`, plus a browser-level read of the three highest-traffic pages (home, a category page, a product page) to confirm no internal token reaches a reader.
+
+## Session `arena/0acc86ad-affil2` — completion record (2026-11-20)
+
+Branch `arena/0acc86ad-affil2`, based on `66ccda9`. Three tasks claimed at the start of the session (originally claimed as T-20..T-22; renumbered to T-23..T-25 because session 58c6ca4a already used T-20 for its own verification pass — the IDs, not the work, collided):
+each committed and pushed separately; scope stayed inside the claim.
+
+### T-23 — shop voice on every buyer page (done)
+
+**Problem found.** The facts were right; the voice was a newsroom's. Measured before the change:
+64 crawl-chunk citations ("chunk 7"), 305 occurrences of bare `FLG-0xx` ticket numbers across 36
+files, a "Product-intent confirmation record" heading on all five product pages, and a
+"Specifications, line by line" table heading.
+
+**What changed (generator, not hand-edited HTML).**
+- `go_clean()` in `scripts/build_site.py` strips crawl-chunk citations and flag IDs from every
+  string that passes through `esc()`. Internal records are untouched; `flagged.html` is generated
+  from `data/flags.json` and never passes through it, so every flag is still published in full.
+- `source_note()` turns "Stated in: About this item & Product information — Features & Specs
+  (chunks 4 & 7)" into "Read from the listing bullets on 2026-11-20", with a link to the source
+  register. No value changed.
+- `ledger_block()` replaces the intent record with a shopper-facing table that keeps all five
+  required fields visible and separate: intended ASIN, observed redirect target, Special Link,
+  confirmation date, Associates test status.
+- `deals_block()` adds a "What comes with it" card (box contents, care, warranty) quoted from the
+  listing's own fields.
+- `card()` gains shop tags (`Best for two cooks`, `Two baskets`) and a "Why we picked it" line per
+  product; "Best for"/"The catch" became "Buy it if"/"Skip it if".
+- Reader-facing language in `data/products.json` and `data/editorial.json` rewritten where it
+  carried citations. Two FAQ answers were rewritten after the citation strip exposed that they no
+  longer named their own conflict — the gate caught this, which is the gate working.
+- `how-we-choose`, `about`, `disclosure` and the search index were swept too.
+
+**Verification.** `build_site.py` idempotent (36 pages); `check_site.py` ALL CHECKS PASS (36 pages,
+5 product records, 44 flags, 19 sources); 3 Python tests OK; `node tests/test_collector.js` PASS;
+`node --check assets/app.js` OK. Zero `chunk` citations and zero bare flag IDs remain on all 25
+reader-facing pages (`grep` verified, and now enforced by the gate).
+
+### T-24 — one indexable site with a stated reason to rank (done)
+
+- `findability.txt` generated at the site root: canonical home, purpose, editorial policy
+  (authorship, review process, no hands-on testing, paid-link marking, corrections), the 24
+  reader-facing pages separately from the 12 project records, sitemap, feed, citation form, and
+  known limits. `robots.txt` points at it.
+- Sitemap deliberately still submits all 36 pages: the gate and an existing test require full
+  coverage, and a half-submitted site is worse than an honest single site. The split lives in
+  `findability.txt` and the choice is recorded as **Q-22** for the owner.
+- Gate additions: all pages in `sitemap.xml` must appear in `findability.txt`; reader pages may not
+  contain a chunk citation or a flag ID. CI now also fails on drift in `findability.txt`.
+
+### T-25 — independent live re-verification (done)
+
+All five official listings fetched live this session and re-read without reusing earlier notes.
+33 field rows recorded in `data/verification-2026-11-20-live.json` and published as an
+"Independent live pass" section on `verification.html`.
+
+| Source | Result |
+|---|---|
+| `/dp/B0CDY277D3` | dimensions, 200–450 °F, 120 V/1700 W, 1-yr, cETL, capacity 6 L vs 6 qt — confirmed |
+| `/dp/B09B7SB46R` | 16.9×15.8×14.8 in, 24 vs 25 presets, 24.6 L vs 26 qt — confirmed |
+| `/dp/B08DKYBTPH` | 12.75×13.5×10 in, 8 qt, 200–400 °F vs 450 °F Hi-Fry, 1000 W vs 1700 W, 4 presets — confirmed |
+| `/dp/B0DHZTCNR5` | ±0.5 °F, NIST/NSF as a listing field, 1 s, battery + calibration certificate, wipe clean — confirmed |
+| `/dp/B0DZFD6R9Z` | 50 h, 1000 °F, 3 probes + hub, Bluetooth/Wi-Fi, 2-yr vs 3-yr — confirmed |
+| USDA FSIS temperature chart | re-read; page states last updated 2025-04-14; 145 °F + 3-min rest, 160 °F, 165 °F, 165 °F, 145 °F confirmed |
+| FTC Endorsement Guides FAQ | re-read; material connection must be disclosed clearly and conspicuously |
+
+Values this pass did **not** reach are recorded as `unverified this pass` rather than copied from
+the register: P-01/P-03 item weight, P-04 model HT07 and 572 °F, P-05 probe length.
+
+**New flags (appended, nothing deleted or downgraded):** FLG-041 (a long `Specification Met` list is
+a seller self-declaration), FLG-042 (P-03 points to a newer model than the submitted one), FLG-043
+(buy-box offer state changes between reads), FLG-044 (the five values not re-reached).
+
+**Not re-verified, still not claimed:** short-link redirects, Associates agreement / program policy
+wording (login-gated), tracking-ID issuance, `link.amazon` compliance, the one-per-product Special
+Link test, Search Console, and any hands-on performance.
+
+### Decision-register additions (same session, non-overlapping)
+
+- **SG-33** shop voice on buyer pages (Shipped) · **SG-34** `findability.txt` (Shipped) ·
+  **SG-35** three-question shortlist (Shipped).
+- **Q-21** does the rewrite change what the site may claim? (needs a human read of three pages)
+- **Q-22** should the 12 project records stay in the sitemap? (owner)
+- **Q-23** which three questions should the shortlist ask? (waiting on measured data)
+
+### Handoff / conflict log
+
+- Rebased onto `origin/main` at `66ccda9` (PR #39) cleanly before claiming. No other session held a
+  live claim on `scripts/build_site.py`, `scripts/check_site.py`, `assets/style.css` or `assets/app.js`
+  during this session, so no request had to be logged against another owner.
+- Open PRs #16, #28, #34, #35 were left untouched. #16 owns the collector; nothing in this session
+  edits `analytics/`, `functions/` or `data/events.json`.
+- No file owned by another session was modified. `data/flags.json` was appended to only
+  (FLG-041..044); `data/sources.json` was not edited.
+
+### Merge resolution vs origin/main (this branch)
+
+`origin/main` advanced to `3ceebb0` (PRs #40–#46) while this branch was in progress. `git merge
+origin/main` conflicted in six files. Resolution, without discarding upstream work:
+
+- `scripts/build_site.py` auto-merged and carries both sides (this session's `go_clean`,
+  `findability.txt`, picker, shop cards, reading estimate; upstream's verification-addendum block).
+- The five conflicted generated pages (`index.html`, `shop.html`, `verification.html`,
+  `products/p01…`, `products/p02…`) were resolved by taking upstream's committed output and
+  **re-running the merged generator**, which reproduces upstream's addendum rows (R-01…, from
+  `data/verification.json`) and this session's reader-voice output in one pass. Generated files are
+  never hand-merged.
+- This file keeps upstream's records and appends this session's claim and completion records.
+- Re-ran the gate after regeneration: 36 pages, 5 product records, 44 flags, 19 sources — ALL CHECKS PASS.
+
+### Merge resolution vs origin/main at 4faab79
+
+Upstream advanced again (PRs #47–#48, session b6b809da, which also claimed an ID called T-23 and
+added its own FLG-041…045). Resolution, keeping both sides:
+
+- `scripts/build_site.py`, `scripts/check_site.py` auto-merged; upstream's CSS/class gate and
+  bidirectional product-link work are intact alongside this session's reader-voice helpers.
+- `data/flags.json`: merged by ID as a union (upstream 46, this session 4) — and because upstream
+  had already used FLG-041…045, **this session's four findings were renumbered to FLG-047…050**
+  rather than overwriting anyone's IDs. 50 flags total.
+- `assets/style.css`: both sides' additions kept. Upstream's new "every emitted class needs a rule"
+  gate immediately caught four status tokens this session emits (`.ok`, `.warn`, `.muted`,
+  `.needs`); rules were added rather than the gate loosened.
+- All conflicted generated pages were resolved by re-running the merged generator.
+- Gate after regeneration: 36 pages, 5 product records, 50 flags, 19 sources — ALL CHECKS PASS.
+
+**ID collision log:** T-20, T-21 and T-23 are all now used by more than one session for different
+work (this session's claim originally used T-20..T-22; this session's work is recorded as T-23..T-25).
+Flag IDs are unique and monotonic; task IDs are not. Future sessions should claim from the current
+maximum, not from the last ID seen in a prompt.
+
+## Session `arena/0acc86ad-affil2` — PR, merge and deploy result
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/49 |
+| Merge | merged into `main` 2026-11-20T06:37:58Z as merge commit `c50a7fa761dca963a2952ca169ae6ccfc79cdb76` |
+| CI before merge | "Regenerate and gate" — **pass** (run 44689101755) |
+| Pages | `status=built`, https://karagemop466-tech.github.io/Affil2/ |
+| Live verification | `findability.txt` fetched live and complete; product page fetched live and confirmed serving the reader-voice version ("Buy it if", "The specs that decide it", "Where this link actually goes", "Read from the listing bullets on 2026-11-20") with zero chunk citations or flag IDs |
+| Gate at merge | 36 pages, 5 product records, 50 flags, 19 sources — ALL CHECKS PASS |
+| Tests at merge | 3 Python tests OK; ALL JS COLLECTOR AND CLIENT TESTS PASS |
+
+### Merge rounds required (main moved four times during this session)
+
+1. `66ccda9` — clean rebase at claim time.
+2. `3ceebb0` (PRs #40–#46) — six-file conflict; merged generator kept both sides, generated pages
+   regenerated, upstream verification addendum R-01… preserved.
+3. `4faab79` (PRs #47–#48, session b6b809da) — 17-file conflict; upstream had also used
+   FLG-041…045, so **this session's four findings were renumbered to FLG-047…050**; upstream's new
+   CSS/class gate caught four missing status-token rules, which were added rather than the gate
+   being loosened.
+4. `9af864b` (PR #50) — COORDINATION.md only; both sides kept.
+
+No other session's work was discarded at any point. Every resolution was re-verified with the full
+gate and both test suites before pushing.
 
 ---
 
-## Session `arena/ca4af934-affil2` — second merge conflict round (2026-11-20)
+## Session `arena/ca4af934-affil2` — third merge conflict round (2026-11-20)
 
-After the first merge round (below), `main` moved again through PRs #48/#50 (session `b6b809da`: answer-first router, product line at end of guides, citation `rel` fix, CSS repair, verification-log regeneration, FLG-041..FLG-046, README refresh). `gh pr merge 47` again reported conflicts. Resolved the same way — **no other session's work discarded**:
+`main` advanced again through PRs #49/#52 (session `0acc86ad`: shop-voice pass, indexable-site pass, live re-verification T-23..T-25, FLG-047..FLG-050, computed reading estimates, "What we would do" verdict labels). Resolved with the same discipline — **no other session's work discarded**:
 
-1. Conflicted generated pages (executive-summary.html, flagged.html, search.html, sources.html) and shared docs (COORDINATION.md, README.md) taken from `origin/main`, then this session's record re-appended below and README counts re-synced (46→47 flags).
-2. `data/flags.json`: main's FLG-041..FLG-046 kept as-is; this session's cosmetic slug flag renumbered **FLG-041 → FLG-047** (ID collision discovered only after the first merge; the flag detail records the chain). All FLG-041 references in this session's records relabeled.
-3. `scripts/build_site.py` auto-merged with both sides intact again (this session's entity fixes, seasonal home module, guides clusters incl. main's Holiday-2026 guides in the Seasonal cluster, intent-row linkification, compare caption, exec bullet + main's router, citation-rel fix, product-line footer). On-page exec bullet relabeled T-21→T-24.
-4. **Task ID chain:** this task was claimed as T-21 (branch claim), relabeled T-23 after the first collision round, and is finally **T-24** (T-21 = c449a2ad requirements traceability; T-22 = 578ca10d verification addendum; T-23 = b6b809da storefront pass).
-5. **Process note (destructive command avoided):** `git pull --rebase` on this branch linearized its merge history and stalled replaying the root commit ("Could not apply 12d49cd Initial commit", README conflict markers). The rebase was **aborted** (`git rebase --abort`), restoring the branch to the pushed merge commit 74e0c54 with no work lost. Subsequent syncs use `git fetch` + `git merge origin/main` (merge-preserving) instead of rebase, and the failure is logged here rather than hidden.
+1. `scripts/build_site.py` had one conflicting hunk (thermometer-accuracy `sub`/`kicker`): kept this session's entity fix (`±0.5` instead of the double-escaped `&plusmn;`, which renders literally through `esc()`) and upstream's honest kicker standard ("Buying guide" + computed `reading_minutes()`), so both fixes stand.
+2. Generated pages (products/*, guides/*, executive-summary.html, flagged.html, search.html, sources.html, guides.html) taken from `origin/main` and regenerated from the combined generator.
+3. `data/flags.json`: upstream FLG-047..FLG-050 kept as-is; this session's cosmetic slug flag renumbered again — chain FLG-041 → FLG-047 → **FLG-051** (three-way ID collision with parallel sessions; the finding is unchanged and the chain is recorded in the flag detail).
+4. **Task ID:** this task's final label is **T-26** (chain: claimed T-21 → T-23 → T-24 → T-26; T-21..T-25 all taken by parallel sessions for different work — the IDs collided, not the work).
+5. On-page exec bullet relabeled to T-26; README flag counts synced to 51; EXECUTIVE-SUMMARY.md re-appended with renames.
 
-## Session `arena/ca4af934-affil2` — T-24 work record (2026-11-20) [claimed as T-21 pre-merge]
+## Session `arena/ca4af934-affil2` — T-26 work record (2026-11-20)
 
 ### Line-by-line review and independent live re-verification (official sources only)
 
 | Check | Official source (link for manual review) | Result |
 |---|---|---|
-| P-01..P-05 listing titles | https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z | All five live page titles match `data/products.json` strings exactly (compared verbatim) |
-| P-03 Product information (Features & Specs, Measurements, Materials & Care, Item details) | https://www.amazon.com/dp/B08DKYBTPH | Line-by-line: Item Weight 12.8 pounds ✓; 12.75"D x 13.5"W x 10"H ✓; Capacity 8 quarts ✓; Output Wattage & Wattage 1700 watts ✓ (FLG-017 side A); Voltage 120 volts ✓; Min 94 °C / Max 400 °F ✓ (FLG-018 side A); Part Number RJ38-SQSS-8T ✓; Warranty Description 1-Year Limited Warranty ✓; Model Number field prints "Large Air Fryer" as register notes ✓ |
-| P-05 Features & Specs | https://www.amazon.com/dp/B0DZFD6R9Z | Line-by-line: Upper Temperature Range 1000 °F ✓; Immersion Depth 4.75 inches ✓; "5 Sensors, Unlimited Range" ✓; Connectivity "Bluetooth, Wi Fi" ✓; Care "Dishwasher Safe" ✓ |
-| FTC Endorsement Guides FAQ (S03) | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Re-read live; "connection … should be disclosed clearly and conspicuously" wording confirmed |
-| Google Qualify outbound links (S04) | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | Re-read live; rel="sponsored" for paid links, multiple rel values allowed |
-| USDA FSIS temperature chart (S22) | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Re-read live; 145 °F + 3-min rest / 160 °F ground meats / 165 °F poultry-leftovers match the site's USDA block; chart dated 2025-04-14 |
-| Thanksgiving 2026-11-26 (seasonal module) | computed: 4th Thursday of November 2026 (Thursdays 5, 12, 19, 26) | Correct |
+| P-01..P-05 listing titles | https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z | All five live page titles match `data/products.json` strings exactly |
+| P-03 Product information | https://www.amazon.com/dp/B08DKYBTPH | Line-by-line: 12.8 pounds ✓; 12.75"D x 13.5"W x 10"H ✓; 8 quarts ✓; 1700 watts / 120 volts ✓ (FLG-017 side A); Max 400 °F ✓ (FLG-018 side A); RJ38-SQSS-8T ✓; 1-Year Limited Warranty ✓ |
+| P-05 Features & Specs | https://www.amazon.com/dp/B0DZFD6R9Z | Line-by-line: 1000 °F ✓; 4.75 inches ✓; 5 sensors ✓; Bluetooth + Wi Fi ✓; Dishwasher Safe ✓ |
+| S03 FTC Endorsement Guides FAQ | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Re-read live; disclosure wording confirmed |
+| S04 Google Qualify outbound links | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | Re-read live; rel="sponsored" guidance confirmed |
+| S22 USDA FSIS temperature chart | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Re-read live; 145/160/165 °F rows match the site's USDA block |
+| Thanksgiving 2026-11-26 | computed (4th Thursday of Nov 2026) | Correct |
 
-**Not re-reached in this pass (recorded honestly, nothing re-marked on their behalf):** the P-01/P-02/P-04 deep spec tables — this session's chunk fetches landed on ad modules (pagination drift between fetcher runs); the values stand on the same-day cited captures by sessions 530c2e6c / 937876a6 / 9f19fe6b (`data/products.json` field provenance, `data/reverification-2026-11-20.json`). S01/S02 remain login-gated (FLG-026). Prices/ratings/buy-box deliberately unrecorded (FLG-005). (Session b6b809da's FLG-045 records the same class of limit from the other side.)
+**Not re-reached here:** P-01/P-02/P-04 deep spec tables (ad-dominated chunk pagination; values stand on same-day cited captures — parallel note in FLG-050). S01/S02 login-gated (FLG-026). Prices/ratings unrecorded (FLG-005).
 
-### Table audit (every row: source link or explicit blank/flag marker)
-333 rows across the 33 pre-merge pages audited: 174 carry direct external source links; 84 carry blank/flag/policy markers; 75 are internal registers (design-brief planning rows, Decision Center, Open Questions, event-schema tables, ledger empty-state) or caption-cited single-source data rows (compare 4, USDA doneness 8). Criteria and exemptions recorded in EXECUTIVE-SUMMARY.md.
+### Table audit
+333 rows (33 pre-merge pages): 174 with external source links; 84 with blank/flag/policy markers; 75 internal-register or caption-cited single-source rows. Product spec and intent tables carry row-level official links.
 
-### Defects found and fixed (generator-level; generated HTML regenerated, never hand-edited)
-1. Double-escaped entities (`&plusmn;` `&mdash;` `&nbsp;` `&deg;`) in four guide `sub`/`intro` strings rendered literally (`amp;plusmn;` visible on guides.html) — replaced with real characters.
-2. Product-intent confirmation record: observed-target, token, model-provenance, observation-note and confirmation-date rows now carry row-level links to the official listing or the supplied short link; intended vs observed fields remain separate (FLG-001).
-3. Compare-table caption now carries all five official listing links and states the per-column traceability path.
-4. **FLG-047** (cosmetic, sourced to S12): P-03 URL slug `p03-chefman-8qt-turbrofry` misspells the listing's TurboFry name; rename would change a published URL, so it is left to the owner.
-5. Publication polish: front-page seasonal cluster "Thanksgiving week" (USDA doneness panel, S22) and guides-hub topic clusters (Choosing an air fryer / Meat thermometers / Seasonal — main's Holiday-2026 guides grouped under Seasonal; the fail-safe group ensures no guide can drop out).
-
-### Sources
-Product listings and policy links as in the table above; full register at `sources.html` / `data/sources.json` (19 sources).
+### Defects found and fixed (generator-level; generated HTML regenerated only)
+1. Double-escaped entities in four guide sub/intro strings (literal `amp;plusmn;` on guides.html) — real characters now.
+2. Intent confirmation record rows gained row-level links (listing/short link); intended vs observed separate (FLG-001).
+3. Compare caption: five official listing links + per-column traceability statement.
+4. **FLG-051** cosmetic slug misspelling (owner decision).
+5. Front-page Thanksgiving-week cluster (USDA panel, S22) + guides-hub clusters (upstream Holiday-2026 guides grouped under Seasonal; fail-safe group).
 
 ### Irregularities
-FLG-001..FLG-046 (main) unchanged; FLG-047 new (cosmetic slug). Open parallel PRs #28/#29/#34/#35 left untouched per protocol and listed for the owner in EXECUTIVE-SUMMARY.md.
+FLG-001..FLG-050 (upstream) unchanged; FLG-051 new. Open parallel PRs #28/#29/#34/#35 untouched per protocol. README counts synced.

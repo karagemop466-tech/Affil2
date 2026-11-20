@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+# Reader-facing pages are listed in sitemap.xml; project records stay crawlable.
 
 Sitemap: https://karagemop466-tech.github.io/Affil2/sitemap.xml
+# Site profile for crawlers and AI agents:
+# https://karagemop466-tech.github.io/Affil2/findability.txt

@@ -1,0 +1,330 @@
+{
+ "generated": "2026-11-20",
+ "session": "arena/0acc86ad-affil2",
+ "method": "Each official Amazon /dp/ listing was fetched live in this session and read in the Product-information / 'About this item' sections. Every value below is quoted as the listing printed it. A value the reader did not reach is recorded as unverified rather than copied from the register, so future sessions can see exactly what was re-checked.",
+ "sources": [
+  "https://www.amazon.com/dp/B0CDY277D3",
+  "https://www.amazon.com/dp/B09B7SB46R",
+  "https://www.amazon.com/dp/B08DKYBTPH",
+  "https://www.amazon.com/dp/B0DHZTCNR5",
+  "https://www.amazon.com/dp/B0DZFD6R9Z",
+  "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
+  "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking"
+ ],
+ "products": [
+  {
+   "id": "P-01",
+   "asin": "B0CDY277D3",
+   "url": "https://www.amazon.com/dp/B0CDY277D3",
+   "title_as_read": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black",
+   "fields": [
+    {
+     "field": "Capacity",
+     "value_as_read": "6 liters",
+     "where": "Product-information table, \"Purchase options and add-ons\"",
+     "status": "conflict",
+     "note": "Title and bullets say 6 quarts (2 x 3-quart baskets); the spec table says 6 liters. Both published; register already records this."
+    },
+    {
+     "field": "Product Dimensions",
+     "value_as_read": "13.38\"D x 11.81\"W x 10.63\"H",
+     "where": "Product-information table",
+     "status": "verified",
+     "note": "Matches the register exactly."
+    },
+    {
+     "field": "Temperature range",
+     "value_as_read": "200-450 F",
+     "where": "\"About this item\" bullet",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Power",
+     "value_as_read": "120 Volts/1700 Watts",
+     "where": "\"About this item\" bullet (RESOURCES line)",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Warranty",
+     "value_as_read": "1-year assurance provided by Chefman",
+     "where": "\"About this item\" (RESOURCES line)",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Certification",
+     "value_as_read": "cETL approved",
+     "where": "\"About this item\" (RESOURCES line)",
+     "status": "verified",
+     "note": "Seller statement only; no certificate inspected."
+    },
+    {
+     "field": "Item weight",
+     "value_as_read": "not present in the chunks read",
+     "where": "n/a",
+     "status": "unverified",
+     "note": "Weight was not in the sections read this session; register carries 13.3 lb from a prior reading of the Measurements table. Not re-confirmed here."
+    }
+   ]
+  },
+  {
+   "id": "P-02",
+   "asin": "B09B7SB46R",
+   "url": "https://www.amazon.com/dp/B09B7SB46R",
+   "title_as_read": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included",
+   "fields": [
+    {
+     "field": "Product Dimensions",
+     "value_as_read": "16.9\"D x 15.8\"W x 14.8\"H",
+     "where": "Product-information table",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Capacity field",
+     "value_as_read": "24.6 liters",
+     "where": "Product-information table",
+     "status": "conflict",
+     "note": "\"About this item\" bullet says 26-quart. Both published."
+    },
+    {
+     "field": "Preset count",
+     "value_as_read": "24 in title; 25 in an About-this-item bullet",
+     "where": "Title vs bullets",
+     "status": "conflict",
+     "note": "Title says \"24 One-Touch Preset Options\"; the bullet says \"25 COOKING PRE-SETS\". Already flagged on the site."
+    },
+    {
+     "field": "Accessories",
+     "value_as_read": "Six in title; Included Components names six; Configuration/Description said 7",
+     "where": "Title vs bullets",
+     "status": "conflict",
+     "note": "Recorded previously; not re-counted against the Configuration field this session."
+    },
+    {
+     "field": "Item weight",
+     "value_as_read": "absent from the listing text read",
+     "where": "n/a",
+     "status": "unverified",
+     "note": "Consistent with the register's decision to publish no weight for P-02."
+    }
+   ]
+  },
+  {
+   "id": "P-03",
+   "asin": "B08DKYBTPH",
+   "url": "https://www.amazon.com/dp/B08DKYBTPH",
+   "title_as_read": "Chefman Air Fryer 8 Qt | TurboFry 4-in-1 with 450F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel",
+   "fields": [
+    {
+     "field": "Product Dimensions",
+     "value_as_read": "12.75\"D x 13.5\"W x 10\"H",
+     "where": "Product-information table",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Capacity",
+     "value_as_read": "8 quarts",
+     "where": "Product-information table",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Temperature range",
+     "value_as_read": "200-400 F",
+     "where": "'About this item' bullet (CRISPIER & HEALTHIER)",
+     "status": "conflict",
+     "note": "Title advertises a 450F Hi-Fry option; the bullet and spec field say 200-400F. Already published as a conflict."
+    },
+    {
+     "field": "Power",
+     "value_as_read": "1000 Watts/120 Volts",
+     "where": "'About this item' bullet (RESOURCES line)",
+     "status": "conflict",
+     "note": "Register records 1700 W in the Features & Specs table. Both published."
+    },
+    {
+     "field": "Presets",
+     "value_as_read": "Four presets: fries, chicken, meat, fish",
+     "where": "'About this item' bullet (EASY COOKING)",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Certification / warranty",
+     "value_as_read": "cETL approved; 1-year warranty provided by Chefman",
+     "where": "'About this item' bullet",
+     "status": "verified",
+     "note": "Seller statements only."
+    },
+    {
+     "field": "Item weight",
+     "value_as_read": "not in the sections read",
+     "where": "n/a",
+     "status": "unverified",
+     "note": "Register carries 12.8 lb from a prior Measurements reading; not re-confirmed this session."
+    }
+   ]
+  },
+  {
+   "id": "P-04",
+   "asin": "B0DHZTCNR5",
+   "url": "https://www.amazon.com/dp/B0DHZTCNR5",
+   "title_as_read": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, +/-0.5F Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black",
+   "fields": [
+    {
+     "field": "Stated accuracy",
+     "value_as_read": "+/-0.5F",
+     "where": "Title and 'About this item' bullet",
+     "status": "verified",
+     "note": "Matches the register; it remains the seller's claim, not an independent test result."
+    },
+    {
+     "field": "Specification Met",
+     "value_as_read": "NIST, NSF",
+     "where": "Product-information table",
+     "status": "verified",
+     "note": "As stated on the listing. No certificate or test report was inspected."
+    },
+    {
+     "field": "Included Components",
+     "value_as_read": "1 Meat Thermometer, 1 AAA Battery, 1 User Manual, 1 Calibration Certificate",
+     "where": "Product-information table",
+     "status": "verified",
+     "note": "Matches the register's battery entry."
+    },
+    {
+     "field": "Response time",
+     "value_as_read": "1 second",
+     "where": "'About this item' bullet",
+     "status": "verified",
+     "note": "Seller claim."
+    },
+    {
+     "field": "Product Care",
+     "value_as_read": "Wipe Clean",
+     "where": "Product-information table",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Upper temperature rating",
+     "value_as_read": "not located in the sections read",
+     "where": "n/a",
+     "status": "unverified",
+     "note": "Register carries 572 F from a prior reading; not re-confirmed this session."
+    },
+    {
+     "field": "Model number (HT07)",
+     "value_as_read": "not located in the sections read",
+     "where": "n/a",
+     "status": "unverified",
+     "note": "Left as previously recorded; not re-confirmed here."
+    }
+   ]
+  },
+  {
+   "id": "P-05",
+   "asin": "B0DZFD6R9Z",
+   "url": "https://www.amazon.com/dp/B0DZFD6R9Z",
+   "title_as_read": "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3",
+   "fields": [
+    {
+     "field": "Battery life",
+     "value_as_read": "up to 50 hours on a full charge",
+     "where": "'About this item' (HOURS OF USE)",
+     "status": "conflict",
+     "note": "An earlier reading of the product description gave 70 hours. 50 hours is the current claim published on the site."
+    },
+    {
+     "field": "Heat rating",
+     "value_as_read": "1000F heat safe",
+     "where": "Title and 'About this item' bullet",
+     "status": "verified",
+     "note": "Seller claim."
+    },
+    {
+     "field": "Probes included",
+     "value_as_read": "3 probes, Hub",
+     "where": "Product-information table (Included Components)",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Connectivity",
+     "value_as_read": "Bluetooth, Wi Fi",
+     "where": "Product-information table",
+     "status": "verified",
+     "note": "Matches the register."
+    },
+    {
+     "field": "Specification Met",
+     "value_as_read": "long list incl. NIST, NSF, ETL, CE",
+     "where": "Product-information table",
+     "status": "verified",
+     "note": "As printed on the listing. A list of standards met is not evidence that each was independently tested for this unit."
+    },
+    {
+     "field": "Warranty",
+     "value_as_read": "'two-year assurance provided by CHEF iQ' in a bullet",
+     "where": "'About this item' (RESOURCES)",
+     "status": "conflict",
+     "note": "Register records a '3 Year' item-details field. Both published."
+    },
+    {
+     "field": "Probe length",
+     "value_as_read": "not re-measured this session",
+     "where": "n/a",
+     "status": "unverified",
+     "note": "Register carries 4.75 in from a prior reading."
+    }
+   ]
+  }
+ ],
+ "usda_chart": {
+  "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
+  "last_updated_on_source": "Apr 14, 2025",
+  "values_re_read": [
+   "Beef/Pork/Veal/Lamb steaks, chops, roasts: 145 F with a 3-minute rest",
+   "Ground meats: 160 F",
+   "All poultry: 165 F",
+   "Leftovers: 165 F",
+   "Fish and shellfish: 145 F"
+  ],
+  "status": "verified"
+ },
+ "ftc": {
+  "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
+  "what_was_re_read": "A material connection between endorser and marketer must be disclosed clearly and conspicuously.",
+  "status": "verified"
+ },
+ "not_re_verified_this_session": [
+  "Short-link redirects (link.amazon/*) - recorded by earlier sessions; not re-tested here.",
+  "Amazon Associates Operating Agreement and Program Policies - login-gated; URLs cited, wording not re-read.",
+  "Whether the tracking ID shopnow047c-20 is issued and active - owner-only.",
+  "Whether link.amazon short links are permitted in this placement - unresolved.",
+  "The one-link-per-product Special Link test inside the Associates account - owner-only.",
+  "Search Console verification and any query data - not set up.",
+  "Hands-on product performance of any kind - never claimed."
+ ],
+ "new_observations_for_review": [
+  {
+   "id": "P-05 specification list",
+   "observation": "The Product-information 'Specification Met' field prints a long list of standards (ANSI, ASME, ASTM, CCC, CE, CSA, EMC, ETL, FCC, FDA, FE, HACCP, ISO 13485, ISO 9000, ISO 9001, NIST, NSF, RoHS, UL, WEEE). A list like this is a seller self-declaration; it is not evidence each standard was independently certified for this unit.",
+   "status": "needs review - published as a seller statement, not as verified certification"
+  },
+  {
+   "id": "P-03 newer model notice",
+   "observation": "The B08DKYBTPH page carries a \"There is a newer model of this item\" module pointing to B0CNY1YVDD (Chefman 6 QT, 4 presets). The site covers the submitted link, not the newer model. Worth an editorial note if the version on sale changes.",
+   "status": "needs review - no action taken; the submitted product is what is covered"
+  },
+  {
+   "id": "P-01 offer state",
+   "observation": "The buy box for B0CDY277D3 showed a USED buying option in the offer JSON at one point in this session and a new-price block elsewhere on the page. Offer state is unstable between reads, which is one more reason no price or condition is published here.",
+   "status": "needs review - consistent with the existing decision to publish no offer data"
+  }
+ ]
+}
