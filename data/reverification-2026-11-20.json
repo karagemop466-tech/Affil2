@@ -1,0 +1,86 @@
+{
+  "session": "arena/990af5de-affil2",
+  "date": "2026-11-20",
+  "scope": "Independent re-verification of the merged data (products.json, flags.json) against the live Amazon pages and the official Associates / Google / eCFR sources. Added as an addendum; the other session's records were not overwritten.",
+  "method": "Opened each supplied link.amazon short link and each cited /dp/ page with the fetch tool on 2026-11-20. Repeated attempts were made where the first attempt failed. Only page <title> and breadcrumb text were compared; prices and ratings were not compared (see FLG-005).",
+  "links": [
+    {
+      "token": "B04G1MEwY",
+      "token_length": 9,
+      "record_observed_asin": "B0CDY277D3",
+      "attempts": [
+        {"result": "product page: /dp/B0CDY277D3", "title_seen": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black"}
+      ],
+      "reproduced": "Yes (1 of 1 attempts)",
+      "title_match": "Yes (record title is a prefix of the page title)",
+      "source": "https://www.amazon.com/dp/B0CDY277D3"
+    },
+    {
+      "token": "B02NbDxp3",
+      "token_length": 9,
+      "record_observed_asin": "B09B7SB46R",
+      "attempts": [
+        {"result": "product page: /dp/B09B7SB46R", "title_seen": "Amazon.com: Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included : Home & Kitchen"}
+      ],
+      "reproduced": "Yes (1 of 1 attempts)",
+      "title_match": "No. Record title 'Emeril Lagasse 26 QT Extra Large Air Fryer, Convection Toaster Oven with French Doors, Stainless Steel' does not match the page title (see FLG-013).",
+      "source": "https://www.amazon.com/dp/B09B7SB46R"
+    },
+    {
+      "token": "B00hJ57DV",
+      "token_length": 9,
+      "record_observed_asin": "B08DKYBTPH",
+      "attempts": [
+        {"result": "HTTP 500 error"},
+        {"result": "Amazon homepage (no product)"},
+        {"result": "product page: /dp/B08DKYBTPH", "title_seen": "Amazon.com: Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel : Home & Kitchen"}
+      ],
+      "reproduced": "Yes, but only on the 3rd attempt (see FLG-011)",
+      "title_match": "Partial. ASIN matches; record title 'Chefman TurboFry Touch Air Fryer, XL 8-Qt...' differs from the page title (see FLG-013).",
+      "source": "https://www.amazon.com/dp/B08DKYBTPH"
+    },
+    {
+      "token": "B0c8moW59",
+      "token_length": 9,
+      "record_observed_asin": "B0DHZTCNR5",
+      "attempts": [
+        {"result": "HTTP 500 error"},
+        {"result": "Amazon 'Continue shopping' checkpoint (no product)"},
+        {"result": "Amazon 'Continue shopping' checkpoint (no product)"},
+        {"result": "Amazon 'Continue shopping' checkpoint (no product)"}
+      ],
+      "reproduced": "No. 0 of 4 attempts reached /dp/B0DHZTCNR5 (see FLG-012)",
+      "title_match": "Not applicable",
+      "source": "https://www.amazon.com/checkpoint/continue"
+    },
+    {
+      "token": "B0f3GKalj",
+      "token_length": 9,
+      "record_observed_asin": "B0DZFD6R9Z",
+      "attempts": [
+        {"result": "Amazon homepage (no product)"},
+        {"result": "direct fetch of https://www.amazon.com/dp/B0f3GKalj failed (expected: token is not a 10-character ASIN)"},
+        {"result": "product page: /dp/B0DZFD6R9Z", "title_seen": "Amazon.com: CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3: Home & Kitchen"}
+      ],
+      "reproduced": "Yes, but only on the 3rd attempt (see FLG-011)",
+      "title_match": "Partial. ASIN matches; record title includes '[2025 Model]', which does not appear in the page title (see FLG-013).",
+      "source": "https://www.amazon.com/dp/B0DZFD6R9Z"
+    }
+  ],
+  "asin_pages_reached_today": ["B0CDY277D3", "B09B7SB46R", "B08DKYBTPH", "B0DHZTCNR5", "B0DZFD6R9Z"],
+  "asin_pages_note": "B0DHZTCNR5 was reached directly as a /dp/ page; the short link B0c8moW59 was not (FLG-012).",
+  "new_flags": ["FLG-011", "FLG-012", "FLG-013", "FLG-014", "FLG-015", "FLG-016"],
+  "official_sources_rechecked": [
+    {"url": "https://affiliate-program.amazon.com/help/operating/agreement", "checked": "Section 5 identification statement, verbatim", "result": "Matches the statement used on the site"},
+    {"url": "https://affiliate-program.amazon.com/help/operating/policies", "checked": "Commission Income Statement §2(d), §2(e), §2(g)", "result": "Clauses exist as described in FLG-015 and FLG-016. Only the first two chunks of 11 were read."},
+    {"url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links", "checked": "rel=\"sponsored\" for paid links", "result": "Matches"},
+    {"url": "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-B/part-255", "checked": "16 CFR Part 255 table of contents and §255.5 excerpt", "result": "§255.5 requires clear and conspicuous disclosure of material connections; affiliate compensation is named. Full text not read."}
+  ],
+  "not_rechecked_in_this_pass": [
+    "Prices and ratings (FLG-005 stands)",
+    "Model numbers and preset counts for each listing (FLG-008, FLG-009 stand)",
+    "FTC Endorsement Guides FAQ on ftc.gov (cited by the other session; not reopened here)",
+    "Associates Special Link test (FLG-004 stands; needs the owner's Associates account)",
+    "Tracking-ID activity (FLG-002 stands)"
+  ]
+}
