@@ -654,3 +654,43 @@ table.changelog td:nth-child(1){font-size:12.5px}
   .aisles figure.photo img{height:98px}
   .aisles figure.photo .photo-cap{display:none}
 }
+
+/* ---------- reader-facing additions (newsroom voice pass) ---------- */
+.spec-wrap{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:26px;align-items:start}
+@media(max-width:900px){.spec-wrap{grid-template-columns:1fr}}
+.aside-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px;box-shadow:var(--shadow)
+}
+.aside-card h2,.aside-card h3{font-size:19px;margin:0 0 10px}
+.aside-card p{margin:0 0 10px;font-size:15px;line-height:1.55}
+.aside-card .small{font-size:12.5px}
+table.ledger,table.specs-table{width:100%;border-collapse:collapse;font-size:15px}
+table.ledger th[scope=row],table.specs-table th[scope=row]{
+  text-align:left;vertical-align:top;width:38%;padding:11px 14px 11px 0;
+  font-family:var(--sans);font-weight:600;color:var(--ink-2);border-bottom:1px solid var(--line)
+}
+table.ledger td,table.specs-table td{
+  padding:11px 0;border-bottom:1px solid var(--line);vertical-align:top
+}
+table.ledger code{font-size:12.5px;background:var(--cream-2);padding:2px 6px;border-radius:6px;word-break:break-all}
+.srcline{font-size:12px;color:var(--muted);margin-top:5px}
+.srcline a{color:var(--muted);text-decoration:underline dotted}
+.review-strip{
+  display:flex;gap:18px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  background:var(--ink);color:#f4efe6;border-radius:var(--radius);
+  padding:14px 20px;margin:0 0 26px
+}
+.review-strip p{margin:0;font-size:14.5px;line-height:1.45;max-width:62ch}
+.review-strip strong{color:#fff}
+.review-strip a{color:var(--gold);font-weight:600;white-space:nowrap}
+.pick-note{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+.badge-row{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 0}
+.badge-row span{
+  font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;font-weight:600;
+  padding:3px 9px;border-radius:999px;background:var(--cream-2);color:var(--ink-2)
+}
+.badge-row span[data-tone="good"]{background:#e9f2dc;color:#3f6212}
+.badge-row span[data-tone="warn"]{background:#fbefd6;color:#8a5a06}
+.card .why{font-size:13.5px;color:var(--ink-2);line-height:1.5;margin:10px 0 6px}
+.card .badge-row{margin:10px 0 0}

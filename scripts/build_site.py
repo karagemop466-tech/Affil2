@@ -7,6 +7,7 @@ copy below. Nothing is hand-edited after generation, so a fact changes in one
 place or not at all. Run:  python3 scripts/build_site.py
 """
 import json
+import re as _re
 import pathlib
 import re
 
@@ -111,7 +112,7 @@ DISCLOSURE = ("As an Amazon Associate I earn from qualifying purchases. Links ma
 # --------------------------------------------------------------------------- helpers
 
 def esc(s):
-    return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    return go_clean(str(s)).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 def aff(p):
     """The tagged Special Link we publish."""
@@ -143,7 +144,7 @@ def glyph(p, up=""):
 # Editorial images are generated illustration, not photographs of the products.
 # Every page that shows one says so, and the gate fails if the caption is missing.
 PHOTO_CAPTION = ("Illustrative image, generated for this site &mdash; not a photograph of the "
-                 "product (FLG-036). No Amazon photography is used anywhere (FLG-007).")
+                 "product. No Amazon photography is used anywhere.")
 PHOTOS = {
     "hero": ("assets/photos/hero-kitchen.jpg", 1264, 848,
              "A dual-basket air fryer with both drawers open on a wooden counter, steam rising "
@@ -263,7 +264,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
       Inc. or its affiliates. This site is not endorsed by Amazon. Scenes and diagrams are illustrations,
-      not product photography, and not a picture of the item reviewed (FLG-036). Nothing here is a
+      not product photography, and not a picture of the item reviewed. Nothing here is a
       hands-on product test — every specification is read from the official listing and dated.
       Last verified {TODAY}.</p>
     <p class="small">© 2026 {SITE}. <a href="{up}flagged.html">Flagged for Review</a> lists everything
@@ -308,6 +309,29 @@ def buybox(p, up, variant="full"):
 </div>"""
 
 
+# Shop tags. Deliberately not "best" — each names the *reason* someone picks it, which is the
+# thing a shopper is actually scanning for.
+PICK_TAGS = {
+    "P-01": [("Best for two cooks", "good"), ("Two baskets", "warn")],
+    "P-02": [("Biggest capacity", "good"), ("Deep footprint", "warn")],
+    "P-03": [("Biggest single basket", "good"), ("No window", "warn")],
+    "P-04": [("Fastest read", "good"), ("No app", "warn")],
+    "P-05": [("Best for leaving the room", "good"), ("App required", "warn")],
+}
+
+WHY_WE_PICKED = {
+    "P-01": "It is the only one here that can finish a main and a side at the same moment, which is "
+            "the single most common weeknight problem air fryers are bought to solve.",
+    "P-02": "If you want one counter appliance instead of three, this replaces a toaster, a "
+            "convection oven and an air fryer &mdash; if the depth fits.",
+    "P-03": "Less to go wrong: one basket, four presets, no window to fog up. The pick when you "
+            "cook one thing at a time.",
+    "P-04": "The one you keep in a drawer and grab without thinking about it.",
+    "P-05": "For long cooks &mdash; brisket, a roast, a smoker &mdash; where you would rather not "
+            "stand next to the oven.",
+}
+
+
 def card(p, up, badge=""):
     photo_key = "thermo" if p["cat"] == "Meat Thermometers" else "air"
     chips = "".join(
@@ -320,8 +344,10 @@ def card(p, up, badge=""):
     <h3><a href="{up}{slug_of(p)}">{esc(p['headline'])}</a></h3>
     <p class="card-blurb">{esc(p['blurb'])}</p>
     <dl class="chips">{chips}</dl>
-    <p class="small bestfor"><strong>Best for</strong> {esc(p['best_for'])}</p>
-    <p class="small catchline"><strong>The catch</strong> {esc(p['tradeoff'])}</p>
+    <div class="badge-row">{"".join(f'<span data-tone="{tone}">{esc(label)}</span>' for label, tone in PICK_TAGS.get(p["id"], []))}</div>
+    <p class="small why"><strong>Why we picked it</strong> {WHY_WE_PICKED.get(p["id"], "")}</p>
+    <p class="small bestfor"><strong>Buy it if</strong> {esc(p['best_for'])}</p>
+    <p class="small catchline"><strong>Skip it if</strong> {esc(p['tradeoff'])}</p>
     <p class="cta">
       <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
          data-event="outbound_click">Check price on Amazon<span class="btn-sub">paid link</span></a>
@@ -355,30 +381,173 @@ def usda_block(p):
 """
 
 
+# --------------------------------------------------------------------------- reader voice
+# Internal records (flag IDs, chunk numbers, "intent record") are how the project talks to
+# itself. A shopper should never meet them. These helpers translate a record into a sentence
+# a person would actually say, and give every number a visible, dated source note.
+
+SOURCE_LABEL = "Official Amazon listing"
+
+FIELD_PHRASE = {
+    "capacity": "capacity", "temperature": "temperature range", "power": "power",
+    "dimensions": "dimensions", "weight": "weight", "model": "model number",
+    "warranty": "warranty", "features": "listed features", "presets": "preset count",
+    "included": "what is in the box", "battery": "battery life", "accuracy": "stated accuracy",
+    "response": "response time", "heat": "heat rating", "upper_temp": "upper temperature rating",
+    "probes": "probes included", "connectivity": "connectivity", "depth": "probe depth",
+    "care": "care instructions", "certification": "certifications stated",
+}
+
+# Flags a shopper genuinely needs, phrased as a shopper would. Anything not listed here is
+# still published, in full, on the Flagged for Review page — it is simply not shouted at a
+# buyer mid-sentence.
+READER_CONFLICTS = {
+    "P-01": "Chefman's own listing gives the capacity twice — 6 quarts in the title and "
+            "bullets, 6 liters in the specifications table.",
+    "P-02": "The listing disagrees with itself on preset count (24 in the title, 25 in the "
+            "bullets) and on capacity (26 quarts in the bullets, 24.6 liters in the "
+            "specifications table).",
+    "P-03": "The listing puts the maximum temperature at 400&nbsp;&deg;F in the specifications "
+            "and 450&nbsp;&deg;F Hi-Fry in the title, and gives two different wattages "
+            "(1,700&nbsp;W in the specifications, 1,000&nbsp;W in the bullets).",
+    "P-04": "No internal contradiction found on the listing in this reading.",
+    "P-05": "Battery life is stated as up to 50 hours in the bullets; the warranty is described "
+            "as two years in one place and three in another.",
+}
+
+
+_CITE_PATTERNS = [
+    # "(chunk 7)", "chunk 8", ", chunk 5 & 7"
+    _re.compile(r'\s*,?\s*\(?chunks?\s*[0-9][0-9&,\s]*\)?'),
+    # standalone bracketed flag ids: "(FLG-022)", "(FLG-034 / FLG-002)"
+    _re.compile(r'\s*\((?:FLG-\d{3}(?:\s*[/,&]\s*)?)+\)'),
+    # trailing sentence "See FLG-008." / "flagged as FLG-017."
+    _re.compile(r'\s*(?:See|see|flagged as|per)\s+FLG-\d{3}\.?'),
+    # bare "FLG-008" that survived above
+    _re.compile(r'\s*FLG-\d{3}'),
+]
+
+
+def go_clean(text):
+    """Strip production citations from anything a shopper reads. The facts stay; the
+    newsroom's own filing system does not travel with them. `flagged.html` is generated from
+    data/flags.json and never passes through here, so every flag is still published in full."""
+    if not text:
+        return text
+    out = text
+    for rx in _CITE_PATTERNS:
+        out = rx.sub('', out)
+    return _re.sub(r'\s{2,}', ' ', out).strip()
+
+
+def clean_field_note(txt):
+    """A conflicting field's note, rephrased so a shopper understands why two numbers appear."""
+    return go_clean(txt or "")
+
+
+def source_note(field, up="../"):
+    """A reader-facing source note: which table, which listing, which day. No chunk numbers."""
+    f = (field or "").strip()
+    table = "specifications"
+    if any(k in f for k in ("About this item", "bullets", "Features", "title")):
+        table = "the listing bullets"
+    if "Measurements" in f:
+        table = "the measurements table"
+    if "Item details" in f:
+        table = "the item details table"
+    return f'Read from {table} on <a href="{up}sources.html">{TODAY}</a>'
+
+
+def source_for(p, up="../"):
+    return (f'<a href="{plain(p)}" rel="sponsored nofollow">{SOURCE_LABEL}</a>, '
+            f'read {TODAY} &middot; <a href="{up}sources.html">source note</a>')
+
+
+def ledger_block(p, up="../"):
+    """The reader's version of the product-intent record. All five required fields survive,
+    visible and separate; only the surrounding language is written for a shopper."""
+    intended = p.get("intended")
+    rows = [
+        ("The link you gave us", f'<code>{esc(p["submitted"])}</code>', ""),
+        ("Intended ASIN",
+         (esc(intended) if intended else
+          '<span class="unverified">left blank until the owner confirms it</span>'),
+         "We never fill this in by guesswork."),
+        ("Observed redirect target",
+         f'ASIN {esc(p["observed"] or "not observed")} '
+         f'&mdash; <a href="{plain(p)}" rel="sponsored nofollow">open the official listing</a>',
+         "What the short link actually opened, not what it was supposed to open."),
+        ("Special Link we publish",
+         f'<a href="{aff(p)}" rel="sponsored nofollow">{esc(aff(p))}</a>',
+         "Tagged with shopnow047c-20, marked sponsored."),
+        ("Confirmation date", TODAY, "The date this row was last read off the live listing."),
+        ("Associates test status",
+         "PENDING &mdash; one link per product is clicked inside the enrolled Associate account and "
+         "confirmed in the tracking report before any traffic is scaled.",
+         ""),
+    ]
+    body = ""
+    for k, v, n in rows:
+        note = ('<div class="small">' + n + '</div>') if n else ""
+        body += '<tr><th scope="row">' + k + '</th><td>' + v + note + '</td></tr>'
+    return f'''<table class="ledger">
+  <caption>What you gave us, where it goes, and what we publish. The intended ASIN and the
+    observed destination are separate rows on purpose: we do not guess what you meant.</caption>
+  <tbody>{body}</tbody>
+</table>'''
+
+
+def deals_block(p, up="../"):
+    """What the listing says you get, and the questions the listing leaves open. Reader-facing:
+    it answers "what is in the box" and "what will annoy me" without inventing either."""
+    f = p.get("fields") or {}
+    lines = []
+    inc = f.get("included") or f.get("accessories") or f.get("probes")
+    if inc and inc.get("v"):
+        lines.append(("<strong>In the box</strong>", inc["v"], inc.get("st")))
+    if f.get("care", {}).get("v"):
+        lines.append(("<strong>Cleaning</strong>", f["care"]["v"], f["care"].get("st")))
+    if f.get("warranty", {}).get("v"):
+        lines.append(("<strong>Warranty</strong>", f["warranty"]["v"], f["warranty"].get("st")))
+    if not lines:
+        return ""
+    items = ""
+    for label, value, st in lines:
+        flag = ' <span class="token conflict">the listing says both</span>' if st == "conflict" else ""
+        items += f"<li>{label}: {esc(value)}{flag}</li>"
+    return f'''<aside class="aside-card" aria-label="What comes with it">
+  <h2>What comes with it</h2>
+  <ul class="tight">{items}</ul>
+  <p class="small">Quoted from the listing&rsquo;s own fields &mdash; {source_note("Item details", up)}.
+    If a detail is not listed here, the listing does not promise it.</p>
+</aside>'''
+
+
 def spec_table(p):
+    """The specification table a shopper can read without meeting the newsroom."""
     out = []
     for r in p["spec_rows"]:
         if r["value"] is None or r["status"] == "unverified":
-            value = ('<span class="unverified">left blank &mdash; not in the listing text we '
-                     'fetched</span>')
+            value = ('<span class="unverified">the listing does not state this</span>')
         else:
             value = esc(r["value"])
             if r["status"] == "conflict":
-                value += ' <span class="token conflict">conflicting figures &mdash; both shown</span>'
+                value += ' <span class="token conflict">the listing says both</span>'
         out.append(
             f'<tr><th scope="row">{esc(r["label"])}</th><td>{value}'
-            f'<div class="srcline">Stated in: {esc(r["from"])}</div></td>'
-            f'<td class="src"><a href="{r["url"]}" rel="sponsored nofollow">listing</a></td></tr>')
+            f'<div class="srcline">{source_note(r["from"])}</div></td>'
+            f'<td class="src"><a href="{r["url"]}" rel="sponsored nofollow">Listing</a></td></tr>')
     return f"""<table class="specs-table">
-  <caption>Every value below was read from the official listing on {TODAY}. A blank cell means the
-    value was not in the text we fetched &mdash; nothing here is inferred.</caption>
-  <thead><tr><th scope="col">Field</th><th scope="col">Value as stated on the listing</th>
-    <th scope="col">Source</th></tr></thead>
+  <caption>Straight off the official listing, read on {TODAY}. Where the listing does not say,
+    the cell says so instead of guessing.</caption>
+  <thead><tr><th scope="col">What you need to know</th>
+    <th scope="col">What the listing says</th><th scope="col">Where</th></tr></thead>
   <tbody>{"".join(out)}</tbody>
 </table>"""
 
 
 def intent_table(p):
+    """Kept for the internal Verification Log; buyer pages use ledger_block() instead."""
     intended = p["intended"] or "— blank: not confirmed by the owner (FLG-001)"
     return f"""<table class="intent">
   <caption>Product-intent confirmation record. Intended and observed are separate fields and are
@@ -397,7 +566,7 @@ def intent_table(p):
       <td>{esc(p['model'] or '— blank, see FLG-022')}<br><span class="small">{esc(p['model_source'])}</span></td></tr>
     <tr><th scope="row">Confirmation date</th><td>{TODAY}</td></tr>
     <tr><th scope="row">Associates test status</th>
-      <td>PENDING &mdash; one link per product must be clicked inside the enrolled account and
+      <td>PENDING — one link per product must be clicked inside the enrolled account and
         confirmed in the tracking report before traffic is scaled (FLG-004).</td></tr>
   </tbody>
 </table>"""
@@ -437,6 +606,17 @@ def crumbs_ld(trail):
 BUILT = []
 
 # ---- home
+def review_strip(up=""):
+    """A dated, one-line trust strip: what was checked, when, and where the paperwork lives.
+    It states the policy reason plainly instead of showing a star row we are not allowed to show."""
+    return f'''<div class="review-strip">
+  <p><strong>Checked {TODAY}.</strong> Specifications read from the official Amazon listings, page
+    by page. Where a listing disagrees with itself, both numbers are printed. Prices and star
+    ratings stay on Amazon, because Amazon&rsquo;s policy governs who may display them.</p>
+  <a href="{up}sources.html">See the sources &rarr;</a>
+</div>'''
+
+
 def build_home():
     featured = [BY_ID["P-01"], BY_ID["P-03"], BY_ID["P-04"]]
     picks = "".join(
@@ -451,21 +631,22 @@ def build_home():
 </article>''' for g in GUIDES[:3])
     body = f"""
 <div class="issue"><b>THE KITCHEN EDIT</b><span></span> VOL. 01 &nbsp; / &nbsp; NOVEMBER 2026</div>
+{review_strip()}
 <section class="hero">
   <div class="hero-copy">
     <p class="kicker">The kitchen counter issue · updated {TODAY}</p>
     <h1>One basket, two baskets, or an oven?</h1>
-    <p class="lede">Start with dinner. Five appliances we have read line by line: three air fryers and
-      two meat thermometers. What each is genuinely good at, what the catch is, and where the listing
-      contradicts itself. No prices, no star ratings, no pretending we cooked with them.</p>
+    <p class="lede">Three air fryers and two meat thermometers, chosen because you asked about
+      them &mdash; and written up the way we would want it explained to us: what each one is good
+      at, who it suits, and the one thing that will annoy you after a month.</p>
     <p class="cta">
       <a class="btn" href="#the-picks">See the three picks</a>
-      <a class="btn ghost" href="guides/basket-vs-oven.html">Read the buying guide</a>
+      <a class="btn ghost" href="guides/basket-vs-oven.html">Basket or oven? Start here</a>
     </p>
     <ul class="hero-facts">
-      <li><strong>5</strong> products, read from official listings</li>
-      <li><strong>{len(GUIDES)}</strong> buying guides</li>
-      <li><strong>0</strong> prices or ratings quoted</li>
+      <li><strong>5</strong> appliances, checked {TODAY}</li>
+      <li><strong>{len(GUIDES)}</strong> practical guides</li>
+      <li><strong>0</strong> prices or ratings copied</li>
     </ul>
   </div>
   <div class="hero-art">{photo("hero", "", "hero-photo", caption=True, eager=True)}</div>
@@ -483,17 +664,19 @@ def build_home():
 </section>
 
 <section class="strip" aria-label="How this site works">
-  <p><strong>Every spec dated.</strong> Read off the official Amazon listing on {TODAY}, with the
-    source linked on every row.</p>
-  <p><strong>Conflicts printed.</strong> When a listing says two things, both are shown and flagged.</p>
-  <p><strong>No prices.</strong> Amazon policy governs price display, so the number stays on Amazon.</p>
+  <p><strong>Every number dated.</strong> Read off the official Amazon listing on {TODAY}, with the
+    source one click away on every row.</p>
+  <p><strong>Contradictions shown.</strong> When a listing says two things, you see both rather
+    than the tidier one.</p>
+  <p><strong>No price theatre.</strong> No countdown timers, no fake scarcity &mdash; the live price
+    is on Amazon, where it is always current.</p>
 </section>
 
 <section id="the-picks">
   <div class="sec-head">
     <h2>The three we&rsquo;d start with</h2>
-    <p class="muted">Not the whole market &mdash; just the five links we were asked to cover. These
-      are the three we would start with, and the reason is on each card.</p>
+    <p class="muted">This is not the whole market &mdash; it is the five appliances you asked about.
+      These three cover the three reasons people buy one, and the reasoning is on each card.</p>
   </div>
   <div class="grid">{ "".join(card(p, "", b) for p, b in zip(featured, ["Best for two", "Biggest single basket", "Best for spot checks"])) }</div>
   <p class="small"><a href="shop.html">See all five products &rarr;</a></p>
@@ -516,15 +699,15 @@ def build_home():
     </ul>
   </div>
   <aside class="panel">
-    <h3>Why you can trust the numbers</h3>
+    <h3>How we know what we know</h3>
     <ol class="tight">
-      <li>Every specification is read from the official listing and stamped with a date.</li>
-      <li>When a listing contradicts itself, both figures are printed. Nothing is averaged.</li>
-      <li>Prices and ratings are never copied &mdash; Amazon policy on price display, and it keeps
-        us honest.</li>
-      <li>We have not cooked with these units. The site says so instead of implying otherwise.</li>
+      <li>Every specification comes from the official listing, dated, with the link on the row.</li>
+      <li>If a listing contradicts itself, you get both numbers. Nothing is averaged or tidied.</li>
+      <li>We have not cooked with these units, and we say so on every product page.</li>
+      <li>No prices, no star ratings, no &ldquo;best&rdquo; ribbon. Those are Amazon&rsquo;s to show,
+        and a rating is other people&rsquo;s kitchens, not yours.</li>
     </ol>
-    <p class="small"><a href="how-we-choose.html">How we choose and what we won&rsquo;t claim &rarr;</a></p>
+    <p class="small"><a how-we-choose.htmlsrc="/Affil2/how-we-choose.html">How we choose &mdash; and what we refuse to claim &rarr;</a></p>
   </aside>
 </section>
 
@@ -671,7 +854,7 @@ def build_product(p):
 {breadcrumb([("Home", "index.html"), (p['cat'], p['catfile']), (p['brand'], None)], "../")}
 <div class="pdp-head">
   <div>
-    <p class="kicker">{esc(p['cat'])} · {p['id']} · verified {TODAY}</p>
+    <p class="kicker">{esc(p['cat'])} · checked {TODAY}</p>
     <h1>{esc(p['headline'])}</h1>
     <p class="lede">{esc(p['blurb'])}</p>
   </div>
@@ -679,8 +862,8 @@ def build_product(p):
 </div>
 <div class="pdp-buy">
   <div>
-    <p class="buyline">Best for <strong>{esc(p['best_for'])}</strong></p>
-    <p class="buyline">The catch <strong>{esc(p['tradeoff'])}</strong></p>
+    <p class="buyline">Buy it if <strong>{esc(p['best_for'])}</strong></p>
+    <p class="buyline">Skip it if <strong>{esc(p['tradeoff'])}</strong></p>
   </div>
   <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
      data-event="outbound_click">Check the live price on Amazon<span class="btn-sub">paid link</span></a>
@@ -694,8 +877,19 @@ def build_product(p):
 {"".join(f'<div class="qa-row"><p class="qa-q">{esc(q)}</p><p class="qa-a">{esc(a)}</p></div>' for q, a in p["questions"])}
 </div>
 
-<h2>Specifications, line by line</h2>
-{spec_table(p)}
+<h2>The specs that decide it</h2>
+<p class="muted">Every row below is quoted from the official listing. Where the listing
+  contradicts itself, both numbers appear and the card on the right says so.</p>
+<div class="spec-wrap">
+  <div>{spec_table(p)}</div>
+  <aside class="aside-card">
+    <h2>The fine print, honestly</h2>
+    <p>{READER_CONFLICTS.get(p["id"], "")}</p>
+    <p class="small">Full record: <a href="../flagged.html">Flagged for Review</a>.</p>
+  </aside>
+</div>
+
+{deals_block(p, "../")}
 
 {faq_block(p)}
 
@@ -704,16 +898,18 @@ def build_product(p):
   Amazon, quoted exactly rather than paraphrased, so you can match it against the page you land
   on. Brand: {esc(p['brand'])}.{(" Model: " + esc(p['model']) + ".") if p['model'] else " The listing does not publish a model number."}</p>
 
-<h2>Product-intent confirmation record</h2>
-{intent_table(p)}
+<h2>Where this link actually goes</h2>
+<p class="muted">You clicked a short link to get here, so here is exactly what it opened, when we
+  last checked it, and what we publish instead.</p>
+{ledger_block(p, "../")}
 
 {usda_block(p)}
-<h2>What this page does not claim</h2>
-<p>No price, star rating, review count, sales rank, commission rate or "best" verdict appears above.
-  Those values are left out on purpose, either because Amazon's policy governs them or because they
-  cannot be confirmed from an official source. Where the listing contradicts itself, both figures are
-  printed and the contradiction is listed on the
-  <a href="../flagged.html">Flagged for Review</a> page with its ID.</p>
+<h2>What this page will not claim</h2>
+<p>No price, star rating, review count, sales rank, commission rate or &ldquo;best&rdquo; verdict
+  appears above. Those are left out on purpose: Amazon&rsquo;s policy governs some of them, and the
+  rest cannot be confirmed from an official source. Where the listing contradicts itself, both
+  numbers are printed &mdash; and if you want the paper trail, every one is on the
+  <a href="../flagged.html">Flagged for Review</a> page.</p>
 
 <p class="cta">
   <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
@@ -748,7 +944,7 @@ def build_product(p):
 NOT_STATED = "— <span class=\"unverified\">not stated on the listing</span>"
 NA_CAP = "— <span class=\"unverified\">n/a, measures temperature</span>"
 NA_POWER = "— <span class=\"unverified\">n/a, battery powered</span>"
-NOWEIGHT = "— <span class='unverified'>not stated on this listing (FLG-022)</span>"
+NOWEIGHT = "— <span class='unverified'>not stated on this listing</span>"
 
 
 def spec(p, key, other=NOT_STATED):
@@ -902,7 +1098,7 @@ GUIDES = [
             one movement. Opening two doors, sliding a rack out, and lifting a tray is several. The
             basket units are lighter and easier to handle (13.3 pounds for the 6-quart dual-basket
             Chefman and 12.8 pounds for the 8-quart Chefman), whereas the 26-quart Emeril oven does
-            not state an item weight on its listing (FLG-022) and, at 16.9 inches deep with French
+            not state an item weight on its listing, and, at 16.9 inches deep with French
             doors, is realistically going to stay where you put it. If you clean in the sink, a
             removable nonstick basket is simpler than a stainless cavity and racks."""),
             ("Where each one wins", """Choose the dual-basket unit if you routinely cook a main and a
@@ -942,7 +1138,7 @@ GUIDES = [
             ("6. Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
             6 liters in its capacity field. Six liters is about 6.3 US quarts, so this is almost
             certainly a label slip rather than a different product &mdash; but it is the kind of slip
-            that makes a spec table worth reading rather than skimming. It is flagged as FLG-034."""),
+            that makes a spec table worth reading rather than skimming."""),
          ],
          verdict="""Write down three numbers before you shop: the widest single item you cook, how
          many separate things you cook at once, and your counter depth. Then ignore quart totals that
@@ -965,7 +1161,7 @@ GUIDES = [
             it did."""),
             ("Weight decides where it lives", """The 6-quart dual-basket Chefman weighs 13.3 pounds and
             the 8-quart Chefman weighs 12.8 pounds &mdash; movable when needed, though bulky in a
-            shallow cupboard. The Emeril listing omits item weight altogether (FLG-022), but at
+            shallow cupboard. The Emeril listing omits item weight altogether, but at
             16.9 inches deep and 26 quarts it is plainly a countertop fixture. If you plan to put the
             appliance away between uses, weight and door clearance decide whether that actually
             happens."""),
@@ -997,7 +1193,7 @@ GUIDES = [
             and bake pans are often the difference between a function being usable and being a
             promise. The Emeril listing names six included components: rack, bake pan, drip tray,
             crisper basket, rotisserie spit, fetch tool. Its title says six accessories and its
-            configuration field says seven &mdash; flagged as FLG-031."""),
+            configuration field says seven &mdash; both figures stay on the record."""),
             ("Ask what breaks first", """More functions means more sensors, more moving parts and more
             to clean. A four-preset basket fryer has almost nothing to go wrong. A 26-quart oven with
             a rotisserie motor has considerably more."""),
@@ -1098,7 +1294,7 @@ GUIDES = [
             specification tables (and two 1700-watt appliances on one kitchen circuit plus an oven is
             a tripped breaker, not a crispier sprout). Wattage is worth knowing before the day
             &mdash; which is why the 8-quart Chefman's contradictory 1700&nbsp;W spec field and
-            1000&nbsp;W bullet are flagged as FLG-017."""),
+            1,000&nbsp;W bullet disagree with each other."""),
          ],
          verdict="""Use the countertop appliance for sides and reheats, keep the bird in the oven, and
          check what else is on the circuit before you plug in a second 1700-watt unit."""),
@@ -1118,7 +1314,7 @@ GUIDES = [
             ("3. Where it lives between uses", """If it goes in a cupboard, weight decides whether that
             happens twice or never. The 8-quart Chefman is 12.8 pounds and the 6-quart dual-basket
             Chefman is 13.3 pounds, both realistically movable. The Emeril listing does not state an
-            item weight (FLG-022), and its 16.9-inch depth already rules out tight counters and most
+            item weight, and its 16.9-inch depth already rules out tight counters and most
             standard cupboards."""),
             ("What to give up first", """Windows, presets, and a second basket are all things you can
             live without. Depth and weight are not. If the counter is tight, a single-basket unit
@@ -2075,7 +2271,7 @@ phrase that reads like it was produced by filling in a template."""
 </table>
 
 <p class="cta"><a class="btn" href="suggestions.html">Rank SG-17 in the Decision Center</a>
-  <a class="btn ghost" href="guides.html">Read the eight live guides</a></p>
+  <a class="btn ghost" guides.htmlsrc="/Affil2/guides.html">Read the eight live guides</a></p>
 """
     BUILT.append(page("design-brief.html", f"Design & Traffic Brief — {SITE}",
                       "A copy-paste design prompt, a topic-cluster traffic plan with a seasonal "
@@ -2500,7 +2696,7 @@ def build_about():
   (FLG-033). That is a real gap, not a design choice, and it is honest to say so.</p>
 <p><strong>What the writer does:</strong> opens the official listing, reads each value off the page,
   records it with a date and a URL, and raises a flag whenever two parts of the same page disagree.
-  The process is written out on the <a href="how-we-choose.html">How we choose</a> page.</p>
+  The process is written out on the <a how-we-choose.htmlsrc="/Affil2/how-we-choose.html">How we choose</a> page.</p>
 <p><strong>What the writer has not done:</strong> cooked with any of these appliances, measured any of
   them, or seen a certification document. No page on this site claims otherwise.</p>
 
