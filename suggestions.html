@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Decision Center — ShopNow Kitchen</title>
-<meta name="description" content="26 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<meta name="description" content="32 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
 <link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta property="og:site_name" content="ShopNow Kitchen">
 <meta property="og:title" content="Decision Center — ShopNow Kitchen">
-<meta property="og:description" content="26 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<meta property="og:description" content="32 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta name="twitter:card" content="summary_large_image">
@@ -57,7 +57,7 @@
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>26 proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>32 proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
     <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
@@ -362,12 +362,12 @@
   </td>
 </tr><tr data-sug="SG-24">
   <td class="nowrap"><strong>SG-24</strong></td>
-  <td><strong>AI-powered affiliate platform architecture and Creators API pipeline</strong><br><span class="small">Document all seven platform modules (research, pricing/commission bounds, SEO drafting, Special Links vs cloaking, telemetry, scaling, CI gate) alongside Creators API (S20/S21) and ML-training/Agent Terms limits (Program Policies §5, IP License §1/§2(e)/§4).</span></td>
-  <td>Automating research or price ingestion without final Associates acceptance and policy-compliant API handling would violate program rules or hallucinate specs.</td>
-  <td>High — architecture and compliance</td>
-  <td>Done (blueprint); API gated on owner</td>
-  <td><span class="pill blocked">Blocked on Creators API</span></td>
-  <td class="small">platform.html documents every module, what runs today, and hard gates (FLG-029, Q-19).</td>
+  <td><strong>Add an evergreen first-week guide for new owners</strong><br><span class="small">A getting-started guide answering onboarding questions (what to cook first, what to skip), added to the sitemap and feed like every other guide.</span></td>
+  <td>New owners search what to cook first, not only what to buy first.</td>
+  <td>Medium — organic traffic</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">guides/first-week-air-fryer.html published and included in sitemap.xml and feed.xml; no cook-time claims inside.</td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-24" aria-label="Move SG-24 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-24" aria-label="Move SG-24 down">&darr;</button>
@@ -375,12 +375,12 @@
   </td>
 </tr><tr data-sug="SG-25">
   <td class="nowrap"><strong>SG-25</strong></td>
-  <td><strong>Generate question-shaped article drafts from Search Console queries</strong><br><span class="small">Turn measured impressions and search queries from Search Console into structured, listing-cited guides that pass scripts/check_site.py before merging.</span></td>
-  <td>Query-driven drafting grows organic search from evidence instead of guesswork.</td>
-  <td>High — organic discovery</td>
-  <td>Owner action</td>
-  <td><span class="pill blocked">Blocked on Search Console</span></td>
-  <td class="small">Requires Search Console verification (SG-10, Q-20).</td>
+  <td><strong>Deploy the self-hosted analytics collector</strong><br><span class="small">Ship zero-dependency Node.js (analytics/server.js) and Cloudflare Pages Function (functions/api/collect.js) collectors, canonical schema (data/events.json), and gated send() transport in assets/app.js.</span></td>
+  <td>GitHub Pages cannot run a server function, so cross-visitor telemetry waits until the owner hosts the collector externally without cookies or third-party scripts.</td>
+  <td>High — measurement</td>
+  <td>Code shipped; hosting is owner action</td>
+  <td><span class="pill code">Code shipped — hosting pending</span></td>
+  <td class="small">measurement.html, data/events.json, analytics/server.js, functions/api/collect.js, tests/test_collector.js (FLG-010, Q-08).</td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-25" aria-label="Move SG-25 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-25" aria-label="Move SG-25 down">&darr;</button>
@@ -388,15 +388,93 @@
   </td>
 </tr><tr data-sug="SG-26">
   <td class="nowrap"><strong>SG-26</strong></td>
-  <td><strong>Privacy-preserving self-hosted analytics endpoint</strong><br><span class="small">Ship zero-dependency Node.js (analytics/server.js) and Cloudflare Pages Function (functions/api/collect.js) collectors plus gated send() transport in assets/app.js.</span></td>
-  <td>GitHub Pages is static-only; shipping vetted collector code lets the owner enable cross-visitor counts without cookies, third-party pixels, or page rewrites.</td>
-  <td>High — measurement</td>
-  <td>Code shipped; hosting is owner action</td>
-  <td><span class="pill code">Code shipped — hosting pending</span></td>
-  <td class="small">measurement.html, data/events.json, analytics/server.js, functions/api/collect.js, tests/test_collector.js (FLG-010, Q-08).</td>
+  <td><strong>Feed the campaign ledger from first-party reports only</strong><br><span class="small">Monthly rows from authorised Associates reports with dated provenance. Clicks stay clicks; orders and revenue come only from reports, never from forecasts.</span></td>
+  <td>The ledger is the evidence base for the next optimisation; invented rows would poison every later decision.</td>
+  <td>High — evidence-based iteration</td>
+  <td>Owner action</td>
+  <td><span class="pill blocked">Blocked on owner</span></td>
+  <td class="small">campaign-ledger.html renders zero rows and explains why (SG-11); no conversion score is computed anywhere on the site.</td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-26" aria-label="Move SG-26 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-26" aria-label="Move SG-26 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-27">
+  <td class="nowrap"><strong>SG-27</strong></td>
+  <td><strong>Nav labels: keep the navigation shopper-first</strong><br><span class="small">Primary nav reads the shopper's tasks (Air Fryers, Meat Thermometers, All products, Guides, Compare, How we choose); every dashboard surface lives in one records group.</span></td>
+  <td>Shoppers navigate by task. Dashboards are for the desk, not the aisle.</td>
+  <td>Medium — usability</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">Every generated page carries the same masthead; the build gate checks the labels.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-27" aria-label="Move SG-27 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-27" aria-label="Move SG-27 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-28">
+  <td class="nowrap"><strong>SG-28</strong></td>
+  <td><strong>The shipped RSS feed</strong><br><span class="small">feed.xml carries every guide with dates and parses cleanly; robots.txt points at the canonical sitemap.</span></td>
+  <td>One indexable site needs a feed that reflects what actually shipped, not an advertisement for more.</td>
+  <td>Medium — distribution</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">The build gate parses the feed and requires an item for every guide.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-28" aria-label="Move SG-28 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-28" aria-label="Move SG-28 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-29">
+  <td class="nowrap"><strong>SG-29</strong></td>
+  <td><strong>Search Console property and sitemap submission</strong><br><span class="small">Verify the github.io property, submit sitemap.xml, and watch which queries bring readers.</span></td>
+  <td>Without it the site cannot see its own audience, and topic choice returns to instinct (SG-19, SG-21).</td>
+  <td>High — findability</td>
+  <td>Owner action</td>
+  <td><span class="pill blocked">Blocked on owner</span></td>
+  <td class="small">No Search Console property is verified; needs the owner's Google account.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-29" aria-label="Move SG-29 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-29" aria-label="Move SG-29 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-30">
+  <td class="nowrap"><strong>SG-30</strong></td>
+  <td><strong>Reader capture: RSS live, email pending</strong><br><span class="small">RSS works today. An email signup needs the owner's provider choice and the privacy wording that goes with it.</span></td>
+  <td>Repeat readers are the only durable channel a small publication gets.</td>
+  <td>Medium — retention</td>
+  <td>Owner action</td>
+  <td><span class="pill blocked">Blocked on owner</span></td>
+  <td class="small">feed.xml is live and linked everywhere; no email form is published.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-30" aria-label="Move SG-30 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-30" aria-label="Move SG-30 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-31">
+  <td class="nowrap"><strong>SG-31</strong></td>
+  <td><strong>AI-powered affiliate platform architecture and Creators API pipeline</strong><br><span class="small">Document all seven platform modules (research, pricing/commission bounds, SEO drafting, Special Links vs cloaking, telemetry, scaling, CI gate) alongside Creators API (S20/S21) and ML-training/Agent Terms limits (Program Policies §5, IP License §1/§2(e)/§4).</span></td>
+  <td>Automating research or price ingestion without final Associates acceptance and policy-compliant API handling would violate program rules or hallucinate specs.</td>
+  <td>High — architecture and compliance</td>
+  <td>Done (blueprint); API gated on owner</td>
+  <td><span class="pill blocked">Blocked on Creators API</span></td>
+  <td class="small">platform.html documents every module, what runs today, and hard gates (FLG-029, Q-19).</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-31" aria-label="Move SG-31 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-31" aria-label="Move SG-31 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-32">
+  <td class="nowrap"><strong>SG-32</strong></td>
+  <td><strong>Generate question-shaped article drafts from Search Console queries</strong><br><span class="small">Turn measured impressions and search queries from Search Console into structured, listing-cited guides that pass scripts/check_site.py before merging.</span></td>
+  <td>Query-driven drafting grows organic search from evidence instead of guesswork.</td>
+  <td>High — organic discovery</td>
+  <td>Owner action</td>
+  <td><span class="pill blocked">Blocked on Search Console</span></td>
+  <td class="small">Requires Search Console verification (SG-10, SG-29, Q-20).</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-32" aria-label="Move SG-32 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-32" aria-label="Move SG-32 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
 </tr></tbody>
@@ -423,9 +501,12 @@
     <tr><td>SG-19</td><td>Approve intent landing pages generated from the register</td><td>Owner (needs SG-10)</td></tr>
     <tr><td>SG-22</td><td>Name an editor or fix the no-testing policy in writing</td><td>Owner (decision)</td></tr>
     <tr><td>SG-23</td><td>Defer cook-time content until hands-on testing exists</td><td>Owner (product access)</td></tr>
-    <tr><td>SG-24</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
-    <tr><td>SG-25</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
-    <tr><td>SG-26</td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
+    <tr><td>SG-25</td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
+    <tr><td>SG-26</td><td>Feed campaign ledger only from authorised first-party reports</td><td>Owner (account access)</td></tr>
+    <tr><td>SG-29</td><td>Verify Search Console property and submit sitemap.xml</td><td>Owner (Google account)</td></tr>
+    <tr><td>SG-30</td><td>Decide reader email capture provider alongside RSS</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-31</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
+    <tr><td>SG-32</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
   </tbody>
 </table>
 

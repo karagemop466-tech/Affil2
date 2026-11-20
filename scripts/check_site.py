@@ -385,8 +385,8 @@ except ET.ParseError as e:
     feed = None
 if feed is not None:
     items = feed.findall("./channel/item")
-    if len(items) < 8:
-        err(f"feed.xml has {len(items)} items, expected at least 8 guides")
+    if len(items) < 9:
+        err(f"feed.xml has {len(items)} items, expected at least 9 guides")
     for it in items:
         link = it.find("link").text
         if not link.startswith(BASE):
@@ -403,6 +403,29 @@ if "Sitemap: " + BASE + "sitemap.xml" not in robots:
     err("robots.txt does not point at the canonical sitemap")
 if "Disallow: /" in robots:
     err("robots.txt blocks the site")
+
+# ---------------------------------------------------------------- weight accuracy & unverified claim guard
+# Only weights verified in data/products.json (e.g. Measurements table P-01 13.3 lb, P-03 12.8 lb)
+# may appear outside flagged.html/sources.html; unverified weights (e.g. 26.5 lb on P-02) fail.
+verified_weights = set()
+for prod in json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8")):
+    w_field = (prod.get("fields") or {}).get("weight") or {}
+    if w_field.get("st") == "verified" and w_field.get("v"):
+        for num in re.findall(r"\b\d+(?:\.\d+)?\b", w_field["v"]):
+            verified_weights.add(num)
+
+WEIGHT_RE = re.compile(r"\b(\d+(?:\.\d+)?)\s?(?:lb|lbs|pounds?)\b", re.I)
+WEIGHT_EXEMPT = {"flagged.html", "sources.html"}
+for f in pages:
+    rel = f.name if f.parent == ROOT else f"{f.parent.name}/{f.name}"
+    if rel in WEIGHT_EXEMPT:
+        continue
+    txt = re.sub(r"<[^>]+>", " ", f.read_text())
+    for m in WEIGHT_RE.finditer(txt):
+        if m.group(1) not in verified_weights:
+            err(f"{rel}: quotes an unverified product weight ({m.group(0).strip()}) not verified in data/products.json (FLG-022/FLG-039)")
+    if re.search(r"\b(?:footprint and weight|weight and footprint|weigh(?:s|ing) \w+ ?(?:lb|pounds))", txt, re.I):
+        err(f"{rel}: promises unverified weight information (FLG-022)")
 
 # ---------------------------------------------------------------- compare pair view
 comp = (ROOT / "compare.html").read_text()

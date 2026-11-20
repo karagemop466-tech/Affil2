@@ -19,7 +19,7 @@ class SiteIntegrationTests(unittest.TestCase):
             [sys.executable, "scripts/build_site.py"],
             cwd=ROOT, capture_output=True, text=True, check=True,
         )
-        self.assertIn("built 32 pages", build_one.stdout)
+        self.assertIn("built 33 pages", build_one.stdout)
         snap_a = {
             p.relative_to(ROOT): p.read_text(encoding="utf-8")
             for p in sorted(ROOT.rglob("*.html")) if ".git" not in p.parts
@@ -90,6 +90,7 @@ class SiteIntegrationTests(unittest.TestCase):
         self.assertIn("S23", sources_html)
         self.assertIn("S24", sources_html)
         self.assertTrue((ROOT / "design-brief.html").exists())
+        self.assertTrue((ROOT / "guides" / "first-week-air-fryer.html").exists())
 
         sitemap = ET.fromstring((ROOT / "sitemap.xml").read_text(encoding="utf-8"))
         ns = "{http://www.sitemaps.org/schemas/sitemap/0.9}"

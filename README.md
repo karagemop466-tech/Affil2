@@ -13,18 +13,18 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | If you want | Read |
 |---|---|
 | The short version | `EXECUTIVE-SUMMARY.md` |
-| What to decide next | `suggestions.html` — Decision Center, 26 proposals, rankable |
+| What to decide next | `suggestions.html` — Decision Center, 32 proposals, rankable |
 | The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
 | What is still unanswered | `questions.html` — Open Questions, 20 rows |
 | What could not be verified | `flagged.html` — Flagged for Review, 40 flags, every one sourced |
 | Where every fact came from | `sources.html` — Source Register, 19 official sources + dated changelog |
-| AI platform blueprint & gates | `platform.html` — 7-module architecture & Creators API / ML policy limits |
-| Telemetry & collector guide | `measurement.html` — 5-event privacy schema & Search Console checklist |
+| AI platform blueprint & gates | `platform.html` — 7-module architecture & Creators API / ML policy limits (SG-31) |
+| Telemetry & collector guide | `measurement.html` — 5-event privacy schema & Search Console checklist (SG-25) |
 | How the site is built | `scripts/build_site.py` |
 
 ## Rebuild and check
 
-    python3 scripts/build_site.py                          # writes 32 pages, sitemap.xml, feed.xml, robots.txt
+    python3 scripts/build_site.py                          # writes 33 pages, sitemap.xml, feed.xml, robots.txt
     python3 scripts/check_site.py                          # compliance and integrity gate; exits 1 on any problem
     python3 -m unittest discover -s tests -p "test_*.py" -v
     node tests/test_collector.js                           # collector server, Cloudflare function & client DOM tests

@@ -5,7 +5,7 @@ Live site https://karagemop466-tech.github.io/Affil2/ · Full version with sourc
 
 ## What this is
 A static publication-style Amazon affiliate site covering five submitted products in two categories:
-three air fryers and two meat thermometers across 32 generated HTML pages. Every specification is read
+three air fryers and two meat thermometers across 33 generated HTML pages (including 9 buying guides). Every specification is read
 from the official Amazon listing (including deep `Product information` tables), dated and linked.
 Where two parts of one listing disagree, both figures are printed and the disagreement is flagged.
 No price, star rating, review count or best-seller rank is reproduced, because Amazon's Program
@@ -76,9 +76,9 @@ beyond listing statements (FLG-035) · any hands-on experience (FLG-032) · a na
 
 ## Decisions that change the numbers
 1. Complete the link test (SG-07, Q-04) — nothing about revenue can be reported until it passes.
-2. Amazon Creators API access (SG-13, SG-24, Q-19) — the only compliant route to showing prices, product images, and automated catalog data (with ML training barred under Program Policies §5 / IP §1 & §2(e)).
-3. Search Console verification (SG-10, SG-25, Q-20) — the only way to pick future guides from measured organic queries.
-4. Self-hosted analytics hosting (SG-26, Q-08) — deploy `analytics/server.js` or `functions/api/collect.js` beyond static GitHub Pages.
+2. Amazon Creators API access (SG-13, SG-31, Q-19) — the only compliant route to showing prices, product images, and automated catalog data (with ML training barred under Program Policies §5 / IP §1 & §2(e)).
+3. Search Console verification (SG-10, SG-29, SG-32, Q-20) — the only way to pick future guides from measured organic queries.
+4. Self-hosted analytics hosting (SG-25, Q-08) — deploy `analytics/server.js` or `functions/api/collect.js` beyond static GitHub Pages.
 5. A custom domain (SG-14, FLG-006, Q-05) — canonicals currently point at the Pages subpath.
 
 ## Honest position on revenue
@@ -88,26 +88,26 @@ its schema and provenance rule written down so the first real row can be added w
 the page.
 
 ## How the site is kept honest
-`scripts/build_site.py` generates all 32 HTML pages from `data/*.json`; nothing is hand-edited.
+`scripts/build_site.py` generates all 33 HTML pages from `data/*.json`; nothing is hand-edited.
 `scripts/check_site.py` fails the build if the disclosure is missing or below the fold, if any
 `amazon.com` link lacks `rel="sponsored nofollow"`, if a price, star rating, cross-row placeholder, or
-unverified `26.5 lb` claim appears, if a link or asset is broken, if any SVG schematic is orphaned, if
+unverified weight claim appears, if a link or asset is broken, if any SVG schematic is orphaned, if
 any generated photo lacks a caption/alt/dimensions, if any table has mismatched `<thead>`/`<tbody>`
 column counts, if a page is missing from the sitemap, if JSON-LD does not parse, or if an undefined
 or unpublished flag exists. CI runs regeneration, drift detection, `check_site.py`, Python unit tests
 (`tests/test_site.py`), and Node.js collector/client tests (`tests/test_collector.js`).
 
-## Suggestions & Open Questions across sessions (`SG-17..SG-26`, `Q-15..Q-20`)
+## Suggestions & Open Questions across sessions (`SG-17..SG-32`, `Q-15..Q-20`)
 - `SG-17` (`design-brief.html`): Publication design prompt, 4-cluster topic plan, seasonal calendar, and 10 editorial standards — shipped.
-- `SG-18`–`SG-23`, `Q-15`–`Q-18`: Storefront issue calendar, intent pages, dated reader change log (`sources.html`), 2-product compare (`compare.html`), editor decision, hands-on policy, imagery & jurisdiction questions — shipped/tracked cleanly.
-- `SG-24` (`platform.html`) / `Q-19`: AI affiliate platform blueprint and compliance matrix shipped; automated catalog ingestion remains blocked until Creators API acceptance (`S20`, `S21`, `FLG-029`).
-- `SG-25` / `Q-20`: Question-shaped article generation from Search Console queries (blocked until SG-10 verification).
-- `SG-26` (`measurement.html`): Zero-dependency `analytics/server.js`, Cloudflare Pages `functions/api/collect.js`, `data/events.json`, RFC-4180 CSV export, and `assets/app.js` `send()` shipped in repo; external hosting remains pending (`FLG-010`, `Q-08`).
+- `SG-18`–`SG-24`, `SG-26`–`SG-30`, `Q-15`–`Q-18`: Storefront issue calendar, intent pages, dated reader change log (`sources.html`), 2-product compare (`compare.html`), first-week air fryer guide (`guides/first-week-air-fryer.html`), editor decision, hands-on policy, RSS/Search Console tracking, imagery & jurisdiction questions — shipped/tracked cleanly.
+- `SG-25` (`measurement.html`): Zero-dependency `analytics/server.js`, Cloudflare Pages `functions/api/collect.js`, `data/events.json`, RFC-4180 CSV export, and `assets/app.js` `send()` shipped in repo; external hosting remains pending (`FLG-010`, `Q-08`).
+- `SG-31` (`platform.html`) / `Q-19`: AI affiliate platform blueprint and compliance matrix shipped; automated catalog ingestion remains blocked until Creators API acceptance (`S20`, `S21`, `FLG-029`).
+- `SG-32` / `Q-20`: Question-shaped article generation from Search Console queries (blocked until SG-10 / SG-29 verification).
 
 ## Verification log (2026-11-20, session arena/9f19fe6b-affil2)
-- Synced cleanly with `origin/main` (`63cb1fb`, preserving PRs #17–#30 including `design-brief.html`, storefront photos, `pairCompare`, and dated `sources.html` changelog).
+- Synced cleanly with `origin/main` (`21424ae`, preserving PRs #17–#36 including `design-brief.html`, storefront photos, `pairCompare`, `guides/first-week-air-fryer.html`, and dated `sources.html` changelog).
 - Verified all 5 `link.amazon/*` short links, deep chunks across all 5 `/dp/` product pages, and official docs (`S01`–`S04`, `S20`–`S24`) live on 2026-11-20.
-- `python3 scripts/build_site.py` built all 32 pages idempotently.
-- `python3 scripts/check_site.py` passed (`checked 32 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`).
-- `python3 -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
+- `python3 -B scripts/build_site.py` built all 33 pages idempotently.
+- `python3 -B scripts/check_site.py` passed (`checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`).
+- `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
 - `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).

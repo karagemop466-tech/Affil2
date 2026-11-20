@@ -463,7 +463,7 @@ def build_home():
     </p>
     <ul class="hero-facts">
       <li><strong>5</strong> products, read from official listings</li>
-      <li><strong>8</strong> buying guides</li>
+      <li><strong>{len(GUIDES)}</strong> buying guides</li>
       <li><strong>0</strong> prices or ratings quoted</li>
     </ul>
   </div>
@@ -538,7 +538,7 @@ def build_home():
   <div>
     <h2>Latest guides</h2>
     <div class="latest">{latest}</div>
-    <p class="small"><a href="guides.html">All eight guides &rarr;</a></p>
+    <p class="small"><a href="guides.html">All {len(GUIDES)} guides &rarr;</a></p>
   </div>
   <aside class="panel pick-panel">
     <h3>The five at a glance</h3>
@@ -1125,6 +1125,37 @@ GUIDES = [
          ],
          verdict="""Measure depth, measure the space in front, and weigh whether it will go in a
          cupboard. Pick the unit that survives all three; then look at features."""),
+    dict(slug="first-week-air-fryer", title="Your air fryer's first week: what to cook, what to skip",
+         sub="Three deliberate experiments, two things to skip, and the habit that earns the counter space.",
+         kicker="Getting started · 5 min read", products=["P-01", "P-03", "P-02"],
+         intro="""The fastest way to regret a new appliance is to feed it only frozen fries. A week
+         of deliberate experiments teaches you where the heat sits and what this machine will
+         actually replace in your routine. The practice below is kitchen experience, not product
+         testing &mdash; no performance claim about any of these machines is made here.""",
+         sections=[
+            ("Days one and two: learn the heat", """Start with something cheap and forgiving &mdash;
+            potato wedges or chicken wings. The point is not dinner, it is calibration: a single
+            layer, a shake halfway, and a note on what you would change next time. You are learning
+            how done looks at 400 degrees versus 375 on your counter, not on anyone else's."""),
+            ("Days three and four: cook the meal you repeat", """Now cook the thing you make on busy
+            nights &mdash; one protein and one vegetable. This is where basket layout decides the
+            rhythm: two baskets run a main and a side to the same finish line, one big basket takes
+            the full family portion in a single batch, and an oven-style tray takes the jobs that
+            want a rack rather than a drawer."""),
+            ("What to skip for now", """Wet batters &mdash; moving air strips them before they set.
+            Overcrowded loads &mdash; stacked food steams instead of crisping, and two smaller
+            batches beat one large one every time. High-sugar glazes until you know your hot spots,
+            because sugar burns fast in moving air. None of this is a product claim; it is kitchen
+            practice that holds across machines."""),
+            ("The habit that pays for the counter space", """Once a week, let the appliance win one
+            job from the big oven: reheating, roasting a tray of vegetables, finishing a weeknight
+            protein. If it never wins a job, it becomes cupboard inventory. If it wins one
+            permanently, it earned the space &mdash; and cleanup is half the ownership, which is
+            covered in the cleanup and counter-space guide."""),
+         ],
+         verdict="""Calibrate with something cheap, cook your real weeknight meal by day four, and
+         give the appliance one standing job from the oven. Skip batters and overloaded baskets
+         until the machine is familiar."""),
 ]
 
 
@@ -1438,29 +1469,53 @@ SUGGESTIONS = [
          impact="High — differentiation", effort="Needs product access",
          status="Not started — blocked on hands-on testing",
          verify="No page on this site claims a cook time."),
-    dict(id="SG-24", title="AI-powered affiliate platform architecture and Creators API pipeline",
-         what="Document all seven platform modules (research, pricing/commission bounds, SEO drafting, "
-              "Special Links vs cloaking, telemetry, scaling, CI gate) alongside Creators API (S20/S21) "
-              "and ML-training/Agent Terms limits (Program Policies §5, IP License §1/§2(e)/§4).",
-         why="Automating research or price ingestion without final Associates acceptance and "
-             "policy-compliant API handling would violate program rules or hallucinate specs.",
-         impact="High — architecture and compliance", effort="Done (blueprint); API gated on owner",
-         status="Blocked on Creators API",
-         verify="platform.html documents every module, what runs today, and hard gates (FLG-029, Q-19)."),
-    dict(id="SG-25", title="Generate question-shaped article drafts from Search Console queries",
-         what="Turn measured impressions and search queries from Search Console into structured, "
-              "listing-cited guides that pass scripts/check_site.py before merging.",
-         why="Query-driven drafting grows organic search from evidence instead of guesswork.",
-         impact="High — organic discovery", effort="Owner action", status="Blocked on Search Console",
-         verify="Requires Search Console verification (SG-10, Q-20)."),
-    dict(id="SG-26", title="Privacy-preserving self-hosted analytics endpoint",
-         what="Ship zero-dependency Node.js (analytics/server.js) and Cloudflare Pages Function "
-              "(functions/api/collect.js) collectors plus gated send() transport in assets/app.js.",
-         why="GitHub Pages is static-only; shipping vetted collector code lets the owner enable "
-             "cross-visitor counts without cookies, third-party pixels, or page rewrites.",
+    dict(id="SG-24", title="Add an evergreen first-week guide for new owners",
+         what="A getting-started guide answering onboarding questions (what to cook first, what to skip), added to the sitemap and feed like every other guide.",
+         why="New owners search what to cook first, not only what to buy first.",
+         impact="Medium — organic traffic", effort="Done", status="Shipped",
+         verify="guides/first-week-air-fryer.html published and included in sitemap.xml and feed.xml; no cook-time claims inside."),
+    dict(id="SG-25", title="Deploy the self-hosted analytics collector",
+         what="Ship zero-dependency Node.js (analytics/server.js) and Cloudflare Pages Function (functions/api/collect.js) collectors, canonical schema (data/events.json), and gated send() transport in assets/app.js.",
+         why="GitHub Pages cannot run a server function, so cross-visitor telemetry waits until the owner hosts the collector externally without cookies or third-party scripts.",
          impact="High — measurement", effort="Code shipped; hosting is owner action",
          status="Code shipped — hosting pending",
          verify="measurement.html, data/events.json, analytics/server.js, functions/api/collect.js, tests/test_collector.js (FLG-010, Q-08)."),
+    dict(id="SG-26", title="Feed the campaign ledger from first-party reports only",
+         what="Monthly rows from authorised Associates reports with dated provenance. Clicks stay clicks; orders and revenue come only from reports, never from forecasts.",
+         why="The ledger is the evidence base for the next optimisation; invented rows would poison every later decision.",
+         impact="High — evidence-based iteration", effort="Owner action", status="Blocked on owner",
+         verify="campaign-ledger.html renders zero rows and explains why (SG-11); no conversion score is computed anywhere on the site."),
+    dict(id="SG-27", title="Nav labels: keep the navigation shopper-first",
+         what="Primary nav reads the shopper's tasks (Air Fryers, Meat Thermometers, All products, Guides, Compare, How we choose); every dashboard surface lives in one records group.",
+         why="Shoppers navigate by task. Dashboards are for the desk, not the aisle.",
+         impact="Medium — usability", effort="Done", status="Shipped",
+         verify="Every generated page carries the same masthead; the build gate checks the labels."),
+    dict(id="SG-28", title="The shipped RSS feed",
+         what="feed.xml carries every guide with dates and parses cleanly; robots.txt points at the canonical sitemap.",
+         why="One indexable site needs a feed that reflects what actually shipped, not an advertisement for more.",
+         impact="Medium — distribution", effort="Done", status="Shipped",
+         verify="The build gate parses the feed and requires an item for every guide."),
+    dict(id="SG-29", title="Search Console property and sitemap submission",
+         what="Verify the github.io property, submit sitemap.xml, and watch which queries bring readers.",
+         why="Without it the site cannot see its own audience, and topic choice returns to instinct (SG-19, SG-21).",
+         impact="High — findability", effort="Owner action", status="Blocked on owner",
+         verify="No Search Console property is verified; needs the owner's Google account."),
+    dict(id="SG-30", title="Reader capture: RSS live, email pending",
+         what="RSS works today. An email signup needs the owner's provider choice and the privacy wording that goes with it.",
+         why="Repeat readers are the only durable channel a small publication gets.",
+         impact="Medium — retention", effort="Owner action", status="Blocked on owner",
+         verify="feed.xml is live and linked everywhere; no email form is published."),
+    dict(id="SG-31", title="AI-powered affiliate platform architecture and Creators API pipeline",
+         what="Document all seven platform modules (research, pricing/commission bounds, SEO drafting, Special Links vs cloaking, telemetry, scaling, CI gate) alongside Creators API (S20/S21) and ML-training/Agent Terms limits (Program Policies §5, IP License §1/§2(e)/§4).",
+         why="Automating research or price ingestion without final Associates acceptance and policy-compliant API handling would violate program rules or hallucinate specs.",
+         impact="High — architecture and compliance", effort="Done (blueprint); API gated on owner",
+         status="Blocked on Creators API",
+         verify="platform.html documents every module, what runs today, and hard gates (FLG-029, Q-19)."),
+    dict(id="SG-32", title="Generate question-shaped article drafts from Search Console queries",
+         what="Turn measured impressions and search queries from Search Console into structured, listing-cited guides that pass scripts/check_site.py before merging.",
+         why="Query-driven drafting grows organic search from evidence instead of guesswork.",
+         impact="High — organic discovery", effort="Owner action", status="Blocked on Search Console",
+         verify="Requires Search Console verification (SG-10, SG-29, Q-20)."),
 ]
 
 
@@ -1530,9 +1585,12 @@ def build_suggestions():
     <tr><td>SG-19</td><td>Approve intent landing pages generated from the register</td><td>Owner (needs SG-10)</td></tr>
     <tr><td>SG-22</td><td>Name an editor or fix the no-testing policy in writing</td><td>Owner (decision)</td></tr>
     <tr><td>SG-23</td><td>Defer cook-time content until hands-on testing exists</td><td>Owner (product access)</td></tr>
-    <tr><td>SG-24</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
-    <tr><td>SG-25</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
-    <tr><td>SG-26</td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
+    <tr><td>SG-25</td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
+    <tr><td>SG-26</td><td>Feed campaign ledger only from authorised first-party reports</td><td>Owner (account access)</td></tr>
+    <tr><td>SG-29</td><td>Verify Search Console property and submit sitemap.xml</td><td>Owner (Google account)</td></tr>
+    <tr><td>SG-30</td><td>Decide reader email capture provider alongside RSS</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-31</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
+    <tr><td>SG-32</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
   </tbody>
 </table>
 
@@ -1611,7 +1669,7 @@ QUESTIONS = [
      "Collector code (analytics/server.js, functions/api/collect.js) ships in the repo, while "
      "GitHub Pages is static-only so events stay in localStorage until hosted externally.",
      "Deploy to Cloudflare Pages or a Node host, verify GET /api/collect, and configure the endpoint.",
-     "Cross-visitor measurement (FLG-010, SG-26)", "Owner", "Code ready; unhosted"),
+     "Cross-visitor measurement (FLG-010, SG-25)", "Owner", "Code ready; unhosted"),
     ("Q-09", "Which reader-capture channel, if any?",
      "An RSS feed exists. Email capture and Search Console both need accounts.",
      "Verify the site in Search Console and submit the sitemap. Decide whether email is wanted.",
@@ -1672,11 +1730,11 @@ QUESTIONS = [
      "PA-API 5 returns HTTP 403 and Creators API requires final Associates acceptance plus "
      "qualifying sales (10 qualifying sales in the prior 30 days for catalog API access, S20/S21).",
      "Complete account review in Associates Central, verify qualified sales, and apply as primary account owner.",
-     "Automated product ingestion and legal price/image display (SG-13, SG-24, FLG-029)", "Owner", "Blocked on API acceptance"),
+     "Automated product ingestion and legal price/image display (SG-13, SG-31, FLG-029)", "Owner", "Blocked on API acceptance"),
     ("Q-20", "Which Search Console query metrics will pick the next buying guides?",
      "Without Search Console property verification, organic queries, impressions, and CTR cannot be seen.",
      "Verify the canonical URL in Google Search Console, submit sitemap.xml, and review query reports monthly.",
-     "Topic selection and guide cadence (SG-16, SG-25)", "Owner", "Blocked on Search Console"),
+     "Topic selection and guide cadence (SG-16, SG-29, SG-32)", "Owner", "Blocked on Search Console"),
 ]
 
 
@@ -2122,14 +2180,14 @@ def build_exec():
 
 <div class="statrow">
   <div><span class="statnum">5</span><span class="statlabel">products covered</span></div>
-  <div><span class="statnum">8</span><span class="statlabel">guides published</span></div>
+  <div><span class="statnum">{len(GUIDES)}</span><span class="statlabel">guides published</span></div>
   <div><span class="statnum">{len(FLAGS)}</span><span class="statlabel">flags, all public</span></div>
   <div><span class="statnum">0</span><span class="statlabel">prices or ratings shown</span></div>
 </div>
 
 <h2>1. What exists now</h2>
 <p>A static publication site deployable straight to GitHub Pages: a front page that leads with
-  products, two category pages, five product pages, eight question-shaped guides, a comparison table
+  products, two category pages, five product pages, {len(GUIDES)} question-shaped guides, a comparison table
   aligned by field, an on-site search that actually works, JSON-LD on every page, a sitemap, an RSS
   feed, and a disclosure strip under the masthead on every page. Alongside it sit the internal
   records: the <a href="suggestions.html">Decision Center</a>, the
@@ -2202,10 +2260,10 @@ def build_exec():
 
 <h2>6. What would change the numbers</h2>
 <p>Two credentials, hosting for the collector, and one domain decision. Creators API access
-  (S20, S21) would make legal price and product-photo display possible (SG-13, SG-15, SG-24), which
+  (S20, S21) would make legal price and product-photo display possible (SG-13, SG-15, SG-31), which
   is the largest lever on conversion. Search Console verification would make query data available
-  (SG-10, SG-25), which is the only way to choose the next guide from evidence. Hosting the
-  shipped self-hosted analytics endpoint (<a href="measurement.html">SG-26</a>, FLG-010) enables
+  (SG-10, SG-29, SG-32), which is the only way to choose the next guide from evidence. Hosting the
+  shipped self-hosted analytics endpoint (<a href="measurement.html">SG-25</a>, FLG-010) enables
   cross-visitor event counts without cookies, and a custom domain (SG-14, FLG-006) strengthens
   brand and indexation. Everything else on the <a href="suggestions.html">Decision Center</a> is
   shipped or blocked on owner account verification.</p>
@@ -2477,15 +2535,15 @@ def build_platform():
     </tr>
     <tr>
       <td><strong>3. SEO-optimized content &amp; comparison generation</strong></td>
-      <td>Single-source generator (<code>scripts/build_site.py</code>) building 8 guides, field-aligned
+      <td>Single-source generator (<code>scripts/build_site.py</code>) building {len(GUIDES)} guides, field-aligned
         <code>compare.html</code>, JSON-LD (<code>Product</code>, <code>FAQPage</code>,
         <code>Article</code>, <code>BreadcrumbList</code>), <code>sitemap.xml</code>,
         <code>feed.xml</code>, and client search index.</td>
-      <td>Query-driven draft topics require Search Console verification (SG-10, Q-20). Special
+      <td>Query-driven draft topics require Search Console verification (SG-10, SG-29, Q-20). Special
         Links and Program Content may not be used to train or fine-tune ML/LLM models without
         express prior written approval.</td>
       <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a> &sect;5 &amp; IP &sect;1/&sect;2(e),
-        SG-02, SG-25</td>
+        SG-02, SG-32</td>
     </tr>
     <tr>
       <td><strong>4. Link management, Special Links &amp; anti-cloaking</strong></td>
@@ -2506,7 +2564,7 @@ def build_platform():
       <td>GitHub Pages hosts static assets only; cross-visitor collection waits until the owner
         deploys the Node/Cloudflare endpoint and sets <code>sn-collect-endpoint</code>. Conversion
         orders still require official Associates reports.</td>
-      <td><a href="{source_url('S03')}" rel="sponsored nofollow">S03</a>, FLG-010, SG-26, Q-08</td>
+      <td><a href="{source_url('S03')}" rel="sponsored nofollow">S03</a>, FLG-010, SG-25, Q-08</td>
     </tr>
     <tr>
       <td><strong>6. Performance optimization &amp; campaign scaling</strong></td>
@@ -2515,7 +2573,7 @@ def build_platform():
         gates before traffic expansion.</td>
       <td>Blocked on Q-04 (one-per-product Associates tracking test), Q-20 (Search Console query
         metrics), and Q-05 (optional custom domain).</td>
-      <td>FLG-004, FLG-006, SG-07, SG-10, SG-16, SG-24</td>
+      <td>FLG-004, FLG-006, SG-07, SG-10, SG-16, SG-31</td>
     </tr>
     <tr>
       <td><strong>7. Compliance &amp; disclosure automation</strong></td>
@@ -2632,10 +2690,10 @@ def build_measurement():
 <h2>4. Search Console &amp; reader-capture checklist (SG-10, Q-09, Q-20)</h2>
 <ol>
   <li><strong>RSS capture (live now):</strong> <a href="feed.xml">feed.xml</a> is valid RSS 2.0
-    listing all eight buying guides and linked from every page head and footer.</li>
+    listing all {len(GUIDES)} buying guides and linked from every page head and footer.</li>
   <li><strong>Google Search Console (owner action):</strong> Verify property ownership for
     <code>{BASE}</code> (or custom domain under SG-14), submit <code>{BASE}sitemap.xml</code>, and
-    track impressions/CTR to choose new guide topics (SG-25).</li>
+    track impressions/CTR to choose new guide topics (SG-29, SG-32).</li>
   <li><strong>Conversion truth stays in Associates Central:</strong> First-party click counts show
     reader exits, never Amazon purchases. Authorised Associates tracking reports go into
     <a href="campaign-ledger.html">campaign-ledger.html</a> once <a href="questions.html">Q-04</a>

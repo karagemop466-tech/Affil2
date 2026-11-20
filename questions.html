@@ -98,7 +98,7 @@
   <td><span class="unverified">Assumed, not confirmed</span></td></tr><tr><td class="nowrap"><strong>Q-08</strong></td>
   <td><strong>Where would the self-hosted analytics endpoint live?</strong><br><span class="small">Collector code (analytics/server.js, functions/api/collect.js) ships in the repo, while GitHub Pages is static-only so events stay in localStorage until hosted externally.</span></td>
   <td>Deploy to Cloudflare Pages or a Node host, verify GET /api/collect, and configure the endpoint.</td>
-  <td>Cross-visitor measurement (FLG-010, SG-26)</td>
+  <td>Cross-visitor measurement (FLG-010, SG-25)</td>
   <td>Owner</td>
   <td><span class="unverified">Code ready; unhosted</span></td></tr><tr><td class="nowrap"><strong>Q-09</strong></td>
   <td><strong>Which reader-capture channel, if any?</strong><br><span class="small">An RSS feed exists. Email capture and Search Console both need accounts.</span></td>
@@ -153,12 +153,12 @@
   <td><span class="unverified">Not assessed</span></td></tr><tr><td class="nowrap"><strong>Q-19</strong></td>
   <td><strong>Will the Associates account qualify for Amazon Creators API credentials?</strong><br><span class="small">PA-API 5 returns HTTP 403 and Creators API requires final Associates acceptance plus qualifying sales (10 qualifying sales in the prior 30 days for catalog API access, S20/S21).</span></td>
   <td>Complete account review in Associates Central, verify qualified sales, and apply as primary account owner.</td>
-  <td>Automated product ingestion and legal price/image display (SG-13, SG-24, FLG-029)</td>
+  <td>Automated product ingestion and legal price/image display (SG-13, SG-31, FLG-029)</td>
   <td>Owner</td>
   <td><span class="unverified">Blocked on API acceptance</span></td></tr><tr><td class="nowrap"><strong>Q-20</strong></td>
   <td><strong>Which Search Console query metrics will pick the next buying guides?</strong><br><span class="small">Without Search Console property verification, organic queries, impressions, and CTR cannot be seen.</span></td>
   <td>Verify the canonical URL in Google Search Console, submit sitemap.xml, and review query reports monthly.</td>
-  <td>Topic selection and guide cadence (SG-16, SG-25)</td>
+  <td>Topic selection and guide cadence (SG-16, SG-29, SG-32)</td>
   <td>Owner</td>
   <td><span class="unverified">Blocked on Search Console</span></td></tr></tbody>
 </table>
