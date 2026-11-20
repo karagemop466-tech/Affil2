@@ -395,3 +395,19 @@ Branch `arena/3fb8f29e-affil2`. Base `1a19c24` (main, after PR #17). Task: indep
 Scope: `scripts/build_site.py`, `scripts/check_site.py` (only if a new gate rule is needed), new generated page `design-brief.html`, `sitemap.xml`, `feed.xml`, `robots.txt`, `COORDINATION.md`, `README.md` (one row), generated HTML. No other session's open PR (#16, branch `arena/bdedd85e-affil2`) is touched. Shared register `data/products.json`, `data/sources.json` are read-only unless verification proves a value wrong; `data/flags.json` is append-only.
 
 T-18 | Re-verification + design & traffic brief + PR/merge/Pages record | in progress | 3fb8f29e | scripts/build_site.py, design-brief.html, sitemap.xml, feed.xml, robots.txt, COORDINATION.md, README.md
+
+## Session `3fb8f29e` — T-18 completion record
+
+T-18 (renumbered from T-17; session 5ecbe089 used T-17 for its measurement/publication integration, merged as PR #20). Base `1a19c24`; rebased through `2a4ffa8` (PRs #19–#24 landed mid-flight).
+
+What shipped in [PR #26](https://github.com/karagemop466-tech/Affil2/pull/26):
+
+- New generated page `design-brief.html` — the Design & Traffic Brief: a copy-paste design prompt (brand, front-page anatomy, components, type and tone, illustration, accessibility, SEO/structured data, compliance, forbidden patterns); a 15-topic cluster plan labelled as hypotheses; a 2026-11-26 → 2027-02-14 seasonal calendar; a ten-point "not AI slop" editorial standards checklist; an explicit "what this brief does not claim" section; a brief-element-to-live-state mapping table.
+- SG-17 added to the Decision Center as "Adopt the Design & Traffic Brief as the next build step" (status: Not started — recommended for approval). It is linked from the footer dashboard group on all 30 pages, from the sitemap and from the on-site search index.
+- Docs reconciled: README start-here table (17 proposals, 35 flags); `EXECUTIVE-SUMMARY.md` gained a dated re-verification log and its never-registered SG-17..SG-20 / Q-15..Q-16 IDs were renumbered (live SG-17 = the brief; UF-1/UF-2 hold the leftover ideas).
+
+Independent re-verification (2026-11-20, all fetched live this session; full table in the PR body): all five official listings re-read line by line — titles, breadcrumbs, capacity, temperature ranges, wattage, dimensions, warranty, presets, probes, sensors, battery wording, included components — **all match the register**; the known listing contradictions (FLG-008, FLG-017, FLG-018, FLG-021, FLG-034) reproduce exactly as flagged. USDA FSIS chart, Google qualify-outbound-links, Associates Program Policies (updated 2026-04-14), PA-API 5 deprecation notice and the FTC Endorsement Guides FAQ were all re-fetched and match what the site cites. **No register corrections were required.**
+
+Merge: `gh pr merge 26 --merge` → merge commit `c021fb0`. GitHub Pages deploy run `44683183551` → **success** (site serves design-brief.html, confirmed live). "Verify site" run on the merge commit `44683184399` → **success**.
+
+Process notes: two rebases onto a fast-moving main; conflicts in COORDINATION.md, assets/style.css and generated pages resolved by keeping both sides and regenerating from the merged generator — no hand-edited HTML; committed pages re-verified byte-identical to generator output before push. One `git push --force-with-lease` (this branch only; lease checked). Open and untouched: PR #16 (analytics collector, needs review/owner decision), FLG-001..FLG-035 (all published, none blocks).
