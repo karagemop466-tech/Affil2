@@ -361,6 +361,8 @@ for f in pages:
     txt = re.sub(r"<[^>]+>", " ", f.read_text())
     for m in WEIGHT_RE.finditer(txt):
         err(f"{rel}: quotes a product weight ({m.group(0).strip()}) that no listing states (FLG-022/FLG-039)")
+    if re.search(r"\b(?:footprint and weight|weight and footprint|weigh(?:s|ing) \w+ ?(?:lb|pounds))", txt, re.I):
+        err(f"{rel}: promises weight information while no weight is published (FLG-022)")
 
 # ---------------------------------------------------------------- compare pair view
 comp = (ROOT / "compare.html").read_text()
