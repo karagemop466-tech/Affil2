@@ -18,6 +18,12 @@ Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED â€
 | T-07 | SEO/findability (sitemap, robots, RSS, JSON-LD, search) + click/analytics layer | done | 530c2e6c | sitemap.xml, robots.txt, feed.xml, assets/app.js |
 | T-08 | Flagged for Review page + campaign ledger (empty, provenance) | done | 530c2e6c | flagged.html, campaign-ledger.html, data/campaign-ledger.json |
 | T-09 | Final integration: build check, broken-link check, GitHub Pages, PR + merge | in progress | 530c2e6c | .github/workflows/pages.yml, COORDINATION.md |
+| T-10 | Independent line-by-line re-verification of register values vs official sources + verification log | in progress | bba2deed | data/verification.json, sources.html, COORDINATION.md |
+| T-11 | Publication polish pass: brand, typography, imagery, seasons, clusters, authorship, nav labels (SG-27) | in progress | bba2deed | index.html, guides.html, guides/*.html, products/*.html, about.html, assets/style.css, assets/img/*, all *.html (nav/footer) |
+| T-12 | Analytics on: five defined events, privacy-preserving outbound-click counter, self-hosted endpoint shipped + tested | in progress | bba2deed | assets/app.js, assets/config.js, analytics/*, disclosure.html |
+| T-13 | Seasonal/question-shaped guides + publishing cadence + sitemap/feed sync (SG-28) | in progress | bba2deed | guides/*.html, guides.html, feed.xml, sitemap.xml |
+| T-14 | Registers: SG-27..SG-30 rows, decision-gate UX, questions completeness (SG-29, SG-30) | in progress | bba2deed | suggestions.html, questions.html |
+| T-15 | Integration: check script extension, JSON-LD fix, PR + merge + Pages confirm, record | in progress | bba2deed | scripts/check_site.py, .github/workflows/*, COORDINATION.md, EXECUTIVE-SUMMARY.md, README.md |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -45,9 +51,12 @@ FLG-008 CHEF iQ battery conflict 50h vs 70h on same listing.
 FLG-009 Emeril preset count 24 vs 25 + model number variants on same listing.
 FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
 
+Session `bba2deed` scope note: branched from `12d49cd`, rebased onto `main` @ `e1b6750` before claiming. Tasks T-01..T-09 recorded done by `530c2e6c` (no longer active); T-10..T-15 claimed by `bba2deed` on branch `arena/bba2deed-affil2`. File scope above is exclusive for this claim; shared-board edits to COORDINATION.md are expected by every session. Branches `arena/177269f3-affil2`, `arena/9397cc0c-affil2`, `arena/990af5de-affil2` exist but carry no commits and no claims as of this entry.
+
 ## Handoff / conflict log
 - 2026-11-20 530c2e6c: claimed all tasks, repo empty, no conflicts.
 - PR link + merge result: (to be recorded at T-09 completion)
+- 2026-11-20 bba2deed: claimed T-10..T-15 after rebasing onto main @ e1b6750. No conflicts observed.
 
 ## T-09 completion (2026-11-20)
 - PR: https://github.com/karagemop466-tech/Affil2/pull/1 â€” merged (merge commit fdb5d79)
