@@ -161,6 +161,7 @@ NAV = [
 
 DASH = [
     ("suggestions.html", "Decision Center"),
+    ("design-brief.html", "Design &amp; Traffic Brief"),
     ("questions.html", "Open Questions"),
     ("flagged.html", "Flagged for Review"),
     ("sources.html", "Sources"),
@@ -1213,6 +1214,15 @@ SUGGESTIONS = [
          why="Cadence compounds; sporadic bursts do not.",
          impact="Medium — organic growth", effort="Ongoing", status="Blocked on Search Console",
          verify="Requires Search Console access (SG-10)."),
+    dict(id="SG-17", title="Adopt the Design & Traffic Brief as the next build step",
+         what="A copy-paste design prompt, a topic-cluster plan with a seasonal calendar, and an "
+              "editorial standards checklist for keeping the site from reading like generated "
+              "content. Published at design-brief.html.",
+         why="The site is verified and compliant but still feels assembled. A designer (or a new "
+             "prompt) needs one document that says exactly what to build and why — this is it.",
+         impact="High — perceived quality and conversion", effort="Medium, one design pass",
+         status="Not started — recommended for approval",
+         verify="design-brief.html is on this site now. Nothing changes until the owner picks this row."),
 ]
 
 
@@ -1254,7 +1264,7 @@ def build_suggestions():
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>Sixteen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>Seventeen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
     <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
@@ -1278,6 +1288,7 @@ def build_suggestions():
     <tr><td>SG-14</td><td>Choose and attach a custom domain</td><td>Owner (decision)</td></tr>
     <tr><td>SG-15</td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
     <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td>SG-17</td><td>Approve the Design &amp; Traffic Brief as the next build</td><td>Owner (decision)</td></tr>
   </tbody>
 </table>
 
@@ -1308,7 +1319,7 @@ def build_suggestions():
 </ul>
 """
     BUILT.append(page("suggestions.html", f"Decision Center — {SITE}",
-                      "Sixteen proposals for this site, with honest status, ranked before anything "
+                      "Seventeen proposals for this site, with honest status, ranked before anything "
                       "is built. Review the shortlist and choose a path.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Decision Center", "url": BASE + "suggestions.html"}))
@@ -1446,6 +1457,226 @@ def build_questions():
                       "made, with how to discover each missing fact and what it blocks.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Open Questions", "url": BASE + "questions.html"}))
+
+
+
+# ---- design & traffic brief
+def build_design_brief():
+    prompt_text = """You are designing the next version of ShopNow Kitchen, an independent publication-style
+Amazon affiliate website covering five specific products: three air fryers (Chefman 6 Quart Dual
+Basket, Chefman TurboFry 8 Qt, Emeril Lagasse 26QT French Door) and two meat thermometers
+(ThermoMaven 1 Sec instant-read, CHEF iQ Sense Gen3 wireless). Audience: US home cooks who want a
+confident answer to one question, not a catalog. Business goal: earn qualified clicks to Amazon
+through trust, never through pressure.
+
+Design like a small-batch food magazine that happens to sell via affiliate links, not like a
+generated content farm. Requirements:
+
+BRAND. Keep the name ShopNow Kitchen. Masthead with wordmark in a warm serif display face
+(Georgia, Iowan Old Style or similar) and body copy in a neutral humanist sans. Palette: charcoal
+ink, warm cream paper, one accent of paprika red, used only for links, price-adjacent details and
+the single primary call to action per view. Generous margins, a real baseline grid, 65 to 75
+characters per measure. No gradients, no glassmorphism, no stock-photo-style hero imagery.
+
+FRONT PAGE. In order: dated publication line and Associates disclosure strip; masthead; one-line
+editorial promise; hero with the single most useful question right now (for example, which air
+fryer fits a family of four); a seasonal spotlight module (Thanksgiving and holiday cooking in
+November and December); category rails for Air Fryers and Meat Thermometers as cards with original
+illustration; a latest-guides rail; a short list of what we will not print; footer with the full
+dashboard group.
+
+COMPONENTS. Product card: original illustration, listing-derived capacity or key stat, one
+trade-off sentence, a question it answers, and a tagged Special Link button labelled as a paid
+link. Comparison module: aligned rows, no star scores. Buy box: explicit question checklist the
+reader answers before clicking out. Disclosure label adjacent to every outbound button, never in a
+tooltip.
+
+TYPE AND TONE. Short declarative headlines. Second person. Sentences a person would say out loud.
+No exclamation marks, no superlatives without evidence, no fake urgency, no countdown timers.
+Never print prices, star ratings or review counts; those come only from Amazon-served links or the
+Creators API.
+
+ILLUSTRATION. Original SVG line-and-wash illustrations in a consistent style: air fryer, thermometer,
+basket, French doors, oven interior. Never product photos scraped from a listing, never Amazon
+imagery without the licence that comes with the Creators API.
+
+ACCESSIBILITY AND PERFORMANCE. WCAG AA contrast, visible focus states, semantic headings in order,
+alt text that describes the illustration, no layout shift, total page weight under one megabyte,
+no third-party fonts or trackers. Disclosure readable at 200 percent zoom.
+
+SEO AND STRUCTURED DATA. One canonical host, one h1 per page, JSON-LD (WebPage, Article on guides,
+FAQPage where the FAQ exists), sitemap and RSS regenerated on every build, Search Console-ready
+meta. Internal links favour depth: every guide links to two related guides and one category page.
+
+COMPLIANCE. Amazon Associates statement above the fold on every page; every outbound Amazon link
+rel=sponsored and nofollow and carrying the tag; FTC-clear disclosure next to each call to action;
+intended and observed ASIN fields kept separate; contradictions on a listing are printed, not
+smoothed over.
+
+FORBIDDEN. Fake countdowns, invented scarcity, fabricated expert quotes, fabricated hands-on
+testing claims, fabricated search-volume numbers, placeholder filler text, emoji bullets, and any
+phrase that reads like it was produced by filling in a template."""
+
+    cluster_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td><td>{esc(c)}</td><td>{esc(d)}</td><td>{esc(e)}</td></tr>" for a, b, c, d, e in [
+        ("A · Air fryer buying", "Basket or oven-style: what to compare first", "guides/basket-vs-oven.html", "Live", "Anchor guide, links to all three air fryer pages"),
+        ("A · Air fryer buying", "A no-hype checklist for comparing air fryer capacity", "guides/capacity-checklist.html", "Live", "Feeds compare.html"),
+        ("A · Air fryer buying", "How to assess cleanup and counter-space trade-offs", "guides/cleanup-counter-space.html", "Live", "Cross-links air fryer pages"),
+        ("A · Air fryer buying", "Air fryer for a small kitchen: three measurements", "guides/small-kitchen-air-fryer.html", "Live", "Captures apartment queries"),
+        ("A · Air fryer buying", "Basket or oven-style: which fits a family of four", "Not written", "Proposed", "Search Console may confirm or kill this title"),
+        ("B · Holiday and seasonal", "Air fryer at Thanksgiving: what actually fits", "guides/air-fryer-thanksgiving.html", "Live", "Seasonal spike, Nov 2026"),
+        ("B · Holiday and seasonal", "Turkey thermometer maths: the USDA minimums", "Not written", "Proposed", "USDA chart is already the source of record (S22)"),
+        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Black Friday is 2026-11-27; must not print prices (SG-13)"),
+        ("B · Holiday and seasonal", "Wireless or instant-read for a long smoker cook", "guides/instant-vs-wireless.html", "Live", "Holiday brisket and turkey season"),
+        ("C · Thermometer education", "How to read accuracy claims: plus-or-minus 0.5 and NIST", "guides/thermometer-accuracy.html", "Live", "Trust content, supports both thermometer pages"),
+        ("C · Thermometer education", "Is NIST certification on a listing a guarantee", "Not written", "Proposed", "Honest answer: it is a seller statement (FLG-035)"),
+        ("C · Thermometer education", "USDA doneness temperatures for the holiday bird", "Not written", "Proposed", "Reuses S22; strong internal-link target"),
+        ("D · Multi-function appliances", "Questions to ask before buying a multi-function appliance", "guides/multi-function-questions.html", "Live", "Umbrella guide for the oven category"),
+        ("D · Multi-function appliances", "Emeril 26QT: 24 or 25 presets, and why it matters less than fit", "Not written", "Proposed", "Turns FLG-021 into the article"),
+        ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "Not written", "Proposed", "Compares P-01 and P-03 without crowning a winner"),
+    ])
+
+    standards_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td></tr>" for a, b in [
+        ("Every claim traceable to a dated source", "The spec table links its source on every row; conflicts are printed verbatim."),
+        ("A named position or an honest blank", "No hands-on test is claimed anywhere; the review process is described on how-we-choose.html."),
+        ("Contradictions shown, not smoothed over", "P-02 lists both 24 and 25 presets; P-05 lists both 50 and 70 hours (FLG-008, FLG-021)."),
+        ("No invented numbers", "No search volume, no conversion rates, no commission figures; the ledger is empty by design."),
+        ("Questions as headlines", "Guides answer one buyer question each; the question came before the keyword."),
+        ("Real dates on everything", "Every page carries a last-verified date; re-verification is a scheduled pass, not a vibes check."),
+        ("Specific beats general", "'16.9 inches of depth plus door swing' beats 'spacious interior'."),
+        ("Trade-offs stated next to recommendations", "Every pick on the front page names what you give up."),
+        ("Disclosure as furniture, not fine print", "Associates statement above the fold on every page, repeated in the footer."),
+        ("One human editorial decision at the gate", "Automation drafts; the build gate and a human decide what ships (SG-12)."),
+    ])
+
+    body = f"""
+{breadcrumb([("Home", "index.html"), ("Design & Traffic Brief", None)])}
+<h1>Design &amp; Traffic Brief</h1>
+<p class="lede">Everything a designer &mdash; or a new prompt &mdash; needs to take this site from
+  verified and compliant to memorable, trustworthy and worth ranking. Nothing on this page
+  changes the site. It is a proposal, reviewed in the <a href="suggestions.html">Decision
+  Center</a> as SG-17.</p>
+
+<div class="panel">
+  <h2>How to use this brief in five minutes</h2>
+  <ol class="tight">
+    <li>Read <strong>The prompt</strong> below. If you agree with it, paste it into your design
+      tool of choice. If you do not, edit it there &mdash; it is written to be edited.</li>
+    <li>Pick <strong>two or three proposed topics</strong> from the cluster table, not twelve.</li>
+    <li>Rank <strong>SG-17</strong> in the Decision Center and export your ranking.</li>
+    <li>Anything shipped from this brief re-enters the build gate before publishing. No exceptions.</li>
+  </ol>
+</div>
+
+<h2>1. The prompt</h2>
+<p>Copy everything inside the box. It is a complete design brief for the next build of this site.</p>
+<pre class="promptbox">{esc(prompt_text)}</pre>
+
+<h2>2. Front page anatomy, in order</h2>
+<ol>
+  <li><strong>Utility strip</strong> — the Associates disclosure, one line, above everything.</li>
+  <li><strong>Masthead</strong> — wordmark, one primary nav group (Air Fryers, Meat Thermometers,
+    All products, Guides, Compare, How we choose), one search field.</li>
+  <li><strong>Editorial promise</strong> — one sentence naming who the site is for.</li>
+  <li><strong>Hero</strong> — the single most useful question of the week. Currently the family-of-four
+    air fryer question; swap seasonally.</li>
+  <li><strong>Seasonal spotlight</strong> — Thanksgiving and holiday cooking modules from mid-November
+    to end of December; New Year health angle from January.</li>
+  <li><strong>Category rails</strong> — Air Fryers and Meat Thermometers as illustrated card rails,
+    three cards each, each card naming a trade-off.</li>
+  <li><strong>Latest guides</strong> — four most recent, question-shaped.</li>
+  <li><strong>Refusals</strong> — "What we will never print", three bullets. This is the most
+    persuasive trust module on the page.</li>
+  <li><strong>Footer</strong> — the dashboard group: Decision Center, this brief, Open Questions,
+    Flagged for Review, Sources, Executive Summary, Campaign Ledger, About, Disclosure.</li>
+</ol>
+
+<h2>3. Organic traffic plan</h2>
+<p>Small sites win on question-shaped long-tail queries, internal links and consistency &mdash; not on
+  volume. Every topic below is tied to a product we already cover or a source we already cite.
+  <strong>Working titles are hypotheses, not claims of popularity.</strong> The order here is an
+  editorial guess; Search Console data (SG-10) is the only thing allowed to settle it.</p>
+
+<table class="clusters">
+  <caption>Topic clusters. "Live" means the guide exists today; "Proposed" means it is a candidate only.</caption>
+  <thead><tr><th scope="col">Cluster</th><th scope="col">Title (working)</th>
+    <th scope="col">Target</th><th scope="col">Status</th><th scope="col">Why it is here</th></tr></thead>
+  <tbody>{cluster_rows}</tbody>
+</table>
+
+<h3>Internal linking rules</h3>
+<ul>
+  <li>Every guide links down to at least one product page and across to at least two related guides.</li>
+  <li>Every product page links up to its category page and sideways to the compare table.</li>
+  <li>Category pages link only to live guides, never to proposed ones.</li>
+</ul>
+
+<h3>Findability checklist (mostly already live)</h3>
+<ul>
+  <li>One canonical host; canonical link on every page — <strong>done</strong> <a href="sources.html">(S04)</a>.</li>
+  <li>Sitemap regenerated and gated on every build — <strong>done</strong>.</li>
+  <li>RSS feed of guides — <strong>done</strong>, 8 items.</li>
+  <li>JSON-LD structured data on every page — <strong>done</strong>.</li>
+  <li>rel="sponsored nofollow" on every outbound product link — <strong>done and gated</strong>.</li>
+  <li>Search Console verification and sitemap submission — <strong>owner action, SG-10</strong>.</li>
+  <li>Custom domain — <strong>owner decision, SG-14</strong> (FLG-006).</li>
+</ul>
+
+<h3>Seasonal calendar</h3>
+<table>
+  <caption>Dates are calendar facts. No event on this page licenses a price, a sale claim or a countdown.</caption>
+  <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Lead time</th><th scope="col">What to do</th></tr></thead>
+  <tbody>
+    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td></tr>
+    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td></tr>
+    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td></tr>
+    <tr><td>2026-12-02</td><td>First week of Advent</td><td>First week of December</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td></tr>
+    <tr><td>2026-12-25</td><td>Christmas</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td></tr>
+    <tr><td>2027-01-02</td><td>New Year</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td></tr>
+    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td></tr>
+  </tbody>
+</table>
+
+<h2>4. The standards that keep this from reading as generated</h2>
+<table>
+  <caption>Ten reader-visible signals, agreed before any redesign.</caption>
+  <thead><tr><th scope="col">Standard</th><th scope="col">What it looks like on this site</th></tr></thead>
+  <tbody>{standards_rows}</tbody>
+</table>
+
+<h2>5. What this brief deliberately does not claim</h2>
+<ul>
+  <li>No keyword volume, difficulty or CPC figures. None have been measured (needs SG-10).</li>
+  <li>No promise that any topic ranks. Ranking is an outcome, not an input.</li>
+  <li>No hands-on testing claim for any product (FLG-032).</li>
+  <li>No commission rate or revenue forecast (Q-11; ledger is intentionally empty).</li>
+  <li>No suggestion that a product is "best" — this site recommends for fit, not in the abstract.</li>
+</ul>
+
+<h2>6. From brief to build: the mapping</h2>
+<table>
+  <caption>Where each part of this brief is already true, and where the gaps are.</caption>
+  <thead><tr><th scope="col">Brief element</th><th scope="col">State today</th><th scope="col">Reference</th></tr></thead>
+  <tbody>
+    <tr><td>Disclosure above the fold, repeated in footer</td><td>Live on every page; gate enforced</td><td>SG-04</td></tr>
+    <tr><td>Sponsored + nofollow on every outbound Amazon link</td><td>Live; gate enforced</td><td>SG-05, S04</td></tr>
+    <tr><td>Sitemap, RSS, canonical, JSON-LD</td><td>Live and gated</td><td>SG-08</td></tr>
+    <tr><td>Original illustration, no Amazon photography</td><td>Live; licence-safe</td><td>SG-09, FLG-007</td></tr>
+    <tr><td>Question-shaped guides with verdicts</td><td>8 live, 8 proposed above</td><td>SG-02</td></tr>
+    <tr><td>Weekly cadence chosen from queries</td><td>Blocked on Search Console</td><td>SG-16, SG-10, Q-09</td></tr>
+    <tr><td>Prices shown legally</td><td>Impossible until API access</td><td>SG-13, FLG-005</td></tr>
+    <tr><td>Parallel-session coordination</td><td>COORDINATION.md task board, active</td><td>Repo root</td></tr>
+  </tbody>
+</table>
+
+<p class="cta"><a class="btn" href="suggestions.html">Rank SG-17 in the Decision Center</a>
+  <a class="btn ghost" href="guides.html">Read the eight live guides</a></p>
+"""
+    BUILT.append(page("design-brief.html", f"Design & Traffic Brief — {SITE}",
+                      "A copy-paste design prompt, a topic-cluster traffic plan with a seasonal "
+                      "calendar, and the editorial standards checklist for a publication-grade "
+                      "affiliate site.",
+                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                                    "name": "Design & Traffic Brief", "url": BASE + "design-brief.html"}))
 
 
 # ---- flagged
@@ -1871,6 +2102,9 @@ def build_search():
                    "trade-offs", "page"),
                   ("How we choose", "how-we-choose.html",
                    "What verified means, what we have not tested, what we refuse to print", "page"),
+                  ("Design & Traffic Brief", "design-brief.html",
+                   "Copy-paste design prompt, a topic-cluster traffic plan, a seasonal calendar "
+                   "and the editorial standards checklist", "page"),
                   ("Decision Center", "suggestions.html",
                    "Proposals for this site, ranked before anything is built", "page"),
                   ("Open Questions", "questions.html",
@@ -1988,6 +2222,7 @@ def main():
     for g in GUIDES:
         build_guide(g)
     build_how()
+    build_design_brief()
     build_suggestions()
     build_questions()
     build_flagged()
