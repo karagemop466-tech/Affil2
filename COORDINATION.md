@@ -848,3 +848,12 @@ T-20 | Live re-verification of the five listings + status reconciliation | done 
 ### Claim (2026-11-20, active)
 
 - Claiming a documentation-only integration review: reconcile open PRs against the current `main`, record whether each contains unique work or is superseded, and log a concrete line-by-line publication finding if one is found. Scope: `COORDINATION.md` only. Do not edit generator/data/site outputs in this pass unless the review identifies a release-blocking defect; if so, record the request and keep scope isolated until safely claimed. Existing account-gated items remain unresolved and are not to be guessed.
+
+### Scope amendment (2026-11-20, session `cb967199`)
+
+Line-by-line review of the deployed pages found two publication defects, both verified against the live site before touching any file:
+
+1. `index.html` main content carries a third dashboard surface — a "Working on this site?" panel linking Decision Center / Open Questions / Flagged / Sources — beyond the masthead Records group and the footer Records line. That violates the shipped rule: lead with the products; every dashboard surface reachable from the footer and a single navigation group.
+2. The P-03 front-page card prints the item weight inside the Capacity chip ("Capacity: 8 quarts (12.8 lb)"). The 12.8 lb figure is verified (S12 Measurements table), but a weight belongs in the product spec table, which already carries it; the chip mixes two fields.
+
+Scope expanded to fix both: `scripts/build_site.py` (front-page panel section only), `data/products.json` (P-03 `card` chip wording only), regenerated pages, gate + tests rerun. No product fact, source, or flag changes; account-gated items (FLG-001/002/003/004/010/028/033) remain untouched. Also claiming the port of open PR #34's documentation block into this file (see next commit) since that branch has no merge base with the shallow clone and cannot be git-merged locally.
