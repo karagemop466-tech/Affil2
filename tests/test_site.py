@@ -265,3 +265,35 @@ class GuideWaveRouteTests(unittest.TestCase):
                 for num in re.findall(r"\d+(?:\.\d+)?", m.group(0)):
                     self.assertIn(num, allowed,
                                   f"{g['slug']}: {m.group(0).strip()!r} is not a registered figure")
+
+
+class BuyerPageVoiceTests(unittest.TestCase):
+    """The gate's reader-voice rules were unreachable for a while; these hold the line in CI too."""
+
+    def test_no_product_page_prints_the_same_record_twice(self):
+        for page in sorted((ROOT / "products").glob("*.html")):
+            txt = page.read_text(encoding="utf-8")
+            self.assertEqual(0, txt.count("Product-intent confirmation record"),
+                             f"{page.name}: audit heading on a buyer page")
+            self.assertEqual(0, len(re.findall(r"FLG-\d{3}", txt)),
+                             f"{page.name}: register code visible to a shopper")
+            # the five required fields still exist, in reader language, exactly once
+            for label in ("The link you gave us", "Intended ASIN", "Observed redirect target",
+                          "Special Link we publish", "Confirmation date", "Associates test status"):
+                self.assertIn(label, txt, f"{page.name}: provenance field {label!r} missing")
+            self.assertEqual(1, txt.count("Intended ASIN"),
+                             f"{page.name}: the intent record is printed more than once")
+
+    def test_the_intend_record_function_still_matches_the_register(self):
+        """intent_table() is not rendered on buyer pages; it must still agree with the data."""
+        sys.path.insert(0, str(ROOT / "scripts"))
+        try:
+            import build_site as bs
+        finally:
+            sys.path.remove(str(ROOT / "scripts"))
+        for prod in bs.PRODUCTS:
+            html = bs.intent_table(prod)
+            self.assertIn(prod["submitted"], html)
+            self.assertIn(prod["observed"], html)
+            self.assertIn(str(bs.TODAY), html)
+            self.assertIn("PENDING", html)

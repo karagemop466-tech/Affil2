@@ -745,7 +745,13 @@ def spec_table(p):
 
 
 def intent_table(p):
-    """Kept for the internal Verification Log; buyer pages use ledger_block() instead."""
+    """The audit-shaped version of the record: codes and all.
+
+    Not rendered on buyer pages any more (2026-11-20): the product page printed this beside
+    `ledger_block()`, so a shopper saw the same five fields twice, once in filing-cabinet language.
+    Kept for the internal log and for any future audit surface, and covered by a test so it cannot
+    rot into a form that no longer matches the register.
+    """
     intended = p["intended"] or "— blank: not confirmed by the owner (FLG-001)"
     return f"""<table class="intent">
   <caption>Product-intent confirmation record. Intended and observed are separate fields and are
@@ -1117,7 +1123,6 @@ def build_product(p):
 <p class="muted">You submitted a short link to get here, so this is exactly what it opened, when we
   last checked it, and what we publish instead — the intended link and the observed destination are
   recorded as separate fields, never merged.</p>
-{intent_table(p)}
 {ledger_block(p, "../")}
 
 {usda_block(p)}
@@ -1747,7 +1752,9 @@ def build_verification():
                         f'<th scope="col">How it was checked</th><th scope="col">Source</th></tr></thead>'
                         f'<tbody>{rows}</tbody></table>')
     corr = "".join(
-        f'<tr><th scope="row">{esc(c["id"])}</th><td>{esc(c["what"])}</td><td>{esc(c["action"])}</td></tr>'
+        f'<tr><th scope="row">{esc(c["id"])}</th><td>{esc(c["what"])}</td><td>{esc(c["action"])}</td>'
+        f'<td class="src"><a href="sources.html">source register</a> &middot; '
+        f'<a href="flagged.html">Flagged for Review</a></td></tr>'
         for c in V["corrections"])
     if V.get("rechecks"):
         rc_rows = "".join(
@@ -1775,7 +1782,8 @@ def build_verification():
 {prod_blocks}
 <h2>Corrections made in this pass</h2>
 <table><caption>Register corrections (C-IDs). Findings that survived as open contradictions are on the <a href="flagged.html">Flagged for Review</a> page.</caption>
-<thead><tr><th scope="col">ID</th><th scope="col">What was wrong</th><th scope="col">Action taken</th></tr></thead>
+<thead><tr><th scope="col">ID</th><th scope="col">What was wrong</th><th scope="col">Action taken</th>
+<th scope="col">Record</th></tr></thead>
 <tbody>{corr}</tbody></table>
 {rechecks_block}
 <div class="panel"><h2>What this log does not claim</h2>
@@ -1792,7 +1800,8 @@ def build_verification():
             rows += (f'<tr><th scope="row">{esc(r["field"])}</th>'
                      f'<td>{esc(r["value_as_read"])}</td>'
                      f'<td><span class="token {tone}">{esc(r["status"])}</span></td>'
-                     f'<td class="small">{esc(r["where"])}<br>{esc(r["note"])}</td></tr>')
+                     f'<td class="small">{esc(r["where"])}<br>{esc(r["note"])}</td>'
+                     f'<td class="src">{a(prod["url"], "listing", True)}</td></tr>')
         live_blocks += (
             f'<h2>{esc(prod["id"])} · ASIN {esc(prod["asin"])}</h2>'
             f'<p class="small">Title as read: <em>{esc(prod["title_as_read"])}</em> · '
@@ -1800,12 +1809,23 @@ def build_verification():
             f'<table><caption>Read live on {esc(live["generated"])}. "Unverified" means this pass did '
             f'not reach that field — not that the value on the product page is wrong.</caption>'
             f'<thead><tr><th scope="col">Field</th><th scope="col">Value as the listing printed it</th>'
-            f'<th scope="col">Status in this pass</th><th scope="col">Where it was read</th></tr></thead>'
+            f'<th scope="col">Status in this pass</th><th scope="col">Where it was read</th>'
+            f'<th scope="col">Source</th></tr></thead>'
             f'<tbody>{rows}</tbody></table>')
     not_done = "".join(f"<li>{esc(x)}</li>" for x in live["not_re_verified_this_session"])
+    obs_urls = {x["id"]: x["url"] for x in live["products"]}
+
+    def obs_link(oid):
+        """Each observation is read against a specific listing; the product id opens the row, so the
+        link is derived from the data instead of being typed in per row."""
+        pid = oid.split()[0]
+        if pid in obs_urls:
+            return a(obs_urls[pid], "official listing", True)
+        return '<a href="sources.html">source register</a>'
     review = "".join(
         f'<tr><th scope="row">{esc(o["id"])}</th><td>{esc(o["observation"])}</td>'
-        f'<td>{esc(o["status"])}</td></tr>' for o in live["new_observations_for_review"])
+        f'<td>{esc(o["status"])}</td><td class="src">{obs_link(o["id"])}</td></tr>'
+        for o in live["new_observations_for_review"])
     usda = live["usda_chart"]
     usda_rows = "".join(f"<li>{esc(v)}</li>" for v in usda["values_re_read"])
     live_section = f"""
@@ -1825,7 +1845,8 @@ def build_verification():
 <h2>New observations for review</h2>
 <table><caption>Raised by this pass. None of these changes a published product value; each is for a
   human to accept or reject.</caption>
-<thead><tr><th scope="col">Item</th><th scope="col">Observation</th><th scope="col">Status</th></tr></thead>
+<thead><tr><th scope="col">Item</th><th scope="col">Observation</th><th scope="col">Status</th>
+  <th scope="col">Read against</th></tr></thead>
 <tbody>{review}</tbody></table>
 """
     # ---- submitted-link re-check (T-31): observations kept apart from the intended/observed ASIN fields

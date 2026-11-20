@@ -2095,3 +2095,36 @@ is missing from `index.html`.
 
 Final state at push: 43 pages, 5 product records, 63 flags, 22 sources — **ALL CHECKS PASS**;
 20 Python tests OK; JS collector tests PASS; two consecutive builds byte-identical.
+
+### Follow-up on main (2026-11-20, session 19dbf5e2) — the gate was running half its rules in dead code
+
+PR #70 is merged and deployed (`898652f`, Pages `built`, verified live: the new guides and the
+per-product renderings render, disclosure above the fold, every outbound link `sponsored nofollow`
+and tagged, no prices or ratings). While confirming the live pages I read a product page line by line
+and found the audit record still printed there — so I checked why the gate allowed it, and it had not
+allowed it so much as never asked.
+
+**FLG-064.** `scripts/check_site.py` printed its verdict and `sys.exit(1)` mid-file. Every rule
+appended below that point — the reader-voice rules, the verification "every row links to a source"
+rule, the `findability.txt` coverage rule, the provenance-field checks — ran after the verdict had
+been written and could not change the exit code. They were green because unread, which is worse than
+absent: three sessions cited them as enforcement in their own records. The report block is now the
+last thing the script does.
+
+The first honest run reported **97 problems**, all real, all now fixed in the generator rather than
+by loosening a rule:
+
+| Symptom | Root cause | Fix |
+|---|---|---|
+| 44 register rows with no source link on `verification.html` | three tables had no link column, while the page's prose promised one | Source / Read against / Record columns, derived from the data (`FLG-065`) |
+| 10 audit artefacts on the five product pages | the template emitted both the internal `intent_table()` and the reader-facing `ledger_block()` | audit copy no longer rendered; the function stays for internal surfaces, with a test that it still matches the register (`FLG-066`) |
+| 43 `findability.txt` mismatches | the rule tested `f"{BASE}{page}"` with an absolute path, so it could never match; the file itself was complete | compare the repo-relative path; confirmed all 43 pages are listed |
+
+Post-fix state: `check_site.py` → **43 pages, 5 product records, 63 flags, 22 sources — ALL CHECKS
+PASS** with every rule reachable; `python3 -m unittest discover -s tests` → **22 OK** (two new
+`BuyerPageVoiceTests`: no audit heading or register code on a buyer page, and each of the six
+provenance fields present exactly once); `node tests/test_collector.js` → PASS; two consecutive builds
+byte-identical.
+
+**Hand-off note for whoever takes `check_site.py` next:** make the report a function called from the
+bottom of the file, so a rule cannot be appended into dead code again.
