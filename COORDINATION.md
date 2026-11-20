@@ -21,6 +21,7 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-10 | Rebuild product data from verified listings; add scripts/build_content.py (generated tables); fix compare column shift; remove unverified 'Verified' labels; fix S01/S02 URLs; extend check_site.py to catch stale values; re-check P-03 specs; reconcile flags (new IDs FLG-017+) | done | 937876a6 | data/products.json, data/sources.json, data/flags.json (appends only), scripts/build_content.py, scripts/check_site.py, generated HTML (products/*, compare, index, category, guides, sources, flagged, executive-summary), EXECUTIVE-SUMMARY.md, feed.xml |
 | T-11 | Publication styling + decision-support improvements | done | 4bbf49bb | assets/style.css, assets/illustrations/*.svg, suggestions.html, questions.html, search.html, COORDINATION.md |
 | T-12 | Final integrate original illustrations in generated product cards | done | 4bbf49bb | scripts/build_content.py, generated product-card pages (index, categories, guides), compare.html, COORDINATION.md |
+| T-21 | Line-by-line repo review + live re-verification of registers; buyer-first polish pass; final integration (gates, PR, merge, Pages) | in progress | ca4af934 | COORDINATION.md, EXECUTIVE-SUMMARY.md, data/* (append-only), scripts/build_site.py, scripts/check_site.py, generated HTML (via generator only) |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -773,3 +774,12 @@ Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`0b509ab`, pr
 - `python3 -B scripts/check_site.py`: `checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`.
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
 - `node tests/test_collector.js`: `ALL JS COLLECTOR AND CLIENT TESTS PASS`.
+
+---
+
+## Session `arena/ca4af934-affil2` — claim (2026-11-20, `active`)
+
+- **Claim:** T-21 (see task board). Session ID `ca4af934`. Branch `arena/ca4af934-affil2` (platform-bound: this session may only commit to this branch, so the per-task branch convention is satisfied by this single dedicated branch).
+- **Scope (non-overlapping):** COORDINATION.md (this record), EXECUTIVE-SUMMARY.md, data/flags.json + data/sources.json (append-only), scripts/build_site.py, scripts/check_site.py, and generated HTML produced by the generator only. Product/source registers are consumed read-only except for append-only flags and source rows. Owner-gated items (FLG-001/002/003/004/010/028/033) untouched.
+- **Open PRs from other sessions (not touched):** #28 (`59ada9df`), #29 (`bba2deed`), #34 (`82c875a9`), #35 (`36170d15`). Per protocol this session will not merge, close, or edit another session's claimed work; they are listed for the owner on the Flagged for Review page.
+- **Planned work:** (1) line-by-line repo review and independent live re-verification of product/policy registers against official sources, with source links for manual review and append-only flags for any drift; (2) buyer-first polish in the generator (shop voice, disclosure above the fold everywhere, question-shaped guides surfaced, Decision Center, sponsored-link marking, product-intent record presentation, five-event measurement surface, compliance gate in the publishing workflow); (3) full gate + tests, PR to main, merge, Pages verification, completion record here.
