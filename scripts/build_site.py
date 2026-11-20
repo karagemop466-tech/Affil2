@@ -763,15 +763,6 @@ def build_home():
       change; the date is printed on each product page so you can judge.</p></details>
   </div>
 </section>
-
-<section class="panel">
-  <h2>Working on this site?</h2>
-  <p>Every internal record is reachable from the footer of every page: the
-    <a href="suggestions.html">Decision Center</a> where proposals are ranked before anything is
-    built, the <a href="questions.html">Open Questions</a> register, the
-    <a href="flagged.html">Flagged for Review</a> page, and the
-    <a href="sources.html">source register</a>.</p>
-</section>
 """
     ld = [{"@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": BASE,
            "publisher": dict(publisher_ld(), **{"@context": "https://schema.org"})},
@@ -1533,9 +1524,21 @@ def build_verification():
     corr = "".join(
         f'<tr><th scope="row">{esc(c["id"])}</th><td>{esc(c["what"])}</td><td>{esc(c["action"])}</td></tr>'
         for c in V["corrections"])
+    if V.get("rechecks"):
+        rc_rows = "".join(
+            f'<tr><th scope="row">{esc(r["id"])}</th><td>{esc(r["item"])}</td>'
+            f'<td class="src">{a(r["source_url"], "official source", "amazon.com" in r["source_url"])}</td>'
+            f'<td>{esc(r["result"])}</td></tr>' for r in V["rechecks"])
+        rechecks_block = f"""
+<h2>Re-verification addendum · session {esc(V.get("recheck_session", ""))} · {esc(V.get("recheck_date", ""))}</h2>
+<table><caption>Line-by-line re-verification performed in the final integration pass. Every row links to the official source. {esc(V.get("recheck_note", ""))}</caption>
+<thead><tr><th scope="col">ID</th><th scope="col">What was checked</th><th scope="col">Official source</th><th scope="col">Result</th></tr></thead>
+<tbody>{rc_rows}</tbody></table>"""
+    else:
+        rechecks_block = ""
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Verification Log", None)])}
-<p class="kicker">Reference · verified {esc(V["verified_on"])} · sessions 530c2e6c + 937876a6 + bba2deed</p>
+<p class="kicker">Reference · verified {esc(V["verified_on"])} · sessions 530c2e6c + 937876a6 + bba2deed + {esc(V.get("recheck_session", "578ca10d"))}</p>
 <h1>Verification Log</h1>
 <p class="lede">Every value in the product register, re-checked row by row against the official Amazon listing or an official policy page. This log is generated from <code>data/verification.json</code>. {esc(V["supersedes"])}</p>
 <div class="panel"><h2>Method legend</h2><ul class="tight">{legend}</ul>
@@ -1549,6 +1552,7 @@ def build_verification():
 <table><caption>Register corrections (C-IDs). Findings that survived as open contradictions are on the <a href="flagged.html">Flagged for Review</a> page.</caption>
 <thead><tr><th scope="col">ID</th><th scope="col">What was wrong</th><th scope="col">Action taken</th></tr></thead>
 <tbody>{corr}</tbody></table>
+{rechecks_block}
 <div class="panel"><h2>What this log does not claim</h2>
 <p>Values marked <em>corroborated</em> were read from product-information mirrors of the listing's own spec table, not from the listing's Product details block itself (the fetch pass could not extract it reliably). The official listing link is in every table row for manual review. Independent sessions reached the same conclusions about the P-03 wattage, the P-03 temperature nuance and the P-05 warranty — those findings are canonical as FLG-017, FLG-018 and FLG-019.</p>
 <p><a class="btn ghost" href="flagged.html">See Flagged for Review</a> <a class="btn ghost" href="sources.html">See the source register</a> <a class="btn ghost" href="suggestions.html">Decision Center</a></p></div>
