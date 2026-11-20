@@ -512,6 +512,77 @@ for token in ("function send(", "exportEvents", "searchIndex", ".navtoggle",
     if token not in app_js:
         err(f"assets/app.js missing required capability: {token}")
 
+# ---------------------------------------------------------------- T-21 rules
+# 1. rel="sponsored" belongs on links we earn from, not on the documents we cite.
+for f in pages:
+    rel = str(f.relative_to(ROOT))
+    for m in re.finditer(r'<a\b[^>]*href="(https://[^"]+)"[^>]*>', f.read_text(encoding="utf-8")):
+        tag = m.group(0)
+        if "sponsored" in tag and "amazon.com/dp/" not in m.group(1):
+            err(f"{rel}: {m.group(1)} is marked rel=sponsored but is not a product listing we "
+                f"earn on; cite it with rel=noopener noreferrer instead")
+
+# 2. The stylesheet must parse: an unbalanced brace silently swallows the rules after it,
+#    which is exactly how the .hero classes lost their styling in the November layer.
+css_path = ROOT / "assets" / "style.css"
+css = css_path.read_text(encoding="utf-8")
+css_no_comments = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+if css_no_comments.count("{") != css_no_comments.count("}"):
+    err(f"assets/style.css: {css_no_comments.count('{')} opening braces vs "
+        f"{css_no_comments.count('}')} closing — a rule is unclosed and the CSS after it is dropped")
+for m in re.finditer(r"@media[^{]*\{", css_no_comments):
+    start = m.end()
+    depth, i = 1, start
+    while i < len(css_no_comments) and depth:
+        depth += {"{": 1, "}": -1}.get(css_no_comments[i], 0)
+        i += 1
+    if depth:
+        err("assets/style.css: an @media block is not closed")
+
+# 3. Every class the generator emits must exist in the stylesheet (or be JS-only state).
+js_only = {"open", "hit", "where"}  # added/removed by assets/app.js at runtime
+defined = set(re.findall(r"\.([a-zA-Z][\w-]*)", css_no_comments))
+emitted = set()
+for f in pages:
+    for cls in re.findall(r'class="([^"]+)"', f.read_text(encoding="utf-8")):
+        emitted.update(c for c in cls.split() if c)
+for cls in sorted(emitted - defined - js_only):
+    err(f"assets/style.css: class .{cls} is emitted by the generator but has no rule "
+        f"(the page will render unstyled)")
+
+# 4. No image may ship in the repo without a page or a script referencing it.
+asset_refs = "\n".join(pg.read_text(encoding="utf-8") for pg in pages)
+script_refs = "\n".join(sp.read_text(encoding="utf-8") for sp in (ROOT / "scripts").glob("*.py"))
+for img in sorted((ROOT / "assets").rglob("*.jpg")):
+    name = img.name
+    if name not in asset_refs and name not in script_refs:
+        err(f"{img.relative_to(ROOT)}: unreferenced image asset (duplicate or dead file)")
+
+# 5. Counts printed on the site must match the data that generates them.
+sug_html = (ROOT / "suggestions.html").read_text(encoding="utf-8")
+guide_count = len(re.findall(r'class="guidecard"', (ROOT / "guides.html").read_text(encoding="utf-8")))
+sm_items = len(ET.fromstring((ROOT / "sitemap.xml").read_text(encoding="utf-8")))
+feed_items = len(feed.findall("./channel/item")) if feed is not None else 0
+if feed_items != guide_count:
+    err(f"feed.xml carries {feed_items} items but guides.html lists {guide_count} guides")
+if re.search(r"\b[Tt]en guides\b", sug_html):
+    err("suggestions.html: SG-02 still says 'ten guides' after the guide count changed")
+if f"lists all {guide_count}" not in sug_html and f"all {guide_count}" not in sug_html:
+    err(f"suggestions.html: SG-02 does not state the live guide count ({guide_count})")
+
+# 6. Every guide must end on a product link, so a reader who is convinced can act.
+for g in (ROOT / "guides").glob("*.html"):
+    txt = g.read_text(encoding="utf-8")
+    if "flip-list" not in txt:
+        err(f"guides/{g.name}: no product line at the end of the guide")
+    elif "amazon.com/dp/" not in txt:
+        err(f"guides/{g.name}: product line carries no tagged listing link")
+
+# 7. The front page must offer a way in before it offers a category directory.
+home = (ROOT / "index.html").read_text(encoding="utf-8")
+if 'class="router"' not in home:
+    err("index.html: the answer-first router is missing")
+
 # ---------------------------------------------------------------- report
 print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
       f"{len(flags)} flags, {len(sources)} sources")

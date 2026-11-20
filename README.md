@@ -24,7 +24,7 @@ Live: https://karagemop466-tech.github.io/Affil2/
 
 ## Rebuild and check
 
-    python3 scripts/build_site.py                          # writes 33 pages, sitemap.xml, feed.xml, robots.txt
+    python3 scripts/build_site.py                          # writes every page, sitemap.xml, feed.xml, robots.txt
     python3 scripts/check_site.py                          # compliance and integrity gate; exits 1 on any problem
     python3 -m unittest discover -s tests -p "test_*.py" -v
     node tests/test_collector.js                           # collector server, Cloudflare function & client DOM tests

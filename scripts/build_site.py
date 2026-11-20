@@ -126,6 +126,30 @@ def plain(p):
 def slug_of(p):
     return f"products/{p['slug']}.html"
 
+def is_shoppable(url):
+    """True for a link that opens a product listing we earn on.
+
+    Policy documentation on affiliate-program.amazon.com and the link.amazon short links are
+    not shoppable destinations, so they are cited rather than marked as paid placements.
+    """
+    return "amazon.com/dp/" in url
+
+
+def cite(url, text=None):
+    """A link to the document a claim was checked against.
+
+    Policy, government and short-link citations are not paid placements, so they are not marked
+    sponsored; a link to an Amazon listing is, because we earn on those and Google's guidance
+    asks for rel="sponsored" on affiliate links.
+    """
+    label = esc(text) if text else esc(url)
+    rel = "sponsored nofollow" if is_shoppable(url) else "noopener noreferrer"
+    return f'<a href="{esc(url)}" rel="{rel}">{label}</a>'
+
+def cite_id(sid):
+    """Citation to a registered source by its register ID."""
+    return cite(source_url(sid), sid)
+
 def glyph(p, up=""):
     if p["cat"] == "Meat Thermometers":
         fname = "thermometer.svg"
@@ -168,6 +192,40 @@ def photo(key, up="", cls="", caption=True, eager=False, short=False):
             f'loading="{load}" decoding="async">{cap}</figure>')
 
 # --------------------------------------------------------------------------- shell
+
+# "Choose it if" — one buyer-facing line per product. Every figure in these lines already
+# appears in data/products.json with its own provenance row; nothing new is asserted here.
+CHOOSE_IF = {
+    "P-01": "two dishes have to land at the same time",
+    "P-02": "one appliance has to roast, toast and air-fry, and the counter is deep enough",
+    "P-03": "you cook one thing at a time and want the largest single basket",
+    "P-04": "you want a number in a second at the grill",
+    "P-05": "the cook needs to leave the room for hours",
+}
+
+
+def choose_if(p):
+    return CHOOSE_IF.get(p["id"], p["best_for"])
+
+
+def flip_strip(p, up, include_self=True):
+    """The product line a guide ends on: what it is for, the caveat, and one tagged button.
+
+    Deliberately short. A guide that has just answered a question should end on the product
+    that answers it, not on another essay.
+    """
+    fit = choose_if(p)
+    return f"""<li class="flip">
+  <div class="flip-body">
+    <p class="flip-k">{esc(p['cat'])} &middot; {esc(p['brand'])}</p>
+    <p class="flip-t"><a href="{up}{slug_of(p)}"><strong>{esc(p['headline'])}</strong></a></p>
+    <p class="flip-fit">Choose it if {esc(fit)}.</p>
+    <p class="flip-catch">The catch: {esc(p['tradeoff'])}</p>
+  </div>
+  <p class="flip-cta"><a class="btn" href="{aff(p)}" rel="sponsored nofollow"
+     data-outbound="{p['id']}" data-event="outbound_click">Check price<span class="btn-sub">paid link</span></a></p>
+</li>"""
+
 
 NAV = [
     ("air-fryers.html", "Air Fryers"),
@@ -471,13 +529,27 @@ def build_home():
   <div class="hero-art">{photo("hero", "", "hero-photo", caption=True, eager=True)}</div>
 </section>
 
+<section class="router" aria-label="Start with your situation">
+  <p class="kicker">Start where you actually are</p>
+  <div class="router-grid">
+    <a href="air-fryers.html"><span class="router-n">01</span><strong>I am replacing a basket fryer</strong>
+      <span>Two drawers, one big basket, or a countertop oven that air-fries.</span></a>
+    <a href="guides/capacity-checklist.html"><span class="router-n">02</span><strong>I do not know what size I need</strong>
+      <span>Quarts are not servings. Work out the batches first.</span></a>
+    <a href="meat-thermometers.html"><span class="router-n">03</span><strong>I want to stop guessing doneness</strong>
+      <span>Instant-read at the grill, or walk-away probes for long cooks.</span></a>
+    <a href="compare.html"><span class="router-n">04</span><strong>Show me all five side by side</strong>
+      <span>Same rows, same sources, prices and ratings deliberately absent.</span></a>
+  </div>
+</section>
+
 <section class="dept">
   <p class="kicker">The shop directory</p>
   <h2>Shop by category</h2>
   <div class="aisles">
-    <a href="air-fryers.html">{photo("air", "", "aisle-photo", caption=True, short=True)}
+    <a href="air-fryers.html">{photo("air", "", "", caption=True, short=True)}
       <span>01 / Appliances<strong>Air fryers &rarr;</strong></span></a>
-    <a href="meat-thermometers.html">{photo("thermo", "", "aisle-photo", caption=True, short=True)}
+    <a href="meat-thermometers.html">{photo("thermo", "", "", caption=True, short=True)}
       <span>02 / Tools<strong>Meat thermometers &rarr;</strong></span></a>
   </div>
 </section>
@@ -666,7 +738,7 @@ def build_product(p):
     <h1>{esc(p['headline'])}</h1>
     <p class="lede">{esc(p['blurb'])}</p>
   </div>
-  <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../", "pdp-photo")}</div>
+  <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../")}</div>
 </div>
 <div class="pdp-buy">
   <div>
@@ -1191,10 +1263,10 @@ def build_guides_index():
 
 def build_guide(g):
     rel = [BY_ID[x] for x in g["products"]]
-    secs = "".join(f"<h2>{esc(h)}</h2><p>{t}</p>" for h, t in g["sections"])
-    items = "".join(
-        f'<li><a href="../{slug_of(p)}">{esc(p["brand"])} — {esc(p["headline"])}</a>'
-        f'<span>{esc(p["best_for"])}</span></li>' for p in rel)
+    secs = "".join(
+        f'<h2><span class="step">{n:02d}</span>{esc(h)}</h2><p>{t}</p>'
+        for n, (h, t) in enumerate(g["sections"], 1))
+    items = "".join(flip_strip(p, "../") for p in rel)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (g['title'][:40] + "…", None)], "../")}
 <p class="kicker">{esc(g['kicker'])} · verified {TODAY}</p>
@@ -1206,8 +1278,10 @@ def build_guide(g):
 </div>
 {secs}
 {g.get("extra", "")}
-<h2>The products this guide refers to</h2>
-<ul class="linklist">{items}</ul>
+<h2>If this guide decided it for you</h2>
+<p class="muted">One line each on why you would pick it, and the caveat that comes with it. Every
+  figure behind these lines is in the specification table on the product page, with its source.</p>
+<ul class="flip-list">{items}</ul>
 <p class="small">Every specification quoted above is from the official listing, dated {TODAY}. See the
   <a href="../sources.html">source register</a> for links, and the
   <a href="../flagged.html">Flagged for Review</a> page for the contradictions.</p>
@@ -1236,7 +1310,8 @@ def build_verification():
     import json as _json
 
     def a(href, text, sponsored=False):
-        rel = ' rel="sponsored nofollow"' if sponsored or "amazon.com" in href else ""
+        rel = (' rel="sponsored nofollow"' if is_shoppable(href)
+               else ' rel="noopener noreferrer"')
         return f'<a href="{href}"{rel}>{esc(text)}</a>'
 
     V = _json.loads((DATA / "verification.json").read_text())
@@ -1375,12 +1450,13 @@ SUGGESTIONS = [
          impact="High — reader trust and time on page", effort="Done",
          status="Shipped", verify="Visible on index.html: hero, three featured products, one nav group."),
     dict(id="SG-02", title="Publish question-shaped guides, then measure arrivals",
-         what="Ten guides built from real buying decisions, each added to the sitemap and the RSS "
-              "feed, each ending in a verdict.",
+         what=f"{len(GUIDES)} guides built from real buying decisions, each added to the sitemap "
+              "and the RSS feed, each ending in a verdict and on the product it argues for.",
          why="Long-tail question queries are how a small site earns its first organic traffic. A "
              "guide that answers one question beats a listicle.",
          impact="High — organic traffic", effort="Done",
-         status="Shipped", verify="guides.html lists ten; sitemap.xml and feed.xml include all ten."),
+         status="Shipped",
+         verify=f"guides.html lists all {len(GUIDES)}; sitemap.xml and feed.xml carry the same set."),
     dict(id="SG-03", title="Measure clicks before optimising anything",
          what="Five defined events (data/events.json), counted locally with no cookies and no third "
               "party, exportable to CSV, with a self-hosted collector ready in analytics/server.js.",
@@ -2096,7 +2172,7 @@ def build_flagged():
         for sid in f.get("links", []):
             url = source_url(sid)
             if url:
-                links.append(f'<a href="{url}" rel="sponsored nofollow">{esc(sid)}</a>')
+                links.append(cite_id(sid))
         return " ".join(links) or "&mdash;"
 
     order = {"conflict": 0, "policy": 1, "open": 2, "pending-test": 3, "unverified": 4,
@@ -2159,8 +2235,7 @@ def changelog_rows():
         if f.get("severity") != "corrected":
             continue
         links = " ".join(
-            f'<a href="{source_url(sid)}" rel="sponsored nofollow">{esc(sid)}</a>'
-            for sid in f.get("links", []) if source_url(sid))
+            cite_id(sid) for sid in f.get("links", []) if source_url(sid))
         rows += (f'<tr><td class="nowrap">{TODAY}</td><td class="nowrap"><strong>{f["id"]}</strong></td>'
                  f'<td>{esc(f["title"])}<br><span class="small">{esc(f["detail"])}</span></td>'
                  f'<td class="src">{links or "&mdash;"}</td></tr>')
@@ -2169,9 +2244,12 @@ def changelog_rows():
 
 # ---- sources
 def build_sources():
+    def rel_of(url):
+        # A listing we earn on is marked sponsored; a policy or government page we cite is not.
+        return "sponsored nofollow" if is_shoppable(url) else "noopener noreferrer"
     rows = "".join(
         f"""<tr><td class="nowrap"><strong>{s['id']}</strong></td>
-  <td>{esc(s['name'])}<br><a href="{esc(s['url'])}" rel="sponsored nofollow" class="small">{esc(s['url'])}</a></td>
+  <td>{esc(s['name'])}<br><a href="{esc(s['url'])}" rel="{rel_of(s['url'])}" class="small">{esc(s['url'])}</a></td>
   <td class="quote">{esc(s['used_for'])}</td>
   <td class="nowrap">{esc(s['checked'])}</td></tr>""" for s in SOURCES)
     body = f"""
@@ -2590,8 +2668,8 @@ def build_platform():
         submitted products.</td>
       <td>Live automated catalog polling is blocked until the Associates account passes final
         review and qualified-sales thresholds for the Creators API (PA-API 5 returns HTTP 403).</td>
-      <td><a href="{source_url('S20')}" rel="sponsored nofollow">S20</a>,
-        <a href="{source_url('S21')}" rel="sponsored nofollow">S21</a>, FLG-029</td>
+      <td>{cite_id('S20')},
+        {cite_id('S21')}, FLG-029</td>
     </tr>
     <tr>
       <td><strong>2. Market, pricing, review &amp; commission analysis</strong></td>
@@ -2601,7 +2679,7 @@ def build_platform():
       <td>Prices and ratings require Amazon-served links or Creators API access (Program Policies
         &sect;2(b), &sect;6(t), &sect;6(y)); commission schedules require signed-in Associates Central
         access.</td>
-      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>, FLG-005, Q-11, Q-13</td>
+      <td>{cite_id('S02')}, FLG-005, Q-11, Q-13</td>
     </tr>
     <tr>
       <td><strong>3. SEO-optimized content &amp; comparison generation</strong></td>
@@ -2612,7 +2690,7 @@ def build_platform():
       <td>Query-driven draft topics require Search Console verification (SG-10, SG-29, Q-20). Special
         Links and Program Content may not be used to train or fine-tune ML/LLM models without
         express prior written approval.</td>
-      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a> &sect;5 &amp; IP &sect;1/&sect;2(e),
+      <td>{cite_id('S02')} &sect;5 &amp; IP &sect;1/&sect;2(e),
         SG-02, SG-32</td>
     </tr>
     <tr>
@@ -2623,8 +2701,8 @@ def build_platform():
       <td>Deceptive cloaking is prohibited (Program Policies &sect;6(v)) and link shorteners must not
         obscure the Amazon destination (&sect;6(w)). Submitted <code>link.amazon</code> compliance and
         live account click tests remain pending.</td>
-      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>,
-        <a href="{source_url('S04')}" rel="sponsored nofollow">S04</a>, FLG-003, FLG-004, FLG-027</td>
+      <td>{cite_id('S02')},
+        {cite_id('S04')}, FLG-003, FLG-004, FLG-027</td>
     </tr>
     <tr>
       <td><strong>5. Privacy-preserving click &amp; conversion measurement</strong></td>
@@ -2634,7 +2712,7 @@ def build_platform():
       <td>GitHub Pages hosts static assets only; cross-visitor collection waits until the owner
         deploys the Node/Cloudflare endpoint and sets <code>sn-collect-endpoint</code>. Conversion
         orders still require official Associates reports.</td>
-      <td><a href="{source_url('S03')}" rel="sponsored nofollow">S03</a>, FLG-010, SG-25, Q-08</td>
+      <td>{cite_id('S03')}, FLG-010, SG-25, Q-08</td>
     </tr>
     <tr>
       <td><strong>6. Performance optimization &amp; campaign scaling</strong></td>
@@ -2651,8 +2729,8 @@ def build_platform():
         compliance checks running on every PR and push to <code>main</code>.</td>
       <td>Maintains hard fail rules on above-the-fold disclosures, sponsored link attributes, banned
         price/rating patterns, blank-field flags, table column symmetry, and XML/JSON-LD validity.</td>
-      <td><a href="{source_url('S01')}" rel="sponsored nofollow">S01</a>,
-        <a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>, SG-04, SG-05, SG-12</td>
+      <td>{cite_id('S01')},
+        {cite_id('S02')}, SG-04, SG-05, SG-12</td>
     </tr>
   </tbody>
 </table>
