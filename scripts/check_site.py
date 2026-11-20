@@ -69,6 +69,41 @@ class TableColumnChecker(HTMLParser):
             self.stack.pop()
 
 
+class TableRowSourcing(HTMLParser):
+    """Every <tbody> claim row must carry an <a href> source link or an explicit
+    'unverified' marker. A row that cites nothing and marks nothing fails the build."""
+
+    def __init__(self, rel):
+        super().__init__()
+        self.rel = rel
+        self.in_tbody = False
+        self.row = None
+        self.row_idx = 0
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "tbody":
+            self.in_tbody = True
+            self.row_idx = 0
+        elif self.in_tbody and tag == "tr":
+            self.row_idx += 1
+            self.row = {"anchor": False, "marker": False}
+        elif self.row is not None:
+            if tag == "a":
+                self.row["anchor"] = True
+            if "unverified" in (a.get("class") or ""):
+                self.row["marker"] = True
+
+    def handle_endtag(self, tag):
+        if tag == "tbody":
+            self.in_tbody = False
+        elif tag == "tr" and self.row is not None and self.in_tbody:
+            if not self.row["anchor"] and not self.row["marker"]:
+                err(f"{self.rel}: tbody row {self.row_idx} has no source link and no "
+                    f"unverified marker — every claim row must cite an official source")
+            self.row = None
+
+
 pages = sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts)
 page_rels = [str(p.relative_to(ROOT)) for p in pages]
 
@@ -168,6 +203,16 @@ for p in pages:
 
     # --- table thead/tbody column symmetry
     TableColumnChecker(rel).feed(html)
+
+    # --- every tbody claim row cites a source or carries an explicit unverified marker
+    TableRowSourcing(rel).feed(html)
+
+    # --- every www.amazon.com anchor carries the Associates tag so every clickable product
+    #     link is a Special Link (link.amazon evidence links and other hosts are exempt)
+    for m in re.finditer(r'<a\b[^>]*href="(https://www\.amazon\.com[^"]*)"[^>]*>', html):
+        if "tag=shopnow047c-20" not in m.group(1):
+            err(f"{rel}: amazon.com anchor missing the Associates tag (shopnow047c-20) — "
+                f"{m.group(1)[:70]}")
 
     # --- unverified leaked prose check (26.5 lb was absent from B09B7SB46R)
     if re.search(r"\b26\.5\s*(?:lb|pound)", html, re.I):

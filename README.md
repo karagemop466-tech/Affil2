@@ -59,8 +59,11 @@ verification shows an inaccuracy or newly confirmed value.
 ## Rules the gate enforces
 
 - The Amazon Associates statement appears twice on every page, the first time above `<main>`.
-- Every `amazon.com` link carries `rel="sponsored nofollow"`; every outbound product link carries the
-  tracking ID (`shopnow047c-20`).
+- Every `amazon.com` link carries `rel="sponsored nofollow"`; every `amazon.com` anchor carries the
+  tracking ID (`shopnow047c-20`) so every clickable Amazon link is a Special Link (plain official
+  URLs stay unmodified as visible citation text; `link.amazon` evidence links are exempt, FLG-003).
+- Every `<tbody>` claim row cites a source link or carries an explicit `unverified` marker — no
+  anonymous rows.
 - No `$` amount, star rating, review count, cross-row placeholder, or unverified `26.5 lb` claim anywhere.
 - No broken internal links, no missing assets, no orphaned SVG illustrations, no root-relative links.
 - Every generated photo (`assets/photos/`) has an explicit editorial illustration caption, alt text, and intrinsic dimensions.
