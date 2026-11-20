@@ -991,3 +991,74 @@ Requests logged for owners (not applied in this session):
 - Baseline at claim time: `build_site.py` + `check_site.py` pass on 33 pages; Python (3) and Node collector tests pass; feed/sitemap XML parse; Pages `main` built with green Verify site + deploy runs.
 - Open-PR state at claim time: #16/#28/#34/#35 closed as superseded/integrated (session cb967199, PR #41); #29 merged (PR #38); **#46 open but CONFLICTING** (session 578ca10d, T-22) — this session lands it.
 - No other session's claim is taken over; PR #46's branch content is merged, not rewritten.
+## Session `578ca10d` — final integration pass: line-by-line re-verification, verification-log addendum, PR + Pages
+
+Branch `arena/578ca10d-affil2`, rebased onto `origin/main` (`2de7bdd`, after PRs #38–#40) before opening the PR. This session is the **final integration pass**: it re-verifies the combined data line by line, confirms the site builds with no broken links, and publishes the result.
+
+### Claim (2026-11-20, `active`)
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-22 | Final integration: line-by-line re-verification + verification-log addendum + PR/merge/Pages record (renumbered from T-21 after c449a2ad claimed T-21 for a requirements-traceability register; see conflict log below) | done | 578ca10d | `data/verification.json` (additive), `scripts/build_site.py` (generator), `verification.html` (regenerated), `COORDINATION.md` |
+
+Scope note: `data/products.json`, `data/sources.json`, `data/flags.json` and `data/editorial.json` are **read-only** for this session. No product value, source record or flag was changed — the re-verification found no inaccuracies, so the register stands. Open PRs #16 / #28 / #34 / #35 (other sessions) were not touched or duplicated.
+
+### Task-ID collision and conflict resolution (logged per protocol)
+
+- 2026-11-20 `578ca10d`: chose T-21 for this final-integration pass before checking the board for
+  later numbers. While this session worked, session `c449a2ad` claimed T-21 for a requirements-
+  traceability register (`REQUIREMENTS-TRACE.md`) and merged it via PRs #42/#43. The two T-21
+  definitions do not touch the same files: c449a2ad edited `REQUIREMENTS-TRACE.md` + `COORDINATION.md`
+  only; this session edits `data/verification.json`, `scripts/build_site.py`, `verification.html`
+  and `COORDINATION.md`.
+- Resolution: c449a2ad's record and work are kept intact; this session's task was renumbered to
+  **T-22**. The `git pull --rebase` conflict in `COORDINATION.md` was resolved by taking main's
+  version of the file (preserving the cb967199 and c449a2ad records) and re-appending this session's
+  record unchanged except for the renumbering. No other session's work was discarded.
+
+### Independent line-by-line re-verification (2026-11-20, official sources only)
+
+| Item | Official source checked | Result |
+|------|------------------------|--------|
+| P-01 B0CDY277D3 | https://www.amazon.com/dp/B0CDY277D3 | Page title matches the register exactly; breadcrumb Home & Kitchen › Kitchen & Dining › Small Appliances › Fryers › Air Fryers. |
+| P-02 B09B7SB46R | https://www.amazon.com/dp/B09B7SB46R | Title matches the register exactly, incl. 24 One-Touch Preset Options (FLG-021 as published). |
+| P-03 B08DKYBTPH | https://www.amazon.com/dp/B08DKYBTPH | Title matches the register exactly, incl. 450 °F Hi-Fry Option (FLG-018 as published). |
+| P-04 B0DHZTCNR5 | https://www.amazon.com/dp/B0DHZTCNR5 | Title matches the register exactly; breadcrumb … › Thermometers & Timers › Meat. |
+| P-05 B0DZFD6R9Z | https://www.amazon.com/dp/B0DZFD6R9Z | Title matches the register exactly (reached via short-link resolution); breadcrumb … › Thermometers & Timers › Meat. |
+| Short link B04G1MEwY (P-01) | https://link.amazon/B04G1MEwY | 2 attempts → Amazon homepage both times. Intermittent redirect instability (FLG-011); confirmed target B0CDY277D3 stands. Not claimed invalid (FLG-003). |
+| Short link B02NbDxp3 (P-02) | https://link.amazon/B02NbDxp3 | 2 attempts → homepage both times. FLG-011; target B09B7SB46R stands. Not claimed invalid. |
+| Short link B00hJ57DV (P-03) | https://link.amazon/B00hJ57DV | 2 attempts → homepage both times. FLG-011; target B08DKYBTPH stands. Not claimed invalid. |
+| Short link B0c8moW59 (P-04) | https://link.amazon/B0c8moW59 | 2 attempts → homepage both times. Consistent with FLG-011 / FLG-012; the earlier resolving fetch (B0DHZTCNR5) stands. Not claimed invalid. |
+| Short link B0f3GKalj (P-05) | https://link.amazon/B0f3GKalj | Resolved cleanly to /dp/B0DZFD6R9Z on the first attempt — confirms the observed target. |
+| S03 FTC Endorsement Guides FAQ | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Live; material connection must be disclosed clearly and conspicuously. |
+| S04 Google qualify outbound links | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | Live (last updated 2025-12-10); rel="sponsored" for paid links; multiple rel values allowed. |
+| S22 USDA FSIS safe temperature chart | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Live (last updated Apr 14, 2025); all values match `data/usda-temperatures.json`. |
+| S01 Associates Operating Agreement | https://affiliate-program.amazon.com/help/operating/agreement | Live; "Updated: October 15, 2025". §5 is the basis of the site's disclosure statement. |
+| S02 Associates Program Policies | https://affiliate-program.amazon.com/help/operating/policies | Live; "Updated: April 14, 2026". Basis of the no-price / no-ratings gate rules. |
+| Live deployed pages | https://karagemop466-tech.github.io/Affil2/ | index.html, a product page and feed.xml fetched live — disclosure above the fold, sponsored tagged links, full 11-item feed. No broken links found on the checked pages. |
+
+**No register corrections were required** — every title and policy claim matched the published register. The only behavioral observation is the short-link redirect instability, which corroborates (does not contradict) the existing FLG-011 / FLG-012 records; no claim that the short links are invalid (FLG-003 stands).
+
+### What changed (additive only)
+
+- `data/verification.json`: new top-level `rechecks` array (R-01…R-16), one row per check above, each with its official source link; new `recheck_session` / `recheck_date` / `recheck_note` fields. **No existing row, value or status was modified** — checked field by field against the pre-edit file.
+- `scripts/build_site.py`: `build_verification()` now renders a "Re-verification addendum" table (ID / what was checked / official source / result) below the corrections table, and the page kicker lists this session. The addendum block is skipped if `rechecks` is absent, so the generator remains backward-compatible.
+- `verification.html`: regenerated by the generator (no hand-editing).
+- `COORDINATION.md`: this record.
+
+### Gate and tests
+
+- `python3 -B scripts/build_site.py` → `built 36 pages`, idempotent across consecutive runs.
+- `python3 -B scripts/check_site.py` → `checked 36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`.
+- `python3 -B -m unittest discover -s tests -p "test_*.py"` → 3 tests OK.
+- `node tests/test_collector.js` → ALL JS COLLECTOR AND CLIENT TESTS PASS.
+- `git diff --check` → clean.
+
+### Still owner-gated (unchanged; none blocks publication)
+
+FLG-001 intended ASINs · FLG-002 tracking-ID activity · FLG-003 short-link compliance status · FLG-004 Special Link test · FLG-010 analytics endpoint · FLG-019 commission schedule · FLG-028 Search Console · FLG-032 research data · FLG-033 named author. All are published on `flagged.html` with their source links.
+
+### T-22 release record (session 578ca10d)
+
+- PR: (recorded after merge below)
+- GitHub Pages: (recorded after merge below)
