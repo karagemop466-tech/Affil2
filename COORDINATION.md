@@ -922,3 +922,22 @@ Open-PR reconciliation (closes executed after this PR merges):
 
 Account-gated open items (FLG-001/002/003/004/010/028/033, SG-07/SG-25/SG-29/SG-31, Q-01..Q-04) remain
 untouched and unguessed.
+
+
+---
+
+## Session `93894704` — T-21 claim (2026-11-20, `active`)
+
+Branch `arena/93894704-affil2`. Base `4025ecc` (main, after PR #38). Session ID `93894704`.
+
+**Task board row (appended, no existing row edited):**
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-21 | Reader-facing de-audit pass (flag codes off buyer pages, computed read times, role-based bylines), two new source-backed guides, Decision Center build-prompt assembly, live re-verification | in progress | 93894704 | scripts/build_site.py, scripts/check_site.py, assets/app.js, assets/style.css, data/flags.json (append-only), generated HTML (index, shop, categories, compare, guides/*, products/*, suggestions, about, how-we-choose, verification, sources, flagged), sitemap.xml, feed.xml, tests/test_site.py, tests/test_collector.js, COORDINATION.md, README.md, EXECUTIVE-SUMMARY.md |
+
+**Numbering note:** PR #28 (session `59ada9df`, open, unmerged) carries the label "T-13..T-20". This session takes **T-21** so no claim collides. Nothing on PR #28, #34 or #35 is merged, duplicated or overwritten by this session; those branches keep their own open scope.
+
+**Scope discipline:** `data/products.json`, `data/sources.json` and `data/reverification-*.json` are read-only unless live verification proves a value wrong; `data/flags.json` is append-only (FLG-041+). All page edits go through the generator — no hand-edited HTML (the rule session `9397cc0c` recorded after losing an edit to regeneration).
+
+**Deliberately NOT touching:** `analytics/`, `functions/`, `data/events.json`, `measurement.html` (owner-gated FLG-010/Q-08, and PR #35's collector scope), `design-brief.html` (SG-17 surface), `campaign-ledger.html`, `compare.html` pair-compare logic beyond the de-audit render path.
