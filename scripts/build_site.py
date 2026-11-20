@@ -877,8 +877,8 @@ GUIDES = [
             ("Think about how you load it, and how you clean it", """Pulling a drawer out towards you is
             one movement. Opening two doors, sliding a rack out, and lifting a tray is several. The
             basket units are lighter and easier to move. An appliance this size is realistically going
-            to stay where you put it &mdash; but note that neither listing we read states a weight, so
-            we print none (FLG-022). If you clean in the sink, a removable
+            to stay where you put it &mdash; but note that none of the three listings states a weight,
+            so we print none (FLG-022). If you clean in the sink, a removable
             nonstick basket is simpler than a stainless cavity and racks."""),
             ("Where each one wins", """Choose the dual-basket unit if you routinely cook a main and a
             side together and want them to finish together. Choose the single 8-quart basket if you

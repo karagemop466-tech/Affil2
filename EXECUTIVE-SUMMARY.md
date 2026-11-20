@@ -47,12 +47,34 @@ each observed ASIN is a dated snapshot, not a permanent mapping.
 | FLG-025 | RSS feed was not well-formed XML | parses, 8 items, checked by the gate |
 | FLG-026 | two Associates source URLs were dead | current policy pages, text checked |
 
+## Register fields re-read on 2026-11-20
+
+An earlier pass had marked several fields unverified because they were missing from a partial
+excerpt. Re-reading each official listing found them stated in the product-information tables, so they
+are now published with the section named as their source (FLG-040):
+
+| Product | Field | Value now published | Where on the listing |
+|---|---|---|---|
+| P-02 Emeril 26QT | Model | 4-00675-02X-VN | Item details: Model Number / Part Number |
+| P-02 Emeril 26QT | Temperature | 75–500 °F | Features & Specs: Min 75 °F, Max 500 °F |
+| P-02 Emeril 26QT | Power | 120 V / 1700 W | Features & Specs: Output Wattage, Wattage, Voltage |
+| P-04 ThermoMaven | Model | HT07 | Item details: Model Name / Model / Part Number |
+| P-04 ThermoMaven | Upper temperature | 572 °F | Features & Specs: Upper Temperature Range |
+| P-05 CHEF iQ Sense | Model | CQ60-3C-Z1-E | Item details: Model / Part Number |
+| P-05 CHEF iQ Sense | Probe length | 4.75 in | Immersion Depth; Measurements: Item Length |
+
+Two things came out of the same pass and are published rather than quietly fixed. Three guides had
+stated weights (26.5 lb, 12.8 lb, "around 13 pounds") that no listing carries; those figures were
+removed and the removal is logged (FLG-039). And the CHEF iQ listing now shows a two-year assurance in
+one field and a 3 Year warranty description in another, so both are printed (FLG-038).
+
 ## Listing conflicts a buyer should see
 
 | Flag | Product | Contradiction |
 |------|---------|---------------|
 | FLG-008 | CHEF iQ Sense | 50 hours battery in About this item, 70 hours in Product Description |
-| FLG-009 | Emeril 26 QT | model number appears in more than one form |
+| FLG-009 | Emeril 26 QT | model number appears in more than one form; the item-details field now reads 4-00675-02X-VN |
+| FLG-038 | CHEF iQ Sense | two-year assurance in About this item, 3 Year warranty description in Item details |
 | FLG-018 | Chefman 8 Qt | 200–400 °F in About this item, 450 °F Hi-Fry in the title |
 | FLG-021 | Emeril 26 QT | 24 presets in the title, 25 in About this item |
 | FLG-034 | Chefman 6 Qt | 6 quarts in the title, 6 liters in the capacity field |
@@ -63,8 +85,8 @@ each observed ASIN is a dated snapshot, not a permanent mapping.
 Intended ASIN per product (FLG-001) · whether the tracking ID is live (FLG-002) · whether the
 short-link format is permitted for this placement (FLG-003) · the one-per-product Special Link test
 (FLG-004) · NIST/NSF and cETL certification beyond the listing's own wording (FLG-035) · any
-hands-on experience (FLG-032) · a named author (FLG-033) · weights and several model numbers that
-were not in the fetched listing text (FLG-022).
+hands-on experience (FLG-032) · a named author (FLG-033) · product weights, which no listing we read
+states, so none is printed for any of the five (FLG-022).
 
 ## Decisions that change the numbers
 
