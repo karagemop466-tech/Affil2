@@ -19,7 +19,7 @@ EXTRA_CAPACITY = """<table><caption>An editorial planning grid &#8212; not a pro
 <tr><th scope="row">4&#8211;6</th><td>2&#8211;3 dishes</td><td>Dual-basket units shine: main + side on synced timers</td></tr>
 <tr><th scope="row">6&#8211;10</th><td>3&#8211;4 dishes, or a roast</td><td>Oven-style capacity, or dual baskets plus your wall oven</td></tr>
 <tr><th scope="row">10+</th><td>Appetiser parade</td><td>Station cooking: one appliance crisps all evening in waves</td></tr></tbody></table>
-<p><img src="../assets/img/guide-holiday-hosting.jpg" alt="Platter of crisp appetisers beside a countertop air fryer in warm holiday light" loading="lazy"></p>
+__PHOTO_HOLIDAY__
 <h2>The pre-holiday checklist</h2>
 <ul class="tight">
 <li>Measure your counter <em>with clearance</em> &#8212; French doors swing, baskets slide out, vents need air.</li>
@@ -37,7 +37,7 @@ EXTRA_ROAST = USDA_TABLE + """
 <li>For roasts: aim for the geometric centre of the thickest muscle.</li>
 <li>Trust the number over the clock &#8212; ovens lie, roasts vary, and the USDA chart is the standard, not the recipe.</li>
 </ul>
-<p><img src="../assets/img/guide-roast.jpg" alt="A holiday roast with a wireless thermometer probe inserted, resting on a carving board" loading="lazy"></p>
+__PHOTO_ROAST__
 <div class="panel"><p class="kicker">Season</p><p>Part of the Holiday 2026 cluster &#8212; the other half is <a href="holiday-capacity.html">the capacity worksheet</a>. The listings referenced above carry open contradictions (battery claims, warranty wording) that are published on the <a href="../flagged.html">Flagged for Review</a> page rather than smoothed over.</p></div>"""
 
 GUIDES = [

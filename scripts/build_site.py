@@ -110,8 +110,34 @@ DISCLOSURE = ("As an Amazon Associate I earn from qualifying purchases. Links ma
 
 # --------------------------------------------------------------------------- helpers
 
+_NAMED = {"&mdash;": "\u2014", "&ndash;": "\u2013", "&rsquo;": "\u2019", "&lsquo;": "\u2018",
+          "&ldquo;": "\u201c", "&rdquo;": "\u201d", "&hellip;": "\u2026", "&nbsp;": "\u00a0",
+          "&times;": "\u00d7", "&plusmn;": "\u00b1", "&deg;": "\u00b0", "&middot;": "\u00b7",
+          "&rarr;": "\u2192", "&asymp;": "\u2248", "&sect;": "\u00a7", "&frac12;": "\u00bd",
+          "&amp;": "&"}
+_NUM = {"8212": "\u2014", "8211": "\u2013", "8216": "\u2018", "8217": "\u2019",
+        "8220": "\u201c", "8221": "\u201d", "8226": "\u00b7", "183": "\u00b7",
+        "8230": "\u2026", "215": "\u00d7", "177": "\u00b1", "176": "\u00b0",
+        "160": "\u00a0", "167": "\u00a7", "8594": "\u2192", "8804": "\u2264",
+        "8805": "\u2265", "8212": "\u2014"}
+
+
+def demojibake(s):
+    """Turn HTML entities that were written inside escaped copy back into real characters.
+
+    Copy is stored as HTML in this generator and then passed through esc(), so an entity typed
+    into the source arrives on the page as '&amp;mdash;' and prints literally. Decoding here means
+    a writer can type either '&mdash;' or the character itself and the page shows the dash.
+    """
+    s = str(s)
+    for ent, ch in _NAMED.items():
+        s = s.replace(ent, ch)
+    s = re.sub(r"&#(\d{1,5});", lambda m: _NUM.get(m.group(1), m.group(0)), s)
+    return s
+
+
 def esc(s):
-    return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    return (demojibake(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
 def aff(p):
     """The tagged Special Link we publish."""
@@ -126,6 +152,19 @@ def plain(p):
 def slug_of(p):
     return f"products/{p['slug']}.html"
 
+def name(p):
+    """The product as a shopper would identify it: distinguishing name plus the editorial angle.
+    `short` comes from data/products.json and is derived from the listing title, so two units
+    from the same brand are never printed as just the brand (P-01 and P-03 are both Chefman)."""
+    return f"{p['short']} — {p['headline']}"
+
+def byline(p):
+    """Brand, plus the model the listing publishes, so a repeat brand is never ambiguous."""
+    model = (p["fields"].get("model") or {}).get("v") or ""
+    m = re.match(r"[A-Za-z0-9][A-Za-z0-9.\-]*", str(model))
+    code = m.group(0) if m else ""
+    return f"By {p['brand']}" + (f" · model {code}" if code else " · model not stated on listing")
+
 def glyph(p, up=""):
     if p["cat"] == "Meat Thermometers":
         fname = "thermometer.svg"
@@ -136,7 +175,8 @@ def glyph(p, up=""):
     else:
         fname = "air-fryer.svg"
         alt = "Editorial illustration of a basket air fryer — original artwork, not product photography"
-    return f'<img src="{up}assets/illustrations/{fname}" alt="{esc(alt)}">'
+    return (f'<img src="{up}assets/illustrations/{fname}" alt="{esc(alt)}" '
+            f'width="720" height="320" loading="lazy" decoding="async">')
 
 
 # ----- photography ---------------------------------------------------------
@@ -151,6 +191,10 @@ PHOTOS = {
     "air": ("assets/photos/air-fryers.jpg", 1264, 848,
             "Three air fryer shapes on a stone counter: a dual-drawer basket fryer, a tall "
             "single-basket fryer and a stainless French-door countertop oven"),
+    "holiday": ("assets/photos/guide-holiday-hosting.jpg", 1536, 1024,
+                "Warm holiday table scene: crisp appetisers in a bowl beside a countertop air fryer"),
+    "roast": ("assets/photos/guide-roast.jpg", 1536, 1024,
+              "A carved roast on a board with a thin probe thermometer left in the thickest part"),
     "thermo": ("assets/photos/thermometers.jpg", 1264, 848,
                "A thin probe thermometer in a sliced roast on a board, with a small wireless "
                "probe hub and a second probe in a joint of meat"),
@@ -288,8 +332,8 @@ def buybox(p, up, variant="full"):
     return f"""<div class="buybox">
   <div class="buybox-art">{photo(photo_key, up, caption=True, short=True)}</div>
   <div class="buybox-body">
-    <p class="kicker">{esc(p['cat'])} · {esc(p['brand'])}</p>
-    <h3>{esc(p['headline'])}</h3>
+    <p class="kicker">{esc(p['cat'])}</p>
+    <h3><span class="prodname">{esc(p['short'])}</span>{esc(p['headline'])}</h3>
     <p>{esc(p['blurb'])}</p>
     <dl class="factrow">
       <div><dt>Best for</dt><dd>{esc(p['best_for'])}</dd></div>
@@ -316,8 +360,8 @@ def card(p, up, badge=""):
     return f"""<article class="card">
   <div class="card-media">{photo(photo_key, up, caption=True, short=True)}{tag}</div>
   <div class="card-body">
-    <p class="kicker">{esc(p['cat'])} · {esc(p['brand'])}</p>
-    <h3><a href="{up}{slug_of(p)}">{esc(p['headline'])}</a></h3>
+    <p class="kicker">{esc(p['cat'])}</p>
+    <h3><a href="{up}{slug_of(p)}"><span class="prodname">{esc(p['short'])}</span>{esc(p['headline'])}</a></h3>
     <p class="card-blurb">{esc(p['blurb'])}</p>
     <dl class="chips">{chips}</dl>
     <p class="small bestfor"><strong>Best for</strong> {esc(p['best_for'])}</p>
@@ -441,7 +485,7 @@ def build_home():
     featured = [BY_ID["P-01"], BY_ID["P-03"], BY_ID["P-04"]]
     picks = "".join(
         f'<li><a href="{slug_of(p)}"><span class="pick-k">{esc(p["cat"])}</span>'
-        f'<strong>{esc(p["brand"])}</strong> {esc(p["headline"])}</a>'
+        f'<strong>{esc(p["short"])}</strong> {esc(p["headline"])}</a>'
         f'<span>{esc(p["best_for"])}</span></li>' for p in PRODUCTS)
     latest = "".join(
         f'''<article class="latest-item">
@@ -584,7 +628,7 @@ def overview_table():
     rows = ""
     for p in PRODUCTS:
         rows += (f"<tr><td class=\"nowrap\">{p['id']}</td>"
-                 f"<td><a href=\"{slug_of(p)}\"><strong>{esc(p['brand'])}</strong> &mdash; "
+                 f"<td><a href=\"{slug_of(p)}\"><strong>{esc(p['short'])}</strong> &mdash; "
                  f"{esc(p['headline'])}</a></td>"
                  f"<td>{esc(p['cat'])}</td>"
                  f"<td>{esc(p['best_for'])}</td>"
@@ -623,7 +667,7 @@ def build_shop():
 def build_category(catfile, cat, headline, intro, guides_, picks):
     items = [p for p in PRODUCTS if p["cat"] == cat]
     verdict_items = "".join(
-        '<li><strong>' + esc(p["brand"]) + '</strong> &mdash; ' + esc(p["best_for"]) +
+        '<li><strong>' + esc(p["short"]) + '</strong> &mdash; ' + esc(p["best_for"]) +
         '. <em>Catch:</em> ' + esc(p["tradeoff"]) + '. <a href="' + slug_of(p) +
         '">Details</a></li>' for p in items)
     guide_items = "".join(
@@ -659,11 +703,13 @@ def build_product(p):
     og = ('<meta property="product:retailer_item_id" content="'
           + target_asin + '">')
     body = f"""
-{breadcrumb([("Home", "index.html"), (p['cat'], p['catfile']), (p['brand'], None)], "../")}
+{breadcrumb([("Home", "index.html"), (p['cat'], p['catfile']), (p['short'], None)], "../")}
 <div class="pdp-head">
   <div>
     <p class="kicker">{esc(p['cat'])} · {p['id']} · verified {TODAY}</p>
+    <p class="prodname-lg">{esc(p['short'])}</p>
     <h1>{esc(p['headline'])}</h1>
+    <p class="pdp-byline">{byline(p)}</p>
     <p class="lede">{esc(p['blurb'])}</p>
   </div>
   <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../", "pdp-photo")}</div>
@@ -678,7 +724,9 @@ def build_product(p):
 </div>
 <p class="small">We do not print the price here &mdash; Amazon's Program Policies only permit a site
   to show price and availability when Amazon serves the link or the data comes through their API.
-  The button opens the official listing, tagged with our Associate ID.</p>
+  The button opens the official listing, tagged with our Associate ID. The same goes for the star
+  rating, review count and best-sellers rank that the listing itself shows: they are on Amazon and
+  deliberately not reproduced here (FLG-005).</p>
 
 <h2>Is this the right one for you?</h2>
 <div class="qa">
@@ -724,10 +772,10 @@ def build_product(p):
         {"@context": "https://schema.org", "@type": "FAQPage",
          "mainEntity": [{"@type": "Question", "name": q,
                          "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]},
-        dict(crumbs_ld([("Home", "index.html"), (p["cat"], p["catfile"]), (p["brand"], slug_of(p))]),
+        dict(crumbs_ld([("Home", "index.html"), (p["cat"], p["catfile"]), (p["short"], slug_of(p))]),
              **{"@context": "https://schema.org"}),
     ]
-    BUILT.append(page(slug_of(p), f"{p['headline']} — {p['brand']} | {SITE}",
+    BUILT.append(page(slug_of(p), f"{p['short']} — {p['headline']} | {SITE}",
                       f"{p['brand']} {p['cat'].lower()}: {p['best_for']}. Specs read from the "
                       f"official listing on {TODAY}, conflicts flagged, no price quoted.",
                       body, jsonld=ld, extra_head=og))
@@ -795,7 +843,8 @@ def build_compare():
         return f'<tr><th scope="row">{label}</th>{cells}</tr>'
 
     head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
-                   f'<br><span class="th-sub">{p["id"]} · {esc(p["headline"])}</span></th>' for p in cols)
+                   f'<br><span class="th-sub">{esc(p["short"])} · {p["id"]}</span>'
+                   f'<br><span class="th-sub">{esc(p["headline"])}</span></th>' for p in cols)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Compare", None)])}
 <h1>Compare &mdash; without crowning a winner</h1>
@@ -826,12 +875,12 @@ def build_compare():
 <div class="pairpick">
   <label>Compare
     <select id="pairA">
-      {"".join(f'<option value="{p["id"]}">{esc(p["brand"])} — {esc(p["headline"])}</option>' for p in cols)}
+      {"".join(f'<option value="{p["id"]}">{esc(p["short"])} — {esc(p["headline"])}</option>' for p in cols)}
     </select>
   </label>
   <label>with
     <select id="pairB">
-      {"".join(f'<option value="{p["id"]}"{" selected" if i == 3 else ""}>{esc(p["brand"])} — {esc(p["headline"])}</option>' for i, p in enumerate(cols))}
+      {"".join(f'<option value="{p["id"]}"{" selected" if i == 3 else ""}>{esc(p["short"])} — {esc(p["headline"])}</option>' for i, p in enumerate(cols))}
     </select>
   </label>
 </div>
@@ -850,11 +899,18 @@ def build_compare():
 </ol>
 <p class="small">Where a listing contradicts itself, the conflicting figures both appear in the
   cell and the flag ID is on the <a href="flagged.html">Flagged for Review</a> page.</p>
+<p class="small">The <strong>Price</strong> and <strong>Star rating</strong> rows say "not shown, by
+  policy" rather than "not available": the official listings do print a price, a star rating, a
+  review count and a best-sellers rank, and those fields were visible when each page was read on
+  {TODAY}. They are excluded here on purpose — Amazon's Program Policies only permit a site to show
+  price and availability when Amazon serves the link or the data comes through the Product
+  Advertising / Creators API, and this site does neither (FLG-005). Look at the listing for the
+  current numbers; they change, and the table below would go stale within days if we copied them.</p>
 """
     pair_data = {}
     for p in cols:
         pair_data[p["id"]] = {
-            "name": esc(p["brand"]) + " — " + esc(p["headline"]),
+            "name": esc(p["short"]) + " — " + esc(p["headline"]),
             "url": slug_of(p),
             "buy": aff(p),
             "rows": [[label, fn(p)] for label, fn in PAIR_ROWS],
@@ -1151,10 +1207,38 @@ GUIDES = [
 
     ]
 from seasonal_guides import GUIDES as _SEASONAL
+
+# Guide images go through the same captioned photo system as every other page image, so they carry
+# intrinsic dimensions, alt text and the "illustrative image" caption the gate requires. The
+# seasonal module only marks where they belong.
+_SEASONAL_PHOTOS = {"__PHOTO_HOLIDAY__": "holiday", "__PHOTO_ROAST__": "roast"}
+for _g in _SEASONAL:
+    def _fill(text, _g=_g):
+        for token, key in _SEASONAL_PHOTOS.items():
+            text = text.replace(token, photo(key, "../", "guide-photo"))
+        return text
+    if _g.get("extra"):
+        _g["extra"] = _fill(_g["extra"])
+    _g["sections"] = [(_fill(h), _fill(t)) for h, t in _g["sections"]]
+    _g["intro"] = _fill(_g["intro"])
+    _g["verdict"] = _fill(_g["verdict"])
 GUIDES += _SEASONAL
 
 
 
+
+
+def covers_list(g):
+    """The guide's products, named so that a repeat brand reads as two different units."""
+    names = []
+    for pid in g["products"]:
+        p = BY_ID[pid]
+        # a bare brand repeats when a guide covers two units from one brand (P-01 + P-03)
+        label = p["brand"] if sum(1 for x in g["products"]
+                                  if BY_ID[x]["brand"] == p["brand"]) == 1 else p["short"]
+        if label not in names:
+            names.append(label)
+    return ", ".join(names)
 
 
 def build_guides_index():
@@ -1163,7 +1247,7 @@ def build_guides_index():
   <p class="kicker">{esc(g['kicker'])}</p>
   <h3><a href="guides/{g['slug']}.html">{esc(g['title'])}</a></h3>
   <p>{esc(g['sub'])}</p>
-  <p class="small">Covers {", ".join(BY_ID[x]['brand'] for x in g['products'])}</p>
+  <p class="small">Covers {covers_list(g)}</p>
 </article>""" for g in GUIDES)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", None)])}
@@ -1193,7 +1277,7 @@ def build_guide(g):
     rel = [BY_ID[x] for x in g["products"]]
     secs = "".join(f"<h2>{esc(h)}</h2><p>{t}</p>" for h, t in g["sections"])
     items = "".join(
-        f'<li><a href="../{slug_of(p)}">{esc(p["brand"])} — {esc(p["headline"])}</a>'
+        f'<li><a href="../{slug_of(p)}">{esc(p["short"])} — {esc(p["headline"])}</a>'
         f'<span>{esc(p["best_for"])}</span></li>' for p in rel)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (g['title'][:40] + "…", None)], "../")}
@@ -1945,6 +2029,8 @@ phrase that reads like it was produced by filling in a template."""
         ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "Not written", "Proposed", "Compares P-01 and P-03 without crowning a winner"),
     ])
 
+    proposed_count = cluster_rows.count("<td>Proposed") + cluster_rows.count("<td>Proposed, no prices")
+
     standards_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td></tr>" for a, b in [
         ("Every claim traceable to a dated source", "The spec table links its source on every row; conflicts are printed verbatim."),
         ("A named position or an honest blank", "No hands-on test is claimed anywhere; the review process is described on how-we-choose.html."),
@@ -2024,7 +2110,8 @@ phrase that reads like it was produced by filling in a template."""
 <ul>
   <li>One canonical host; canonical link on every page — <strong>done</strong> <a href="sources.html">(S04)</a>.</li>
   <li>Sitemap regenerated and gated on every build — <strong>done</strong>.</li>
-  <li>RSS feed of guides — <strong>done</strong>, 8 items.</li>
+  <li>RSS feed of guides &mdash; <strong>done</strong>, one item for each of the {len(GUIDES)} guides
+    that are live.</li>
   <li>JSON-LD structured data on every page — <strong>done</strong>.</li>
   <li>rel="sponsored nofollow" on every outbound product link — <strong>done and gated</strong>.</li>
   <li>Search Console verification and sitemap submission — <strong>owner action, SG-10</strong>.</li>
@@ -2071,7 +2158,7 @@ phrase that reads like it was produced by filling in a template."""
     <tr><td>Sponsored + nofollow on every outbound Amazon link</td><td>Live; gate enforced</td><td>SG-05, S04</td></tr>
     <tr><td>Sitemap, RSS, canonical, JSON-LD</td><td>Live and gated</td><td>SG-08</td></tr>
     <tr><td>Original illustration, no Amazon photography</td><td>Live; licence-safe</td><td>SG-09, FLG-007</td></tr>
-    <tr><td>Question-shaped guides with verdicts</td><td>8 live, 8 proposed above</td><td>SG-02</td></tr>
+    <tr><td>Question-shaped guides with verdicts</td><td>{len(GUIDES)} live, {proposed_count} proposed above</td><td>SG-02</td></tr>
     <tr><td>Weekly cadence chosen from queries</td><td>Blocked on Search Console</td><td>SG-16, SG-10, Q-09</td></tr>
     <tr><td>Prices shown legally</td><td>Impossible until API access</td><td>SG-13, FLG-005</td></tr>
     <tr><td>Parallel-session coordination</td><td>COORDINATION.md task board, active</td><td>Repo root</td></tr>
@@ -2079,7 +2166,7 @@ phrase that reads like it was produced by filling in a template."""
 </table>
 
 <p class="cta"><a class="btn" href="suggestions.html">Rank SG-17 in the Decision Center</a>
-  <a class="btn ghost" href="guides.html">Read the eight live guides</a></p>
+  <a class="btn ghost" href="guides.html">Read the {len(GUIDES)} live guides</a></p>
 """
     BUILT.append(page("design-brief.html", f"Design & Traffic Brief — {SITE}",
                       "A copy-paste design prompt, a topic-cluster traffic plan with a seasonal "
@@ -2234,7 +2321,7 @@ it in full, including what the earlier version said.</p>
 # ---- executive summary
 def build_exec():
     rows = "".join(
-        f"<tr><td class=\"nowrap\">{p['id']}</td><td><strong>{esc(p['brand'])}</strong></td>"
+        f"<tr><td class=\"nowrap\">{p['id']}</td><td><strong>{esc(p['short'])}</strong></td>"
         f"<td>{esc(p['cat'])}</td><td>{esc(p['observed'])}</td>"
         f"<td>{esc(p['model'] or '—')}</td>"
         f"<td><a href=\"{plain(p)}\" rel=\"sponsored nofollow\">listing</a></td></tr>" for p in PRODUCTS)
@@ -2529,15 +2616,15 @@ def build_about():
   shapes covered here. No Amazon product photography is used anywhere (FLG-007).</p>
 <div class="diagram-row">
   <figure class="diagram-card">
-    <img src="assets/illustrations/air-fryer.svg" width="720" height="320" alt="Editorial vector schematic of a basket air fryer — original illustration, not product photography">
+    <img src="assets/illustrations/air-fryer.svg" width="720" height="320" loading="lazy" decoding="async" alt="Editorial vector schematic of a basket air fryer — original illustration, not product photography">
     <figcaption>Basket air fryer schematic (original vector artwork, not manufacturer photography).</figcaption>
   </figure>
   <figure class="diagram-card">
-    <img src="assets/illustrations/air-fryer-oven.svg" width="720" height="320" alt="Editorial vector schematic of an oven-style French-door air fryer — original illustration, not product photography">
+    <img src="assets/illustrations/air-fryer-oven.svg" width="720" height="320" loading="lazy" decoding="async" alt="Editorial vector schematic of an oven-style French-door air fryer — original illustration, not product photography">
     <figcaption>Countertop air fryer oven schematic (original vector artwork).</figcaption>
   </figure>
   <figure class="diagram-card">
-    <img src="assets/illustrations/thermometer.svg" width="720" height="320" alt="Editorial vector schematic of a digital meat thermometer — original illustration, not product photography">
+    <img src="assets/illustrations/thermometer.svg" width="720" height="320" loading="lazy" decoding="async" alt="Editorial vector schematic of a digital meat thermometer — original illustration, not product photography">
     <figcaption>Meat thermometer schematic (original vector artwork).</figcaption>
   </figure>
 </div>
@@ -2784,7 +2871,7 @@ def build_search():
     index = []
     for p in PRODUCTS:
         index.append({
-            "t": f"{p['brand']} — {p['headline']}",
+            "t": f"{p['short']} — {p['headline']}",
             "u": slug_of(p),
             "d": f"{p['cat']}. {p['best_for']}. {p['tradeoff']}. "
                  f"Listing title: {p['listing_title']}. Specs: " +

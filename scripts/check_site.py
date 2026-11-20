@@ -28,6 +28,15 @@ def err(msg):
     errors.append(msg)
 
 
+def slug_page(prod):
+    return f"products/{prod['slug']}.html"
+
+
+def alt_ok(tag):
+    m = re.search(r'alt="([^"]*)"', tag)
+    return bool(m and m.group(1).strip())
+
+
 class TableColumnChecker(HTMLParser):
     def __init__(self, rel):
         super().__init__()
@@ -217,12 +226,47 @@ for p in pages:
         if bad in html:
             err(f"{rel}: placeholder cell text {bad!r}")
 
+    # --- double-escaped entities: an entity written inside escaped copy prints as "&amp;#8212;"
+    if re.search(r"&amp;(?:[a-z]{2,8}|#\d{2,5});", html):
+        m = re.search(r"&amp;(?:[a-z]{2,8}|#\d{2,5});", html)
+        err(f"{rel}: double-escaped entity {m.group(0)!r} would print literally on the page")
+
+    # --- every image carries alt text, intrinsic dimensions and lazy loading
+    for tag in re.findall(r"<img\b[^>]*>", html):
+        src = re.search(r'src="([^"]+)"', tag)
+        if not alt_ok(tag):
+            err(f"{rel}: <img> without alt text — {src.group(1) if src else tag[:50]}")
+        if not re.search(r'width="\d+"\s+height="\d+"', tag):
+            err(f"{rel}: <img> without intrinsic width/height — {src.group(1) if src else tag[:50]}")
+        if "loading=" not in tag:
+            err(f"{rel}: <img> without loading attribute — {src.group(1) if src else tag[:50]}")
+
     # --- no placeholder or template debris (outside script bodies, which hold JSON)
     prose = re.sub(r"<script\b.*?</script>", "", html, flags=re.S)
     prose = re.sub(r"<style\b.*?</style>", "", prose, flags=re.S)
     for bad in ("{{", "}}", "TODO", "FIXME", "lorem ipsum", "%cardName%", "${"):
         if bad in prose:
             err(f"{rel}: contains template debris {bad!r}")
+
+
+# ---------------------------------------------------------------- product identity
+# A card that says only "Chefman" twice (P-01 and P-03 are both Chefman) tells a shopper nothing.
+# Every product must be identified by the distinguishing name in products.json (`short`), and that
+# name must be printed on the front page, the shop index and its own product page.
+_reg = json.loads((ROOT / "data" / "products.json").read_text(encoding="utf-8"))
+for prod in _reg:
+    if not prod.get("short"):
+        err(f"products.json {prod['id']}: no distinguishing 'short' name")
+        continue
+    for page_rel in ("index.html", "shop.html", slug_page(prod)):
+        f = ROOT / page_rel
+        if not f.exists():
+            continue
+        if prod["short"] not in f.read_text(encoding="utf-8"):
+            err(f"{page_rel}: product {prod['id']} is not identified as '{prod['short']}'")
+_shorts = [prod.get("short") for prod in _reg]
+if len(set(_shorts)) != len(_shorts):
+    err("products.json: distinguishing names are not unique")
 
 
 # ---------------------------------------------------------------- product pages
