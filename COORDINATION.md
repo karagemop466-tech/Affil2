@@ -25,6 +25,8 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
 | T-26 | Independent short-link re-check (5 submitted links) + repo gate/test re-run; new flag FLG-051 for non-reproduced redirects; no recorded values changed | done | 614b9fe7 | data/verification-2026-11-20-shortlinks.json, data/flags.json (append only), COORDINATION.md, generated flagged/sources/executive-summary pages |
+| T-28 | AI-powered product research engine: scripts/research_engine.py analyses first-party event data (zero-result searches, guide reads, outbound clicks) and emits ranked research suggestions for the Decision Center | done | 505e685a | scripts/research_engine.py |
+| T-29 | Campaign optimization advisor: scripts/campaign_optimizer.py analyses first-party click data and emits ranked optimization recommendations (content investment, placement review, conversion gaps) | done | 505e685a | scripts/campaign_optimizer.py |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -63,6 +65,10 @@ FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
 | check_site.py | 25 pages | ALL CHECKS PASS |
 
 ## Handoff / conflict log
+
+- 2026-11-20 505e685a (current session, branch arena/505e685a-affil2, base 4ddede54 = main): claimed T-28 and T-29. Added scripts/research_engine.py (product research from first-party events) and scripts/campaign_optimizer.py (campaign optimization from first-party clicks). Verified: python3 scripts/build_site.py builds 36 pages, python3 scripts/check_site.py ALL CHECKS PASS (36 pages, 5 product records, 50 flags, 19 sources), Python and JS test suites pass. GitHub Pages already live at https://karagemop466-tech.github.io/Affil2/ (status: built, source=main, https enforced). No conflicts — edits are limited to new files in own scope; no shared records modified.
+
+## Handoff / conflict log (original)
 - 2026-11-20 530c2e6c: claimed all tasks, repo empty, no conflicts; all tasks merged to main at e1b6750e.
 - 2026-11-20 6e40cecc: took over stale T-09 claim (>60 min old, no new commits); feed.xml language tag fixed; re-verified P-01/P-05 vs official Amazon listings; re-fetched S03/S04; check_site 25 pages ALL CHECKS PASS.
 - PR link + merge result: (to be recorded at T-09 completion)
