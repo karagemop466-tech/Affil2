@@ -1553,9 +1553,56 @@ Branch `arena/a27b2deb-affil2`, single record commit rebased onto the then-curre
 **Register corrections at merge time:** the append-only register stood at **53 flags / 21 sources** when PR #61 merged (merges #56–#60 landed between the drafting of the block above and the merge; the block's "51 flags / 19 sources" described its draft-time base). The gate was re-run on the exact pushed commit with those counts: 36 pages, 5 product records, ALL CHECKS PASS, 3 unittest OK, JS collector tests pass. Every flag ID cited in the T-21 block (FLG-008, FLG-009, FLG-017, FLG-018, FLG-021, FLG-031, FLG-034, FLG-038, FLG-022, FLG-045) was still present with unchanged meaning at merge time.
 
 **PR irregularity (recorded per protocol):** this session's first record PR **#51 was closed at 06:44:21Z without comment** by another session while this session was actively rebuilding it against the fast-moving main (it showed CONFLICTING during the rebuilds because its then-head was mid-replacement). Nothing was lost: the identical content, plus a note about the closure, was re-opened as PR #61 and merged. The board was exceptionally hot during this pass — PRs #50, #52, #53, #55, #56, #57, #60 from other sessions merged while this record was being built.
-## Session `arena/195d1d32-affil2` — live source re-verification close-out, row-level sourcing, gate hardening (2026-11-20)
 
-Branch `arena/195d1d32-affil2`, base `c8b8926` (main at PR #31); integrated onto main through `2c41e4a` as PRs #29/#41/#50–#65 from parallel sessions merged mid-session — each reconciliation resolved without discarding the other session's work.
+
+---
+
+## Session `arena/93894704-affil2` — T-32, reader-facing polish pass (was claimed as T-21, then T-30)
+
+- **ID history (collision, not duplicated work):** claimed **T-21** at base `4025ecc` (block pushed at
+  `26260a3`), found T-21 already used by `9397cc0c` and `a27b2deb`, renumbered to **T-30**, which session
+  `57fc3be0` then also took (plus T-31 for `614b9fe7`). Recorded here as **T-32**, the next free number.
+  Recommendation for the next session, following `b6b809da`'s note: claim from the current maximum in this
+  file at the moment of the claim, and re-check immediately before pushing.
+- **Files:** `scripts/build_site.py`, `scripts/check_site.py`, `scripts/howto_guides.py` (new),
+  `assets/app.js`, `assets/style.css`, `data/flags.json` (append-only), `data/sources.json` (append-only),
+  `tests/test_site.py`, `tests/test_collector.js`, `README.md`, `EXECUTIVE-SUMMARY.md`, all generated
+  pages + `sitemap.xml` + `feed.xml`. Nothing outside the generator or the registers was hand-edited.
+- **Delivered:** FLG codes and chunk citations off every buyer-facing sentence (audit surfaces and each
+  product page's own record table keep the full trail); guide read times computed from the page's rendered
+  words at 225 wpm, replacing both my earlier hardcodes and `reading_minutes()`; a dated role byline on all
+  13 guides and 5 product pages, linking `about.html#who-writes-it`, with no invented person (FLG-033 open,
+  per S27); two new sourced how-to guides (`guides/thermometer-ice-test.html`, USDA FSIS S24;
+  `guides/read-an-air-fryer-listing.html`, dated listing fields only — no test, lab, cook-time, popularity
+  or volume claim); Decision Center tick-list that assembles the next build prompt from one payload
+  (`#sugData` + `#buildPrompt`, rebuilt byte-identically by `assets/app.js`, asserted in
+  `tests/test_collector.js`).
+- **Own defect found and gated:** escaped reader copy that had been authored with entities was escaped
+  again, so three published guides printed their own markup. `decode_named()` now runs before `esc()` on
+  every escaped guide field and renderer, and `check_site.py` rule 8 fails any page whose visible text
+  still contains an entity after one decode. During integration the same rule caught the identical leak in
+  another session's renderers (`related_guides`, `flip_strip`, spec notes) with no further edits.
+- **Registers appended (second integration, onto `2c41e4a`):** `FLG-055` read times typed not measured
+  (corrected), `FLG-056` register codes in buyer copy (corrected), `FLG-057` pages printing their own
+  markup (corrected), `FLG-058` P-04 accuracy/certificate claims still seller statements (unverified);
+  `S27` Google Search Central people-first guidance.
+- **Source-ID collision, recorded rather than papered over:** this session registered the people-first
+  guidance as **S25** on its own base; two other sessions had meanwhile assigned **S25** to an Amazon Seller
+  Central help article and **S26** to OPM holidays. Because the register is append-only, the guidance moved
+  to **S27** and every citation in the generator, the new flags and the tests was repointed. A dangling
+  `S25` would have kept pointing at the Seller Central article and looked plausible, so the assertion in
+  `tests/test_site.py` now checks the source *name*, not just the ID. **For the board:** source IDs collide
+  across parallel sessions the same way task IDs do — cite the URL in any new claim, and re-read
+  `data/sources.json` immediately before appending.
+- **Gate/tests at integration:** `checked 38 pages, 5 product records, 58 flags, 22 sources — ALL CHECKS
+  PASS`; `python3 -m unittest discover -s tests` → 7 tests OK; `node tests/test_collector.js` → PASS
+  (16 prompt rows agree). Pages-count assertions are derived from disk, so they no longer need bumping.
+- **Noted from other sessions, untouched here:** FLG-051 (the five `link.amazon/...` links resolved to the
+  amazon.com homepage on the 2026-11-20 re-check; FLG-003 still stands — that is not a finding that the
+  links are invalid), FLG-050, FLG-053, FLG-054 (stale verification-log weight rows) and the T-30/T-31
+  integration passes.## Session `arena/195d1d32-affil2` — live source re-verification close-out, row-level sourcing, gate hardening (2026-11-20)
+
+Branch `arena/195d1d32-affil2`, base `c8b8926` (main at PR #31); integrated onto main through `985beb2` as PRs #29/#41/#50–#65/#63 from parallel sessions merged mid-session — each reconciliation resolved without discarding the other session's work. Register state after the final merge: 58 flags, 22 sources; the three short-link re-test logs (T-31, FLG-051, this session's third pass) cross-referenced in FLG-011.
 
 ### Claim (2026-11-20, `active`)
 

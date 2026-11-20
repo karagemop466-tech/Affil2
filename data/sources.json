@@ -154,5 +154,12 @@
     "url": "https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/",
     "used_for": "2026 table: 'Thursday, November 26 — Thanksgiving Day'. 2027 table: 'Friday, January 01 — New Year's Day'. Used for the seasonal calendar dates in design-brief.html (FLG-052). Read 2026-11-20.",
     "checked": "2026-11-20"
+  },
+  {
+    "id": "S27",
+    "name": "Google Search Central — Creating helpful, reliable, people-first content",
+    "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
+    "used_for": "Authorship and accuracy standards this site follows. Quoted verbatim on 2026-11-20 (page last updated 2026-10-05 UTC): \"Do pages carry a byline, where one might be expected?\"; \"We strongly encourage adding accurate authorship information, such as bylines to content where readers might expect it\"; \"avoid using deceptive authorship information. Fabricating creator profiles (such as by using AI-generated headshots, made-up names, or false credentials…) is a form of deception\"; \"For informational pages, the content should be factually accurate\"; and \"automatically generating pages from feeds or using generative AI to produce large amounts of text without manual oversight or curation represents little to no effort\".",
+    "checked": "2026-11-20"
   }
 ]

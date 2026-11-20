@@ -302,10 +302,54 @@ function testAppJsClientBehavior() {
   assert.equal(posted.t % 60000, 0);
 }
 
+
+// ---------------------------------------------------------------------------
+// Decision Center build-prompt assembly (SG-37): the page's server-rendered default and the
+// browser-side rebuild must be the same text, from the same payload.
+function testBuildPromptAssembly() {
+  const appCode = fs.readFileSync(path.join(__dirname, '..', 'assets', 'app.js'), 'utf8');
+  const html = fs.readFileSync(path.join(__dirname, '..', 'suggestions.html'), 'utf8');
+  const dataMatch = html.match(/<script type="application\/json" id="sugData">([\s\S]*?)<\/script>/);
+  assert.ok(dataMatch, 'suggestions.html must carry the #sugData payload');
+  const payload = JSON.parse(dataMatch[1].replace(/<\\\//g, '</'));
+  const box = html.match(/<textarea id="buildPrompt"[^>]*>([\s\S]*?)<\/textarea>/);
+  assert.ok(box, 'suggestions.html must render a default build prompt');
+  const rendered = box[1]
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
+  const ctx = vm.createContext({ navigator: {}, console });
+  vm.runInNewContext(appCode, ctx);
+  assert.ok(ctx.snPrompt, 'assets/app.js must expose the prompt assembler');
+
+  const ids = ctx.snPrompt.defaultIds(payload);
+  assert.ok(ids.length > 0, 'the default selection is the unshipped register entries');
+  ids.forEach((id) => assert.ok(!/^Shipped/i.test(payload.proposals[id].status),
+    `${id} is shipped and must not be in the default prompt`));
+
+  const rebuilt = ctx.snPrompt.assemble(ids, payload);
+  assert.equal(rebuilt, rendered, 'browser-rebuilt prompt must equal the server-rendered default');
+  for (const must of ['Do these proposals, in order:', 'Standing constraints', 'sponsored nofollow',
+                      'Program Policies', 'Do not assume answers']) {
+    assert.ok(rebuilt.includes(must), `prompt must carry ${must}`);
+  }
+
+  // A ticked subset yields exactly those proposals, in register order, and nothing else.
+  const subset = ids.slice(0, 2);
+  const short = ctx.snPrompt.assemble(subset, payload);
+  subset.forEach((id) => assert.ok(short.includes(id), `${id} missing from the short prompt`));
+  const skipped = ids.filter((id) => !subset.includes(id));
+  skipped.slice(0, 4).forEach((id) => assert.ok(!short.includes(id + ' \u2014'),
+    `${id} leaked into a prompt that did not select it`));
+  assert.ok(short.includes('Selected: 2 proposal(s)'), 'the prompt must state how much it carries');
+  assert.ok(!short.includes('undefined'), 'no undefined values in the assembled prompt');
+  console.log('build-prompt assembly: server default and browser rebuild agree on', ids.length, 'rows');
+}
+
 (async () => {
   await testCollectorValidationAndServer();
   await testCloudflareFunctionModule();
   testAppJsClientBehavior();
+  testBuildPromptAssembly();
   console.log('ALL JS COLLECTOR AND CLIENT TESTS PASS');
 })().catch((err) => {
   console.error(err);
