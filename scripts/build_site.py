@@ -826,7 +826,7 @@ def build_home():
   <p class="kicker">{esc(guide_kicker(g))}</p>
   <h3><a href="guides/{g["slug"]}.html">{esc(g["title"])}</a></h3>
   <p>{esc(g["sub"])}</p>
-</article>''' for g in GUIDES[-3:])
+</article>''' for g in GUIDES[-6:])
     body = f"""
 <div class="issue"><b>THE KITCHEN EDIT</b><span></span> VOL. 01 &nbsp; / &nbsp; NOVEMBER 2026</div>
 {review_strip()}
@@ -2389,6 +2389,56 @@ def decision_prompt(ids, payload):
     return "\n".join(lines)
 
 
+def draft_queue_panel():
+    """The draft queue, read from data/drafts at build time so the panel cannot drift from the files.
+
+    Nothing in here is a page: a draft becomes a guide only when a human moves the record into a
+    guide module and the build gate passes. The panel exists so that automation is visible in the
+    same place as the decisions, rather than hidden in a script.
+    """
+    import pathlib as _pl
+    d = _pl.Path(__file__).resolve().parent.parent / "data" / "drafts"
+    recs = []
+    if d.exists():
+        for f in sorted(d.glob("*.json")):
+            try:
+                recs.append(json.loads(f.read_text(encoding="utf-8")))
+            except json.JSONDecodeError:
+                continue
+    if not recs:
+        rows = ('<tr><td colspan="4" class="muted">Empty. Create one with '
+                '<code>python3 scripts/draft_guide.py new --slug &hellip;</code> and it lands here '
+                'marked unapproved.</td></tr>')
+    else:
+        rows = ""
+        for r in recs:
+            lint = r.get("lint") or {}
+            state = ("clean" if lint.get("clean") else
+                     ("not linted" if "clean" not in lint else
+                      f"{len(lint.get('problems') or [])} blocker(s)"))
+            who = (r.get("approval") or {}).get("by", "&mdash;")
+            pill = "shipped" if r.get("status") == "approved" else "not"
+            rows += (f'<tr><td class="nowrap"><strong>{esc(r.get("slug", f.stem))}</strong></td>'
+                     f'<td><span class="pill {pill}">{esc(r.get("status", "unapproved"))}</span></td>'
+                     f'<td>{esc(state)}</td><td>{who}</td></tr>')
+    return f"""<h2>Draft queue</h2>
+<p class="muted">Written by <code>scripts/draft_guide.py</code> and read from <code>data/drafts/</code>
+  on every build. A draft is inert: it is not a page, not in the sitemap and not in the feed, and
+  approving it here changes nothing on the site. Publication still means a human moves the record into
+  a guide module and the build gate passes &mdash; which is the shape the policy brief asks for:
+  automated drafting, human gate.</p>
+<table class="drafts">
+  <caption>{len(recs)} draft(s). Status comes from the file, not from anyone's memory.</caption>
+  <thead><tr><th scope="col">Slug</th><th scope="col">Status</th><th scope="col">Compliance lint</th>
+    <th scope="col">Reviewer</th></tr></thead>
+  <tbody>{rows}</tbody>
+</table>
+<p class="small">The lint rejects a price, a star rating, a review count, any figure the register does
+  not mark verified, a contested figure stated without its other figure, an unknown source ID, and a
+  draft that omits either the no-hands-on-testing statement or the affiliate-link statement. See
+  <a href="flagged.html">Flagged for Review</a> for what that gate is protecting.</p>"""
+
+
 def build_suggestions():
     payload = sug_payload()
     sug_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
@@ -2430,6 +2480,8 @@ def build_suggestions():
       page without an explicit choice recorded in the worksheet at the bottom.</li>
   </ol>
 </div>
+
+{draft_queue_panel()}
 
 <h2>Choose a path, not a row</h2>
 <p class="muted">Thirty-five rows is a backlog, and a backlog is not a decision. The open items sort

@@ -220,6 +220,18 @@ class GuideWaveRouteTests(unittest.TestCase):
             self.assertIn("flip-list", html, f"{slug}: no product line at the end")
             self.assertIn("amazon.com/dp/", html, f"{slug}: product line has no tagged link")
 
+    def test_the_live_wave_is_on_the_front_page(self):
+        """A guide nobody can reach from the home page is a guide nobody reads (T-31)."""
+        sys.path.insert(0, str(ROOT / "scripts"))
+        try:
+            from traffic_guides import GUIDES as traffic
+        finally:
+            sys.path.remove(str(ROOT / "scripts"))
+        home = (ROOT / "index.html").read_text(encoding="utf-8")
+        for g in traffic:
+            self.assertIn(f'href="guides/{g["slug"]}.html"', home,
+                          f"{g['slug']}: not linked from index.html")
+
     def test_no_stale_guide_pages(self):
         """A guide removed from the registers must not stay published on disk."""
         slugs = set(self._slugs())
