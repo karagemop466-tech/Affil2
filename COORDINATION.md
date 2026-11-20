@@ -226,3 +226,60 @@ Both observations were reached separately, which raises confidence in them.
 - **Analytics endpoint.** Unchanged. `assets/app.js` still logs the five events to `localStorage` only. Deploying a self-hosted endpoint needs hosting that GitHub Pages cannot provide (existing FLG-010 / Q-08).
 - **Capture form.** No email provider exists, so none was added.
 - **Associates test.** Cannot be performed without access to Associates Central (existing FLG-004).
+
+---
+
+## Session bdedd85e — T-13 / T-14 claim (2026-11-20 UTC)
+
+**Session ID:** `bdedd85e`  **Branch:** `arena/bdedd85e-affil2`
+**Base when started:** `12d49cd` (the original `Initial commit`) — **stale**; `main` had already moved to `1c52f8a`.
+
+### Conflict log — the parallel site was NOT merged
+
+This session was started from a stale base and built a complete parallel site
+(`tools/`, `content/`, `assets/`, `docs/`, `functions/`, `analytics/`, `tests/`,
+plus its own `data/*.json` registers). That work is **not** merged.
+
+Reason, recorded rather than quietly resolved:
+
+- `main` already contains a complete, deployed publication from sessions
+  `530c2e6c`, `6e40cecc`, `990af5de`, `937876a6`, `4bbf49bb` and `e9516a41`
+  (PRs #1–#13). Merging a second site would discard all of it, including the
+  re-verification records, FLG-017..030, the USDA and Creators API citations,
+  the original illustrations and the decision tools.
+- Two earlier sessions (`990af5de`, `e9516a41`) built parallel sites the same
+  way; both were withdrawn for the same reason and logged above.
+- The standing instruction for this repository is that a session must never
+  overwrite another session's work, and that shared outputs belong to the
+  final integration session. This session **is** the integration session, so it
+  keeps `main`'s site and data and merges only what adds to them.
+
+The parallel build is preserved out of tree at `/tmp/affil2-parallel/` for this
+session's reference only. Nothing from it replaces a `main` file.
+
+### What this session claims
+
+| ID | Task | Status | Files (exclusive scope) |
+|----|------|--------|-------------------------|
+| T-13 | Self-hosted analytics endpoint + five-event privacy-preserving collector | in progress | `functions/api/collect.js`, `analytics/server.js`, `assets/js/collect.js`, `data/events.json`, `tests/collector.test.js` |
+| T-14 | Measurement surface, gate hardening, tracking-tag compliance, CI in the publish workflow | in progress | `measurement.html`, `scripts/check_site.py`, `scripts/build_content.py`, `.github/workflows/pages.yml`, `sitemap.xml`, `feed.xml`, `disclosure.html`, `questions.html`, `data/flags.json` (append only), `tests/test_site.py`, `README.md`, `EXECUTIVE-SUMMARY.md` |
+
+**Not claimed, not touched:** `data/products.json`, `data/sources.json`,
+`data/reverification-2026-11-20.json`, `data/campaign-ledger.json`,
+`scripts/build_content.py` product/spec rendering, `assets/style.css`,
+`assets/illustrations/*`, and every existing page's editorial copy. Those stay
+exactly as `main` has them.
+
+### The gap this session is closing
+
+`main`'s own records name the gap twice:
+
+- `FLG-010` — "Analytics local-only: click counter runs in-browser until a
+  self-hosted endpoint is deployed. See Q-08."
+- `disclosure.html` — "A self-hosted endpoint (Q-08) will replace local storage
+  when deployed; until then, server-side conversion data is blank by design."
+
+GitHub Pages cannot host a server-side function, so the endpoint is shipped in
+this repository in two deployable forms (a Cloudflare Pages Function and a
+dependency-free Node server) and is **inert** until someone points the site at
+one. The site keeps working, and keeps collecting nothing, until then.
