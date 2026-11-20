@@ -139,7 +139,7 @@ def decode_named(t):
     """Turn typed entities back into characters before the renderer escapes the text.
 
     Copy in the registers and the guide records was written with entities; some of it is passed
-    through esc(), which used to print the markup itself (FLG-044). Named and numeric forms are
+    through esc(), which used to print the markup itself (FLG-054). Named and numeric forms are
     both handled, and it loops until stable so a double-escaped &amp;plusmn; resolves too.
     """
     t = str(t)
@@ -171,7 +171,7 @@ def byline(up=""):
     """The stamp under every h1: who wrote it, what it was checked against, and when.
 
     The byline links to the authorship note because that is what a byline is for — a reader
-    who wants to know who stands behind the number should be able to ask (S25).
+    who wants to know who stands behind the number should be able to ask (S27).
     """
     return (f'<p class="byline"><span class="by-who">By <strong>{DESK}</strong></span>'
             f'<span class="stamp">Verified against the official listing on {TODAY}</span>'
@@ -1801,7 +1801,39 @@ def build_verification():
 <thead><tr><th scope="col">Item</th><th scope="col">Observation</th><th scope="col">Status</th></tr></thead>
 <tbody>{review}</tbody></table>
 """
-    body = body.replace('<h2>Corrections made in this pass</h2>', live_section + '<h2>Corrections made in this pass</h2>', 1)
+    # ---- submitted-link re-check (T-31): observations kept apart from the intended/observed ASIN fields
+    lr = _json.loads((DATA / "link-resolution-2026-11-20.json").read_text())
+    reg_titles = {p["id"]: p["title"] for p in _json.loads((DATA / "products.json").read_text())}
+    sr_rows = ""
+    for sl in lr["short_links"]:
+        tries = "; ".join(f"round {t['round']}: {t['final_url']}" for t in sl["attempts"])
+        sr_rows += (f'<tr><th scope="row">{esc(sl["product"])}</th>'
+                    f'<td class="small">{esc(sl["submitted"])}</td>'
+                    f'<td class="small">{esc(sl["earlier_record"])}</td>'
+                    f'<td class="small">{esc(tries)}</td>'
+                    f'<td><span class="token warn">does not reproduce</span></td>'
+                    f'<td class="src">{cite_id(sl["source_row"])}</td></tr>')
+    lp_rows = ""
+    for lp in lr["listing_pages"]:
+        matches = reg_titles[lp["product"]] in lp["title_as_read"]
+        lp_rows += (f'<tr><th scope="row">{esc(lp["product"])}</th><td>{esc(lp["asin_in_url"])}</td>'
+                    f'<td class="small">{esc(lp["title_as_read"])}</td>'
+                    f'<td><span class="token {"ok" if matches else "warn"}">'
+                    f'{"title matches register" if matches else "title differs from register"}</span></td>'
+                    f'<td class="src">{cite_id(lp["source_row"])}</td></tr>')
+    link_section = f"""
+<h2 id="link-recheck">Submitted-link re-check &middot; {esc(lr["generated"])}</h2>
+<p class="lede">Each submitted <code>link.amazon</code> address was fetched again. The final URL is recorded
+  apart from the intended ASIN, which stays blank until the owner confirms it. A link that ends on the
+  Amazon home page is recorded as an observation. It is not a finding that the link is invalid (FLG-003, FLG-051).</p>
+<table><caption>Short links: what this re-check saw, next to what the earlier record said.</caption>
+<thead><tr><th scope="col">Product</th><th scope="col">Submitted link</th><th scope="col">Earlier record</th><th scope="col">This re-check (final URL)</th><th scope="col">Result</th><th scope="col">Source</th></tr></thead>
+<tbody>{sr_rows}</tbody></table>
+<table><caption>Listing pages: ASIN and title as read on the same date. Prices and ratings are deliberately not recorded (Program Policies, S02).</caption>
+<thead><tr><th scope="col">Product</th><th scope="col">ASIN in URL</th><th scope="col">Title as read</th><th scope="col">Check</th><th scope="col">Source</th></tr></thead>
+<tbody>{lp_rows}</tbody></table>
+"""
+    body = body.replace('<h2>Corrections made in this pass</h2>', link_section + live_section + '<h2>Corrections made in this pass</h2>', 1)
 
     BUILT.append(page("verification.html", f"Verification Log — {SITE}",
                       "Line-by-line verification of every register value against official listings and policy pages, with method and status per row.",
@@ -1850,7 +1882,7 @@ def build_how():
 <h2>How a page is signed, and why</h2>
 <p>Every guide and every product page carries the desk byline, the date the numbers were read, and a
   link back to this page. Three publisher promises sit behind that line, each taken from
-  <a href="{source_url('S25')}">Google's people-first guidance</a> (S25): a page should say who wrote
+  <a href="{source_url('S27')}">Google's people-first guidance</a> (S27): a page should say who wrote
   it; it should say how it was written; and its figures should be accurate. Read times on this site are
   therefore counted from the copy at build time rather than typed in, and internal register codes are
   kept off buyer-facing sentences, because neither is a fact a shopper can use.</p>
@@ -2125,7 +2157,7 @@ SUGGESTIONS = [
          impact="High — reads like a shop", effort="Done", status="Shipped",
          verify="scripts/check_site.py fails if a FLG- code appears in the visible copy of index.html, "
                 "shop.html, a category page, compare.html or any guide page; flagged.html, sources.html and "
-                "verification.html still list all 51, and each product page keeps a full record table."),
+                "verification.html still list every one of them, and each product page keeps a full record table."),
     dict(id="SG-37", title="Measure every guide's read time from its own copy",
          what="The 'N min read' figure in a guide kicker is computed at build time from the guide's "
               "word count at 225 words per minute, rounded up. The hardcoded numbers it replaced are "
@@ -2646,7 +2678,7 @@ phrase that reads like it was produced by filling in a template."""
         ("A · Air fryer buying", "Basket or oven-style: which fits a family of four", "Not written", "Proposed", "Search Console may confirm or kill this title"),
         ("B · Holiday and seasonal", "Air fryer at Thanksgiving: what actually fits", "guides/air-fryer-thanksgiving.html", "Live", "Seasonal spike, Nov 2026"),
         ("B · Holiday and seasonal", "Turkey thermometer maths: the USDA minimums", "Not written", "Proposed", "USDA chart is already the source of record (S22)"),
-        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Black Friday is 2026-11-27; must not print prices (SG-13)"),
+        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Black Friday is 2026-11-27 (computed, FLG-052); must not print prices (SG-13)"),
         ("B · Holiday and seasonal", "Wireless or instant-read for a long smoker cook", "guides/instant-vs-wireless.html", "Live", "Holiday brisket and turkey season"),
         ("C · Thermometer education", "How to read accuracy claims: plus-or-minus 0.5 and NIST", "guides/thermometer-accuracy.html", "Live", "Trust content, supports both thermometer pages"),
         ("C · Thermometer education", "Is NIST certification on a listing a guarantee", "Not written", "Proposed", "Honest answer: it is a seller statement (FLG-035)"),
@@ -2744,16 +2776,16 @@ phrase that reads like it was produced by filling in a template."""
 
 <h3>Seasonal calendar</h3>
 <table>
-  <caption>Dates are calendar facts. No event on this page licenses a price, a sale claim or a countdown.</caption>
-  <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Lead time</th><th scope="col">What to do</th></tr></thead>
+  <caption>Every row states its source. Holiday dates are read from OPM's federal holiday tables (S26). Rows marked computed are calendar arithmetic with no cited source, so they are unverified (FLG-052). No event on this page licenses a price, a sale claim or a countdown.</caption>
+  <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Lead time</th><th scope="col">What to do</th><th scope="col">Source</th></tr></thead>
   <tbody>
-    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td></tr>
-    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td></tr>
-    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td></tr>
-    <tr><td>2026-12-02</td><td>First week of Advent</td><td>First week of December</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td></tr>
-    <tr><td>2026-12-25</td><td>Christmas</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td></tr>
-    <tr><td>2027-01-02</td><td>New Year</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td></tr>
-    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td></tr>
+    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
+    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td><td>Unverified: computed as the day after Thanksgiving (FLG-052)</td></tr>
+    <tr><td>2026-11-29</td><td>First Sunday of Advent</td><td>Weekend after Black Friday</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td><td>Unverified: computed as the fourth Sunday before 25 December (FLG-052)</td></tr>
+    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td><td>Unverified: computed as the Monday after Thanksgiving (FLG-052)</td></tr>
+    <tr><td>2026-12-25</td><td>Christmas Day</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
+    <tr><td>2027-01-01</td><td>New Year's Day</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2027 table</a></td></tr>
+    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td><td>Unverified: computed calendar date (FLG-052)</td></tr>
   </tbody>
 </table>
 
@@ -3261,8 +3293,8 @@ def build_about():
     accountability without inventing a biography. The named editor of record is an open item, not a
     styling choice.</li>
   <li><strong>Source for those standards:</strong>
-    <a href="{source_url('S25')}">Google Search Central &mdash; Creating helpful, reliable,
-    people-first content</a> (S25 in the <a href="sources.html">source register</a>).</li>
+    <a href="{source_url('S27')}">Google Search Central &mdash; Creating helpful, reliable,
+    people-first content</a> (S27 in the <a href="sources.html">source register</a>).</li>
 </ul>
 
 <h2>How a page is signed</h2>

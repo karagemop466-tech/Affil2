@@ -681,7 +681,6 @@ table.changelog td:nth-child(1){font-size:12.5px}
   .aisles figure.photo .photo-cap{display:none}
 }
 
-<<<<<<< HEAD
 /* ---------- reader-facing additions (newsroom voice pass) ---------- */
 .spec-wrap{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:26px;align-items:start}
 @media(max-width:900px){.spec-wrap{grid-template-columns:1fr}}
@@ -750,7 +749,6 @@ table.ledger code{font-size:12.5px;background:var(--cream-2);padding:2px 6px;bor
 .records summary::after{content:" \25BE";font-size:10px;opacity:.8}
 .records[open] summary::after{content:" \25B4"}
 @media(max-width:760px){.records div{width:100%}}
-=======
 
 /* ============================================================
    Decision router, guide steps, and the product line a guide ends on.
@@ -831,7 +829,6 @@ header .records div a:hover{background:var(--cream-2);color:var(--accent-d)}
   header .records{order:6;flex-basis:100%}
   header .records div{position:static;width:100%;margin-top:6px;box-shadow:none}
 }
->>>>>>> origin/main
 /* ---------- byline, dated stamp and the short audit link (session 93894704) ---------- */
 /* A publication signs its pages; an audit trail does not. The byline sits under the headline on
    every guide and product page, and the register codes stay off the buyer-facing sentence. */

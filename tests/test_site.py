@@ -162,21 +162,21 @@ class SiteIntegrationTests(unittest.TestCase):
             self.assertIn(token, js)
 
     def test_new_flags_and_source_are_published(self):
-        """S25 and this session's flags are registered, sourced and published, never quietly edited."""
+        """S27 (people-first guidance) and this session's flags are registered, sourced and published, never quietly edited."""
         sources = {x["id"]: x for x in json.loads((ROOT / "data" / "sources.json").read_text())}
-        self.assertIn("people-first content", sources["S25"]["name"].lower())
+        self.assertIn("people-first content", sources["S27"]["name"].lower())
         flags = json.loads((ROOT / "data" / "flags.json").read_text())
         by_id = {f["id"]: f for f in flags}
-        for fid in ("FLG-052", "FLG-053", "FLG-054", "FLG-055"):
+        for fid in ("FLG-055", "FLG-056", "FLG-057", "FLG-058"):
             self.assertIn(fid, by_id)
             self.assertTrue(by_id[fid]["links"], f"{fid} has no source")
             published = (ROOT / "flagged.html").read_text(encoding="utf-8")
             self.assertIn(fid, published)
         # corrected findings stay visible: the dated changelog on sources.html must carry them
         changes = (ROOT / "sources.html").read_text(encoding="utf-8")
-        for fid in ("FLG-052", "FLG-053", "FLG-054"):
+        for fid in ("FLG-055", "FLG-056", "FLG-057"):
             self.assertIn(fid, changes, f"{fid} is not recorded in the dated changelog")
-        self.assertIn("S25", changes)
+        self.assertIn("S27", changes)
         self.assertIn("people-first guidance", (ROOT / "how-we-choose.html").read_text(encoding="utf-8"))
 
 
