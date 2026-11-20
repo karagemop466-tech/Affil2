@@ -21,8 +21,11 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-10 | Rebuild product data from verified listings; add scripts/build_content.py (generated tables); fix compare column shift; remove unverified 'Verified' labels; fix S01/S02 URLs; extend check_site.py to catch stale values; re-check P-03 specs; reconcile flags (new IDs FLG-017+) | done | 937876a6 | data/products.json, data/sources.json, data/flags.json (appends only), scripts/build_content.py, scripts/check_site.py, generated HTML (products/*, compare, index, category, guides, sources, flagged, executive-summary), EXECUTIVE-SUMMARY.md, feed.xml |
 | T-11 | Publication styling + decision-support improvements | done | 4bbf49bb | assets/style.css, assets/illustrations/*.svg, suggestions.html, questions.html, search.html, COORDINATION.md |
 | T-12 | Final integrate original illustrations in generated product cards | done | 4bbf49bb | scripts/build_content.py, generated product-card pages (index, categories, guides), compare.html, COORDINATION.md |
+| T-19 | Final integration: merge open PRs #16/#22/#27, resolve conflicts without discarding work, line-by-line re-verify combined data, build + broken-link gate, PR to main, merge, Pages deploy confirmation, completion record | in progress | de608df7 | COORDINATION.md, conflict resolutions in shared files as integration requires, EXECUTIVE-SUMMARY.md (append) |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
+
+> Session `de608df7` (branch `arena/de608df7-affil2`): first claimed T-12..T-14 from a stale base; renumbered to **T-19** after rebasing onto main — T-12 is taken (done, `4bbf49bb`), and the SG-27..SG-30/nav work (my old T-12) plus the analytics endpoint (my old T-13) are already in open PR #22 (`42617e35`) and PR #16 (`bdedd85e`) respectively. This session does not duplicate them; it integrates them as the final integration session (T-19).
 
 ## Verification log (2026-11-20, official sources only)
 
