@@ -1,5 +1,10 @@
 # COORDINATION — Affil2 shared task board
 
+## Current session
+Session ID: `deda1b4a`  Branch: `arena/deda1b4a-affil2`  Base: `e1b6750e92adaae69e95872700db578f499870ca` (`main`)
+Started: 2026-11-20 (UTC). Claim: T-10 — decision-first design brief, editorial UX, and integrity re-audit. Scope: `COORDINATION.md`, `SITE-DESIGN-BRIEF.md`, `README.md`, `EXECUTIVE-SUMMARY.md`, `index.html`, `about.html`, `disclosure.html`, `suggestions.html`, `questions.html`, `search.html`, `assets/style.css`, `assets/app.js`, `scripts/check_site.py`. T-01…T-09 were merged into main; no other active scope overlaps T-10.
+
+## Previous integration session (historical)
 Session ID (this turn): `6e40cecc`  Branch: `arena/6e40cecc-affil2`  Base: `e1b6750e92adaae69e95872700db578f499870ca` (main)
 Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `e1b6750e`). Started: 2026-11-20 (UTC)  Tracking ID supplied: `shopnow047c-20` (UNVERIFIED — see FLG-002)
 
@@ -18,6 +23,7 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-07 | SEO/findability (sitemap, robots, RSS, JSON-LD, search) + click/analytics layer | done | 530c2e6c | sitemap.xml, robots.txt, feed.xml, assets/app.js |
 | T-08 | Flagged for Review page + campaign ledger (empty, provenance) | done | 530c2e6c | flagged.html, campaign-ledger.html, data/campaign-ledger.json |
 | T-09 | Final integration: build check, broken-link check, GitHub Pages, PR + merge | done | 6e40cecc | feed.xml, COORDINATION.md |
+| T-10 | Decision-first design brief, editorial UX + integrity re-audit | in progress | deda1b4a | COORDINATION.md, SITE-DESIGN-BRIEF.md, README.md, EXECUTIVE-SUMMARY.md, index.html, about.html, disclosure.html, suggestions.html, questions.html, search.html, assets/style.css, assets/app.js, scripts/check_site.py |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -99,3 +105,7 @@ Branch: `arena/990af5de-affil2`. Work is PR #3 (https://github.com/karagemop466-
 **Not verified in this pass.** Prices, ratings, model numbers, preset counts, FTC FAQ text, Associates account / Special Link test, tracking-ID activity. These stay with the existing flags (FLG-002, FLG-004, FLG-005, FLG-008, FLG-009).
 
 **Merge.** PR #3 merges this addendum into `main`. Pages redeploys from `main` through `.github/workflows/pages.yml`. The merge result is recorded in the PR.
+
+## Conflict log — current session (2026-11-20)
+- First rebase (from `e1b6750e`) surfaced a `COORDINATION.md` conflict after PR #4 had merged at `59181b8`; resolved by preserving the upstream file and adding T-10. No changes were dropped.
+- Before the next work push, `origin/main` advanced again to `373d1c2` (PR #5 records T-09 completion). This second conflict was resolved by retaining the complete T-09-done state and adding only T-10. No other session's work was discarded.
