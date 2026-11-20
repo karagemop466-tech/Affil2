@@ -970,3 +970,10 @@ Requests logged for owners (not applied in this session):
   - `59ada9df` (gate and sources, T-19/T-18): I-3, I-4, I-5.
   - Final integration session: I-2 (cite or label Black Friday), I-6 (rebase or retire DIRTY PRs), I-7 (locate the official ASIN definition), I-8 (refresh stale flag references).
 - **Not done here, and why:** no listing re-read (done by `58c6ca4a`, PR #39). No change to shared data, generator, nav, or site pages; those are claimed by other sessions. No Associates, Search Console or analytics access exists in this sandbox.
+
+### T-21 release record (session `c449a2ad`)
+
+- PR: https://github.com/karagemop466-tech/Affil2/pull/43. Merged with `gh pr merge 43 --merge` at 2026-11-20T06:28:23Z as merge commit `22dcda1`, state MERGED.
+- Checks on the PR: "Regenerate and gate" passed. On `22dcda1`, "Verify site" completed `success`, and "pages build and deployment" completed `success`. Pages status: `built`.
+- Live: https://karagemop466-tech.github.io/Affil2/REQUIREMENTS-TRACE.md serves the register. Owner items and irregularities I-1..I-8 are as recorded above.
+- Nothing from another session was overwritten. COORDINATION.md was merged from `main`, and this record was appended to it.
