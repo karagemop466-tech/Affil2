@@ -1,17 +1,44 @@
 name: Deploy GitHub Pages
+
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: pages
   cancel-in-progress: true
+
 jobs:
+  # The publishing gate. Nothing reaches GitHub Pages without passing it.
+  verify:
+    name: Verify (gate, disclosure, policy, tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Rebuild the generated content
+        run: python3 scripts/build_content.py
+      - name: Fail if the committed pages differ from the generator
+        run: git diff --exit-code
+      - name: Publishing gate (disclosure, sponsored links, tags, no prices, no ratings)
+        run: python3 scripts/check_site.py
+      - name: Collector tests (privacy rules for the five events)
+        run: node tests/collector.test.js
+      - name: Site tests
+        run: python3 -m unittest discover -s tests -p "test_*.py" -v
+
   deploy:
+    needs: verify
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

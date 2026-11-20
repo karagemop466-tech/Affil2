@@ -36,7 +36,10 @@ def esc(s):
 
 
 def a(href, text, sponsored=False):
-    rel = ' rel="sponsored nofollow"' if sponsored or "amazon.com" in href else ""
+    # Every link to an Amazon product page is a Program link, including the
+    # supplied link.amazon short links, so it carries rel="sponsored".
+    is_product = "amazon.com" in href or "link.amazon" in href
+    rel = ' rel="sponsored nofollow"' if sponsored or is_product else ""
     return f'<a href="{href}"{rel}>{esc(text)}</a>'
 
 
@@ -194,6 +197,65 @@ def compare_tables():
     return block(af, af_keys, "Air fryers"), block(mt, mt_keys, "Meat thermometers")
 
 
+AMAZON_PRODUCT_RE = re.compile(r'href="(https://www\.amazon\.com/(?:dp|gp/product)/[A-Z0-9]{10})(\?[^"]*)?"')
+
+
+def tag_amazon_links(text):
+    """Every link to an Amazon product listing carries the Associates tag.
+
+    The Operating Agreement requires that a link to Amazon includes the
+    tracking ID, so the source citations are tagged as well as the buttons.
+    Policy pages on affiliate-program.amazon.com are not product links and
+    are deliberately left alone.
+    """
+    def repl(m):
+        url = m.group(1)
+        if "tag=" in (m.group(2) or ""):
+            return 'href="%s%s"' % (url, m.group(2) or "")
+        return 'href="%s?tag=%s"' % (url, TAG)
+    return AMAZON_PRODUCT_RE.sub(repl, text)
+
+
+def ensure_nav_links(text, prefix=""):
+    """Every page carries the Measurement link in both nav groups.
+
+    Only the two <nav> blocks and the footer dashboard row are touched, so a
+    breadcrumb line in the body of a page is never modified.
+    """
+    href = '%smeasurement.html' % prefix
+    link = '<a href="%s">Measurement</a>' % href
+    if link in text:
+        return text
+    flagged = '<a href="%sflagged.html">Flagged for Review</a>' % prefix
+
+    def add_to_nav(m):
+        return m.group(1) + m.group(2).replace(flagged, link + flagged) + m.group(3)
+
+    text = re.sub(r'(<nav aria-label="Primary">)(.*?)(</nav>)', add_to_nav, text, count=1, flags=re.S)
+    text = re.sub(r'(<nav aria-label="Footer">)(.*?)(</nav>)', add_to_nav, text, count=1, flags=re.S)
+    # footer dashboard row: after the Campaign Ledger entry
+    text = text.replace(
+        '<a href="%scampaign-ledger.html">Campaign Ledger</a>' % prefix,
+        '<a href="%scampaign-ledger.html">Campaign Ledger</a> &middot; %s' % (prefix, link),
+    )
+    return text
+
+
+def ensure_collect_script(text, prefix=""):
+    """Make sure the page loads the self-hosted event collector.
+
+    The collector is inert until a collector answers the health probe, so
+    shipping the script on every page is safe even with no collector
+    deployed.
+    """
+    tag = '<script src="%sassets/js/collect.js" defer></script>' % prefix
+    if tag in text:
+        return text
+    if "</body>" not in text:
+        raise SystemExit("build_content: page has no </body>")
+    return text.replace("</body>", tag + "</body>", 1)
+
+
 def replace_once(text, pattern, repl, label, flags=re.S):
     fn = repl if callable(repl) else (lambda m: repl)
     new, n = re.subn(pattern, fn, text, count=1, flags=flags)
@@ -292,6 +354,18 @@ def main():
                            "Irregularities register, updated " + CHECKED + ". None of these block publishing; all are visible to readers."),
                      "flagged table")
     fp.write_text(t)
+    # 8. compliance: tag every Amazon product link, load the collector
+    for path in sorted(set(ROOT.glob("*.html")) | set((ROOT / "guides").glob("*.html"))
+                       | set((ROOT / "products").glob("*.html"))):
+        t = path.read_text()
+        n_before = t
+        pre = prefix_for(path)
+        t = tag_amazon_links(t)
+        t = ensure_collect_script(t, pre)
+        t = ensure_nav_links(t, pre)
+        if t != n_before:
+            path.write_text(t)
+            changed.append(str(path.relative_to(ROOT)))
     print("build_content: updated", len(set(changed)), "files")
 
 

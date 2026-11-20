@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Measurement — ShopNow Kitchen</title><meta name="description" content="The five first-party events this site records, what is never collected, how the self-hosted collector is deployed, and how first-party reports land in the campaign ledger.">
+<link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/measurement.html"><meta property="og:title" content="Measurement — ShopNow Kitchen"><meta property="og:description" content="The five first-party events this site records, what is never collected, how the self-hosted collector is deployed, and how first-party reports land in the campaign ledger."><meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/style.css"><link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml"></head><body>
+<header class="masthead"><div class="wrap mast"><a class="brand" href="index.html">ShopNow <span>Kitchen</span></a><nav aria-label="Primary"><a href="index.html">Home</a><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="measurement.html">Measurement</a><a href="flagged.html">Flagged for Review</a></nav>
+<form class="search" action="search.html" method="get" role="search"><label class="sr" for="q">Search guides and products</label><input id="q" name="q" type="search" placeholder="Search: basket, capacity, thermometer…"><button type="submit">Search</button></form></div></header>
+<div class="disclosure" role="note"><div class="wrap">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links — if you buy through them, we may earn a commission at no extra cost to you. <a href="disclosure.html">How we disclose</a></div></div>
+<main class="wrap">
+<h1>Measurement</h1><p class="lede">Five first-party events, one self-hosted collector, and a ledger that stays empty until an authorised report fills it. Nothing here is inferred, and nothing is estimated.</p>
+
+<section><h2>What this site records</h2><p>Five events are defined and only these five are accepted. The collector rejects anything else with a <code>400</code>, so a stray or hostile payload cannot be stored.</p>
+<table><caption>Event schema. The authoritative copy lives in <code>data/events.json</code>; the collector enforces it in code.</caption>
+<thead><tr><th>Event</th><th>Fires when</th><th>Payload</th><th>Why it exists</th></tr></thead><tbody>
+<tr><td><code>page_view</code></td><td>Every full page load.</td><td>path, referrer host, session id</td><td>The denominator. Every other number is meaningless without it.</td></tr>
+<tr><td><code>outbound_click</code></td><td>A reader clicks a sponsored Amazon link.</td><td>path, product id, link position, session id</td><td>The only first-party number that measures intent to buy.</td></tr>
+<tr><td><code>guide_read</code></td><td>The footer of a guide scrolls into view — the reader reached the end.</td><td>path, guide id, session id</td><td>Separates a guide that was opened from a guide that was read.</td></tr>
+<tr><td><code>search</code></td><td>A search results page has a query.</td><td>path, query length, result count, session id</td><td>Shows what readers cannot find by browsing. It records the <em>shape</em> of a search, never the words typed.</td></tr>
+<tr><td><code>suggestion_rank</code></td><td>A reader moves a suggestion up or down the register.</td><td>path, suggestion id, position, session id</td><td>Shows which directions readers think should be built first, without a form.</td></tr>
+</tbody></table></section>
+
+<section><h2>What is never collected</h2><ul>
+<li>No cookies, no local storage, no advertising identifiers, no cross-site tracking.</li>
+<li>No IP address, no user agent, no device fingerprint or any derived identifier.</li>
+<li>No query strings, no hash fragments, no referrer URL — only the bare hostname of a different site, and only when one exists.</li>
+<li>The text of a search query is never sent or stored. Its length and the number of results returned are.</li>
+<li>Any payload key outside the documented schema is dropped rather than stored.</li>
+<li>The session id is random per page load, 18 characters, and dies with the tab. Sessions can be counted; people cannot be profiled.</li>
+</ul>
+<p>The reader-visible counter in the <a href="campaign-ledger.html">Campaign Ledger</a> is separate and stays in the reader's own browser. It is a local convenience, not a measurement system.</p></section>
+
+<section><h2>The self-hosted collector</h2><p>GitHub Pages serves static files and cannot run a server-side function, so the collector ships in this repository in two deployable forms. Either one answers the same contract.</p>
+<table><caption>Two implementations of one contract. Both share the same sanitisation rules, so they cannot drift.</caption>
+<thead><tr><th>Implementation</th><th>File</th><th>Storage</th><th>How to run it</th></tr></thead><tbody>
+<tr><td>Cloudflare Pages Function</td><td><code>functions/api/collect.js</code></td><td>Workers KV binding named <code>EVENT_LOG</code> (optional)</td><td>Deploy the repository as a Cloudflare Pages project and bind the KV namespace. The route <code>/api/collect</code> then answers both the health probe and the event sink.</td></tr>
+<tr><td>Standalone Node server</td><td><code>analytics/server.js</code></td><td>Newline-delimited JSON appended to a local file</td><td><code>PORT=8787 LOG=./analytics/events.ndjson node analytics/server.js</code> — no npm install, no build step.</td></tr>
+</tbody></table>
+<p><strong>Pointing the site at a collector.</strong> The collector is same-origin by default. To use one on a different host, add this to the <code>&lt;head&gt;</code> of every page:</p>
+<pre><code>&lt;meta name="x-collect-endpoint" content="https://collector.example/collect"&gt;</code></pre>
+<p><strong>While no collector answers, nothing happens.</strong> The browser client sends one <code>GET</code> to the endpoint on each page load. If it does not return <code>200</code>, the whole module stays inert: no event is sent, no storage is touched, and the reader sees nothing. That is the state of the live site today, and it is deliberate — see <a href="flagged.html">Flagged for Review</a>, FLG-033.</p>
+<p><strong>Contract.</strong> <code>POST /api/collect</code> with a JSON body returns <code>204</code> for an accepted event and <code>400</code> for anything outside the schema. <code>GET /api/collect</code> returns <code>200 {"status":"ok"}</code> and stores nothing. Bodies over 4&nbsp;KB are refused with <code>413</code>.</p></section>
+
+<section><h2>What the collector does not measure</h2><table><caption>Server-side numbers come from Amazon, not from us. They are transcribed by hand, with provenance.</caption>
+<thead><tr><th>Number</th><th>Where it comes from</th></tr></thead><tbody>
+<tr><td>Orders</td><td>The Associates Central orders report, transcribed into the campaign ledger by hand with the report date and a link to the report.</td></tr>
+<tr><td>Commission</td><td>The same first-party report. Never estimated.</td></tr>
+<tr><td>Conversion rate</td><td>Orders divided by clicks, and only once both sides are real. No proxy conversion rate is published.</td></tr>
+</tbody></table>
+<p>Until a real report exists, the <a href="campaign-ledger.html">campaign ledger</a> stays empty. An empty ledger is the honest starting point; a filled one with invented numbers would not be.</p></section>
+
+<section><h2>How a number gets used</h2><ol>
+<li><strong>page_view</strong> gives the denominator for every rate on the site.</li>
+<li><strong>outbound_click</strong> gives intent to buy, per product and per placement — the number that decides which guide to write next.</li>
+<li><strong>guide_read</strong> separates a guide that was opened from a guide that was finished, and therefore says which topics deserve more coverage.</li>
+<li><strong>search</strong> shows what readers are looking for and not finding, which is the cheapest editorial signal available.</li>
+<li><strong>suggestion_rank</strong> shows which directions readers think should be built first.</li>
+</ol>
+<p>None of these are used to claim a revenue figure, a popularity ranking or a conversion rate. They are used to decide what to write and what to fix.</p></section>
+
+<section class="panel"><h2>How this site earns trust</h2><ol>
+<li><strong>Disclosure above the fold</strong> on every page, repeated in the footer.</li>
+<li><strong>Every outbound link</strong> is marked <em>(paid link)</em>, carries <code>rel="sponsored nofollow"</code>, and carries the Associates tracking tag.</li>
+<li><strong>Intended vs observed</strong> ASINs are stored in separate fields — never merged.</li>
+<li><strong>Blank means unverified.</strong> We do not infer prices, ratings or popularity.</li>
+<li><strong>Measurement is first-party</strong>, cookie-free, and self-hosted. If no collector is deployed, nothing is collected.</li>
+</ol>
+<p><a href="flagged.html">Flagged for Review</a> · <a href="questions.html">Open questions</a> · <a href="campaign-ledger.html">Campaign ledger</a> · <a href="disclosure.html">Privacy &amp; analytics</a> · <a href="executive-summary.html">Executive summary</a></p></section>
+</main><footer><div class="wrap"><p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links — if you buy through them, we may earn a commission at no extra cost to you.</p>
+<nav aria-label="Footer"><a href="index.html">Home</a><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="suggestions.html">Suggestions</a><a href="questions.html">Questions</a><a href="measurement.html">Measurement</a><a href="flagged.html">Flagged for Review</a></nav><p class="dash">Dashboard &amp; records: <a href="executive-summary.html">Executive Summary</a> · <a href="sources.html">Sources</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="measurement.html">Measurement</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Privacy &amp; Analytics</a> · <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS Feed</a></p>
+<p class="small">Prices and availability are not shown on this site. Check the live listing on Amazon for current details. Product names and Amazon are trademarks of Amazon.com, Inc. or its affiliates. This site is not endorsed by Amazon. Illustrations are original artwork, not product photographs. Listing checked: 2026-11-20. Values not confirmed on the listing are left blank.</p>
+<p class="small">© 2026 ShopNow Kitchen. Original editorial content. <a href="flagged.html">Flagged for Review</a> lists everything we could not verify.</p></div></footer>
+<script src="assets/app.js" defer></script><script src="assets/js/collect.js" defer></script></body></html>

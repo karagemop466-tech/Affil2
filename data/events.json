@@ -1,0 +1,111 @@
+{
+  "register_title": "First-party event schema",
+  "compiled_on": "2026-11-20",
+  "compiled_by": "session bdedd85e",
+  "principles": [
+    "No cookies. No local storage. No advertising identifiers. No cross-site tracking.",
+    "No personal data is collected: no name, no email, no IP address, no user agent, no device fingerprint.",
+    "A search is recorded as a length and a result count, never as the words the reader typed.",
+    "Every event carries a random per-page-load session id that is discarded when the tab closes, so sessions can be counted but not profiled.",
+    "The collector is first-party and self-hosted. If no collector is deployed, the script is inert and the site works normally.",
+    "Amazon-side conversions are never measured here. Orders and commission appear only in the campaign ledger, and only when transcribed from an authorised Associates report."
+  ],
+  "endpoint": {
+    "default": "/api/collect",
+    "method": "POST",
+    "content_type": "application/json on fetch, text/plain on sendBeacon",
+    "health_probe": "GET /api/collect returns 200 {\"status\":\"ok\"}. The browser client sends this once per page load and only switches measurement on when it succeeds, so a site with no collector deployed behaves exactly like a site with no analytics at all.",
+    "implementations": [
+      {
+        "kind": "cloudflare_pages_function",
+        "path": "functions/api/collect.js",
+        "storage": "Workers KV binding EVENT_LOG, optional",
+        "note": "A GET on the same path answers the health probe, so one route serves both the probe and the event sink."
+      },
+      {
+        "kind": "node_http_server",
+        "path": "analytics/server.js",
+        "storage": "newline-delimited JSON appended to a local file",
+        "note": "Dependency-free, no npm install, no build step. Run it on any host and point the site at it with <meta name=\"x-collect-endpoint\" content=\"https://host/collect\">."
+      }
+    ],
+    "failure_behaviour": "A failed or unreachable collector is swallowed silently. It never blocks navigation and never produces a console error in a reader's browser.",
+    "what_is_never_stored": [
+      "IP address",
+      "User agent",
+      "Device fingerprint or any derived identifier",
+      "Cookies",
+      "Query strings and hash fragments",
+      "The full referrer URL (only the bare hostname is kept, and only when it is a different host)",
+      "The text of a search query",
+      "Any key outside the documented event schema"
+    ]
+  },
+  "events": [
+    {
+      "id": "1",
+      "name": "page_view",
+      "title": "A page of the publication was viewed",
+      "fires": "On every full page load of a page on this site.",
+      "payload": { "path": "string", "referrer_host": "string, empty when absent", "session_id": "string, random per tab" },
+      "why_it_exists": "The denominator. Every other number is meaningless without it.",
+      "not_collected": ["query strings", "hash fragments", "IP address", "user agent"]
+    },
+    {
+      "id": "2",
+      "name": "outbound_click",
+      "title": "A reader clicked a sponsored outbound link to Amazon",
+      "fires": "On click of any anchor carrying a data-outbound product id, immediately before navigation.",
+      "payload": { "path": "string", "product_id": "string, e.g. P-01", "link_position": "string, the placement label", "session_id": "string" },
+      "why_it_exists": "The only first-party number that measures intent to buy. It is the top of the funnel that the Associates report eventually completes.",
+      "not_collected": ["the destination URL of the click", "the Amazon tag", "anything beyond the product id"]
+    },
+    {
+      "id": "3",
+      "name": "guide_read",
+      "title": "A guide was actually read",
+      "fires": "When the footer of a guide scrolls into view, which means the reader reached the end of it.",
+      "payload": { "path": "string", "guide_id": "string", "session_id": "string" },
+      "why_it_exists": "Distinguishes a guide that was opened from a guide that was read. It is the closest proxy this site has to engagement, and it is the number that should decide which topics get more coverage.",
+      "not_collected": ["exact scroll depth", "time on page"]
+    },
+    {
+      "id": "4",
+      "name": "search",
+      "title": "A reader searched the site",
+      "fires": "On a search results page that has a query.",
+      "payload": { "path": "string", "query_length": "string, the number of characters typed", "result_count": "string, the number of results shown", "session_id": "string" },
+      "why_it_exists": "Shows what readers cannot find by browsing, which is the cheapest editorial signal available. It names a topic; it never repeats the words a reader typed.",
+      "not_collected": ["the query text", "which results were clicked"]
+    },
+    {
+      "id": "5",
+      "name": "suggestion_rank",
+      "title": "A reader reordered the suggestions register",
+      "fires": "When a reader moves a suggestion up or down in the rank table.",
+      "payload": { "path": "string", "suggestion_id": "string, e.g. SG-03", "position": "string, the new position, 1-based", "session_id": "string" },
+      "why_it_exists": "The suggestions register is a decision surface. This shows which directions readers think should be built first, without asking them to fill in a form.",
+      "not_collected": ["the full ranking", "any identifier for the reader"]
+    }
+  ],
+  "not_measured_here": [
+    {
+      "item": "Orders",
+      "where_it_comes_from": "The Associates Central orders report, transcribed into the campaign ledger by hand, with the report date and a link to the report recorded."
+    },
+    {
+      "item": "Commission income",
+      "where_it_comes_from": "The same first-party report. It is never estimated."
+    },
+    {
+      "item": "Conversion rate",
+      "where_it_comes_from": "Orders divided by clicks, and only once both sides are real. No proxy conversion rate is published."
+    }
+  ],
+  "status": {
+    "client": "shipped",
+    "endpoint": "shipped in repository, not deployed to a public host",
+    "why_not_deployed": "GitHub Pages serves static files only and cannot run a server-side function. The endpoint ships in two deployable forms so the site owner can run it wherever they like. Until one is deployed and pointed at, the collector stays inert and the campaign ledger stays empty.",
+    "flag": "FLG-033"
+  }
+}

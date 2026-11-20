@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /functions/
+Disallow: /analytics/
+Disallow: /tests/
 Sitemap: https://karagemop466-tech.github.io/Affil2/sitemap.xml
