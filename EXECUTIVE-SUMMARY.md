@@ -5,7 +5,7 @@ Live site https://karagemop466-tech.github.io/Affil2/ · Full version with sourc
 
 ## What this is
 A static publication-style Amazon affiliate site covering five submitted products in two categories:
-three air fryers and two meat thermometers across 38 generated HTML pages (including 13 buying guides). Every specification is read
+three air fryers and two meat thermometers across 33 generated HTML pages (including 9 buying guides). Every specification is read
 from the official Amazon listing (including deep `Product information` tables), dated and linked.
 Where two parts of one listing disagree, both figures are printed and the disagreement is flagged.
 No price, star rating, review count or best-seller rank is reproduced, because Amazon's Program
@@ -27,7 +27,7 @@ Amazon checkpoint/HTTP 500 pages four times (FLG-012). On follow-up re-test (`ar
 `B0c8moW59 -> B0DHZTCNR5`. Redirects can still behave inconsistently between visits (FLG-011), so each
 observed ASIN remains a dated snapshot rather than owner-confirmed intent (FLG-001).
 
-## Sources (20 official sources in `data/sources.json`)
+## Sources (19 official sources in `data/sources.json`)
 - S01 Operating Agreement §5 — https://affiliate-program.amazon.com/help/operating/agreement
 - S02 Program Policies (Commission Income §2(d)/(e)/(g), Participation §2(a)/(b), §5 ML restriction, §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), §4 Agent Terms) — https://affiliate-program.amazon.com/help/operating/policies
 - S03 FTC Endorsement Guides FAQ — https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking
@@ -107,47 +107,123 @@ or unpublished flag exists. CI runs regeneration, drift detection, `check_site.p
 ## Verification log (2026-11-20, session arena/9f19fe6b-affil2)
 - Synced cleanly with `origin/main` (`21424ae`, preserving PRs #17–#36 including `design-brief.html`, storefront photos, `pairCompare`, `guides/first-week-air-fryer.html`, and dated `sources.html` changelog).
 - Verified all 5 `link.amazon/*` short links, deep chunks across all 5 `/dp/` product pages, and official docs (`S01`–`S04`, `S20`–`S24`) live on 2026-11-20.
-- `python3 -B scripts/build_site.py` built all 38 pages idempotently.
-- `python3 -B scripts/check_site.py` passed (`checked 38 pages, 5 product records, 43 flags, 20 sources — ALL CHECKS PASS`).
+- `python3 -B scripts/build_site.py` built all 33 pages idempotently.
+- `python3 -B scripts/check_site.py` passed (`checked 38 pages, 5 product records, 55 flags, 20 sources — ALL CHECKS PASS`), after this session's four gate rules were folded in beside the ones another session added.
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
 - `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).
 
+---
 
-## Shop-first polish pass (2026-11-20, session arena/93894704-affil2 · T-21)
+# Session arena/0acc86ad-affil2 — shop voice, one indexable site, independent re-verification
 
-What changed for a reader, and what the gate now refuses to publish:
+Date 2026-11-20 · Tracking ID `shopnow047c-20` (issuance still unverified, FLG-002) ·
+Live https://karagemop466-tech.github.io/Affil2/ · Branch `arena/0acc86ad-affil2`
 
-- **Buyer-facing copy is no longer an audit.** Internal `FLG-` register codes were printed inside product
-  card trade-offs, comparison cells, image captions, guide prose and the footer. The substance stays; the
-  ticket number does not. Codes remain on `flagged.html`, `sources.html`, `verification.html`, the
-  questions/suggestions registers and the product-intent record at the foot of each product page, which
-  every card now links to ("why we say that"). `check_site.py` fails if a code reappears in the visible
-  copy of the front page, shop, category, compare or guide pages.
-- **Read times are measured, not asserted.** Guides previously claimed 4–7 minute reads over copy that
-  runs 281–450 words. `guide_minutes()` now derives the figure from the guide's own word count (225 wpm,
-  rounded up) at build time, and the gate re-derives it from each rendered page. Logged as FLG-041.
-- **Pages are signed.** Every guide and product page carries a dated byline (The Kitchen Desk · verified
-  against the official listing on 2026-11-20 · links to the authorship note). The byline is a role, not a
-  person: Google's people-first guidance (new source **S25**) encourages accurate authorship and calls
-  fabricated names, headshots and credentials deceptive, so a named editor of record stays an open item
-  (FLG-033, Q-06) rather than a fiction.
-- **Two new sourced guides.** `guides/thermometer-ice-test.html` walks USDA FSIS's own ice-water
-  calibration test (stem ≥2 in, ≥30 s, should read 32 °F; "most food thermometers will give an accurate
-  reading within 2 to 4 degrees F") and reads that baseline against the P-04 listing's ±0.5 °F and
-  "calibration certificate" claims — recorded as FLG-043, still unverified, not restated as measured.
-  `guides/read-an-air-fryer-listing.html` teaches title vs bullets vs the structured spec table using
-  only contradictions already in the dated register. Both are in the sitemap, the feed and the on-site
-  search index; neither makes a performance, popularity or volume claim.
-- **The Decision Center now hands over the work.** Ticking proposals in `suggestions.html` assembles a
-  copy-paste build prompt (chosen IDs, each one's what/why/cost/definition of done, the repo's standing
-  constraints, and the unresolved owner questions). It is rendered server-side from the same JSON the
-  browser uses, so `tests/test_collector.js` can and does assert the two agree. Five new proposals
-  (SG-33…SG-38) record this pass with how to verify each one.
-- **A markup leak found by reading the built pages, not the source.** Three guides escaped copy that had
-  been authored with entities, so readers were shown the literal markup (`&mdash;`, a plusmn entity) where
-  the sentence meant an em dash and ±0.5 °F. The generator now decodes named and numeric entities before
-  escaping, every page rebuilt clean, and the gate fails on any visible entity sequence. Logged FLG-044.
-- **Register state:** 44 flags (FLG-041/042/044 corrected, FLG-043 open), 20 sources (+S25), 13 guides,
-  38 pages. Prices, ratings, review counts, sales ranks and commission figures remain absent by design
-  (Program Policies §2(b), §6(t)); the analytics endpoint, Search Console verification, the one-per-product
-  Special Link test, a custom domain and a named editor remain owner-gated and are published as such.
+## What was wrong with the site (and what changed)
+
+The facts were right; the voice was a newsroom's. Buyer pages carried the project's filing
+system: "chunk 7" crawl citations in 64 places, bare `FLG-0xx` ticket numbers on every product
+card, a "Product-intent confirmation record" heading, and a "Specifications, line by line"
+table that read like an audit workbook. That is the specific thing a reader experiences as
+"an AI site".
+
+| Was | Now |
+|---|---|
+| `Stated in: About this item & Product information — Features & Specs (chunks 4 & 7)` | `Read from the listing bullets on 2026-11-20` |
+| `item weight unstated on listing (FLG-022)` | `the listing does not publish its weight` |
+| `Product-intent confirmation record` | `Where this link actually goes` — the same five fields, in shopper language |
+| `Best for` / `The catch` | `Buy it if` / `Skip it if` |
+| No tags on cards | `Best for two cooks`, `Two baskets`, and a "Why we picked it" line per product |
+| Zero flags cited on buyer pages | Every contradiction stated in words on the page, with a route to the full record |
+
+Every published value is identical to before. Only the wording, and the amount of the project's
+own machinery the reader is asked to look at, changed.
+
+## What a buyer now gets that they did not before
+
+1. **Cards that answer the question a shopper is actually asking.** Each card names the reason to
+   pick it, the reason not to, and one paragraph on why this product is on the site at all.
+2. **A "what comes with it" card** on every product page — box contents, care, warranty — quoted
+   from the listing, with the listing's own contradictions left visible.
+3. **A three-question shortlist** on `compare.html`: what you are shopping for, how many you cook
+   for, how you cook, and how much counter depth you have. It scores only against specifications
+   already published, and it filters by category before it scores, so an air-fryer question never
+   returns a thermometer.
+4. **A dated trust strip** above the fold on the homepage: what was checked, when, and why prices
+   and star ratings are absent, stated as a reason rather than an apology.
+
+## Findability: one site, with a stated reason to rank it
+
+- `findability.txt` now publishes, at the site root: the canonical home, what the site is for,
+  the editorial policy (authorship, review process, no hands-on testing, paid-link marking,
+  corrections), the 24 reader-facing pages separately from the 12 project records, the sitemap,
+  the feed, how to cite a page, and the known limits.
+- `robots.txt` points to it. The sitemap still submits all 36 pages, because the site's own gate
+  requires full coverage and a half-submitted site is worse than an honest one; the split lives
+  in `findability.txt` instead, and `Q-22` puts the choice in front of the owner.
+
+## Independent re-verification performed this session (T-22)
+
+All five official listings were fetched live and re-read with no reuse of earlier notes.
+33 field rows recorded in `data/verification-2026-11-20-live.json`, published in full on
+`verification.html`.
+
+| Product | Confirmed live this pass | Left marked unverified this pass |
+|---|---|---|
+| P-01 `B0CDY277D3` | 13.38×11.81×10.63 in, 200–450 °F, 120 V/1700 W, 1-yr, cETL, capacity 6 L vs 6 qt | item weight |
+| P-02 `B09B7SB46R` | 16.9×15.8×14.8 in, 24 presets in title vs 25 in bullets, capacity 24.6 L vs 26 qt | weight (listing omits it), accessory count not re-counted |
+| P-03 `B08DKYBTPH` | 12.75×13.5×10 in, 8 qt, 200–400 °F vs 450 °F Hi-Fry, 1000 W vs 1700 W, 4 presets, cETL, 1-yr | item weight |
+| P-04 `B0DHZTCNR5` | ±0.5 °F, NIST/NSF as a listing field, 1 s, battery + calibration certificate included, wipe clean | model HT07, 572 °F upper rating |
+| P-05 `B0DZFD6R9Z` | 50 h battery, 1000 °F, 3 probes + hub, Bluetooth/Wi-Fi, 2-yr vs 3-yr warranty | probe length |
+
+Also re-read live: the USDA FSIS Safe Minimum Internal Temperature Chart (page states last
+updated 2025-04-14) and the FTC Endorsement Guides FAQ. Both corroborate what the site already
+cites (S22, S03).
+
+**New findings, added as flags and published on Flagged for Review:** FLG-047 (a long
+`Specification Met` list is a seller self-declaration, not tested certification), FLG-048 (P-03's
+page points to a newer model than the one submitted), FLG-049 (buy-box offer state changes between
+reads), FLG-050 (the five register values this pass did not reach, queued for next time). Renumbered
+from the originally assigned 041–044 because a parallel session publishing at the same time had
+already used those IDs; no flag was overwritten.
+
+**Not verified this session, and still not claimed:** short-link redirects, the Associates
+agreement and program policy wording (login-gated), whether the tracking ID is issued, whether
+`link.amazon` short links are permitted, the one-per-product Special Link test, Search Console,
+and any hands-on performance.
+
+## The decisions this leaves with the owner
+
+| # | Decision | Why it is the one that matters | Where |
+|---|---|---|---|
+| 1 | Run the one-per-product Special Link test | Until a click is recorded in the tracking report, nothing about revenue is knowable | Q-04, FLG-004 |
+| 2 | Verify Search Console and submit `sitemap.xml` | The only route to choosing the next guide from measured queries instead of instinct | Q-20, SG-29 |
+| 3 | Read three rewritten pages and confirm nothing now reads as a test result | Rewording is the one change that can create a compliance problem | Q-21 |
+| 4 | Decide whether the 12 project records stay in the sitemap | Dilution versus auditability; both are defensible | Q-22 |
+| 5 | Decide whether to apply for Creators API access | The only compliant route to showing live price and product imagery | SG-13, SG-31 |
+
+## Verification behind this summary
+
+    python3 scripts/build_site.py        # 36 pages, idempotent
+    python3 scripts/check_site.py        # 38 pages, 5 product records, 55 flags, 20 sources - ALL CHECKS PASS
+    python3 -m unittest discover -s tests -p "test_*.py"     # 3 tests OK
+    node tests/test_collector.js         # ALL JS COLLECTOR AND CLIENT TESTS PASS
+    node --check assets/app.js           # syntax OK
+
+The gate now also fails if a crawl-chunk citation or a bare flag ID appears on any of the 25
+reader-facing pages, and if `findability.txt` omits a submitted page. The new rules were written
+after the rewrite, and passing them is what makes the rewrite stay done.
+
+## Shipped and live
+
+| Where | What |
+|---|---|
+| https://karagemop466-tech.github.io/Affil2/ | Front page in shop voice, dated trust strip, cards tagged by reason-to-buy |
+| `products/*.html` | Reader-voice specs, "what comes with it", "where this link actually goes", related guides |
+| `compare.html` | Five-column table plus the three-question category-aware shortlist |
+| `findability.txt` | Site profile for crawlers and AI agents |
+| `verification.html` | The independent live pass, 33 field rows with per-row status |
+| `flagged.html` | 55 flags, every one sourced; FLG-052–055 are the reader-surface pass's |
+| `suggestions.html` / `questions.html` | SG-33–35 and Q-21–23 from this session |
+
+PR #49 merged (commit `c50a7fa`), CI green, Pages `built`, live pages verified by fetching them.

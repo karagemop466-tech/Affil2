@@ -13,18 +13,21 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | If you want | Read |
 |---|---|
 | The short version | `EXECUTIVE-SUMMARY.md` |
-| What to decide next | `suggestions.html` — Decision Center, 37 proposals, rankable, and it assembles the next build prompt |
+| What to decide next | `suggestions.html` — Decision Center, 41 proposals, tickable into a build prompt |
 | The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
-| What is still unanswered | `questions.html` — Open Questions, 20 rows, each with how to go and get the answer |
-| What could not be verified | `flagged.html` — Flagged for Review, 44 flags, every one sourced |
+| What is still unanswered | `questions.html` — Open Questions, current count on the page |
+| What could not be verified | `flagged.html` — Flagged for Review, 55 flags, every one sourced |
+| Why crawlers should rank this | `findability.txt` — canonical home, editorial policy, indexable pages, citation form |
+| What is still unanswered | `questions.html` — Open Questions, 20 rows |
 | Where every fact came from | `sources.html` — Source Register, 20 official sources + dated changelog |
+| How to check a gadget you own | `guides/thermometer-ice-test.html` — the USDA ice-water test, step by step |
 | AI platform blueprint & gates | `platform.html` — 7-module architecture & Creators API / ML policy limits (SG-31) |
 | Telemetry & collector guide | `measurement.html` — 5-event privacy schema & Search Console checklist (SG-25) |
 | How the site is built | `scripts/build_site.py` |
 
 ## Rebuild and check
 
-    python3 scripts/build_site.py                          # writes 38 pages, sitemap.xml, feed.xml, robots.txt
+    python3 scripts/build_site.py                          # writes 38 pages, sitemap.xml, feed.xml, robots.txt, findability.txt
     python3 scripts/check_site.py                          # compliance and integrity gate; exits 1 on any problem
     python3 -m unittest discover -s tests -p "test_*.py" -v
     node tests/test_collector.js                           # collector server, Cloudflare function & client DOM tests
@@ -38,23 +41,42 @@ generator output, if the gate fails, or if the unit/collector tests fail.
 | Path | Holds |
 |---|---|
 | `data/products.json` | the shared product register: titles, field values, provenance, status |
+| `scripts/howto_guides.py` | the two sourced how-to guides (ice-water calibration test; reading a listing) |
 | `data/editorial.json` | this site's voice: headlines, best-for, trade-offs, FAQ |
 | `data/sources.json` | 20 official sources (`S01`–`S04`, `S10`–`S25`) with what each supports and date checked |
-| `data/flags.json` | 44 flags (`FLG-001`–`FLG-044`): severity, detail, owner status, source links |
+| `data/flags.json` | 55 flags (`FLG-001`–`FLG-055`): severity, detail, owner status, source links |
 | `data/events.json` | canonical 5-event privacy-preserving measurement schema and forbidden fields |
 | `data/reverification-2026-11-20.json` | attempt-by-attempt record of the short-link and deep-table tests |
 | `assets/style.css` | storefront stylesheet, including photo-card and diagram styles |
 | `assets/photos/` | generated illustrative storefront scenes, captioned on every page that uses them (FLG-036) |
 | `assets/illustrations/` | 3 original editorial SVG schematics (`air-fryer.svg`, `air-fryer-oven.svg`, `thermometer.svg`) |
-| `assets/app.js` | five measured events, client search (`search.html`), pair compare (`compare.html`), mobile nav toggle, ranking, CSV export, gated `send()` |
+| `assets/app.js` | five measured events, client search (`search.html`), pair compare and the three-question shortlist (`compare.html`), mobile nav toggle, ranking, CSV export, gated `send()` |
+| `findability.txt` | generated site profile: canonical home, editorial policy, reader pages vs records, sitemap, feed, citation form, known limits |
+| `data/verification-2026-11-20-live.json` | the independent live re-read of all five listings: 33 field rows, each marked verified / conflict / unverified for that pass |
 | `analytics/server.js` | zero-dependency Node.js self-hosted collector (`GET`/`POST /api/collect`) |
 | `functions/api/collect.js` | drop-in Cloudflare Pages Function collector matching `data/events.json` |
-| `scripts/` | single-source generator (`build_site.py`, guide copy in `seasonal_guides.py` and `howto_guides.py`) and compliance gate (`check_site.py`) |
+| `scripts/` | single-source generator (`build_site.py`) and compliance gate (`check_site.py`) |
 | `tests/` | Python integration tests (`test_site.py`) and Node.js collector/client tests (`test_collector.js`) |
 
 Cross-session rule: `data/products.json`, `data/sources.json` and `data/flags.json` are shared
 records. Annotations are added to `data/editorial.json`; shared records are only edited when live
 verification shows an inaccuracy or newly confirmed value.
+
+## What this pass changed, and what it did not verify
+
+The storefront pass added a front-page router (four ways in, stated as the reader's situation),
+a product line at the end of every guide with one tagged button, and styling for the hero and
+guide markup that had been shipping without CSS rules. It also stopped marking FTC, Google, USDA
+and Amazon policy citations as `rel="sponsored"` — that attribute belongs on the listings we earn
+on, not on the documents a claim is checked against — and removed six image files that nothing
+referenced.
+
+**It verified nothing against a live source.** The environment this pass ran in could reach
+GitHub and the two package registries only; `amazon.com`, `affiliate-program.amazon.com`,
+`ftc.gov`, `developers.google.com` and `fsis.usda.gov` all failed at TLS. Every register value
+therefore still rests on the dated reads recorded against S01–S24 by earlier sessions. That limit
+is itself published as FLG-045 rather than left implicit, and no `verified` status was added
+anywhere on the strength of this pass.
 
 ## Rules the gate enforces
 
@@ -68,12 +90,26 @@ verification shows an inaccuracy or newly confirmed value.
 - Every page has one `<h1>`, canonical & `og:url` matching its path, valid JSON-LD, and an entry in
   `sitemap.xml`; `feed.xml` parses and its items exist.
 - A blank field must be marked `unverified`; a value must name where it was stated.
-- Buyer-facing copy (front page, shop, categories, compare, guides) carries no internal `FLG-` code;
-  the codes live on the audit surfaces, and every guide and product page carries the dated desk byline.
-- No page may print its own markup: entity sequences are decoded before escaping, and the gate
-  fails on any visible `&entity;` left in the text. A guide's stated read time must be consistent with the words on the page — it is computed at build
-  time by `guide_minutes()`, never typed into the kicker.
 - Every flag referenced in HTML or `editorial.json` is defined, and every defined flag is published.
+- **Reader voice.** No crawl-chunk citation (`chunk 7`) and no bare flag ID (`FLG-0xx`) may appear on
+  any reader-facing page — product pages, category pages, guides, `index`, `shop`, `compare`,
+  `how-we-choose`, `about`, `disclosure`, `search`. Flags belong on `flagged.html`, where they are
+  published in full with their sources. A contradiction a shopper should know about is stated in
+  words on the page instead.
+- **No page prints its own markup.** Escaped reader copy is decoded before it is escaped, and the gate
+  unescapes every page's visible text and fails on any `&entity;` or `&#1234;` left behind (FLG-054).
+- **Numbers on the page are derived, and pages are signed.** A guide's stated read time must match the
+  words on the page (225 wpm, rounded up), and every guide and product page carries a dated byline that
+  links to the authorship note — `about.html#who-writes-it`.
+- **Findability.** `findability.txt` exists, names the canonical home, and lists every page in
+  `sitemap.xml`.
+- `assets/style.css` parses (balanced braces, closed `@media` blocks) and every class the generator
+  emits has a rule, so a page cannot ship unstyled.
+- No image file under `assets/` ships without a page or a generator script referencing it.
+- `rel="sponsored"` appears only on `amazon.com/dp/` listings; policy and government citations
+  must not claim to be paid placements.
+- Every guide ends on a product line with a tagged link, the feed item count matches the guide
+  count, and the front page still offers the router.
 
 ## Measurement & Collector
 

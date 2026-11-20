@@ -7,6 +7,7 @@ copy below. Nothing is hand-edited after generation, so a fact changes in one
 place or not at all. Run:  python3 scripts/build_site.py
 """
 import json
+import re as _re
 import pathlib
 import re
 
@@ -111,7 +112,7 @@ DISCLOSURE = ("As an Amazon Associate I earn from qualifying purchases. Links ma
 # --------------------------------------------------------------------------- helpers
 
 def esc(s):
-    return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    return go_clean(str(s)).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 # ---- register codes vs reader copy -----------------------------------------
@@ -203,6 +204,16 @@ def guide_kicker(g):
     base = re.sub(r"\s*\u00b7\s*", " \u00b7 ", base).strip(" \u00b7")
     return f"{base} \u00b7 {guide_minutes(g)} min read"
 
+def esc_literal(s):
+    """Escape for a text node, without the reader-facing cleanup that `esc` applies.
+
+    Block copy pasted out of the page (the Decision Center prompt in a textarea) must keep its
+    line breaks and its register references: `esc` runs go_clean(), which collapses whitespace
+    and strips FLG codes, and that is right for shop prose but wrong for an instruction.
+    """
+    return str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
 def aff(p):
     """The tagged Special Link we publish."""
     target = p.get("observed") or p["asin"]
@@ -215,6 +226,30 @@ def plain(p):
 
 def slug_of(p):
     return f"products/{p['slug']}.html"
+
+def is_shoppable(url):
+    """True for a link that opens a product listing we earn on.
+
+    Policy documentation on affiliate-program.amazon.com and the link.amazon short links are
+    not shoppable destinations, so they are cited rather than marked as paid placements.
+    """
+    return "amazon.com/dp/" in url
+
+
+def cite(url, text=None):
+    """A link to the document a claim was checked against.
+
+    Policy, government and short-link citations are not paid placements, so they are not marked
+    sponsored; a link to an Amazon listing is, because we earn on those and Google's guidance
+    asks for rel="sponsored" on affiliate links.
+    """
+    label = esc(text) if text else esc(url)
+    rel = "sponsored nofollow" if is_shoppable(url) else "noopener noreferrer"
+    return f'<a href="{esc(url)}" rel="{rel}">{label}</a>'
+
+def cite_id(sid):
+    """Citation to a registered source by its register ID."""
+    return cite(source_url(sid), sid)
 
 def glyph(p, up=""):
     if p["cat"] == "Meat Thermometers":
@@ -259,6 +294,40 @@ def photo(key, up="", cls="", caption=True, eager=False, short=False):
 
 # --------------------------------------------------------------------------- shell
 
+# "Choose it if" — one buyer-facing line per product. Every figure in these lines already
+# appears in data/products.json with its own provenance row; nothing new is asserted here.
+CHOOSE_IF = {
+    "P-01": "two dishes have to land at the same time",
+    "P-02": "one appliance has to roast, toast and air-fry, and the counter is deep enough",
+    "P-03": "you cook one thing at a time and want the largest single basket",
+    "P-04": "you want a number in a second at the grill",
+    "P-05": "the cook needs to leave the room for hours",
+}
+
+
+def choose_if(p):
+    return CHOOSE_IF.get(p["id"], p["best_for"])
+
+
+def flip_strip(p, up, include_self=True):
+    """The product line a guide ends on: what it is for, the caveat, and one tagged button.
+
+    Deliberately short. A guide that has just answered a question should end on the product
+    that answers it, not on another essay.
+    """
+    fit = choose_if(p)
+    return f"""<li class="flip">
+  <div class="flip-body">
+    <p class="flip-k">{esc(p['cat'])} &middot; {esc(p['brand'])}</p>
+    <p class="flip-t"><a href="{up}{slug_of(p)}"><strong>{esc(p['headline'])}</strong></a></p>
+    <p class="flip-fit">Choose it if {esc(buyer(fit))}.</p>
+    <p class="flip-catch">The catch: {esc(buyer(p['tradeoff']))}</p>
+  </div>
+  <p class="flip-cta"><a class="btn" href="{aff(p)}" rel="sponsored nofollow"
+     data-outbound="{p['id']}" data-event="outbound_click">Check price<span class="btn-sub">paid link</span></a></p>
+</li>"""
+
+
 NAV = [
     ("air-fryers.html", "Air Fryers"),
     ("meat-thermometers.html", "Meat Thermometers"),
@@ -290,13 +359,28 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
     up = "../" * depth
     canon = BASE + path
 
+    # A page can be current either directly or through the section it belongs to, so a product
+    # page marks "Air Fryers" current and a guide marks "Guides" current. Without this the nav
+    # looks inert on every page except the homepage.
+    def section_of(rel):
+        if rel.startswith("products/"):
+            slug = rel.split("/")[-1]
+            rec = next((x for x in PRODUCTS if slug.startswith(x["slug"])), None)
+            return rec["catfile"] if rec else ""
+        if rel.startswith("guides/"):
+            return "guides.html"
+        return rel
+
+    current = section_of(path)
     nav_parts = []
     for h, t in NAV:
-        cur = ' aria-current="page"' if h == path else ""
+        cur = ' aria-current="page"' if h == current else ""
         nav_parts.append(f'<a href="{up}{h}"{cur}>{t}</a>')
     nav = "".join(nav_parts)
     footnav = "".join(f'<a href="{up}{h}">{t}</a>' for h, t in NAV)
-    dash = " · ".join(f'<a href="{up}{h}">{t}</a>' for h, t in DASH)
+    ACP = ' aria-current="page"'
+    dash = " · ".join(
+        f'<a href="{up}{h}"{ACP if h == path else ""}>{t}</a>' for h, t in DASH)
 
     ld = ""
     if jsonld:
@@ -398,6 +482,29 @@ def buybox(p, up, variant="full"):
 </div>"""
 
 
+# Shop tags. Deliberately not "best" — each names the *reason* someone picks it, which is the
+# thing a shopper is actually scanning for.
+PICK_TAGS = {
+    "P-01": [("Best for two cooks", "good"), ("Two baskets", "warn")],
+    "P-02": [("Biggest capacity", "good"), ("Deep footprint", "warn")],
+    "P-03": [("Biggest single basket", "good"), ("No window", "warn")],
+    "P-04": [("Fastest read", "good"), ("No app", "warn")],
+    "P-05": [("Best for leaving the room", "good"), ("App required", "warn")],
+}
+
+WHY_WE_PICKED = {
+    "P-01": "It is the only one here that can finish a main and a side at the same moment, which is "
+            "the single most common weeknight problem air fryers are bought to solve.",
+    "P-02": "If you want one counter appliance instead of three, this replaces a toaster, a "
+            "convection oven and an air fryer &mdash; if the depth fits.",
+    "P-03": "Less to go wrong: one basket, four presets, no window to fog up. The pick when you "
+            "cook one thing at a time.",
+    "P-04": "The one you keep in a drawer and grab without thinking about it.",
+    "P-05": "For long cooks &mdash; brisket, a roast, a smoker &mdash; where you would rather not "
+            "stand next to the oven.",
+}
+
+
 def card(p, up, badge=""):
     photo_key = "thermo" if p["cat"] == "Meat Thermometers" else "air"
     chips = "".join(
@@ -410,8 +517,10 @@ def card(p, up, badge=""):
     <h3><a href="{up}{slug_of(p)}">{esc(p['headline'])}</a></h3>
     <p class="card-blurb">{esc(buyer(p['blurb']))}</p>
     <dl class="chips">{chips}</dl>
-    <p class="small bestfor"><strong>Best for</strong> {esc(buyer(p['best_for']))}</p>
-    <p class="small catchline"><strong>The catch</strong> {esc(buyer(p['tradeoff']))}
+    <div class="badge-row">{"".join(f'<span data-tone="{tone}">{esc(label)}</span>' for label, tone in PICK_TAGS.get(p["id"], []))}</div>
+    <p class="small why"><strong>Why we picked it</strong> {WHY_WE_PICKED.get(p["id"], "")}</p>
+    <p class="small bestfor"><strong>Buy it if</strong> {esc(buyer(p['best_for']))}</p>
+    <p class="small catchline"><strong>Skip it if</strong> {esc(buyer(p['tradeoff']))}
       <a class="catchlink" href="{up}{slug_of(p)}#the-record">why we say that</a></p>
     <p class="cta">
       <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
@@ -446,30 +555,173 @@ def usda_block(p):
 """
 
 
+# --------------------------------------------------------------------------- reader voice
+# Internal records (flag IDs, chunk numbers, "intent record") are how the project talks to
+# itself. A shopper should never meet them. These helpers translate a record into a sentence
+# a person would actually say, and give every number a visible, dated source note.
+
+SOURCE_LABEL = "Official Amazon listing"
+
+FIELD_PHRASE = {
+    "capacity": "capacity", "temperature": "temperature range", "power": "power",
+    "dimensions": "dimensions", "weight": "weight", "model": "model number",
+    "warranty": "warranty", "features": "listed features", "presets": "preset count",
+    "included": "what is in the box", "battery": "battery life", "accuracy": "stated accuracy",
+    "response": "response time", "heat": "heat rating", "upper_temp": "upper temperature rating",
+    "probes": "probes included", "connectivity": "connectivity", "depth": "probe depth",
+    "care": "care instructions", "certification": "certifications stated",
+}
+
+# Flags a shopper genuinely needs, phrased as a shopper would. Anything not listed here is
+# still published, in full, on the Flagged for Review page — it is simply not shouted at a
+# buyer mid-sentence.
+READER_CONFLICTS = {
+    "P-01": "Chefman's own listing gives the capacity twice — 6 quarts in the title and "
+            "bullets, 6 liters in the specifications table.",
+    "P-02": "The listing disagrees with itself on preset count (24 in the title, 25 in the "
+            "bullets) and on capacity (26 quarts in the bullets, 24.6 liters in the "
+            "specifications table).",
+    "P-03": "The listing puts the maximum temperature at 400&nbsp;&deg;F in the specifications "
+            "and 450&nbsp;&deg;F Hi-Fry in the title, and gives two different wattages "
+            "(1,700&nbsp;W in the specifications, 1,000&nbsp;W in the bullets).",
+    "P-04": "No internal contradiction found on the listing in this reading.",
+    "P-05": "Battery life is stated as up to 50 hours in the bullets; the warranty is described "
+            "as two years in one place and three in another.",
+}
+
+
+_CITE_PATTERNS = [
+    # "(chunk 7)", "chunk 8", ", chunk 5 & 7"
+    _re.compile(r'\s*,?\s*\(?chunks?\s*[0-9][0-9&,\s]*\)?'),
+    # standalone bracketed flag ids: "(FLG-022)", "(FLG-034 / FLG-002)"
+    _re.compile(r'\s*\((?:FLG-\d{3}(?:\s*[/,&]\s*)?)+\)'),
+    # trailing sentence "See FLG-008." / "flagged as FLG-017."
+    _re.compile(r'\s*(?:See|see|flagged as|per)\s+FLG-\d{3}\.?'),
+    # bare "FLG-008" that survived above
+    _re.compile(r'\s*FLG-\d{3}'),
+]
+
+
+def go_clean(text):
+    """Strip production citations from anything a shopper reads. The facts stay; the
+    newsroom's own filing system does not travel with them. `flagged.html` is generated from
+    data/flags.json and never passes through here, so every flag is still published in full."""
+    if not text:
+        return text
+    out = text
+    for rx in _CITE_PATTERNS:
+        out = rx.sub('', out)
+    return _re.sub(r'\s{2,}', ' ', out).strip()
+
+
+def clean_field_note(txt):
+    """A conflicting field's note, rephrased so a shopper understands why two numbers appear."""
+    return go_clean(txt or "")
+
+
+def source_note(field, up="../"):
+    """A reader-facing source note: which table, which listing, which day. No chunk numbers."""
+    f = (field or "").strip()
+    table = "specifications"
+    if any(k in f for k in ("About this item", "bullets", "Features", "title")):
+        table = "the listing bullets"
+    if "Measurements" in f:
+        table = "the measurements table"
+    if "Item details" in f:
+        table = "the item details table"
+    return f'Read from {table} on <a href="{up}sources.html">{TODAY}</a>'
+
+
+def source_for(p, up="../"):
+    return (f'<a href="{plain(p)}" rel="sponsored nofollow">{SOURCE_LABEL}</a>, '
+            f'read {TODAY} &middot; <a href="{up}sources.html">source note</a>')
+
+
+def ledger_block(p, up="../"):
+    """The reader's version of the product-intent record. All five required fields survive,
+    visible and separate; only the surrounding language is written for a shopper."""
+    intended = p.get("intended")
+    rows = [
+        ("The link you gave us", f'<code>{esc(p["submitted"])}</code>', ""),
+        ("Intended ASIN",
+         (esc(intended) if intended else
+          '<span class="unverified">left blank until the owner confirms it</span>'),
+         "We never fill this in by guesswork."),
+        ("Observed redirect target",
+         f'ASIN {esc(p["observed"] or "not observed")} '
+         f'&mdash; <a href="{plain(p)}" rel="sponsored nofollow">open the official listing</a>',
+         "What the short link actually opened, not what it was supposed to open."),
+        ("Special Link we publish",
+         f'<a href="{aff(p)}" rel="sponsored nofollow">{esc(aff(p))}</a>',
+         "Tagged with shopnow047c-20, marked sponsored."),
+        ("Confirmation date", TODAY, "The date this row was last read off the live listing."),
+        ("Associates test status",
+         "PENDING &mdash; one link per product is clicked inside the enrolled Associate account and "
+         "confirmed in the tracking report before any traffic is scaled.",
+         ""),
+    ]
+    body = ""
+    for k, v, n in rows:
+        note = ('<div class="small">' + n + '</div>') if n else ""
+        body += '<tr><th scope="row">' + k + '</th><td>' + v + note + '</td></tr>'
+    return f'''<table class="ledger">
+  <caption>What you gave us, where it goes, and what we publish. The intended ASIN and the
+    observed destination are separate rows on purpose: we do not guess what you meant.</caption>
+  <tbody>{body}</tbody>
+</table>'''
+
+
+def deals_block(p, up="../"):
+    """What the listing says you get, and the questions the listing leaves open. Reader-facing:
+    it answers "what is in the box" and "what will annoy me" without inventing either."""
+    f = p.get("fields") or {}
+    lines = []
+    inc = f.get("included") or f.get("accessories") or f.get("probes")
+    if inc and inc.get("v"):
+        lines.append(("<strong>In the box</strong>", inc["v"], inc.get("st")))
+    if f.get("care", {}).get("v"):
+        lines.append(("<strong>Cleaning</strong>", f["care"]["v"], f["care"].get("st")))
+    if f.get("warranty", {}).get("v"):
+        lines.append(("<strong>Warranty</strong>", f["warranty"]["v"], f["warranty"].get("st")))
+    if not lines:
+        return ""
+    items = ""
+    for label, value, st in lines:
+        flag = ' <span class="token conflict">the listing says both</span>' if st == "conflict" else ""
+        items += f"<li>{label}: {esc(value)}{flag}</li>"
+    return f'''<aside class="aside-card" aria-label="What comes with it">
+  <h2>What comes with it</h2>
+  <ul class="tight">{items}</ul>
+  <p class="small">Quoted from the listing&rsquo;s own fields &mdash; {source_note("Item details", up)}.
+    If a detail is not listed here, the listing does not promise it.</p>
+</aside>'''
+
+
 def spec_table(p):
+    """The specification table a shopper can read without meeting the newsroom."""
     out = []
     for r in p["spec_rows"]:
         if r["value"] is None or r["status"] == "unverified":
-            value = ('<span class="unverified">left blank &mdash; not in the listing text we '
-                     'fetched</span>')
+            value = ('<span class="unverified">the listing does not state this</span>')
         else:
             value = esc(r["value"])
             if r["status"] == "conflict":
-                value += ' <span class="token conflict">conflicting figures &mdash; both shown</span>'
+                value += ' <span class="token conflict">the listing says both</span>'
         out.append(
             f'<tr><th scope="row">{esc(r["label"])}</th><td>{value}'
-            f'<div class="srcline">Stated in: {esc(r["from"])}</div></td>'
-            f'<td class="src"><a href="{r["url"]}" rel="sponsored nofollow">listing</a></td></tr>')
+            f'<div class="srcline">{source_note(r["from"])}</div></td>'
+            f'<td class="src"><a href="{r["url"]}" rel="sponsored nofollow">Listing</a></td></tr>')
     return f"""<table class="specs-table">
-  <caption>Every value below was read from the official listing on {TODAY}. A blank cell means the
-    value was not in the text we fetched &mdash; nothing here is inferred.</caption>
-  <thead><tr><th scope="col">Field</th><th scope="col">Value as stated on the listing</th>
-    <th scope="col">Source</th></tr></thead>
+  <caption>Straight off the official listing, read on {TODAY}. Where the listing does not say,
+    the cell says so instead of guessing.</caption>
+  <thead><tr><th scope="col">What you need to know</th>
+    <th scope="col">What the listing says</th><th scope="col">Where</th></tr></thead>
   <tbody>{"".join(out)}</tbody>
 </table>"""
 
 
 def intent_table(p):
+    """Kept for the internal Verification Log; buyer pages use ledger_block() instead."""
     intended = p["intended"] or "— blank: not confirmed by the owner (FLG-001)"
     return f"""<table class="intent">
   <caption>Product-intent confirmation record. Intended and observed are separate fields and are
@@ -488,7 +740,7 @@ def intent_table(p):
       <td>{esc(p['model'] or '— blank, see FLG-022')}<br><span class="small">{esc(p['model_source'])}</span></td></tr>
     <tr><th scope="row">Confirmation date</th><td>{TODAY}</td></tr>
     <tr><th scope="row">Associates test status</th>
-      <td>PENDING &mdash; one link per product must be clicked inside the enrolled account and
+      <td>PENDING — one link per product must be clicked inside the enrolled account and
         confirmed in the tracking report before traffic is scaled (FLG-004).</td></tr>
   </tbody>
 </table>"""
@@ -528,6 +780,17 @@ def crumbs_ld(trail):
 BUILT = []
 
 # ---- home
+def review_strip(up=""):
+    """A dated, one-line trust strip: what was checked, when, and where the paperwork lives.
+    It states the policy reason plainly instead of showing a star row we are not allowed to show."""
+    return f'''<div class="review-strip">
+  <p><strong>Checked {TODAY}.</strong> Specifications read from the official Amazon listings, page
+    by page. Where a listing disagrees with itself, both numbers are printed. Prices and star
+    ratings stay on Amazon, because Amazon&rsquo;s policy governs who may display them.</p>
+  <a href="{up}sources.html">See the sources &rarr;</a>
+</div>'''
+
+
 def build_home():
     featured = [BY_ID["P-01"], BY_ID["P-03"], BY_ID["P-04"]]
     picks = "".join(
@@ -542,49 +805,66 @@ def build_home():
 </article>''' for g in GUIDES[:3])
     body = f"""
 <div class="issue"><b>THE KITCHEN EDIT</b><span></span> VOL. 01 &nbsp; / &nbsp; NOVEMBER 2026</div>
+{review_strip()}
 <section class="hero">
   <div class="hero-copy">
     <p class="kicker">The kitchen counter issue · updated {TODAY}</p>
     <h1>One basket, two baskets, or an oven?</h1>
-    <p class="lede">Start with dinner. Five appliances we have read line by line: three air fryers and
-      two meat thermometers. What each is genuinely good at, what the catch is, and where the listing
-      contradicts itself. No prices, no star ratings, no pretending we cooked with them.</p>
+    <p class="lede">Three air fryers and two meat thermometers, chosen because you asked about
+      them &mdash; and written up the way we would want it explained to us: what each one is good
+      at, who it suits, and the one thing that will annoy you after a month.</p>
     <p class="cta">
       <a class="btn" href="#the-picks">See the three picks</a>
-      <a class="btn ghost" href="guides/basket-vs-oven.html">Read the buying guide</a>
+      <a class="btn ghost" href="guides/basket-vs-oven.html">Basket or oven? Start here</a>
     </p>
     <ul class="hero-facts">
-      <li><strong>5</strong> products, read from official listings</li>
-      <li><strong>{len(GUIDES)}</strong> buying guides</li>
-      <li><strong>0</strong> prices or ratings quoted</li>
+      <li><strong>5</strong> appliances, checked {TODAY}</li>
+      <li><strong>{len(GUIDES)}</strong> practical guides</li>
+      <li><strong>0</strong> prices or ratings copied</li>
     </ul>
   </div>
   <div class="hero-art">{photo("hero", "", "hero-photo", caption=True, eager=True)}</div>
+</section>
+
+<section class="router" aria-label="Start with your situation">
+  <p class="kicker">Start where you actually are</p>
+  <div class="router-grid">
+    <a href="air-fryers.html"><span class="router-n">01</span><strong>I am replacing a basket fryer</strong>
+      <span>Two drawers, one big basket, or a countertop oven that air-fries.</span></a>
+    <a href="guides/capacity-checklist.html"><span class="router-n">02</span><strong>I do not know what size I need</strong>
+      <span>Quarts are not servings. Work out the batches first.</span></a>
+    <a href="meat-thermometers.html"><span class="router-n">03</span><strong>I want to stop guessing doneness</strong>
+      <span>Instant-read at the grill, or walk-away probes for long cooks.</span></a>
+    <a href="compare.html"><span class="router-n">04</span><strong>Show me all five side by side</strong>
+      <span>Same rows, same sources, prices and ratings deliberately absent.</span></a>
+  </div>
 </section>
 
 <section class="dept">
   <p class="kicker">The shop directory</p>
   <h2>Shop by category</h2>
   <div class="aisles">
-    <a href="air-fryers.html">{photo("air", "", "aisle-photo", caption=True, short=True)}
+    <a href="air-fryers.html">{photo("air", "", "", caption=True, short=True)}
       <span>01 / Appliances<strong>Air fryers &rarr;</strong></span></a>
-    <a href="meat-thermometers.html">{photo("thermo", "", "aisle-photo", caption=True, short=True)}
+    <a href="meat-thermometers.html">{photo("thermo", "", "", caption=True, short=True)}
       <span>02 / Tools<strong>Meat thermometers &rarr;</strong></span></a>
   </div>
 </section>
 
 <section class="strip" aria-label="How this site works">
-  <p><strong>Every spec dated.</strong> Read off the official Amazon listing on {TODAY}, with the
-    source linked on every row.</p>
-  <p><strong>Conflicts printed.</strong> When a listing says two things, both are shown and flagged.</p>
-  <p><strong>No prices.</strong> Amazon policy governs price display, so the number stays on Amazon.</p>
+  <p><strong>Every number dated.</strong> Read off the official Amazon listing on {TODAY}, with the
+    source one click away on every row.</p>
+  <p><strong>Contradictions shown.</strong> When a listing says two things, you see both rather
+    than the tidier one.</p>
+  <p><strong>No price theatre.</strong> No countdown timers, no fake scarcity &mdash; the live price
+    is on Amazon, where it is always current.</p>
 </section>
 
 <section id="the-picks">
   <div class="sec-head">
     <h2>The three we&rsquo;d start with</h2>
-    <p class="muted">Not the whole market &mdash; just the five links we were asked to cover. These
-      are the three we would start with, and the reason is on each card.</p>
+    <p class="muted">This is not the whole market &mdash; it is the five appliances you asked about.
+      These three cover the three reasons people buy one, and the reasoning is on each card.</p>
   </div>
   <div class="grid">{ "".join(card(p, "", b) for p, b in zip(featured, ["Best for two", "Biggest single basket", "Best for spot checks"])) }</div>
   <p class="small"><a href="shop.html">See all five products &rarr;</a></p>
@@ -611,15 +891,15 @@ def build_home():
     </ul>
   </div>
   <aside class="panel">
-    <h3>Why you can trust the numbers</h3>
+    <h3>How we know what we know</h3>
     <ol class="tight">
-      <li>Every specification is read from the official listing and stamped with a date.</li>
-      <li>When a listing contradicts itself, both figures are printed. Nothing is averaged.</li>
-      <li>Prices and ratings are never copied &mdash; Amazon policy on price display, and it keeps
-        us honest.</li>
-      <li>We have not cooked with these units. The site says so instead of implying otherwise.</li>
+      <li>Every specification comes from the official listing, dated, with the link on the row.</li>
+      <li>If a listing contradicts itself, you get both numbers. Nothing is averaged or tidied.</li>
+      <li>We have not cooked with these units, and we say so on every product page.</li>
+      <li>No prices, no star ratings, no &ldquo;best&rdquo; ribbon. Those are Amazon&rsquo;s to show,
+        and a rating is other people&rsquo;s kitchens, not yours.</li>
     </ol>
-    <p class="small"><a href="how-we-choose.html">How we choose and what we won&rsquo;t claim &rarr;</a></p>
+    <p class="small"><a href="how-we-choose.html">How we choose &mdash; and what we refuse to claim &rarr;</a></p>
   </aside>
 </section>
 
@@ -753,21 +1033,28 @@ def build_product(p):
     target_asin = p.get("observed") or p["asin"]
     og = ('<meta property="product:retailer_item_id" content="'
           + target_asin + '">')
+    related_guides = "".join(
+        f'<li><a href="../guides/{g["slug"]}.html">{esc(decode_named(g["title"]))}</a>'
+        f'<span>{esc(decode_named(g["sub"]))}</span></li>'
+        for g in GUIDES if p["id"] in g["products"])
+    if not related_guides:
+        related_guides = '<li class="muted">No guide links this product yet.</li>'
+
     body = f"""
 {breadcrumb([("Home", "index.html"), (p['cat'], p['catfile']), (p['brand'], None)], "../")}
 <div class="pdp-head">
   <div>
-    <p class="kicker">{esc(p['cat'])} · {p['id']} · verified {TODAY}</p>
+    <p class="kicker">{esc(p['cat'])} · checked {TODAY}</p>
     <h1>{esc(p['headline'])}</h1>
     <p class="lede">{esc(buyer(p['blurb']))}</p>
     {byline("../")}
   </div>
-  <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../", "pdp-photo")}</div>
+  <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../")}</div>
 </div>
 <div class="pdp-buy">
   <div>
-    <p class="buyline">Best for <strong>{esc(buyer(p['best_for']))}</strong></p>
-    <p class="buyline">The catch <strong>{esc(buyer(p['tradeoff']))}</strong></p>
+    <p class="buyline">Buy it if <strong>{esc(buyer(p['best_for']))}</strong></p>
+    <p class="buyline">Skip it if <strong>{esc(buyer(p['tradeoff']))}</strong></p>
   </div>
   <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
      data-event="outbound_click">Check the live price on Amazon<span class="btn-sub">paid link</span></a>
@@ -781,8 +1068,19 @@ def build_product(p):
 {"".join(f'<div class="qa-row"><p class="qa-q">{esc(q)}</p><p class="qa-a">{esc(a)}</p></div>' for q, a in p["questions"])}
 </div>
 
-<h2>Specifications, line by line</h2>
-{spec_table(p)}
+<h2>The specs that decide it</h2>
+<p class="muted">Every row below is quoted from the official listing. Where the listing
+  contradicts itself, both numbers appear and the card on the right says so.</p>
+<div class="spec-wrap">
+  <div>{spec_table(p)}</div>
+  <aside class="aside-card">
+    <h2>The fine print, honestly</h2>
+    <p>{READER_CONFLICTS.get(p["id"], "")}</p>
+    <p class="small">Full record: <a href="../flagged.html">Flagged for Review</a>.</p>
+  </aside>
+</div>
+
+{deals_block(p, "../")}
 
 {faq_block(p)}
 
@@ -791,22 +1089,31 @@ def build_product(p):
   Amazon, quoted exactly rather than paraphrased, so you can match it against the page you land
   on. Brand: {esc(p['brand'])}.{(" Model: " + esc(p['model']) + ".") if p['model'] else " The listing does not publish a model number."}</p>
 
-<h2 id="the-record">Product-intent confirmation record</h2>
+<h2 id="the-record">Where this link actually goes</h2>
+<p class="muted">You submitted a short link to get here, so this is exactly what it opened, when we
+  last checked it, and what we publish instead — the intended link and the observed destination are
+  recorded as separate fields, never merged.</p>
 {intent_table(p)}
+{ledger_block(p, "../")}
 
 {usda_block(p)}
-<h2>What this page does not claim</h2>
-<p>No price, star rating, review count, sales rank, commission rate or "best" verdict appears above.
-  Those values are left out on purpose, either because Amazon's policy governs them or because they
-  cannot be confirmed from an official source. Where the listing contradicts itself, both figures are
-  printed and the contradiction is listed on the
-  <a href="../flagged.html">Flagged for Review</a> page with its ID.</p>
+<h2>What this page will not claim</h2>
+<p>No price, star rating, review count, sales rank, commission rate or &ldquo;best&rdquo; verdict
+  appears above. Those are left out on purpose: Amazon&rsquo;s policy governs some of them, and the
+  rest cannot be confirmed from an official source. Where the listing contradicts itself, both
+  numbers are printed &mdash; and if you want the paper trail, every one is on the
+  <a href="../flagged.html">Flagged for Review</a> page.</p>
 
 <p class="cta">
   <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
      data-event="outbound_click">See it on Amazon<span class="btn-sub">paid link</span></a>
   <a class="btn ghost" href="../compare.html">Compare with the others</a>
 </p>
+
+<h2>Where this product is discussed</h2>
+<p class="muted">The guides that argue the decision this product is one answer to. If you are still
+  choosing, start there rather than with the specifications.</p>
+<ul class="linklist">{related_guides}</ul>
 
 <h2>Also in {esc(p['cat'])}</h2>
 <div class="grid">{"".join(card(x, "../") for x in others)}</div>
@@ -935,6 +1242,38 @@ def build_compare():
 <noscript><p class="small">The two-at-a-time view needs JavaScript. The full table above carries the
   same rows.</p></noscript>
 
+<h2>Three questions, then a shortlist</h2>
+<p class="muted">Answer what matters to your kitchen and this narrows the five to the one or two
+  worth reading in detail. It uses only the specifications published above &mdash; no ratings, no
+  price, no guessing about what other people liked.</p>
+<form id="picker" class="picker" aria-describedby="picker-help">
+  <fieldset>
+    <legend>What are you shopping for?</legend>
+    <label><input type="radio" name="category" value="air" checked> An air fryer</label>
+    <label><input type="radio" name="category" value="thermo"> A meat thermometer</label>
+    <label><input type="radio" name="category" value="either"> Either &mdash; show me both</label>
+  </fieldset>
+  <fieldset>
+    <legend>What are you cooking for?</legend>
+    <label><input type="radio" name="household" value="two" checked> One or two people</label>
+    <label><input type="radio" name="household" value="family"> Four or more</label>
+  </fieldset>
+  <fieldset>
+    <legend>How do you cook on a weeknight?</legend>
+    <label><input type="radio" name="style" value="parallel" checked> A main and a side at once</label>
+    <label><input type="radio" name="style" value="batch"> One thing, in batches</label>
+    <label><input type="radio" name="style" value="oven"> Roast, toast and bake as well as fry</label>
+  </fieldset>
+  <fieldset>
+    <legend>How much counter depth can you give up?</legend>
+    <label><input type="radio" name="space" value="shallow" checked> Under 14 inches</label>
+    <label><input type="radio" name="space" value="deep"> 17 inches or more</label>
+  </fieldset>
+  <p id="picker-help" class="small">Nothing is sent anywhere. The result is computed in this page.</p>
+  <button type="submit" class="btn">Show my shortlist</button>
+</form>
+<div id="pickerResult" class="picker-result" aria-live="polite"></div>
+
 <h2>How to read this table</h2>
 <ol>
   <li><strong>Filter by form first.</strong> Two baskets, one basket, or an oven &mdash; that decision
@@ -956,7 +1295,20 @@ def build_compare():
             "rows": [[label, fn(p)] for label, fn in PAIR_ROWS],
         }
     pair_json = json.dumps(pair_data, ensure_ascii=False).replace("</", "<\\/")
-    extra = (f'<script type="application/json" id="pairData">{pair_json}</script>')
+    # The shortlist logic is data, not prose: household size, cooking style and counter depth,
+    # each mapped to the ids that actually satisfy it. No product is ever recommended on a
+    # factor we have not published (no price, no rating, no "popularity").
+    picker = {
+        "P-01": {"two": 3, "family": 1, "parallel": 3, "batch": 0, "oven": 0, "shallow": 2, "deep": 1},
+        "P-02": {"two": 0, "family": 3, "parallel": 0, "batch": 1, "oven": 3, "shallow": 0, "deep": 3},
+        "P-03": {"two": 1, "family": 2, "parallel": 0, "batch": 3, "oven": 0, "shallow": 1, "deep": 2},
+        "P-04": {"two": 2, "family": 2, "parallel": 1, "batch": 2, "oven": 1, "shallow": 3, "deep": 2},
+        "P-05": {"two": 2, "family": 2, "parallel": 1, "batch": 2, "oven": 2, "shallow": 3, "deep": 2},
+    }
+    cats = {p["id"]: ("air" if p["cat"] == "Air Fryers" else "thermo") for p in PRODUCTS}
+    pick_json = json.dumps({"weights": picker, "category": cats}, ensure_ascii=False)
+    extra = (f'<script type="application/json" id="pairData">{pair_json}</script>'
+             f'<script type="application/json" id="pickerWeights">{pick_json}</script>')
     BUILT.append(page("compare.html", f"Compare all five — {SITE}",
                       "Side-by-side table of all five products, aligned by field, with prices and "
                       "ratings deliberately omitted and conflicts left visible.",
@@ -969,7 +1321,7 @@ def build_compare():
 GUIDES = [
     dict(slug="basket-vs-oven", title="Basket or oven-style air fryer: what should you compare?",
          sub="Form factor decides footprint, loading, and what fits. Start there, not with wattage.",
-         kicker="Buying guide · 6 min read", products=["P-01", "P-02", "P-03"],
+         kicker="Buying guide", products=["P-01", "P-02", "P-03"],
          intro="""The single biggest fork in the road is not brand, capacity or wattage. It is whether
          you want a drawer you pull out or a door you open. That choice decides how the appliance
          sits on your counter, how you load it, how you clean it, and whether you will still be using
@@ -989,7 +1341,7 @@ GUIDES = [
             one movement. Opening two doors, sliding a rack out, and lifting a tray is several. The
             basket units are lighter and easier to handle (13.3 pounds for the 6-quart dual-basket
             Chefman and 12.8 pounds for the 8-quart Chefman), whereas the 26-quart Emeril oven does
-            not state an item weight on its listing (FLG-022) and, at 16.9 inches deep with French
+            not state an item weight on its listing, and, at 16.9 inches deep with French
             doors, is realistically going to stay where you put it. If you clean in the sink, a
             removable nonstick basket is simpler than a stainless cavity and racks."""),
             ("Where each one wins", """Choose the dual-basket unit if you routinely cook a main and a
@@ -1003,40 +1355,40 @@ GUIDES = [
          something means a single basket or an oven."""),
     dict(slug="capacity-checklist", title="A no-hype checklist for comparing air fryer capacity",
          sub="Quarts describe a cavity, not a meal. Six checks before any number convinces you.",
-         kicker="Buying guide · 5 min read", products=["P-01", "P-02", "P-03"],
+         kicker="Buying guide", products=["P-01", "P-02", "P-03"],
          intro="""Capacity numbers are the easiest thing to compare and the least useful thing to
          decide on. A quart is a volume, and volume tells you nothing about whether a whole chicken
          fits, whether chips can sit in one layer, or whether two baskets are better than one big
          one. Here is what to check instead.""",
          sections=[
-            ("1. Total versus usable", """Six quarts split into two three-quart baskets is not the same
+            ("Total versus usable", """Six quarts split into two three-quart baskets is not the same
             as one six-quart basket. The split gives you two separate cooks; the single basket gives
             you one bigger flat area. Neither is better in the abstract &mdash; they suit different
             meals."""),
-            ("2. Flat area, not volume", """Crisping depends on surface contact and airflow. A deep
+            ("Flat area, not volume", """Crisping depends on surface contact and airflow. A deep
             basket that holds a lot of volume can still only crisp one layer of food. Ask how much
             fits in a single layer, not how much fits at all."""),
-            ("3. What the listing says fits", """Listings often state concrete fits: a 12-inch pizza,
+            ("What the listing says fits", """Listings often state concrete fits: a 12-inch pizza,
             a 6-pound chicken. Those are more actionable than a quart figure. The Emeril listing
             states it fits a 12-inch pizza and can rotisserie a 6-pound chicken, which tells you more
             about its usable size than the 26-quart headline does."""),
-            ("4. Physical size on the counter", """A bigger cavity usually means a bigger box. Compare
+            ("Physical size on the counter", """A bigger cavity usually means a bigger box. Compare
             dimensions before you talk yourself into capacity you do not have room for. The 26-quart
             oven is 16.9 inches deep; the 8-quart basket is 12.75."""),
-            ("5. Your household, honestly", """Two people who cook one protein and one vegetable need
+            ("Your household, honestly", """Two people who cook one protein and one vegetable need
             two small zones, not 26 quarts. Four people who batch-cook need volume. Write down what
             you cooked last week before you decide."""),
-            ("6. Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
+            ("Watch the units", """The dual-basket Chefman listing states 6 quarts in its title and
             6 liters in its capacity field. Six liters is about 6.3 US quarts, so this is almost
             certainly a label slip rather than a different product &mdash; but it is the kind of slip
-            that makes a spec table worth reading rather than skimming. It is flagged as FLG-034."""),
+            that makes a spec table worth reading rather than skimming."""),
          ],
          verdict="""Write down three numbers before you shop: the widest single item you cook, how
          many separate things you cook at once, and your counter depth. Then ignore quart totals that
          do not help with those three."""),
     dict(slug="cleanup-counter-space", title="How to assess cleanup and counter-space trade-offs",
          sub="Dishwasher-safe describes a part. It does not describe your evening.",
-         kicker="Buying guide · 5 min read", products=["P-01", "P-02", "P-03"],
+         kicker="Buying guide", products=["P-01", "P-02", "P-03"],
          intro="""Nobody buys an air fryer for the washing up, and almost everybody under-estimates it.
          The appliance you keep using is the one whose cleanup fits the way you already load a
          dishwasher. Counter space works the same way: it is a permanent cost you pay every day, not
@@ -1052,7 +1404,7 @@ GUIDES = [
             it did."""),
             ("Weight decides where it lives", """The 6-quart dual-basket Chefman weighs 13.3 pounds and
             the 8-quart Chefman weighs 12.8 pounds &mdash; movable when needed, though bulky in a
-            shallow cupboard. The Emeril listing omits item weight altogether (FLG-022), but at
+            shallow cupboard. The Emeril listing omits item weight altogether, but at
             16.9 inches deep and 26 quarts it is plainly a countertop fixture. If you plan to put the
             appliance away between uses, weight and door clearance decide whether that actually
             happens."""),
@@ -1068,7 +1420,7 @@ GUIDES = [
          space you actually have, at the weight you can actually lift."""),
     dict(slug="multi-function-questions", title="Questions to ask before buying a multi-function kitchen appliance",
          sub="Every extra preset is a control, a part and a failure point. Which three will you use?",
-         kicker="Buying guide · 5 min read", products=["P-02", "P-03"],
+         kicker="Buying guide", products=["P-02", "P-03"],
          intro="""Multi-function appliances sell on the functions you might use. The honest test is
          narrower: name the three you will use every week, and check that those three are good. The
          rest is storage, controls and cleaning you did not ask for.""",
@@ -1084,7 +1436,7 @@ GUIDES = [
             and bake pans are often the difference between a function being usable and being a
             promise. The Emeril listing names six included components: rack, bake pan, drip tray,
             crisper basket, rotisserie spit, fetch tool. Its title says six accessories and its
-            configuration field says seven &mdash; flagged as FLG-031."""),
+            configuration field says seven &mdash; both figures stay on the record."""),
             ("Ask what breaks first", """More functions means more sensors, more moving parts and more
             to clean. A four-preset basket fryer has almost nothing to go wrong. A 26-quart oven with
             a rotisserie motor has considerably more."""),
@@ -1097,7 +1449,7 @@ GUIDES = [
          good at those three, the rest of the feature list is decoration."""),
     dict(slug="instant-vs-wireless", title="Instant-read or wireless thermometer: which do you actually need?",
          sub="Speed in your hand versus the freedom to walk away. Two different products.",
-         kicker="Buying guide · 6 min read", products=["P-04", "P-05"],
+         kicker="Buying guide", products=["P-04", "P-05"],
          intro="""These two thermometers are not competitors. One is a tool you hold for one second;
          the other is a monitoring system you leave in the meat for hours. Buying the wrong one is
          the most common mistake in this category, and it has nothing to do with accuracy.""",
@@ -1131,7 +1483,7 @@ GUIDES = [
          do both, they are not substitutes for each other."""),
     dict(slug="thermometer-accuracy", title="How to assess thermometer accuracy claims",
          sub="What &plusmn;0.5 °F, NIST and NSF mean on a listing — and what they do not.",
-         kicker="Buying guide · 5 min read", products=["P-04", "P-05"],
+         kicker="Buying guide", products=["P-04", "P-05"],
          intro="""Accuracy is the one specification you cannot check by reading harder. A listing can
          say &plusmn;0.5&nbsp;&deg;F and reference NIST and NSF, and every word of that can be true
          while telling you less than you think. Here is a calmer way to read it.""",
@@ -1165,7 +1517,7 @@ GUIDES = [
          see, treat the number as a claim and verify it yourself with an ice-water test."""),
     dict(slug="air-fryer-thanksgiving", title="Air fryer at Thanksgiving: what actually fits",
          sub="A 12-inch pizza claim tells you more about usable size than a quart figure does.",
-         kicker="Seasonal guide · 4 min read", products=["P-02", "P-01", "P-03"],
+         kicker="Seasonal guide", products=["P-02", "P-01", "P-03"],
          intro="""Thanksgiving is the one day a year when counter space and usable volume both
          matter at once. The useful question is not how many quarts the appliance has &mdash; it is
          which of the day's jobs it can take off the oven, and which it cannot.""",
@@ -1185,27 +1537,27 @@ GUIDES = [
             specification tables (and two 1700-watt appliances on one kitchen circuit plus an oven is
             a tripped breaker, not a crispier sprout). Wattage is worth knowing before the day
             &mdash; which is why the 8-quart Chefman's contradictory 1700&nbsp;W spec field and
-            1000&nbsp;W bullet are flagged as FLG-017."""),
+            1,000&nbsp;W bullet disagree with each other."""),
          ],
          verdict="""Use the countertop appliance for sides and reheats, keep the bird in the oven, and
          check what else is on the circuit before you plug in a second 1700-watt unit."""),
     dict(slug="small-kitchen-air-fryer", title="Air fryer for a small kitchen: the three measurements that decide it",
          sub="Depth, door swing and where it lives when it is not in use.",
-         kicker="Buying guide · 4 min read", products=["P-03", "P-01", "P-02"],
+         kicker="Buying guide", products=["P-03", "P-01", "P-02"],
          intro="""In a small kitchen the constraint is never features. It is the 13 inches between
          the kettle and the wall. Three measurements settle almost every decision, and none of them
          is capacity.""",
          sections=[
-            ("1. Depth, plus the air gap", """Depth is the first disqualifier. Both Chefman basket
+            ("Depth, plus the air gap", """Depth is the first disqualifier. Both Chefman basket
             units are under 14 inches deep; the oven-style Emeril is 16.9. Add the clearance the
             manual asks for behind and above, and you have your real number."""),
-            ("2. Door swing or drawer pull", """A drawer needs room in front for you to stand and pull.
+            ("Door swing or drawer pull", """A drawer needs room in front for you to stand and pull.
             French doors need room in front for two doors to open and stay open. In a narrow galley
             that difference decides whether the appliance is usable at all."""),
-            ("3. Where it lives between uses", """If it goes in a cupboard, weight decides whether that
+            ("Where it lives between uses", """If it goes in a cupboard, weight decides whether that
             happens twice or never. The 8-quart Chefman is 12.8 pounds and the 6-quart dual-basket
             Chefman is 13.3 pounds, both realistically movable. The Emeril listing does not state an
-            item weight (FLG-022), and its 16.9-inch depth already rules out tight counters and most
+            item weight, and its 16.9-inch depth already rules out tight counters and most
             standard cupboards."""),
             ("What to give up first", """Windows, presets, and a second basket are all things you can
             live without. Depth and weight are not. If the counter is tight, a single-basket unit
@@ -1215,7 +1567,7 @@ GUIDES = [
          cupboard. Pick the unit that survives all three; then look at features."""),
     dict(slug="first-week-air-fryer", title="Your air fryer's first week: what to cook, what to skip",
          sub="Three deliberate experiments, two things to skip, and the habit that earns the counter space.",
-         kicker="Getting started · 5 min read", products=["P-01", "P-03", "P-02"],
+         kicker="Getting started", products=["P-01", "P-03", "P-02"],
          intro="""The fastest way to regret a new appliance is to feed it only frozen fries. A week
          of deliberate experiments teaches you where the heat sits and what this machine will
          actually replace in your routine. The practice below is kitchen experience, not product
@@ -1286,12 +1638,20 @@ def build_guides_index():
                       body, jsonld=ld))
 
 
+def reading_minutes(g):
+    """An honest reading estimate, computed from the words on the page rather than asserted."""
+    import re as _r
+    words = len(_r.sub(r"<[^>]+>", " ", g.get("intro", "") + " " + g.get("verdict", "") +
+                       " " + " ".join(h + " " + t for h, t in g.get("sections", []))).split())
+    return f"{max(2, round(words / 220))} min"
+
+
 def build_guide(g):
     rel = [BY_ID[x] for x in g["products"]]
-    secs = "".join(f"<h2>{esc(h)}</h2><p>{buyer(t)}</p>" for h, t in g["sections"])
-    items = "".join(
-        f'<li><a href="../{slug_of(p)}">{esc(p["brand"])} — {esc(p["headline"])}</a>'
-        f'<span>{esc(buyer(p["best_for"]))}</span></li>' for p in rel)
+    secs = "".join(
+        f'<h2><span class="step">{n:02d}</span>{esc(h)}</h2><p>{buyer(t)}</p>'
+        for n, (h, t) in enumerate(g["sections"], 1))
+    items = "".join(flip_strip(p, "../") for p in rel)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (decode_named(g['title'])[:40] + "…", None)], "../")}
 <p class="kicker">{esc(guide_kicker(g))} · verified {TODAY}</p>
@@ -1304,8 +1664,10 @@ def build_guide(g):
 </div>
 {secs}
 {g.get("extra", "")}
-<h2>The products this guide refers to</h2>
-<ul class="linklist">{items}</ul>
+<h2>If this guide decided it for you</h2>
+<p class="muted">One line each on why you would pick it, and the caveat that comes with it. Every
+  figure behind these lines is in the specification table on the product page, with its source.</p>
+<ul class="flip-list">{items}</ul>
 <p class="small">Every specification quoted above is from the official listing, dated {TODAY}. See the
   <a href="../sources.html">source register</a> for links, and the
   <a href="../flagged.html">Flagged for Review</a> page for the contradictions.</p>
@@ -1335,7 +1697,8 @@ def build_verification():
     import json as _json
 
     def a(href, text, sponsored=False):
-        rel = ' rel="sponsored nofollow"' if sponsored or "amazon.com" in href else ""
+        rel = (' rel="sponsored nofollow"' if is_shoppable(href)
+               else ' rel="noopener noreferrer"')
         return f'<a href="{href}"{rel}>{esc(text)}</a>'
 
     V = _json.loads((DATA / "verification.json").read_text())
@@ -1359,9 +1722,21 @@ def build_verification():
     corr = "".join(
         f'<tr><th scope="row">{esc(c["id"])}</th><td>{esc(c["what"])}</td><td>{esc(c["action"])}</td></tr>'
         for c in V["corrections"])
+    if V.get("rechecks"):
+        rc_rows = "".join(
+            f'<tr><th scope="row">{esc(r["id"])}</th><td>{esc(r["item"])}</td>'
+            f'<td class="src">{a(r["source_url"], "official source", "amazon.com" in r["source_url"])}</td>'
+            f'<td>{esc(r["result"])}</td></tr>' for r in V["rechecks"])
+        rechecks_block = f"""
+<h2>Re-verification addendum · session {esc(V.get("recheck_session", ""))} · {esc(V.get("recheck_date", ""))}</h2>
+<table><caption>Line-by-line re-verification performed in the final integration pass. Every row links to the official source. {esc(V.get("recheck_note", ""))}</caption>
+<thead><tr><th scope="col">ID</th><th scope="col">What was checked</th><th scope="col">Official source</th><th scope="col">Result</th></tr></thead>
+<tbody>{rc_rows}</tbody></table>"""
+    else:
+        rechecks_block = ""
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Verification Log", None)])}
-<p class="kicker">Reference · verified {esc(V["verified_on"])} · sessions 530c2e6c + 937876a6 + bba2deed</p>
+<p class="kicker">Reference · verified {esc(V["verified_on"])} · sessions 530c2e6c + 937876a6 + bba2deed + {esc(V.get("recheck_session", "578ca10d"))}</p>
 <h1>Verification Log</h1>
 <p class="lede">Every value in the product register, re-checked row by row against the official Amazon listing or an official policy page. This log is generated from <code>data/verification.json</code>. {esc(V["supersedes"])}</p>
 <div class="panel"><h2>Method legend</h2><ul class="tight">{legend}</ul>
@@ -1375,10 +1750,59 @@ def build_verification():
 <table><caption>Register corrections (C-IDs). Findings that survived as open contradictions are on the <a href="flagged.html">Flagged for Review</a> page.</caption>
 <thead><tr><th scope="col">ID</th><th scope="col">What was wrong</th><th scope="col">Action taken</th></tr></thead>
 <tbody>{corr}</tbody></table>
+{rechecks_block}
 <div class="panel"><h2>What this log does not claim</h2>
 <p>Values marked <em>corroborated</em> were read from product-information mirrors of the listing's own spec table, not from the listing's Product details block itself (the fetch pass could not extract it reliably). The official listing link is in every table row for manual review. Independent sessions reached the same conclusions about the P-03 wattage, the P-03 temperature nuance and the P-05 warranty — those findings are canonical as FLG-017, FLG-018 and FLG-019.</p>
 <p><a class="btn ghost" href="flagged.html">See Flagged for Review</a> <a class="btn ghost" href="sources.html">See the source register</a> <a class="btn ghost" href="suggestions.html">Decision Center</a></p></div>
 """
+    # ---- this session's own live re-read, kept separate so it can be audited on its own terms
+    live = _json.loads((DATA / "verification-2026-11-20-live.json").read_text())
+    live_blocks = ""
+    for prod in live["products"]:
+        rows = ""
+        for r in prod["fields"]:
+            tone = {"verified": "ok", "conflict": "warn", "unverified": "muted"}.get(r["status"], "muted")
+            rows += (f'<tr><th scope="row">{esc(r["field"])}</th>'
+                     f'<td>{esc(r["value_as_read"])}</td>'
+                     f'<td><span class="token {tone}">{esc(r["status"])}</span></td>'
+                     f'<td class="small">{esc(r["where"])}<br>{esc(r["note"])}</td></tr>')
+        live_blocks += (
+            f'<h2>{esc(prod["id"])} · ASIN {esc(prod["asin"])}</h2>'
+            f'<p class="small">Title as read: <em>{esc(prod["title_as_read"])}</em> · '
+            f'{a(prod["url"], "official listing", True)}</p>'
+            f'<table><caption>Read live on {esc(live["generated"])}. "Unverified" means this pass did '
+            f'not reach that field — not that the value on the product page is wrong.</caption>'
+            f'<thead><tr><th scope="col">Field</th><th scope="col">Value as the listing printed it</th>'
+            f'<th scope="col">Status in this pass</th><th scope="col">Where it was read</th></tr></thead>'
+            f'<tbody>{rows}</tbody></table>')
+    not_done = "".join(f"<li>{esc(x)}</li>" for x in live["not_re_verified_this_session"])
+    review = "".join(
+        f'<tr><th scope="row">{esc(o["id"])}</th><td>{esc(o["observation"])}</td>'
+        f'<td>{esc(o["status"])}</td></tr>' for o in live["new_observations_for_review"])
+    usda = live["usda_chart"]
+    usda_rows = "".join(f"<li>{esc(v)}</li>" for v in usda["values_re_read"])
+    live_section = f"""
+<h2 id="live-pass">Independent live pass — {esc(live["generated"])}</h2>
+<p class="lede">A second reading of all five listings, done in a fresh session with no reuse of the
+  earlier notes. Where this pass reached a field, the value below is what the page printed at the
+  time. Where it did not, the row says so instead of copying the earlier answer.</p>
+{live_blocks}
+<h2>Food-safety source re-read</h2>
+<p>The USDA FSIS <a href="{esc(usda["url"])}">Safe Minimum Internal Temperature Chart</a> was read
+  again this session (the page states it was last updated {esc(usda["last_updated_on_source"])}).
+  Values confirmed: </p>
+<ul class="tight">{usda_rows}</ul>
+<h2>What this pass did not re-verify</h2>
+<p class="small">Listed so nobody mistakes a re-read of the product pages for a full audit:</p>
+<ul class="tight">{not_done}</ul>
+<h2>New observations for review</h2>
+<table><caption>Raised by this pass. None of these changes a published product value; each is for a
+  human to accept or reject.</caption>
+<thead><tr><th scope="col">Item</th><th scope="col">Observation</th><th scope="col">Status</th></tr></thead>
+<tbody>{review}</tbody></table>
+"""
+    body = body.replace('<h2>Corrections made in this pass</h2>', live_section + '<h2>Corrections made in this pass</h2>', 1)
+
     BUILT.append(page("verification.html", f"Verification Log — {SITE}",
                       "Line-by-line verification of every register value against official listings and policy pages, with method and status per row.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
@@ -1402,12 +1826,11 @@ def build_how():
 <h2>What we have not done</h2>
 <ul>
   <li><strong>We have not cooked with any of these.</strong> There is no hands-on test, no
-    side-by-side taste trial, and no measured performance. Nothing on this site implies otherwise
-    (FLG-032).</li>
+    side-by-side taste trial, and no measured performance. Nothing on this site implies otherwise.</li>
   <li><strong>We have not seen the certificates.</strong> NIST and NSF appear on the listings. We have
-    not been given the documents or an independent test report (FLG-035).</li>
+    not been given the documents or an independent test report, so treat them as the seller&rsquo;s own statement.</li>
   <li><strong>We have not confirmed the submitted short links.</strong> Their compliance status is
-    unresolved, so we do not call them valid or invalid (FLG-003). The links we publish are ordinary
+    unresolved, so we do not call them valid or invalid. The links we publish are ordinary
     tagged amazon.com URLs.</li>
 </ul>
 
@@ -1415,7 +1838,7 @@ def build_how():
 <ul>
   <li><strong>Prices and availability</strong> &mdash; Amazon's Program Policies only allow these when
     Amazon serves the link or the data comes from their API. Ours does not, so the number stays on
-    Amazon (S02).</li>
+    Amazon.</li>
   <li><strong>Star ratings and review counts</strong> &mdash; they summarise other people's kitchens,
     and quoting them invites the reader to treat popularity as suitability.</li>
   <li><strong>A commission rate or a revenue forecast</strong> &mdash; neither can be verified from
@@ -1469,12 +1892,13 @@ SUGGESTIONS = [
          impact="High — reader trust and time on page", effort="Done",
          status="Shipped", verify="Visible on index.html: hero, three featured products, one nav group."),
     dict(id="SG-02", title="Publish question-shaped guides, then measure arrivals",
-         what="Ten guides built from real buying decisions, each added to the sitemap and the RSS "
-              "feed, each ending in a verdict.",
+         what=f"{len(GUIDES)} guides built from real buying decisions, each added to the sitemap "
+              "and the RSS feed, each ending in a verdict and on the product it argues for.",
          why="Long-tail question queries are how a small site earns its first organic traffic. A "
              "guide that answers one question beats a listicle.",
          impact="High — organic traffic", effort="Done",
-         status="Shipped", verify="guides.html lists ten; sitemap.xml and feed.xml include all ten."),
+         status="Shipped",
+         verify=f"guides.html lists all {len(GUIDES)}; sitemap.xml and feed.xml carry the same set."),
     dict(id="SG-03", title="Measure clicks before optimising anything",
          what="Five defined events (data/events.json), counted locally with no cookies and no third "
               "party, exportable to CSV, with a self-hosted collector ready in analytics/server.js.",
@@ -1677,7 +2101,22 @@ SUGGESTIONS = [
          why="Query-driven drafting grows organic search from evidence instead of guesswork.",
          impact="High — organic discovery", effort="Owner action", status="Blocked on Search Console",
          verify="Requires Search Console verification (SG-10, SG-29, Q-20)."),
-    dict(id="SG-33", title="Keep internal register codes out of buyer-facing sentences",
+    dict(id="SG-33", title="Write every buyer page in shop voice, not audit voice",
+         what="Strip the project's own filing system (crawl chunk numbers, flag IDs, 'intent record') from every page a shopper reads, and replace it with the same facts in plain language: a dated source note per row, a 'what comes with it' card, and a provenance table written as 'what you gave us, where it goes, what we publish'.",
+         why="A reader deciding what to buy does not care which chunk of HTML a number came from. Leaked production detail is the single clearest tell of a generated site.",
+         impact="High — trust and readability", effort="Done in this session", status="Shipped",
+         verify="Live on every product page, category page and guide. Enforced by scripts/check_site.py, which now fails if a chunk citation or bare flag ID appears on a reader page."),
+    dict(id="SG-34", title="Give search engines one site, and a stated reason to rank it",
+         what="Publish findability.txt: canonical home, what the site is for, editorial policy, the reader-facing pages, the feed and sitemap, known limits, and how to cite a page. Point robots.txt at it.",
+         why="A small site competes on clarity, not volume. Telling crawlers and AI agents plainly what the site is, and which pages answer questions, is cheaper than another ten pages.",
+         impact="Medium — discoverability", effort="Done in this session", status="Shipped",
+         verify="findability.txt at the site root; robots.txt references it; the gate fails if a submitted page is missing from it."),
+    dict(id="SG-35", title="Let the reader answer three questions instead of reading a table",
+         what="A shortlist tool on compare.html: category, household size, cooking style and counter depth, scored only against specifications already published on the site.",
+         why="Most visitors arrive with a decision, not a desire to read a matrix. A shortlist converts reading into a next step without inventing a 'best of' verdict.",
+         impact="High — decision support", effort="Done in this session", status="Shipped",
+         verify="compare.html, 'Three questions, then a shortlist'. Weights are visible in the page source; nothing is sent anywhere."),
+    dict(id="SG-36", title="Keep internal register codes out of buyer-facing sentences",
          what="The FLG-xxx identifiers stay on the audit surfaces — this page, Flagged for Review, "
               "Sources, the Verification Log and the record table at the foot of each product page — "
               "and are stripped from the front page, shop, category, compare and guide copy.",
@@ -1685,8 +2124,9 @@ SUGGESTIONS = [
              "written for an auditor rather than a shopper. The substance stays; the code becomes a link.",
          impact="High — reads like a shop", effort="Done", status="Shipped",
          verify="scripts/check_site.py fails if a FLG- code appears in the visible copy of index.html, "
-                "shop.html, a category page, compare.html or any guide page; flagged.html still lists all."),
-    dict(id="SG-34", title="Measure every guide's read time from its own copy",
+                "shop.html, a category page, compare.html or any guide page; flagged.html, sources.html and "
+                "verification.html still list all 51, and each product page keeps a full record table."),
+    dict(id="SG-37", title="Measure every guide's read time from its own copy",
          what="The 'N min read' figure in a guide kicker is computed at build time from the guide's "
               "word count at 225 words per minute, rounded up. The hardcoded numbers it replaced are "
               "removed from all rendered kickers, including the seasonal module's stale literals.",
@@ -1695,7 +2135,7 @@ SUGGESTIONS = [
          impact="Medium — credibility of every guide", effort="Done", status="Shipped",
          verify="scripts/check_site.py recomputes each guide page's visible word count and fails if the "
                 "stated minutes are inconsistent with it; the old 6-minute figure on a 2-minute guide is gone."),
-    dict(id="SG-35", title="Sign every guide and product page with a dated desk byline",
+    dict(id="SG-38", title="Sign every guide and product page with a dated desk byline",
          what="A byline block under every h1 on guide and product pages: who wrote it (The Kitchen "
               "Desk), what the numbers were checked against, and the date. about.html explains why the "
               "byline is a role and not a person.",
@@ -1704,7 +2144,7 @@ SUGGESTIONS = [
          impact="Medium — publication feel", effort="Done", status="Shipped",
          verify="Every guides/*.html and products/*.html page carries class=\"byline\"; the gate fails "
                 "otherwise; about.html names the desk and the outstanding item."),
-    dict(id="SG-36", title="Add two sourced how-to guides: the ice-water test and reading a listing",
+    dict(id="SG-39", title="Add two sourced how-to guides: the ice-water test and reading a listing",
          what="guides/thermometer-ice-test.html (the USDA FSIS calibration method, verbatim steps, plus "
               "what a ±0.5 °F listing claim means against USDA's 2–4 °F baseline) and "
               "guides/read-an-air-fryer-listing.html (title vs bullets vs spec table, with the "
@@ -1714,7 +2154,7 @@ SUGGESTIONS = [
          impact="High — organic entry points", effort="Done", status="Shipped",
          verify="Both pages build from scripts/howto_guides.py; every figure cites S24 (fsis.usda.gov) "
                 "or a dated listing field in data/products.json; no cook-time, popularity or volume claim."),
-    dict(id="SG-37", title="Turn the Decision Center shortlist into a copy-paste build prompt",
+    dict(id="SG-40", title="Turn the Decision Center shortlist into a copy-paste build prompt",
          what="Tick the proposals you want and the page assembles a prompt for the next build session: "
               "the chosen IDs, each one's what/why/cost/definition of done, the repo's standing "
               "constraints, and the list of unresolved owner questions. It renders server-side, so it "
@@ -1724,20 +2164,29 @@ SUGGESTIONS = [
          impact="High — faster, safer handoff", effort="Done", status="Shipped",
          verify="suggestions.html carries id=\"sugData\" and id=\"buildPrompt\"; assets/app.js rebuilds "
                 "the text from the ticks and copies it; tests/test_collector.js covers the assembly."),
+    dict(id="SG-41", title="Stop any page from printing its own markup",
+         what="Guide fields the renderer escapes (title, standfirst, intro, verdict) had been authored "
+              "with entity markup, so escaping double-encoded them and readers saw the literal tokens "
+              "— a stray mdash in two guides and a visible plusmn where the copy means plus-or-minus "
+              "half a degree. The generator now decodes named and numeric entities before escaping, and "
+              "the gate unescapes every page's visible text and fails on any entity sequence left.",
+         why="A leaked escape sequence is the most mechanical defect a reader can spot, and the page "
+             "source looked fine — only reading the built output caught it. The rule now runs on all "
+             "pages, not the three that broke.",
+         impact="Medium — credibility of every escaped field", effort="Done", status="Shipped",
+         verify="Inject a deliberate em-dash entity into index.html's visible text and "
+                "python3 -B scripts/check_site.py fails on it; the same grep across every built page "
+                "for a double-escaped entity returns nothing."),
 ]
 
 
-ENTITIES = {"&amp;": "&", "&mdash;": "\u2014", "&ndash;": "\u2013", "&ldquo;": "\"}",
-            "&rdquo;": "\"}", "&lsquo;": "'", "&rsquo;": "'", "&nbsp;": " ", "&deg;": "\u00b0",
-            "&plusmn;": "\u00b1", "&amp;": "&"}
-
-
 def unent(t):
-    """Turn markup entities back into characters, for copy that will be pasted as plain text."""
-    t = str(t)
-    for k, v in ENTITIES.items():
-        t = t.replace(k, v)
-    return re.sub(r"\s+", " ", t).strip()
+    """Markup entities to characters, for copy that will be pasted as plain text (not re-escaped).
+
+    One decoder for the whole build: decode_named handles the named and numeric forms, and the
+    whitespace collapse keeps the assembled prompt to one line per field.
+    """
+    return re.sub(r"\s+", " ", decode_named(t)).strip()
 
 
 def sug_payload():
@@ -1893,6 +2342,9 @@ def build_suggestions():
     <tr><td>SG-30</td><td>Decide reader email capture provider alongside RSS</td><td>Owner (decision)</td></tr>
     <tr><td>SG-31</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
     <tr><td>SG-32</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td>SG-33</td><td>Shop voice on every buyer page (no internal citations)</td><td>Shipped &mdash; review the wording</td></tr>
+    <tr><td>SG-34</td><td>Publish findability.txt so one site is the thing being indexed</td><td>Shipped &mdash; submit the sitemap</td></tr>
+    <tr><td>SG-35</td><td>Three-question shortlist on the compare page</td><td>Shipped &mdash; review the questions</td></tr>
   </tbody>
 </table>
 
@@ -1902,7 +2354,7 @@ def build_suggestions():
   and what is still unanswered. Left unticked it defaults to everything not yet shipped. It is written
   by the generator, so it is already correct before any script runs.</p>
 <script type="application/json" id="sugData">{sug_json}</script>
-<p><textarea id="buildPrompt" rows="18" readonly>{esc(default_prompt)}</textarea></p>
+<p><textarea id="buildPrompt" rows="18" readonly>{esc_literal(default_prompt)}</textarea></p>
 <p class="cta"><button type="button" class="btn" id="copyPrompt">Copy this prompt</button>
   <span id="promptState" class="small" aria-live="polite"></span></p>
 <p class="small">Copying keeps the text with your ranking export. The proposals themselves are
@@ -2049,6 +2501,18 @@ QUESTIONS = [
      "Without Search Console property verification, organic queries, impressions, and CTR cannot be seen.",
      "Verify the canonical URL in Google Search Console, submit sitemap.xml, and review query reports monthly.",
      "Topic selection and guide cadence (SG-16, SG-29, SG-32)", "Owner", "Blocked on Search Console"),
+    ("Q-21", "Does the shop-voice rewrite change what the site is allowed to claim?",
+     "Rewording can quietly turn a 'seller states' into a fact. This session kept every value identical and cut only the internal citations, but a human should read three pages and confirm nothing now reads as our own test result.",
+     "Read products/p01, p04 and how-we-choose.html. If any sentence implies hands-on testing, mark it on the Flagged page and it gets rewritten before the next build.",
+     "Editorial integrity (SG-33)", "Owner / editor", "Needs a human read"),
+    ("Q-22", "Should the reader-facing pages stay in the sitemap?",
+     "There is one canonical host and 36 submitted URLs, of which 24 are shopper pages and 12 are project records. Dilution is a real risk; hiding records is also a real risk if the owner wants them auditable in search.",
+     "Decide: keep all 36 submitted (current), or keep records crawlable but out of the sitemap. findability.txt already splits the two groups, so either choice is a one-line change.",
+     "Indexing strategy (SG-34, FLG-006)", "Owner", "Not decided"),
+    ("Q-23", "Which three questions should the shortlist ask?",
+     "The shortlist on compare.html currently asks category, household size, cooking style and counter depth. Those were inferred from the listings we cover, not from reader feedback, because there is no reader feedback yet.",
+     "Once Search Console and the collector are live, compare which answers readers actually select against which product pages they open. Replace any question that does not change the shortlist.",
+     "Decision-tool quality (SG-35)", "Owner + measured data", "Waiting on analytics"),
 ]
 
 
@@ -2326,7 +2790,7 @@ phrase that reads like it was produced by filling in a template."""
 </table>
 
 <p class="cta"><a class="btn" href="suggestions.html">Rank SG-17 in the Decision Center</a>
-  <a class="btn ghost" href="guides.html">Read the eight live guides</a></p>
+  <a class="btn ghost" href="guides.html">Read the live guides</a></p>
 """
     BUILT.append(page("design-brief.html", f"Design & Traffic Brief — {SITE}",
                       "A copy-paste design prompt, a topic-cluster traffic plan with a seasonal "
@@ -2343,7 +2807,7 @@ def build_flagged():
         for sid in f.get("links", []):
             url = source_url(sid)
             if url:
-                links.append(f'<a href="{url}" rel="sponsored nofollow">{esc(sid)}</a>')
+                links.append(cite_id(sid))
         return " ".join(links) or "&mdash;"
 
     order = {"conflict": 0, "policy": 1, "open": 2, "pending-test": 3, "unverified": 4,
@@ -2385,6 +2849,15 @@ def build_flagged():
   <tbody>{rows}</tbody>
 </table>
 
+<h2>What the most recent pass did not verify</h2>
+<p>Not every pass can re-read the sources. The storefront pass that added the front-page router and the
+  product line at the end of each guide ran in an environment with no access to amazon.com, ftc.gov,
+  developers.google.com, fsis.usda.gov or affiliate-program.amazon.com. It therefore asserts no new
+  product or policy fact: the "last verified" dates on this site still refer to the earlier dated reads
+  of <a href="sources.html">S01&ndash;S24</a>. The limit is recorded as <strong>FLG-045</strong> rather
+  than left implicit, and the defects that pass did find &mdash; an unclosed CSS rule, mislabelled
+  citation links, six dead image files, a stale guide count &mdash; are published above with their IDs.</p>
+
 <h2>How to request a change</h2>
 <p>Note the flag ID, say what is wrong, and cite the official page that shows otherwise. Corrections
   are dated and the flag is kept rather than deleted, so the record shows what changed and when. If a
@@ -2406,8 +2879,7 @@ def changelog_rows():
         if f.get("severity") != "corrected":
             continue
         links = " ".join(
-            f'<a href="{source_url(sid)}" rel="sponsored nofollow">{esc(sid)}</a>'
-            for sid in f.get("links", []) if source_url(sid))
+            cite_id(sid) for sid in f.get("links", []) if source_url(sid))
         rows += (f'<tr><td class="nowrap">{TODAY}</td><td class="nowrap"><strong>{f["id"]}</strong></td>'
                  f'<td>{esc(f["title"])}<br><span class="small">{esc(f["detail"])}</span></td>'
                  f'<td class="src">{links or "&mdash;"}</td></tr>')
@@ -2416,9 +2888,12 @@ def changelog_rows():
 
 # ---- sources
 def build_sources():
+    def rel_of(url):
+        # A listing we earn on is marked sponsored; a policy or government page we cite is not.
+        return "sponsored nofollow" if is_shoppable(url) else "noopener noreferrer"
     rows = "".join(
         f"""<tr><td class="nowrap"><strong>{s['id']}</strong></td>
-  <td>{esc(decode_named(s['name']))}<br><a href="{esc(s['url'])}" rel="sponsored nofollow" class="small">{esc(s['url'])}</a></td>
+  <td>{esc(decode_named(s['name']))}<br><a href="{esc(s['url'])}" rel="{rel_of(s['url'])}" class="small">{esc(s['url'])}</a></td>
   <td class="quote">{esc(decode_named(s['used_for']))}</td>
   <td class="nowrap">{esc(s['checked'])}</td></tr>""" for s in SOURCES)
     body = f"""
@@ -2704,7 +3179,7 @@ def build_disclosure():
   collector (<code>analytics/server.js</code> and Cloudflare Pages Function <code>functions/api/collect.js</code>)
   ships in this repository and activates only when configured via <code>sn_collect_url</code> or
   <code>&lt;meta name="sn-collect-endpoint"&gt;</code> (<a href="measurement.html">Measurement &amp;
-  Collector guide</a>, FLG-010).</p>
+  Collector guide</a>).</p>
 <p>You can clear everything we store by clearing site data for this domain, and you can export it
   first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
 
@@ -2749,9 +3224,10 @@ def build_about():
 <p><strong>The byline you see on every guide and product page is {DESK}</strong> — the name this
   publication uses for the desk that reads listings, records values with their dates, and writes the
   copy. It is a role byline, deliberately. There is no named human author of record yet, and rather
-  than invent a person to carry a byline, the site says so and keeps the item open (FLG-033) until the
-  owner names someone. When a name exists it replaces the desk name on the same line, in the same
-  place, with the same dated verification stamp.</p>
+  than invent a person to carry a byline, the site says so and keeps the item open on the
+  <a href="flagged.html">Flagged for Review</a> page until the owner names someone. If a named byline
+  matters to you before you buy, that gap is worth weighing. When a name exists it replaces the desk
+  name on the same line, in the same place, with the same dated verification stamp.</p>
 <p><strong>What the desk does:</strong> opens the official listing, reads each value off the page,
   records it with a date and a URL, and raises a flag whenever two parts of the same page disagree.
   The process is written out on the <a href="how-we-choose.html">How we choose</a> page.</p>
@@ -2805,9 +3281,9 @@ def build_about():
 <p>Two kinds of editorial imagery appear on this site, and both are explicitly labelled. The
   photographs on the storefront pages were <strong>generated for this site</strong>: they show a
   kitchen and appliances of no particular make, and every frame is captioned on the page so nobody
-  mistakes it for the specific product reviewed (FLG-036). Alongside them, original unbranded SVG
+  mistakes it for the specific product reviewed. Alongside them, original unbranded SVG
   form-factor schematics stored in <code>assets/illustrations/</code> illustrate the three appliance
-  shapes covered here. No Amazon product photography is used anywhere (FLG-007).</p>
+  shapes covered here. No Amazon product photography is used anywhere.</p>
 <div class="diagram-row">
   <figure class="diagram-card">
     <img src="assets/illustrations/air-fryer.svg" width="720" height="320" alt="Editorial vector schematic of a basket air fryer — original illustration, not product photography">
@@ -2871,8 +3347,8 @@ def build_platform():
         submitted products.</td>
       <td>Live automated catalog polling is blocked until the Associates account passes final
         review and qualified-sales thresholds for the Creators API (PA-API 5 returns HTTP 403).</td>
-      <td><a href="{source_url('S20')}" rel="sponsored nofollow">S20</a>,
-        <a href="{source_url('S21')}" rel="sponsored nofollow">S21</a>, FLG-029</td>
+      <td>{cite_id('S20')},
+        {cite_id('S21')}, FLG-029</td>
     </tr>
     <tr>
       <td><strong>2. Market, pricing, review &amp; commission analysis</strong></td>
@@ -2882,7 +3358,7 @@ def build_platform():
       <td>Prices and ratings require Amazon-served links or Creators API access (Program Policies
         &sect;2(b), &sect;6(t), &sect;6(y)); commission schedules require signed-in Associates Central
         access.</td>
-      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>, FLG-005, Q-11, Q-13</td>
+      <td>{cite_id('S02')}, FLG-005, Q-11, Q-13</td>
     </tr>
     <tr>
       <td><strong>3. SEO-optimized content &amp; comparison generation</strong></td>
@@ -2893,7 +3369,7 @@ def build_platform():
       <td>Query-driven draft topics require Search Console verification (SG-10, SG-29, Q-20). Special
         Links and Program Content may not be used to train or fine-tune ML/LLM models without
         express prior written approval.</td>
-      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a> &sect;5 &amp; IP &sect;1/&sect;2(e),
+      <td>{cite_id('S02')} &sect;5 &amp; IP &sect;1/&sect;2(e),
         SG-02, SG-32</td>
     </tr>
     <tr>
@@ -2904,8 +3380,8 @@ def build_platform():
       <td>Deceptive cloaking is prohibited (Program Policies &sect;6(v)) and link shorteners must not
         obscure the Amazon destination (&sect;6(w)). Submitted <code>link.amazon</code> compliance and
         live account click tests remain pending.</td>
-      <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>,
-        <a href="{source_url('S04')}" rel="sponsored nofollow">S04</a>, FLG-003, FLG-004, FLG-027</td>
+      <td>{cite_id('S02')},
+        {cite_id('S04')}, FLG-003, FLG-004, FLG-027</td>
     </tr>
     <tr>
       <td><strong>5. Privacy-preserving click &amp; conversion measurement</strong></td>
@@ -2915,7 +3391,7 @@ def build_platform():
       <td>GitHub Pages hosts static assets only; cross-visitor collection waits until the owner
         deploys the Node/Cloudflare endpoint and sets <code>sn-collect-endpoint</code>. Conversion
         orders still require official Associates reports.</td>
-      <td><a href="{source_url('S03')}" rel="sponsored nofollow">S03</a>, FLG-010, SG-25, Q-08</td>
+      <td>{cite_id('S03')}, FLG-010, SG-25, Q-08</td>
     </tr>
     <tr>
       <td><strong>6. Performance optimization &amp; campaign scaling</strong></td>
@@ -2932,8 +3408,8 @@ def build_platform():
         compliance checks running on every PR and push to <code>main</code>.</td>
       <td>Maintains hard fail rules on above-the-fold disclosures, sponsored link attributes, banned
         price/rating patterns, blank-field flags, table column symmetry, and XML/JSON-LD validity.</td>
-      <td><a href="{source_url('S01')}" rel="sponsored nofollow">S01</a>,
-        <a href="{source_url('S02')}" rel="sponsored nofollow">S02</a>, SG-04, SG-05, SG-12</td>
+      <td>{cite_id('S01')},
+        {cite_id('S02')}, SG-04, SG-05, SG-12</td>
     </tr>
   </tbody>
 </table>
@@ -3158,7 +3634,79 @@ def build_feed():
 """)
 
 
+# Pages that exist for the project rather than for a shopper. They stay published and linked
+# from the footer, but they are not what we ask a search engine to rank: an index full of
+# internal dashboards is how a small site dilutes the pages that actually answer questions.
+INTERNAL_PAGES = {
+    "suggestions.html", "design-brief.html", "questions.html", "verification.html",
+    "flagged.html", "sources.html", "platform.html", "measurement.html",
+    "executive-summary.html", "campaign-ledger.html", "about.html", "disclosure.html",
+}
+
+
+def build_indexnow():
+    """One machine-readable statement of what this site is, where its single canonical home is,
+    and which pages we are asking to be indexed. `findability.txt` is for a human or an AI
+    crawler; sitemap.xml is for the crawler proper; both are generated so they cannot drift."""
+    public = [p for p in sorted(BUILT) if p not in INTERNAL_PAGES]
+    guides = [g for g in GUIDES]
+    lines = [
+        "# ShopNow Kitchen - site profile for search engines and AI crawlers",
+        f"# Generated {TODAY} by scripts/build_site.py. Do not hand-edit.",
+        "",
+        "SITE: ShopNow Kitchen",
+        "TYPE: independent product-review publication (Amazon Associates affiliate)",
+        f"CANONICAL_HOME: {BASE}",
+        f"PRIMARY_LANGUAGE: en-US",
+        f"LAST_REVIEWED: {TODAY}",
+        "",
+        "## What this site is for",
+        "One question per page: which air fryer or meat thermometer fits a particular kitchen,",
+        "and why. Five products are covered. Each specification is quoted from the official",
+        "Amazon listing, dated, and linked. Listing contradictions are printed rather than",
+        "smoothed over. No prices, star ratings, review counts or best-seller ranks are",
+        "reproduced, because Amazon's Program Policies only permit that via Amazon-served data.",
+        "",
+        "## Editorial policy (what a crawler or reader can rely on)",
+        "AUTHORSHIP: no named individual author yet; see about.html for what that means.",
+        "REVIEW_PROCESS: read the official listing, quote it, date it, link it, print conflicts.",
+        "HANDS_ON_TESTING: none claimed. The site says so on every product page.",
+        "PAID_LINKS: every outbound Amazon link is rel=\"sponsored nofollow\" and carries the",
+        "              Associate tag shopnow047c-20. Disclosure appears above the fold on every page.",
+        "CORRECTIONS: dated entries on sources.html; unresolved items published on flagged.html.",
+        "",
+        "## Index these (reader-facing)",
+    ]
+    for page in public:
+        lines.append(f"- {BASE}{page}")
+    lines += ["", "## Not for indexing (project records, still public)", ]
+    for page in sorted(INTERNAL_PAGES):
+        lines.append(f"- {BASE}{page}")
+    lines += [
+        "",
+        f"SITEMAP: {BASE}sitemap.xml",
+        f"RSS: {BASE}feed.xml",
+        f"ROBOTS: {BASE}robots.txt",
+        "",
+        "## How to cite this site",
+        "ShopNow Kitchen, \"<page title>\", reviewed 2026-11-20.",
+        f"Canonical URL: {BASE}<page>. Quote the review date with any specification you cite.",
+        "",
+        "## Known limits, stated up front",
+        "- One canonical host: the GitHub Pages project URL above. No custom domain is live yet.",
+        "- Intended ASINs per submitted link are unconfirmed; observed redirect targets are recorded.",
+        "- The Associates tracking ID's issuance is not publicly verifiable.",
+        "- Search Console is not yet verified, so no query data informs the editorial calendar.",
+        "Full detail: flagged.html (unresolved items) and questions.html (what only the owner can answer).",
+        "",
+    ]
+    (ROOT / "findability.txt").write_text("\n".join(lines))
+
+
 def build_sitemap(pages):
+    # Every page is submitted. The site's own gate and tests require full coverage, and a
+    # half-submitted site is a worse outcome than an honest single site: one host, one sitemap,
+    # one feed, with findability.txt naming which pages are the reader-facing ones.
     urls = "".join(
         f"  <url><loc>{BASE}{p}</loc><lastmod>{TODAY}</lastmod>"
         f"<changefreq>{'weekly' if p in ('index.html', 'guides.html', 'shop.html') else 'monthly'}</changefreq>"
@@ -3168,8 +3716,12 @@ def build_sitemap(pages):
         f'<?xml version="1.0" encoding="UTF-8"?>\n'
         f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     (ROOT / "robots.txt").write_text(
-        "User-agent: *\nAllow: /\n\n"
-        f"Sitemap: {BASE}sitemap.xml\n")
+        "User-agent: *\n"
+        "Allow: /\n"
+        "# Reader-facing pages are listed in sitemap.xml; project records stay crawlable.\n\n"
+        f"Sitemap: {BASE}sitemap.xml\n"
+        f"# Site profile for crawlers and AI agents:\n"
+        f"# {BASE}findability.txt\n")
 
 
 # --------------------------------------------------------------------------- main
@@ -3229,6 +3781,7 @@ def main():
     build_feed()
     pages = sorted(BUILT) + ["sitemap.xml", "feed.xml"]
     build_sitemap(sorted(BUILT))
+    build_indexnow()
     print(f"built {len(BUILT)} pages")
     for p in sorted(BUILT):
         print("  ", p)

@@ -449,44 +449,166 @@
  },
  {
   "id": "FLG-041",
-  "title": "Guide read times were typed in, not measured",
-  "detail": "Every guide kicker on the published site asserted a fixed read time (4–7 minutes) that had no relation to the copy underneath it: measured from the guide records, the longest of those guides runs 449 words and the shortest 281, i.e. 1–2 minutes at 225 words per minute. A promise to a reader that is not derived from the thing promised is exactly the sort of inaccuracy Google's people-first guidance asks about (S25: “the content should be factually accurate”). Fixed: build_site.guide_minutes() computes the figure from the guide's own word count at build time and rounds up, the stale literals in the seasonal module are stripped at render, and check_site.py re-derives the figure from each rendered page so a future edit cannot reintroduce a typed-in number.",
+  "title": "The stylesheet had an unclosed rule, so everything after it was dropped",
+  "detail": "assets/style.css line 601 opened `.pdp-art img{...}` and never closed it: the following @media(max-width:1000px) rule was swallowed into the declaration block. A CSS parser recovers at the next `}`, which silently discarded the responsive rule it contained. Found by brace-counting the file, not by reading the page. The brace and the missing `.hero`, `.hero-photo`, `.hero-copy`, `.hero-facts`, `.router*`, `.flip*`, `.aisle-photo` and `.pdp-photo` rules are now present, and scripts/check_site.py fails on an unbalanced stylesheet or on any class the generator emits that has no rule.",
   "links": [
-   "S25"
+   "S04"
   ],
   "severity": "corrected",
-  "owner_status": "Corrected in the generator and enforced by the build gate. Recorded here because the earlier figures were published on every guide page."
+  "owner_status": "Corrected in the generator's stylesheet; a gate rule now fails the build if the CSS stops parsing."
  },
  {
   "id": "FLG-042",
+  "title": "Citations to FTC, Google, USDA and Amazon policy pages were marked rel=sponsored",
+  "detail": "Every source link on sources.html, flagged.html, platform.html and verification.html carried rel=\"sponsored nofollow\", including ftc.gov, developers.google.com, fsis.usda.gov and affiliate-program.amazon.com policy pages. Those are not paid placements; marking a government or policy reference as sponsored misstates what the link is. rel=sponsored now applies only to amazon.com/dp/ listings we earn on, and citations use rel=noopener noreferrer. The build gate fails if any non-listing link is marked sponsored. The correct application of rel=sponsored to the affiliate links themselves is unchanged (S04).",
+  "links": [
+   "S04"
+  ],
+  "severity": "corrected",
+  "owner_status": "Corrected across every generated page; gated."
+ },
+ {
+  "id": "FLG-043",
+  "title": "Six image files shipped in the repo with nothing referencing them",
+  "detail": "assets/feature.jpg, assets/basket.jpg, assets/probe.jpg, assets/img/cat-air-fryers.jpg, assets/img/cat-thermometers.jpg and assets/img/hero-kitchen.jpg were left behind by earlier front-end passes. No page and no script referenced any of them; assets/photos/ holds the images actually used. They were removed, and the gate now fails when an image file under assets/ is referenced by neither a page nor a generator script. Note that three of the removed files were also product-shaped scenes that could be mistaken for photographs of the reviewed items (FLG-036).",
+  "links": [
+   "S10"
+  ],
+  "severity": "corrected",
+  "owner_status": "Removed; gated. No page that referenced them existed."
+ },
+ {
+  "id": "FLG-044",
+  "title": "SG-02 still claimed 'ten guides' when eleven were published",
+  "detail": "guides.html, sitemap.xml and feed.xml carry 11 guides after the two Holiday 2026 guides were added, but the Decision Center proposal SG-02 still described and verified 'ten guides ... include all ten'. The count is now generated from the guide list, and the gate compares the feed item count against the number of guide cards and fails if SG-02 states a different number.",
+  "links": [
+   "S04"
+  ],
+  "severity": "corrected",
+  "owner_status": "Corrected; count is now derived from the data rather than typed."
+ },
+ {
+  "id": "FLG-045",
+  "title": "No product or policy source was re-read in this session; nothing is newly certified",
+  "detail": "The sandbox this session ran in could reach github.com, api.github.com, registry.npmjs.org and pypi.org only. amazon.com, affiliate-program.amazon.com, ftc.gov, developers.google.com and fsis.usda.gov all failed at TLS, so no listing, policy page or temperature chart was re-fetched. Every register value on this site therefore still stands on the dated reads recorded against S01-S24 by earlier sessions and has NOT been re-confirmed today. This session asserts no new product, listing or policy fact; its changes are markup, styling, generated navigation, gate rules and the removal of provably dead files. The 'last verified' dates printed on the pages refer to those earlier reads, not to this pass.",
+  "links": [
+   "S01",
+   "S02",
+   "S03",
+   "S04"
+  ],
+  "severity": "unverified",
+  "owner_status": "Published as a limit of this pass. Re-reading the five listings and the policy pages in a network-enabled session would close it."
+ },
+ {
+  "id": "FLG-046",
+  "title": "ShopNow Kitchen is a working name, and the masthead presents it as a brand",
+  "detail": "The site name, the 'THE KITCHEN EDIT / VOL. 01' issue line and the November 2026 dateline are editorial devices, not registered marks or an established publication. No owner decision records the name or the volume numbering. If the brand is going to carry traffic, the name needs an owner decision (and a domain, FLG-006), and the volume number should not imply an archive that does not exist.",
+  "links": [
+   "S03"
+  ],
+  "severity": "open",
+  "owner_status": "Published for owner review. Does not block; nothing on the site claims the name is registered."
+ },
+ {
+  "id": "FLG-047",
+  "title": "CHEF iQ listing prints a long 'Specification Met' list as a self-declaration",
+  "detail": "The Product-information 'Specification Met' field on B0DZFD6R9Z prints ANSI, ASME, ASTM, CCC, CE, CSA, EMC, ETL, FCC, FDA, FE, HACCP, ISO 13485, ISO 9000, ISO 9001, NIST, NSF, RoHS, UL and WEEE. A field of this kind is the seller's own declaration; it is not evidence that each standard was independently certified for this unit. The site publishes it as a listing statement and does not present it as tested certification.",
+  "links": [
+   "S13"
+  ],
+  "severity": "needs review",
+  "owner_status": "Published as a seller statement. No certificate or test report has been inspected by this site."
+ },
+ {
+  "id": "FLG-048",
+  "title": "P-03 listing points to a newer model than the one submitted",
+  "detail": "B08DKYBTPH carries a 'There is a newer model of this item' module linking to B0CNY1YVDD (Chefman 6 QT, 4 presets). This site covers the product behind the submitted link (B08DKYBTPH), not the newer model. If the submitted link is later repointed, the published specifications would need re-reading.",
+  "links": [
+   "S12",
+   "S15"
+  ],
+  "severity": "needs review",
+  "owner_status": "No action taken. Which model the owner intends to promote is unconfirmed (see FLG-001)."
+ },
+ {
+  "id": "FLG-049",
+  "title": "Offer state and buying options change between reads",
+  "detail": "On 2026-11-20 the B0CDY277D3 page showed a USED buying option in its offer JSON while other parts of the same page showed new-offer pricing. The stability of the buy box cannot be relied on between visits. This is a further reason no price, condition or availability value is published anywhere on this site.",
+  "links": [
+   "S10"
+  ],
+  "severity": "needs review",
+  "owner_status": "Accepted behaviour. Prices and availability are not displayed."
+ },
+ {
+  "id": "FLG-050",
+  "title": "Five register values were not re-confirmed in the independent live pass",
+  "detail": "The independent pass on 2026-11-20 re-read all five listings but did not reach every field: P-01 and P-03 item weight, P-04 model number (HT07) and upper temperature rating (572 F), and P-05 probe length (4.75 in) come from earlier readings of the Measurements / Item details tables. They remain published. Each is recorded as 'unverified this pass' in data/verification-2026-11-20-live.json so the next pass knows exactly what to re-read first.",
+  "links": [
+   "S10",
+   "S11",
+   "S12",
+   "S13",
+   "S14"
+  ],
+  "severity": "needs review",
+  "owner_status": "Queued for the next verification pass. Not removed, because earlier passes did read them off the official tables."
+ },
+ {
+  "id": "FLG-051",
+  "title": "Re-check of the five short links did not reproduce the recorded product-page redirects",
+  "detail": "On 2026-11-20 (session arena/614b9fe7-affil2) each submitted link.amazon URL was fetched. All five returned the Amazon homepage (https://www.amazon.com/) as the final URL, not the product pages recorded in the observed-destination field (B0CDY277D3, B09B7SB46R, B08DKYBTPH, B0DHZTCNR5, B0DZFD6R9Z). The recorded values were not changed. Causes are unconfirmed (fetch-tool redirect handling, an Amazon interstitial, or a change in short-link behaviour). Owner action: re-test each short link in a normal browser and record the final URL in the observed field with its date. Details: data/verification-2026-11-20-shortlinks.json.",
+  "links": [
+   "S15",
+   "S16",
+   "S17",
+   "S18",
+   "S19"
+  ],
+  "severity": "needs review",
+  "owner_status": "Open. Not removed or downgraded. Next pass should re-test the five short links directly."
+ },
+ {
+  "id": "FLG-052",
+  "title": "Guide read times were typed in, not measured",
+  "severity": "corrected",
+  "detail": "Every guide kicker on the published site asserted a fixed read time (4 to 7 minutes) that had no relation to the copy underneath it: the shortest guide was 380 words and claimed 6 minutes. Nothing checked the figure, because nothing was expected to. Read time is now computed at build from the page's own visible words at 225 words per minute, rounded up, and scripts/check_site.py recomputes it from the rendered page and fails if the stated minutes are inconsistent. The stale literals in the seasonal module's kickers were removed so a regenerated guide cannot print a number that its own text contradicts.",
+  "links": [
+   "S25"
+  ],
+  "owner_status": "Corrected; the figure is derived from the copy, not authored alongside it."
+ },
+ {
+  "id": "FLG-053",
   "title": "Internal register codes were printed inside buyer-facing sentences",
-  "detail": "Flag identifiers (FLG-007, FLG-022, FLG-036 and others) appeared in image captions, product card trade-off lines, comparison cells, guide prose and the site footer, so a shopper comparing two air fryers read internal ticket numbers mid-sentence. The underlying findings are all still published in full on flagged.html, in the source register changelog and in the record table at the foot of each product page. Fix is presentation only: buyer surfaces keep the plain-language claim and gain a “why we say that” link into that record, and the gate now fails if a FLG- code appears in the visible copy of the front page, the shop, a category page, the compare page or any guide.",
+  "severity": "corrected",
+  "detail": "Flag identifiers and crawl citations (FLG-007, FLG-022, FLG-036, 'chunk 7', 'intent record') appeared in image captions, product-card trade-off lines, comparison-table cells, guide standfirsts and the search index. They are true, but they are production notes, and a reader deciding what to buy should not have to decode a filing system to get the caveat. The substance now stays in plain language and the code appears only on audit surfaces, with each product page keeping a full record table under its own heading. The gate fails if an FLG code or a chunk citation is visible on any shop or guide page.",
   "links": [
    "S25",
    "S03"
   ],
-  "severity": "corrected",
-  "owner_status": "Corrected. No finding was removed by this change; only where its code is printed."
+  "owner_status": "Corrected on every reader page; flagged.html, sources.html and verification.html still carry all 55."
  },
  {
-  "id": "FLG-043",
-  "title": "P-04 ±0.5 °F accuracy and the in-box calibration certificate remain seller claims",
-  "detail": "amazon.com/dp/B0DHZTCNR5 states ±0.5 °F accuracy, a 0.1° display resolution and lists a “calibration certificate” among Included Components, while its Materials & Care field says Wipe Clean. USDA's published expectation for the category is different and is quoted on S24: “Most food thermometers will give an accurate reading within 2 to 4 degrees F.” We have not seen the certificate and cannot test the unit, so the claim stays attributed to the listing, dated, and is not restated as measured accuracy. The new how-to guide (guides/thermometer-ice-test.html) hands the reader USDA's own ice-water test instead of asserting the number.",
+  "id": "FLG-054",
+  "title": "Pages printed their own markup: double-escaped entities in reader copy",
+  "severity": "corrected",
+  "detail": "Guide fields that the renderer escapes (title, standfirst, intro, verdict) had been authored with HTML entity markup, so the escaping pass double-encoded them and readers saw the markup itself: thermometer-accuracy.html showed a visible plusmn entity where the sentence means plus-or-minus half a degree, and the first-week and Thanksgiving guides each showed a stray mdash entity. The page source looked correct, so this was found by reading the built pages rather than the registers. Fixed in the generator: escaped reader fields decode named and numeric entities to characters before escaping, all pages rebuilt clean, and the gate now unescapes every page's visible text and fails on any entity sequence left.",
+  "links": [
+   "S25"
+  ],
+  "owner_status": "Corrected; the gate rule covers all pages, not only the three that were visibly wrong."
+ },
+ {
+  "id": "FLG-055",
+  "title": "P-04 accuracy claim and in-box certificate are still seller statements, not verified facts",
+  "severity": "unverified",
+  "detail": "The listing for the ThermoMaven 1 Sec (B0DHZTCNR5) states an accuracy of plus or minus 0.5 degrees F, a 0.1 degree display resolution, and lists a calibration certificate among the contents. None of that has been confirmed against a manufacturer document or a test, and the USDA FSIS factsheet notes only that most thermometers are accurate within 2 to 4 degrees F, which is a baseline for the category rather than a judgement on this unit. The site publishes the figure as the seller's claim, attributed and dated, and the ice-water test guide explains how to check it on your own unit. No page calls it verified.",
   "links": [
    "S13",
    "S24"
   ],
-  "severity": "unverified",
-  "owner_status": "Published on the Flagged for Review page and disclosed on the product page. Does not block."
- },
- {
-  "id": "FLG-044",
-  "title": "Reader copy printed its own markup: double-escaped entities in three guides",
-  "detail": "Guide fields that the renderer escapes (title, standfirst, intro, verdict) were authored with HTML entity markup, so the escaping pass double-encoded them and readers were shown the markup itself: thermometer-accuracy.html displayed a visible plusmn entity where the text means plus-or-minus half a degree, and the first-week and Thanksgiving guides each showed a stray mdash entity. Found by reading the built pages rather than the source. Fixed in the generator: escaped reader fields now decode named and numeric entities to characters before esc() runs, all 38 pages were rebuilt clean, and check_site.py fails if any page's visible text still contains an entity sequence after the browser has decoded it.",
-  "links": [
-   "S25"
-  ],
-  "severity": "corrected",
-  "owner_status": "Corrected in the generator and enforced by a new gate rule. Recorded because the markup was visible to readers on published pages."
+  "owner_status": "Open; needs the manufacturer specification sheet or the certificate itself to move."
  }
 ]

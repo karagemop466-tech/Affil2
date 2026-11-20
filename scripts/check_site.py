@@ -513,6 +513,87 @@ for token in ("function send(", "exportEvents", "searchIndex", ".navtoggle",
     if token not in app_js:
         err(f"assets/app.js missing required capability: {token}")
 
+# ---------------------------------------------------------------- T-21 rules
+# 1. rel="sponsored" belongs on links we earn from, not on the documents we cite.
+for f in pages:
+    rel = str(f.relative_to(ROOT))
+    for m in re.finditer(r'<a\b[^>]*href="(https://[^"]+)"[^>]*>', f.read_text(encoding="utf-8")):
+        tag = m.group(0)
+        if "sponsored" in tag and "amazon.com/dp/" not in m.group(1):
+            err(f"{rel}: {m.group(1)} is marked rel=sponsored but is not a product listing we "
+                f"earn on; cite it with rel=noopener noreferrer instead")
+
+# 2. The stylesheet must parse: an unbalanced brace silently swallows the rules after it,
+#    which is exactly how the .hero classes lost their styling in the November layer.
+css_path = ROOT / "assets" / "style.css"
+css = css_path.read_text(encoding="utf-8")
+css_no_comments = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+if css_no_comments.count("{") != css_no_comments.count("}"):
+    err(f"assets/style.css: {css_no_comments.count('{')} opening braces vs "
+        f"{css_no_comments.count('}')} closing — a rule is unclosed and the CSS after it is dropped")
+for m in re.finditer(r"@media[^{]*\{", css_no_comments):
+    start = m.end()
+    depth, i = 1, start
+    while i < len(css_no_comments) and depth:
+        depth += {"{": 1, "}": -1}.get(css_no_comments[i], 0)
+        i += 1
+    if depth:
+        err("assets/style.css: an @media block is not closed")
+
+# 3. Every class the generator emits must exist in the stylesheet (or be JS-only state).
+js_only = {"open", "hit", "where"}  # added/removed by assets/app.js at runtime
+defined = set(re.findall(r"\.([a-zA-Z][\w-]*)", css_no_comments))
+emitted = set()
+for f in pages:
+    for cls in re.findall(r'class="([^"]+)"', f.read_text(encoding="utf-8")):
+        emitted.update(c for c in cls.split() if c)
+for cls in sorted(emitted - defined - js_only):
+    err(f"assets/style.css: class .{cls} is emitted by the generator but has no rule "
+        f"(the page will render unstyled)")
+
+# 4. No image may ship in the repo without a page or a script referencing it.
+asset_refs = "\n".join(pg.read_text(encoding="utf-8") for pg in pages)
+script_refs = "\n".join(sp.read_text(encoding="utf-8") for sp in (ROOT / "scripts").glob("*.py"))
+for img in sorted((ROOT / "assets").rglob("*.jpg")):
+    name = img.name
+    if name not in asset_refs and name not in script_refs:
+        err(f"{img.relative_to(ROOT)}: unreferenced image asset (duplicate or dead file)")
+
+# 5. Counts printed on the site must match the data that generates them.
+sug_html = (ROOT / "suggestions.html").read_text(encoding="utf-8")
+guide_count = len(re.findall(r'class="guidecard"', (ROOT / "guides.html").read_text(encoding="utf-8")))
+sm_items = len(ET.fromstring((ROOT / "sitemap.xml").read_text(encoding="utf-8")))
+feed_items = len(feed.findall("./channel/item")) if feed is not None else 0
+if feed_items != guide_count:
+    err(f"feed.xml carries {feed_items} items but guides.html lists {guide_count} guides")
+if re.search(r"\b[Tt]en guides\b", sug_html):
+    err("suggestions.html: SG-02 still says 'ten guides' after the guide count changed")
+if f"lists all {guide_count}" not in sug_html and f"all {guide_count}" not in sug_html:
+    err(f"suggestions.html: SG-02 does not state the live guide count ({guide_count})")
+
+# 6. Every guide must end on a product link, so a reader who is convinced can act.
+for g in (ROOT / "guides").glob("*.html"):
+    txt = g.read_text(encoding="utf-8")
+    if "flip-list" not in txt:
+        err(f"guides/{g.name}: no product line at the end of the guide")
+    elif "amazon.com/dp/" not in txt:
+        err(f"guides/{g.name}: product line carries no tagged listing link")
+
+# 7. Every product page links back into the guides that discuss it, and vice versa.
+for g in sorted((ROOT / "guides").glob("*.html")):
+    txt = g.read_text(encoding="utf-8")
+    if 'href="../products/' not in txt:
+        err(f"guides/{g.name}: links to no product page")
+for p_ in sorted((ROOT / "products").glob("*.html")):
+    txt = p_.read_text(encoding="utf-8")
+    if 'href="../guides/' not in txt:
+        err(f"products/{p_.name}: links to no guide")
+
+# 7. The front page must offer a way in before it offers a category directory.
+home = (ROOT / "index.html").read_text(encoding="utf-8")
+if 'class="router"' not in home:
+    err("index.html: the answer-first router is missing")
+
 # ---------------------------------------------------------------- reader-facing surfaces (session 93894704)
 # Two rules the shop-side polish pass depends on. Both are cheap to state and easy to regress,
 # which is why they are gate rules rather than a convention in a README nobody re-reads.
@@ -528,16 +609,19 @@ def visible_text(html):
     t = re.sub(r"<[^>]+>", " ", t)
     return re.sub(r"\s+", " ", t)
 
-# 0. No page may print its own markup: escaped copy used to leak literal &amp;entity; text.
+# 8. No page may print its own markup: escaped copy used to leak literal &amp;entity; text.
 for p in pages:
     rel = str(p.relative_to(ROOT))
     seen = htmlmod.unescape(visible_text(p.read_text(encoding="utf-8")))
-    leak = sorted(set(re.findall(r"&(?:[a-z]{2,8}|#\d{2,4});", seen)))
+    # A bare `&amp;` after one decode pass is a legitimate encoded ampersand ("Design & Traffic"),
+    # which is how the nav labels are written. Anything else that is still markup after the browser
+    # has decoded once was double-encoded on the way in.
+    leak = sorted(e for e in set(re.findall(r"&(?:[a-z]{2,8}|#\d{1,4});", seen)) if e != "&amp;")
     if leak:
         err(f"{rel}: visible text prints its own markup {leak} — decode entities before esc() "
             "(FLG-044)")
 
-# 1. Internal register codes belong on audit surfaces, not inside a buying sentence.
+# 9. Internal register codes belong on audit surfaces, not inside a buying sentence.
 for rel in SHOP_SURFACES:
     f = ROOT / rel
     if not f.exists():
@@ -548,7 +632,7 @@ for rel in SHOP_SURFACES:
         err(f"{rel}: internal register code in buyer-facing copy: {leaked} "
             "(keep the plain-language claim; the code goes on flagged.html)")
 
-# 2. A guide's read time is measured from the page, never typed into it.
+# 10. A guide's read time is measured from the page, never typed into it.
 for rel in sorted(str(g.relative_to(ROOT)) for g in (ROOT / "guides").glob("*.html")):
     html = (ROOT / rel).read_text(encoding="utf-8")
     main = re.search(r"<main[^>]*>(.*?)</main>", html, re.S)
@@ -565,7 +649,7 @@ for rel in sorted(str(g.relative_to(ROOT)) for g in (ROOT / "guides").glob("*.ht
         err(f"{rel}: states {minutes} min read for a {words}-word page; the figure must be derived "
             "from the copy (see build_site.guide_minutes), not typed in")
 
-# 3. Every guide and product page carries the dated byline, and the byline has a target.
+# 11. Every guide and product page carries the dated byline, and the byline has a target.
 for rel in sorted([str(g.relative_to(ROOT)) for g in (ROOT / "guides").glob("*.html")] +
                   [str(x.relative_to(ROOT)) for x in (ROOT / "products").glob("*.html")]):
     html = (ROOT / rel).read_text(encoding="utf-8")
@@ -578,7 +662,7 @@ for rel in sorted([str(g.relative_to(ROOT)) for g in (ROOT / "guides").glob("*.h
 if 'id="who-writes-it"' not in (ROOT / "about.html").read_text():
     err("about.html: the authorship anchor the bylines point at is missing")
 
-# 4. Decision Center: the shortlist must assemble into a build prompt, in the page and in the JS.
+# 12. Decision Center: the shortlist must assemble into a build prompt, in the page and in the JS.
 sug_html = (ROOT / "suggestions.html").read_text(encoding="utf-8")
 sd = re.search(r'<script type="application/json" id="sugData">(.*?)</script>', sug_html, re.S)
 if not sd:
@@ -623,6 +707,50 @@ if errors:
         print("  ✗", e)
     sys.exit(1)
 print("ALL CHECKS PASS")
+
+
+# ---------------------------------------------------------------- reader voice (session 0acc86ad)
+# The site is a shop, not a newsroom. A shopper must never meet the project's filing system:
+# no chunk numbers, no bare flag IDs on the pages a buyer reads. Every flag stays published on
+# flagged.html (generated from data/flags.json), which is the only place IDs belong.
+READER_PAGES = [ROOT / "index.html", ROOT / "shop.html", ROOT / "compare.html",
+                ROOT / "air-fryers.html", ROOT / "meat-thermometers.html",
+                ROOT / "how-we-choose.html", ROOT / "guides.html",
+                ROOT / "about.html", ROOT / "disclosure.html", ROOT / "search.html"]
+READER_PAGES += sorted((ROOT / "products").glob("*.html"))
+READER_PAGES += sorted((ROOT / "guides").glob("*.html"))
+for page in READER_PAGES:
+    if not page.exists():
+        err(f"{page.name}: expected reader-facing page missing")
+        continue
+    txt = page.read_text()
+    if re.search(r"\bchunks?\s*\d", txt, re.I):
+        err(f"{page.relative_to(ROOT)}: internal crawl citation (chunk N) visible to readers")
+    if re.search(r"FLG-\d{3}", txt):
+        err(f"{page.relative_to(ROOT)}: internal flag ID visible to readers "
+            f"(publish the fact in words; keep the ID on flagged.html)")
+    if "Product-intent confirmation record" in txt:
+        err(f"{page.relative_to(ROOT)}: internal intent record heading on a reader page")
+
+# Every product page must still carry the five required provenance facts, in reader language.
+for page in sorted((ROOT / "products").glob("*.html")):
+    txt = page.read_text()
+    for required in ("Intended ASIN", "Observed redirect target", "Special Link we publish",
+                     "Confirmation date"):
+        if required not in txt:
+            err(f"{page.relative_to(ROOT)}: provenance table missing '{required}'")
+
+# findability.txt must exist, name the canonical home, and list every submitted page.
+find = ROOT / "findability.txt"
+if not find.exists():
+    err("findability.txt missing (site profile for crawlers)")
+else:
+    ftxt = find.read_text()
+    if BASE not in ftxt:
+        err("findability.txt: canonical home not stated")
+    for page in pages:
+        if f"{BASE}{page}" not in ftxt:
+            err(f"findability.txt: does not list {page}")
 
 
 # ---------------------------------------------------------------- analytics surface (session bba2deed)

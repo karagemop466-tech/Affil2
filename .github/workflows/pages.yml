@@ -31,9 +31,9 @@ jobs:
 
       - name: Fail if the committed pages differ from the generator output
         run: |
-          if [ -n "$(git status --porcelain -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt')" ]; then
+          if [ -n "$(git status --porcelain -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt' 'findability.txt')" ]; then
             echo "::error::Committed pages are out of sync with scripts/build_site.py."
-            git --no-pager diff --stat -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt'
+            git --no-pager diff --stat -- '*.html' 'sitemap.xml' 'feed.xml' 'robots.txt' 'findability.txt'
             exit 1
           fi
           echo "Pages match the generator."
