@@ -936,3 +936,37 @@ untouched and unguessed.
 | PR dispositions executed | #16 closed superseded; #28 closed superseded (four guide topics preserved as backlog); #34 closed integrated (block ported verbatim); #35 closed superseded. PR #29 was merged by its own session during this pass. Each close comment states where the work lives on main. |
 | Gate at merge | 36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS; 3 Python tests OK; JS collector tests pass; generator idempotent. |
 | Not touched | account-gated items FLG-001/002/003/004/010/028/033, SG-07/SG-25/SG-29/SG-31, Q-01..Q-04; no product fact, source, or flag changed. |
+
+---
+
+## Session `c449a2ad` — T-21 claim (2026-11-20 UTC)
+
+Branch `arena/c449a2ad-affil2`, base `4025ecc` (main, after PR #38). Scope is deliberately read-only with respect to shared outputs.
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-21 | Requirements traceability register: every requirement in the current brief mapped to status, evidence, owning claim and the owner action it needs; plus a read-only log of intent/observed field irregularities | in progress | c449a2ad | `REQUIREMENTS-TRACE.md` (new), `COORDINATION.md` (append only) |
+
+Not claimed here, and not edited: the open PRs #28 (59ada9df: T-13..T-20), #34 (82c875a9), #35 (36170d15: T-17 identity fields), #16 (bdedd85e: analytics T-13/T-14). Their file scopes are left alone. Requests for those owners are logged below rather than applied.
+
+Requests logged for owners (not applied in this session):
+- For `36170d15` (identity fields): `data/products.json` sets `asin` equal to the observed redirect target for P-01..P-05 (for example P-01 `asin: B0CDY277D3`, `observed: B0CDY277D3`). FLG-001 says the intended field stays blank and the observed field stays separate. The two should not hold the same value.
+- For `59ada9df` (verification pass T-18): the re-fetch should cover the S01/S02 "Updated" dates. The Operating Agreement page currently reads "Updated: October 15, 2025" at https://affiliate-program.amazon.com/help/operating/agreement (checked 2026-11-20 by c449a2ad). Compare with the date in `data/sources.json`.
+- Mergeability: PRs #16, #28, #34 and #35 all report `DIRTY` (merge conflicts with main at 4025ecc). The final integration session needs to rebase them in order or retire the duplicates.
+
+### T-21 completion (session `c449a2ad`, 2026-11-20 UTC)
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-21 | Requirements traceability register + read-only irregularity log | done | c449a2ad | `REQUIREMENTS-TRACE.md` (new), `COORDINATION.md` (append only) |
+
+- **Register:** `REQUIREMENTS-TRACE.md` maps 36 requirements from the current brief to status, evidence on `main`, official source, and owner action. Owner-only items are listed separately (section 2).
+- **Live official sources read this pass:** Associates Operating Agreement §4 and §5 (https://affiliate-program.amazon.com/help/operating/agreement). §5 wording matches the site's disclosure sentence verbatim. OPM Federal Holidays 2026 (https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/): Thanksgiving Day is Thursday, November 26, 2026. Amazon listing B0CDY277D3 (https://www.amazon.com/dp/B0CDY277D3): page loads; title matches the register.
+- **Local verification:** `python3 scripts/build_site.py` leaves every tracked file unchanged (idempotent). `python3 scripts/check_site.py` → `checked 36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`. Python and Node test suites pass.
+- **Corrections made while verifying:** three flag references in the first draft pointed at the wrong flags. They now point at SG-29 (Search Console), SG-26 (ledger) and FLG-004 (Special Link test). One source link was not verified and was removed; that gap is logged as I-7.
+- **Irregularities (not blocking; detail in `REQUIREMENTS-TRACE.md` §3):** I-1 `asin` equals `observed` for P-01..P-05; I-2 Black Friday date unsourced; I-3 gate checks source links on spec rows only; I-4 gate checks `https` only, not official domains; I-5 Operating Agreement "Updated" date not recorded in `sources.json`; I-6 open PRs #16, #28, #34, #35 report DIRTY; I-7 formal ASIN definition not yet linked to an official page; I-8 stale flag numbers in older COORDINATION entries.
+- **Requests to owners (logged, not applied):**
+  - `36170d15` (identity fields): I-1.
+  - `59ada9df` (gate and sources, T-19/T-18): I-3, I-4, I-5.
+  - Final integration session: I-2 (cite or label Black Friday), I-6 (rebase or retire DIRTY PRs), I-7 (locate the official ASIN definition), I-8 (refresh stale flag references).
+- **Not done here, and why:** no listing re-read (done by `58c6ca4a`, PR #39). No change to shared data, generator, nav, or site pages; those are claimed by other sessions. No Associates, Search Console or analytics access exists in this sandbox.
