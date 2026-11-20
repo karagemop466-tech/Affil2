@@ -747,6 +747,21 @@ for key in ("analyticsEndpoint", "readerCaptureEndpoint"):
     if key not in config:
         err(f"assets/config.js: {key} is not declared")
 
+# A named entity that arrives double-escaped prints as literal text on the page ("&mdash;"),
+# which is invisible to every other check. Audit the rendered HTML for the common set.
+DOUBLE_ENTITY = re.compile(
+    r"&amp;(?:mdash|ndash|plusmn|nbsp|deg|rsquo|lsquo|ldquo|rdquo|hellip|copy|reg|times|"
+    r"rarr|larr|middot|frac12|frac14|frac34|sup2|sup3|eacute|aacute|ouml|uuml|szlig|amp|lt|gt|quot);")
+for f in pages:
+    rel = str(f.relative_to(ROOT))
+    html = f.read_text(encoding="utf-8")
+    # JSON-LD is data, not rendered text; a double-escaped entity there is still wrong, so it counts.
+    hits = DOUBLE_ENTITY.findall(html)
+    if hits:
+        err(f"{rel}: {len(hits)} double-escaped entity/entities will print literally "
+            f"({', '.join(sorted(set(hits))[:3])}) - use the character or the raw entity in the source")
+
+
 
 # ---------------------------------------------------------------- T-28 rules
 # Every external citation on the site must point at a host that is registered in sources.json.

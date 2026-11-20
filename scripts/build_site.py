@@ -1415,10 +1415,10 @@ GUIDES = [
          If you smoke or roast for hours and want to leave the room, buy the wireless system. If you
          do both, they are not substitutes for each other."""),
     dict(slug="thermometer-accuracy", title="How to assess thermometer accuracy claims",
-         sub="What &plusmn;0.5 °F, NIST and NSF mean on a listing — and what they do not.",
+         sub="What ±0.5 °F, NIST and NSF mean on a listing, and what they do not.",
          kicker="Buying guide", products=["P-04", "P-05"],
          intro="""Accuracy is the one specification you cannot check by reading harder. A listing can
-         say &plusmn;0.5&nbsp;&deg;F and reference NIST and NSF, and every word of that can be true
+         say ±0.5 °F and reference NIST and NSF, and every word of that can be true
          while telling you less than you think. Here is a calmer way to read it.""",
          sections=[
             ("Separate the claim from the evidence", """&plusmn;0.5&nbsp;&deg;F is a claim about
@@ -1452,7 +1452,7 @@ GUIDES = [
          sub="A 12-inch pizza claim tells you more about usable size than a quart figure does.",
          kicker="Seasonal guide", products=["P-02", "P-01", "P-03"],
          intro="""Thanksgiving is the one day a year when counter space and usable volume both
-         matter at once. The useful question is not how many quarts the appliance has &mdash; it is
+         matter at once. The useful question is not how many quarts the appliance has: it is
          which of the day's jobs it can take off the oven, and which it cannot.""",
          sections=[
             ("What a countertop oven can take off your hands", """Sides and reheats are the realistic
@@ -1504,7 +1504,7 @@ GUIDES = [
          intro="""The fastest way to regret a new appliance is to feed it only frozen fries. A week
          of deliberate experiments teaches you where the heat sits and what this machine will
          actually replace in your routine. The practice below is kitchen experience, not product
-         testing &mdash; no performance claim about any of these machines is made here.""",
+         testing. No performance claim about any of these machines is made here.""",
          sections=[
             ("Days one and two: learn the heat", """Start with something cheap and forgiving &mdash;
             potato wedges or chicken wings. The point is not dinner, it is calibration: a single
