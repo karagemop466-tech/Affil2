@@ -1530,6 +1530,54 @@ def build_verification():
 <p>Values marked <em>corroborated</em> were read from product-information mirrors of the listing's own spec table, not from the listing's Product details block itself (the fetch pass could not extract it reliably). The official listing link is in every table row for manual review. Independent sessions reached the same conclusions about the P-03 wattage, the P-03 temperature nuance and the P-05 warranty — those findings are canonical as FLG-017, FLG-018 and FLG-019.</p>
 <p><a class="btn ghost" href="flagged.html">See Flagged for Review</a> <a class="btn ghost" href="sources.html">See the source register</a> <a class="btn ghost" href="suggestions.html">Decision Center</a></p></div>
 """
+    # ---- this session's own live re-read, kept separate so it can be audited on its own terms
+    live = _json.loads((DATA / "verification-2026-11-20-live.json").read_text())
+    live_blocks = ""
+    for prod in live["products"]:
+        rows = ""
+        for r in prod["fields"]:
+            tone = {"verified": "ok", "conflict": "warn", "unverified": "muted"}.get(r["status"], "muted")
+            rows += (f'<tr><th scope="row">{esc(r["field"])}</th>'
+                     f'<td>{esc(r["value_as_read"])}</td>'
+                     f'<td><span class="token {tone}">{esc(r["status"])}</span></td>'
+                     f'<td class="small">{esc(r["where"])}<br>{esc(r["note"])}</td></tr>')
+        live_blocks += (
+            f'<h2>{esc(prod["id"])} · ASIN {esc(prod["asin"])}</h2>'
+            f'<p class="small">Title as read: <em>{esc(prod["title_as_read"])}</em> · '
+            f'{a(prod["url"], "official listing", True)}</p>'
+            f'<table><caption>Read live on {esc(live["generated"])}. "Unverified" means this pass did '
+            f'not reach that field — not that the value on the product page is wrong.</caption>'
+            f'<thead><tr><th scope="col">Field</th><th scope="col">Value as the listing printed it</th>'
+            f'<th scope="col">Status in this pass</th><th scope="col">Where it was read</th></tr></thead>'
+            f'<tbody>{rows}</tbody></table>')
+    not_done = "".join(f"<li>{esc(x)}</li>" for x in live["not_re_verified_this_session"])
+    review = "".join(
+        f'<tr><th scope="row">{esc(o["id"])}</th><td>{esc(o["observation"])}</td>'
+        f'<td>{esc(o["status"])}</td></tr>' for o in live["new_observations_for_review"])
+    usda = live["usda_chart"]
+    usda_rows = "".join(f"<li>{esc(v)}</li>" for v in usda["values_re_read"])
+    live_section = f"""
+<h2 id="live-pass">Independent live pass — {esc(live["generated"])}</h2>
+<p class="lede">A second reading of all five listings, done in a fresh session with no reuse of the
+  earlier notes. Where this pass reached a field, the value below is what the page printed at the
+  time. Where it did not, the row says so instead of copying the earlier answer.</p>
+{live_blocks}
+<h2>Food-safety source re-read</h2>
+<p>The USDA FSIS <a href="{esc(usda["url"])}">Safe Minimum Internal Temperature Chart</a> was read
+  again this session (the page states it was last updated {esc(usda["last_updated_on_source"])}).
+  Values confirmed: </p>
+<ul class="tight">{usda_rows}</ul>
+<h2>What this pass did not re-verify</h2>
+<p class="small">Listed so nobody mistakes a re-read of the product pages for a full audit:</p>
+<ul class="tight">{not_done}</ul>
+<h2>New observations for review</h2>
+<table><caption>Raised by this pass. None of these changes a published product value; each is for a
+  human to accept or reject.</caption>
+<thead><tr><th scope="col">Item</th><th scope="col">Observation</th><th scope="col">Status</th></tr></thead>
+<tbody>{review}</tbody></table>
+"""
+    body = body.replace('<h2>Corrections made in this pass</h2>', live_section + '<h2>Corrections made in this pass</h2>', 1)
+
     BUILT.append(page("verification.html", f"Verification Log — {SITE}",
                       "Line-by-line verification of every register value against official listings and policy pages, with method and status per row.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
