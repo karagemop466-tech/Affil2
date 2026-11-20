@@ -341,3 +341,6 @@ It does not deploy, on purpose. This repository's Pages site is configured as **
 Given that the branch builder publishes whatever lands on `main`, the gate cannot block a merge by
 itself; it makes a breakage loud and immediate instead, which is what a repository without branch
 protection can actually support.
+## Session 5ecbe089 — measurement and publication integration
+T-17 | in progress | 5ecbe089 | COORDINATION.md, measurement/, assets/app.js, scripts/build_site.py and generated publication outputs, assets/feature.webp, analytics documentation. Integrate current main first; preserve existing verification records.
+Coordination append conflict resolved by retaining both session entries.
