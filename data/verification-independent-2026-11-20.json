@@ -1,0 +1,193 @@
+{
+  "generated": "2026-11-20",
+  "session": "arena/c6fa1006-affil2",
+  "method": "Each official amazon.com listing named below was fetched live in this session and read in the sections that carry the values: the product-information block (Features & Specs, Measurements, Materials & Care), the Item details block, the Purchase options and add-ons table, and the About this item bullets. Every value is quoted as the listing printed it. A field this pass did not reach is recorded as 'not reached in this pass' rather than copied from the register, so the next session knows exactly what is still unchecked.",
+  "reading_note": "Chunk indices are fetch-dependent: Amazon interleaves sponsored-ad modules into the page, so the same listing splits into different chunks on different fetches. The section name is the stable citation; the chunk number is not. See FLG-052.",
+  "sources": [
+    "https://www.amazon.com/dp/B0CDY277D3",
+    "https://www.amazon.com/dp/B09B7SB46R",
+    "https://www.amazon.com/dp/B08DKYBTPH",
+    "https://www.amazon.com/dp/B0DHZTCNR5",
+    "https://www.amazon.com/dp/B0DZFD6R9Z",
+    "https://affiliate-program.amazon.com/help/operating/agreement",
+    "https://affiliate-program.amazon.com/help/operating/policies",
+    "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
+    "https://sell.amazon.com/blog/what-is-an-asin",
+    "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking"
+  ],
+  "products": [
+    {
+      "id": "P-01",
+      "observed": "B0CDY277D3",
+      "url": "https://www.amazon.com/dp/B0CDY277D3",
+      "title_as_read": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black",
+      "fields": [
+        {"field": "Capacity", "value_as_read": "6 liters", "where": "Product information - Measurements table", "status": "conflict", "note": "The same table prints Size: 6 Quart, and the title and bullets say 6 quarts split into two 3-quart baskets. Both published."},
+        {"field": "Item Dimensions D x W x H", "value_as_read": "13.38\"D x 11.81\"W x 10.63\"H", "where": "Product information - Measurements table", "status": "verified", "note": "Matches the register."},
+        {"field": "Item Weight", "value_as_read": "13.3 pounds", "where": "Product information - Measurements table", "status": "verified", "note": "Re-read in this pass; this was one of the five values FLG-050 listed as not re-confirmed."},
+        {"field": "Size", "value_as_read": "6 Quart", "where": "Product information - Measurements table", "status": "verified", "note": ""},
+        {"field": "Output Wattage / Wattage", "value_as_read": "1700 watts", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Voltage", "value_as_read": "120 volts", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Min / Max Temperature Setting", "value_as_read": "93 °C / 450 °F", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Special Features", "value_as_read": "+ 2Min Button, Automatic Shut-Off, Dual Zone Features, Hi-Fry, Mute", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Material / Inner Material", "value_as_read": "Metal, Plastic / Plastic with Non-Stick Coating", "where": "Product information - Materials & Care", "status": "verified", "note": ""},
+        {"field": "Color", "value_as_read": "Black, Gray", "where": "Product information - Additional details", "status": "verified", "note": ""},
+        {"field": "Warranty & Support block", "value_as_read": "Manufacturer's warranty can be requested from customer service.", "where": "Product information - Warranty & Support", "status": "conflict", "note": "A second, vaguer warranty sentence on the same page as the one-year assurance in the bullets. See FLG-053."},
+        {"field": "Model / Part number", "value_as_read": "not reached in this pass", "where": "Item details block", "status": "unverified", "note": "Published value RJ38-SQPF-3TDB-2W rests on the earlier reading of the Item details block and was not re-read here."}
+      ]
+    },
+    {
+      "id": "P-02",
+      "observed": "B09B7SB46R",
+      "url": "https://www.amazon.com/dp/B09B7SB46R",
+      "title_as_read": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included",
+      "fields": [
+        {"field": "Product Dimensions", "value_as_read": "16.9\"D x 15.8\"W x 14.8\"H", "where": "Purchase options and add-ons table", "status": "verified", "note": "Matches the register."},
+        {"field": "Capacity", "value_as_read": "24.6 liters", "where": "Purchase options and add-ons table", "status": "conflict", "note": "The About this item bullet says 26-QUART CAPACITY. Both published; register already records this."},
+        {"field": "Special Feature", "value_as_read": "Automatic Shut-Off, Programmable, Temperature Control, Timer", "where": "Purchase options and add-ons table", "status": "verified", "note": ""},
+        {"field": "Material / Color", "value_as_read": "Stainless Steel / Stainless Steel", "where": "Purchase options and add-ons table", "status": "verified", "note": ""},
+        {"field": "Cooking pre-sets", "value_as_read": "25 COOKING PRE-SETS: Provide a variety of cooking methods: Ribs, Defrost, Bake, Toast, Chicken, Pizza, Pastry, Slow Cook, Roast, Reheat, and Keep Warm.", "where": "About this item bullet", "status": "conflict", "note": "The title says 24 One-Touch Preset Options. The bullet also names eleven methods. Both figures are published; FLG-021."},
+        {"field": "Stated fits", "value_as_read": "capacity to rotisserie a 6-lb chicken, bake a 12” pizza", "where": "About this item bullet", "status": "verified", "note": ""},
+        {"field": "Air circulation", "value_as_read": "360º superheated air circulation", "where": "About this item bullet", "status": "verified", "note": ""},
+        {"field": "Doors", "value_as_read": "Elegant French doors open with a single pull", "where": "About this item bullet", "status": "verified", "note": ""},
+        {"field": "Item details (model number, included components)", "value_as_read": "not reached in this pass", "where": "Item details block", "status": "unverified", "note": "Published value 4-00675-02X-VN and the six-accessory list rest on the earlier reading; neither was re-read here."},
+        {"field": "Temperature range / wattage", "value_as_read": "not reached in this pass", "where": "Product information - Features & Specs", "status": "unverified", "note": "Published values 75-500 °F and 1700 W rest on the earlier reading of the Features & Specs table."}
+      ]
+    },
+    {
+      "id": "P-03",
+      "observed": "B08DKYBTPH",
+      "url": "https://www.amazon.com/dp/B08DKYBTPH",
+      "title_as_read": "Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel",
+      "fields": [
+        {"field": "Item Dimensions D x W x H", "value_as_read": "12.75\"D x 13.5\"W x 10\"H", "where": "Product information - Measurements table", "status": "verified", "note": "Matches the register."},
+        {"field": "Item Weight", "value_as_read": "12.8 pounds", "where": "Product information - Measurements table", "status": "verified", "note": "Re-read in this pass; one of the five values FLG-050 listed as not re-confirmed."},
+        {"field": "Capacity / Size", "value_as_read": "8 quarts / 8 quarts", "where": "Product information - Measurements table", "status": "verified", "note": ""},
+        {"field": "Output Wattage / Wattage", "value_as_read": "1700 watts", "where": "Product information - Features & Specs", "status": "verified", "note": "The About this item bullet prints 1000 watts; both are published. FLG-017."},
+        {"field": "Voltage", "value_as_read": "120 volts", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Min / Max Temperature Setting", "value_as_read": "94 °C / 400 °F", "where": "Product information - Features & Specs", "status": "conflict", "note": "The page title advertises a 450°F Hi-Fry option. Both are published; FLG-018."},
+        {"field": "Special Features", "value_as_read": "Automatic Shut-Off, LED Shake Reminder, Programmable", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Material / Inner Material / Care", "value_as_read": "Plastic, Stainless Steel / Stainless Steel / Dishwasher Safe", "where": "Product information - Materials & Care", "status": "verified", "note": ""},
+        {"field": "Part Number", "value_as_read": "RJ38-SQSS-8T", "where": "Item details block", "status": "verified", "note": "The same block prints Model Name \"Square Air Fryer\" and Model Number \"Large Air Fryer\"; the register publishes both."},
+        {"field": "UPC", "value_as_read": "816458024518", "where": "Item details block", "status": "verified", "note": ""},
+        {"field": "Warranty Description", "value_as_read": "1-Year Limited Warranty", "where": "Item details block", "status": "verified", "note": "The Warranty & Support block separately says the manufacturer's warranty can be requested from customer service. FLG-053."},
+        {"field": "Included Components", "value_as_read": "User Guide", "where": "Item details block", "status": "verified", "note": ""},
+        {"field": "ASIN", "value_as_read": "B08DKYBTPH", "where": "Item details block", "status": "verified", "note": ""}
+      ]
+    },
+    {
+      "id": "P-04",
+      "observed": "B0DHZTCNR5",
+      "url": "https://www.amazon.com/dp/B0DHZTCNR5",
+      "title_as_read": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black",
+      "fields": [
+        {"field": "Upper Temperature Range", "value_as_read": "572 °F", "where": "Product information - Features & Specs", "status": "verified", "note": "Re-read in this pass; one of the five values FLG-050 listed as not re-confirmed."},
+        {"field": "Response Time", "value_as_read": "1 seconds", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Resolution", "value_as_read": "0.1°", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Immersion Depth / Item Length", "value_as_read": "6.5 inches / 6.5 inches", "where": "Product information - Features & Specs and Item details Measurements", "status": "verified", "note": ""},
+        {"field": "Model Name / Model / Part Number", "value_as_read": "HT07 / HT07 / HT07", "where": "Item details block", "status": "verified", "note": "Re-read in this pass; one of the five values FLG-050 listed as not re-confirmed."},
+        {"field": "Included Components", "value_as_read": "1*Meat Thermometer, 1*AAA Battery, 1*User Manual, 1*Calibration Certificate", "where": "Item details block", "status": "verified", "note": ""},
+        {"field": "UPC", "value_as_read": "850057819342", "where": "Item details block", "status": "verified", "note": ""},
+        {"field": "Power Source / Number of Batteries", "value_as_read": "Battery Powered / 1 AAA batteries required. (included)", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Display Type / Additional Features", "value_as_read": "Digital / Auto Off, Fast Reading System, High Accuracy, Ultra Clear Screen, Waterproof", "where": "Product information - Features & Specs", "status": "verified", "note": ""},
+        {"field": "Outer Material / Care / Inner Material", "value_as_read": "Plastic / Wipe Clean / Plastic", "where": "Product information - Materials & Care", "status": "verified", "note": ""},
+        {"field": "Specification Met", "value_as_read": "NIST, NSF", "where": "Product information - User guide", "status": "verified", "note": "A seller statement on the listing. No certificate or test report was inspected; the published wording says so."},
+        {"field": "Color / Style Name", "value_as_read": "Black / Contemporary", "where": "Item details - Style", "status": "verified", "note": ""},
+        {"field": "Unit Count", "value_as_read": "1 Count", "where": "Item details - Measurements", "status": "verified", "note": ""},
+        {"field": "Warranty & Support block", "value_as_read": "Manufacturer's warranty can be requested from customer service.", "where": "Product information - Warranty & Support", "status": "conflict", "note": "No warranty duration is printed anywhere on this listing, which is why the site's warranty cell for this product is blank. FLG-053."}
+      ]
+    },
+    {
+      "id": "P-05",
+      "observed": "B0DZFD6R9Z",
+      "url": "https://www.amazon.com/dp/B0DZFD6R9Z",
+      "title_as_read": "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3",
+      "fields": [
+        {"field": "Item Length", "value_as_read": "4.75 inches", "where": "Item details - Measurements", "status": "verified", "note": "Re-read in this pass; one of the five values FLG-050 listed as not re-confirmed."},
+        {"field": "Unit Count", "value_as_read": "3 Count", "where": "Item details - Measurements", "status": "verified", "note": "The page offers 1, 2, 3 and 4 probe variants behind one ASIN. FLG-051."},
+        {"field": "Model / Part Number", "value_as_read": "CQ60-3C-Z1-E", "where": "Item details block", "status": "verified", "note": "Model Name is \"iQ Sense\"."},
+        {"field": "UPC", "value_as_read": "810170921148", "where": "Item details block", "status": "verified", "note": ""},
+        {"field": "Warranty Description", "value_as_read": "3 Year", "where": "Item details block", "status": "conflict", "note": "The About this item bullet says a two-year assurance provided by CHEF iQ. Both are published; FLG-019."},
+        {"field": "Included Components", "value_as_read": "3 Probes, Hub", "where": "Item details block and What's in the box", "status": "verified", "note": ""},
+        {"field": "Battery life", "value_as_read": "up to 50 hours on a full charge", "where": "About this item - HOURS OF USE", "status": "conflict", "note": "An earlier reading of the product description gave 70 hours. The 50-hour figure is what the page printed on 2026-11-20 and is what the site publishes. FLG-008."},
+        {"field": "Sensors", "value_as_read": "4 internal temperature sensors. Additionally, an ambient sensor", "where": "About this item - FIVE SENSORS, MAX ACCURACY", "status": "verified", "note": ""},
+        {"field": "Heat rating", "value_as_read": "built to endure 1000°F heat", "where": "About this item - ENGINEERED FOR DURABILITY", "status": "verified", "note": ""},
+        {"field": "Care", "value_as_read": "Waterproof and dishwasher-safe probes", "where": "About this item - EASY TO CLEAN", "status": "verified", "note": ""},
+        {"field": "Connectivity / Display Type / Outer Material / Care field", "value_as_read": "Bluetooth, Wi Fi / App / Stainless Steel / Dishwasher Safe", "where": "Purchase options and add-ons table", "status": "verified", "note": ""},
+        {"field": "Specification Met", "value_as_read": "ANSI, ASME, ASTM, CCC, CE, CSA, EMC, ETL, FCC, FDA, FE, HACCP, ISO 13485, ISO 9000, ISO 9001, NIST, NSF, RoHS, UL, WEEE", "where": "Product information - User guide", "status": "verified", "note": "A seller statement listing standards the listing claims conformance with; no certificate was inspected."}
+      ]
+    }
+  ],
+  "policy_sources": [
+    {
+      "id": "S01",
+      "url": "https://affiliate-program.amazon.com/help/operating/agreement",
+      "page_date": "Updated: October 15, 2025",
+      "read": [
+        "§1: \"The links must properly use the special 'tagged' link formats we provide and comply with this Agreement ('Special Links').\"",
+        "§4: \"We do not make any representation, warranty, or covenant regarding the amount of traffic or commission income you can expect at any time in connection with the Associates Program.\"",
+        "§5: \"You must clearly and prominently state the following ... 'As an Amazon Associate I earn from qualifying purchases.'\"",
+        "§6: a violation of Section 5 is a material breach."
+      ],
+      "result": "The site's disclosure sentence is the §5 wording, and the site states no traffic or commission expectation."
+    },
+    {
+      "id": "S02",
+      "url": "https://affiliate-program.amazon.com/help/operating/policies",
+      "page_date": "Updated: April 14, 2026",
+      "read": [
+        "Participation Requirements §2(a): \"Special Links must use the Associates ID we have assigned to you.\"",
+        "Participation Requirements §2(b): \"All Special Links must be accessed directly from your Site ... you must include your Associates ID or 'tag' ... as a parameter in the URL of each link you place on your Site to an Amazon Site.\"",
+        "Participation Requirements §2(b): \"your Site may only show prices and availability if: (a) we serve the link in which that price and availability data are displayed, or (b) you obtain Product pricing and availability data via Creators API or PA API ...\"",
+        "Participation Requirements §2(b): \"You must not make inaccurate, overbroad, deceptive or otherwise misleading claims about any Product.\"",
+        "Commission Income Statement §1(a): a qualifying purchase occurs when \"a customer clicks through a Special Link on your Site to an Amazon Site\"."
+      ],
+      "result": "The site shows no price or availability, carries the tag on every product link, and states no claim the listing does not print."
+    },
+    {
+      "id": "S04",
+      "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
+      "page_date": "Last updated 2025-12-10 UTC",
+      "read": [
+        "\"rel='sponsored' - Mark links that are advertisements or paid placements (commonly called paid links) with the sponsored value.\"",
+        "\"Multiple values - You may specify multiple rel values as a space- or comma-separated list.\""
+      ],
+      "result": "Every product listing link on the site carries rel=\"sponsored nofollow\"; policy and government citations do not."
+    },
+    {
+      "id": "S25",
+      "url": "https://sell.amazon.com/blog/what-is-an-asin",
+      "page_date": "Jun 4, 2025",
+      "read": [
+        "\"ASIN\" stands for \"Amazon Standard Identification Number.\" It's a unique 10-character alphanumeric code assigned to every product listed in the Amazon store.",
+        "\"URL method: Look at the URL for a product detail page in the Amazon store. The ASIN appears after '/dp/'.\""
+      ],
+      "result": "The five observed ASINs are 10-character codes, and the supplied link tokens are 9 characters, so the tokens are short-link codes and not ASINs (FLG-014)."
+    },
+    {
+      "id": "S03",
+      "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
+      "page_date": null,
+      "read": [
+        "\"if there's a connection between an endorser and the marketer that a significant minority of consumers wouldn't expect and it would affect how they evaluate the endorsement, that connection should be disclosed clearly and conspicuously\"",
+        "The Guides were revised in 2023, including a new definition of \"clearly and conspicuously\"."
+      ],
+      "result": "The site's disclosure strip sits under the masthead on every page, above the main content, and repeats in the footer."
+    }
+  ],
+  "not_verified_this_session": [
+    "Prices, star ratings, review counts, Best Sellers Rank and commission rates (excluded by policy and by site rule).",
+    "Associates account state: tracking-ID activity, Special Link test, short-link compliance status, commission schedule (owner-only, FLG-002, FLG-003, FLG-004).",
+    "P-01 model / part number, P-02 Item details and Features & Specs blocks, P-02 accessory counts - not reached in this pass; the published values stand on the earlier readings.",
+    "Hands-on behaviour of any product: nothing here was tested, cooked with, or measured.",
+    "Search Console property, analytics endpoint deployment, reader-capture provider, publishing cadence owner decision."
+  ],
+  "new_observations_for_review": [
+    {"flag": "FLG-051", "summary": "P-05 is a variation family (1-4 probes) behind one ASIN; the published figures are the 3-probe variant."},
+    {"flag": "FLG-052", "summary": "Chunk numbers in the provenance strings are fetch-dependent; the section name is the stable citation."},
+    {"flag": "FLG-053", "summary": "P-01, P-03 and P-04 print a second, vaguer warranty sentence in the Warranty & Support block."},
+    {"flag": "FLG-054", "summary": "The policy documents carry their own revision dates, now recorded next to the date they were read."},
+    {"flag": "FLG-014", "summary": "Resolved with an official source: a 9-character token cannot be a 10-character ASIN."},
+    {"flag": "FLG-050", "summary": "Resolved: all five previously unconfirmed values were re-read off the live listings."}
+  ]
+}

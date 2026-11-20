@@ -443,6 +443,18 @@ table.intent th[scope="row"]{width:34%}
 table.intent td{font-size:14px}
 .hero-copy{min-width:0}
 table.ledger td,table.events td,table.exec td,table.shortlist td{font-size:13.5px;color:var(--ink-2)}
+table.season{font-size:13.5px}
+table.season td{color:var(--ink-2)}
+table.season th[scope="col"]{white-space:nowrap}
+table.season .token{white-space:nowrap}
+table.cadence{font-size:13.5px}
+table.cadence th[scope="row"]{width:26%;font-weight:600}
+table.cadence td{color:var(--ink-2)}
+table.pubindex{font-size:13.5px}
+table.pubindex td{color:var(--ink-2)}
+table.pubindex td:first-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.panel.follow{border-left:4px solid var(--accent,#b34a1f)}
+.panel.follow h2{margin-top:0}
 table.exec{font-size:13.5px}
 table.events td:nth-child(2){min-width:150px}
 table.shortlist td:nth-child(2){min-width:240px}

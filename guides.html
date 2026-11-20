@@ -103,8 +103,70 @@
     come from the official listings in this site's <a href="sources.html">source register</a>, dated
     2026-11-20, plus one government source for food-safety temperatures. Where the listings contradict
     themselves the contradiction is printed, not resolved by guessing.</p>
-  <p class="small">Publishing cadence and the next topics are decided on the
-    <a href="suggestions.html">Decision Center</a> page, not by instinct.</p>
+  <p class="small">Publishing cadence and the next topics are decided by published policy, not by
+    instinct &mdash; see the schedule below and the <a href="suggestions.html">Decision Center</a>.</p>
+</div>
+
+<h2 id="schedule">Publishing schedule</h2>
+<p>This is the policy the site holds itself to, not a promise about results. A new guide ships only
+  when it has a buyer question, a decision it changes, a source for every figure, and a place in the
+  sitemap and the feed. The cadence is one guide a week, which is the rate a single editor can
+  sustain while still re-reading listings. If a week produces nothing worth reading, nothing ships:
+  a thinner site is better than a padded one.</p>
+<table class="cadence" data-own="publishing-policy">
+  <caption>This site&rsquo;s own publishing policy: what has to be true before a guide ships, and where
+    each rule is enforced. The rule column is the rule; the enforcement column names the file or gate
+    that applies it.</caption>
+  <thead><tr><th scope="col">Rule</th><th scope="col">What it means in practice</th>
+    <th scope="col">Enforced by</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">One question per guide</th>
+      <td>The title is the question a buyer types or thinks. If the guide answers two questions, it
+        becomes two guides.</td>
+      <td><code>scripts/build_site.py</code> (GUIDES register)</td></tr>
+    <tr><th scope="row">Every figure has a dated source</th>
+      <td>A guide may not introduce a number that is not in <code>data/sources.json</code> or read off
+        a listing on the page&rsquo;s own date.</td>
+      <td><code>scripts/check_site.py</code> official-domain rule</td></tr>
+    <tr><th scope="row">A verdict, or an honest blank</th>
+      <td>Each guide ends by changing a decision. Where the source cannot settle it, the guide says
+        so and points at the open question.</td>
+      <td>Editorial review; <a href="questions.html">Questions register</a></td></tr>
+    <tr><th scope="row">Listed where search engines look</th>
+      <td>A new guide is added to <code>sitemap.xml</code> and <code>feed.xml</code> in the same build
+        that publishes it &mdash; never in a follow-up.</td>
+      <td><code>scripts/check_site.py</code> sitemap and feed rules; <code>tests/test_site.py</code></td></tr>
+    <tr><th scope="row">An exit for the reader</th>
+      <td>Every guide opens with the decision, states the trade-off, and links to one product page
+        only where the product is the answer. Product links stay marked sponsored.</td>
+      <td><code>scripts/check_site.py</code> sponsored-link rule</td></tr>
+    <tr><th scope="row">Cadence before volume</th>
+      <td>One guide a week. Next topics come from measured queries once
+        <a href="measurement.html">Search Console</a> is verified; until then they come from the
+        published <a href="design-brief.html">topic clusters</a>.</td>
+      <td>Owner decision (SG-16, Q-07, Q-20)</td></tr>
+  </tbody>
+</table>
+
+<h2>Everything published so far</h2>
+<p>The same list, dated, so you can see the actual cadence rather than a claimed one.</p>
+<table class="pubindex">
+  <caption>Guides published, with the date each was written and the source each one is built on.
+    A row appears here only when the guide page exists.</caption>
+  <thead><tr><th scope="col">Published</th><th scope="col">Guide</th>
+    <th scope="col">Answers</th><th scope="col">Built from</th></tr></thead>
+  <tbody><tr><td>2026-11-20</td><td><a href="guides/basket-vs-oven.html">Basket or oven-style air fryer: what should you compare?</a></td><td>Buying guide &mdash; 3 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">P-01</a>, <a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">P-02</a>, <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">P-03</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/capacity-checklist.html">A no-hype checklist for comparing air fryer capacity</a></td><td>Buying guide &mdash; 3 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">P-01</a>, <a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">P-02</a>, <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">P-03</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/cleanup-counter-space.html">How to assess cleanup and counter-space trade-offs</a></td><td>Buying guide &mdash; 3 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">P-01</a>, <a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">P-02</a>, <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">P-03</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/multi-function-questions.html">Questions to ask before buying a multi-function kitchen appliance</a></td><td>Buying guide &mdash; 2 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">P-02</a>, <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">P-03</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/instant-vs-wireless.html">Instant-read or wireless thermometer: which do you actually need?</a></td><td>Buying guide &mdash; 2 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">P-04</a>, <a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">P-05</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/thermometer-accuracy.html">How to assess thermometer accuracy claims</a></td><td>Buying guide &mdash; 2 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">P-04</a>, <a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">P-05</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/air-fryer-thanksgiving.html">Air fryer at Thanksgiving: what actually fits</a></td><td>Seasonal guide &mdash; 3 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">P-02</a>, <a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">P-01</a>, <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">P-03</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/small-kitchen-air-fryer.html">Air fryer for a small kitchen: the three measurements that decide it</a></td><td>Buying guide &mdash; 3 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">P-03</a>, <a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">P-01</a>, <a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">P-02</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/first-week-air-fryer.html">Your air fryer's first week: what to cook, what to skip</a></td><td>Getting started &mdash; 3 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">P-01</a>, <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">P-03</a>, <a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">P-02</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/holiday-capacity.html">Holiday hosting: how much air fryer capacity does a full table actually need?</a></td><td>Seasonal guide &amp;#183; Holiday 2026 &amp;#183; 7 min read &mdash; 3 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">P-01</a>, <a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">P-02</a>, <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">P-03</a></td></tr><tr><td>2026-11-20</td><td><a href="guides/holiday-roast-thermometer.html">The holiday roast question: when does a wireless thermometer actually earn its keep?</a></td><td>Seasonal guide &amp;#183; Holiday 2026 &amp;#183; 6 min read &mdash; 2 listing(s)</td><td class="src"><a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">P-04</a>, <a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">P-05</a></td></tr></tbody>
+</table>
+
+<div class="panel follow">
+  <h2>Follow new guides</h2>
+  <p>There is one way to follow this site and it needs no account, no email address and no tracking
+    pixel: the <a href="feed.xml">RSS feed</a>. It carries every guide, in full order. Paste it into
+    any feed reader. Because this is the only capture channel, nothing about you is collected when
+    you use it &mdash; the feed is a file on the server, not a subscription you register for.</p>
+  <p class="small">No newsletter is offered yet. Email capture would need a provider that stores
+    addresses, so it stays switched off until there is a stated privacy policy for it
+    (<a href="questions.html">Q-09</a>).</p>
 </div>
 
 </main>
@@ -124,6 +186,7 @@
       we could not verify.</p>
   </div>
 </footer>
+<script src="assets/config.js"></script>
 <script src="assets/app.js" defer></script>
 </body>
 </html>

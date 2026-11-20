@@ -6,57 +6,61 @@
     "catfile": "air-fryers.html",
     "submitted": "https://link.amazon/B04G1MEwY",
     "token": "B04G1MEwY",
+    "intended_asin": null,
+    "intended_status": "Not confirmed by the owner, so this field stays blank (FLG-001). The supplied token is 9 characters; Amazon defines an ASIN as a 10-character alphanumeric code (S27), so the token is a short-link code and not an ASIN. The value in the observed row below is the only identifier this site has verified.",
     "observed": "B0CDY277D3",
     "observed_status": "Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B0CDY277D3",
-    "asin": "B0CDY277D3",
+    "observed_source": "S15",
+    "confirmed": "2026-11-20",
     "listing": "https://www.amazon.com/dp/B0CDY277D3",
+    "listing_source": "S10",
     "title": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black",
     "fields": {
       "model": {
         "v": "RJ38-SQPF-3TDB-2W",
-        "src": "Product information — Item details table (Model Number & Part Number, chunk 8)",
+        "src": "Product information — Item details table (Model Number & Part Number)",
         "st": "verified",
         "note": ""
       },
       "capacity": {
         "v": "6 quarts combined — 2 independent 3-quart baskets (Measurements table prints 6 liters)",
-        "src": "Page title & About this item (6 quarts / two 3Qt baskets) vs Measurements table (6 liters, chunk 7)",
+        "src": "Page title & About this item (6 quarts / two 3Qt baskets) vs Measurements table (6 liters)",
         "st": "conflict",
         "note": "Both expressions appear on the listing; 6 liters is ~6.34 US quarts."
       },
       "temperature": {
         "v": "200–450 °F (Features & Specs prints Min 93 °C / Max 450 °F)",
-        "src": "About this item & Product information — Features & Specs (chunks 4 & 7)",
+        "src": "About this item & Product information — Features & Specs",
         "st": "verified",
         "note": ""
       },
       "power": {
         "v": "120 volts / 1700 watts",
-        "src": "About this item & Product information — Features & Specs (chunks 5 & 7)",
+        "src": "About this item & Product information — Features & Specs",
         "st": "verified",
         "note": ""
       },
       "dimensions": {
         "v": "13.38 in D × 11.81 in W × 10.63 in H",
-        "src": "About this item & Product information — Measurements table (chunks 4 & 7)",
+        "src": "About this item & Product information — Measurements table",
         "st": "verified",
         "note": ""
       },
       "weight": {
         "v": "13.3 pounds",
-        "src": "Product information — Measurements table (Item Weight, chunk 7)",
+        "src": "Product information — Measurements table (Item Weight)",
         "st": "verified",
         "note": ""
       },
       "warranty": {
         "v": "1-year assurance provided by Chefman",
-        "src": "About this item (chunk 5)",
+        "src": "About this item",
         "st": "verified",
         "note": ""
       },
       "features": {
         "v": "Two viewing windows, Sync Finish, Hi-Fry, +2Min button, mute option, automatic shut-off, cETL approved, dishwasher-safe non-stick baskets",
-        "src": "About this item & Product information — Features & Specs (chunks 4, 5 & 7)",
+        "src": "About this item & Product information — Features & Specs",
         "st": "verified",
         "note": ""
       }
@@ -89,51 +93,55 @@
     "catfile": "air-fryers.html",
     "submitted": "https://link.amazon/B02NbDxp3",
     "token": "B02NbDxp3",
+    "intended_asin": null,
+    "intended_status": "Not confirmed by the owner, so this field stays blank (FLG-001). The supplied token is 9 characters; Amazon defines an ASIN as a 10-character alphanumeric code (S27), so the token is a short-link code and not an ASIN. The value in the observed row below is the only identifier this site has verified.",
     "observed": "B09B7SB46R",
     "observed_status": "Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B09B7SB46R",
-    "asin": "B09B7SB46R",
+    "observed_source": "S16",
+    "confirmed": "2026-11-20",
     "listing": "https://www.amazon.com/dp/B09B7SB46R",
+    "listing_source": "S11",
     "title": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included",
     "fields": {
       "model": {
         "v": "4-00675-02X-VN (prior listing capture noted 4-00675-02, absent from live page)",
-        "src": "Product information — Item details table (Model Number & Part Number, chunk 10)",
+        "src": "Product information — Item details table (Model Number & Part Number)",
         "st": "conflict",
         "note": "Live Item details table lists 4-00675-02X-VN; earlier records cited 4-00675-02."
       },
       "capacity": {
         "v": "26 quarts (Measurements table: 24.6 liters)",
-        "src": "About this item & Product information — Measurements table (chunks 4 & 10)",
+        "src": "About this item & Product information — Measurements table",
         "st": "verified",
         "note": ""
       },
       "temperature": {
         "v": "75–500 °F (Min Temperature Setting 75 °F, Max Temperature Setting 500 °F)",
-        "src": "Product information — Features & Specs table (chunks 9–10)",
+        "src": "Product information — Features & Specs table",
         "st": "verified",
         "note": ""
       },
       "power": {
         "v": "120 volts / 1700 watts",
-        "src": "Product information — Features & Specs table (Output Wattage, Wattage, Voltage, chunk 9)",
+        "src": "Product information — Features & Specs table (Output Wattage, Wattage, Voltage)",
         "st": "verified",
         "note": ""
       },
       "dimensions": {
         "v": "16.9 in D × 15.8 in W × 14.8 in H",
-        "src": "About this item & Product information — Measurements table (chunks 4 & 10)",
+        "src": "About this item & Product information — Measurements table",
         "st": "verified",
         "note": ""
       },
       "weight": {
         "v": null,
-        "src": "Product information — Measurements table (no item weight stated on listing, chunk 10)",
+        "src": "Product information — Measurements table (no item weight stated on listing)",
         "st": "unverified",
         "note": "No item weight is printed on amazon.com/dp/B09B7SB46R — left blank."
       },
       "presets": {
         "v": "24 (page title, Product Description & Configuration) vs 25 (About this item)",
-        "src": "Page title & Product Description vs About this item (chunks 0, 4, 8, 12)",
+        "src": "Page title & Product Description vs About this item",
         "st": "conflict",
         "note": "Listing states both 24 One-Touch Preset Options and 25 cooking pre-sets."
       },
@@ -151,7 +159,7 @@
       },
       "features": {
         "v": "French doors open with a single pull; 360° superheated air circulation (Air Frying Technology: True); rotisserie a 6-lb chicken; bake a 12-inch pizza; stainless steel interior & exterior",
-        "src": "About this item & Features & Specs (chunks 4, 9–10)",
+        "src": "About this item & Features & Specs",
         "st": "verified",
         "note": ""
       }
@@ -184,63 +192,67 @@
     "catfile": "air-fryers.html",
     "submitted": "https://link.amazon/B00hJ57DV",
     "token": "B00hJ57DV",
+    "intended_asin": null,
+    "intended_status": "Not confirmed by the owner, so this field stays blank (FLG-001). The supplied token is 9 characters; Amazon defines an ASIN as a 10-character alphanumeric code (S27), so the token is a short-link code and not an ASIN. The value in the observed row below is the only identifier this site has verified.",
     "observed": "B08DKYBTPH",
     "observed_status": "Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B08DKYBTPH",
-    "asin": "B08DKYBTPH",
+    "observed_source": "S17",
+    "confirmed": "2026-11-20",
     "listing": "https://www.amazon.com/dp/B08DKYBTPH",
+    "listing_source": "S12",
     "title": "Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel",
     "fields": {
       "model": {
         "v": "RJ38-SQSS-8T (About this item & Part Number; Item details Model Number field prints 'Large Air Fryer')",
-        "src": "About this item (chunk 4) & Product information — Item details table (chunk 7)",
+        "src": "About this item & Product information — Item details table",
         "st": "verified",
         "note": ""
       },
       "capacity": {
         "v": "8 quarts",
-        "src": "About this item & Product information — Measurements table (chunks 4 & 7)",
+        "src": "About this item & Product information — Measurements table",
         "st": "verified",
         "note": ""
       },
       "temperature": {
         "v": "200–400 °F (About this item & Features & Specs Max 400 °F) vs 450 °F Hi-Fry option (page title)",
-        "src": "About this item & Features & Specs (chunks 4 & 7) vs page title (chunk 0)",
+        "src": "About this item & Features & Specs vs page title",
         "st": "conflict",
         "note": "Both figures appear on the listing. Both published."
       },
       "power": {
         "v": "120 volts / 1700 watts (Features & Specs: Output Wattage & Wattage) vs 1000 watts (About this item)",
-        "src": "Product information — Features & Specs (chunk 7) vs About this item (chunk 4)",
+        "src": "Product information — Features & Specs vs About this item",
         "st": "conflict",
         "note": "Same listing prints both 1700 watts (Features & Specs) and 1000 watts (About this item). Both shown."
       },
       "dimensions": {
         "v": "12.75 in D × 13.5 in W × 10 in H",
-        "src": "About this item & Product information — Measurements table (chunks 4 & 7)",
+        "src": "About this item & Product information — Measurements table",
         "st": "verified",
         "note": ""
       },
       "weight": {
         "v": "12.8 pounds",
-        "src": "Product information — Measurements table (Item Weight, chunk 7)",
+        "src": "Product information — Measurements table (Item Weight)",
         "st": "verified",
         "note": ""
       },
       "presets": {
         "v": "Four presets: French fries, chicken, meat, fish",
-        "src": "About this item (chunk 4)",
+        "src": "About this item",
         "st": "verified",
         "note": ""
       },
       "warranty": {
         "v": "1-year warranty provided by Chefman (Item details: 1-Year Limited Warranty)",
-        "src": "About this item (chunk 4) & Product information — Item details (chunk 7)",
+        "src": "About this item & Product information — Item details",
         "st": "verified",
         "note": ""
       },
       "features": {
         "v": "LED shake reminder; automatic shut-off; programmable; top-rack dishwasher-safe 8-quart basket and flat frying tray; cETL approved",
-        "src": "About this item & Product information — Features & Specs (chunks 4 & 7)",
+        "src": "About this item & Product information — Features & Specs",
         "st": "verified",
         "note": ""
       }
@@ -273,69 +285,73 @@
     "catfile": "meat-thermometers.html",
     "submitted": "https://link.amazon/B0c8moW59",
     "token": "B0c8moW59",
+    "intended_asin": null,
+    "intended_status": "Not confirmed by the owner, so this field stays blank (FLG-001). The supplied token is 9 characters; Amazon defines an ASIN as a 10-character alphanumeric code (S27), so the token is a short-link code and not an ASIN. The value in the observed row below is the only identifier this site has verified.",
     "observed": "B0DHZTCNR5",
     "observed_status": "Confirmed on re-test (2026-11-20): four earlier attempts hit Amazon checkpoint/HTTP 500 pages; fresh fetch in follow-up verification resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent redirect instability remains under; intended ASIN remains blank under)",
-    "asin": "B0DHZTCNR5",
+    "observed_source": "S18",
+    "confirmed": "2026-11-20",
     "listing": "https://www.amazon.com/dp/B0DHZTCNR5",
+    "listing_source": "S13",
     "title": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black",
     "fields": {
       "model": {
         "v": "HT07",
-        "src": "Product information — Item details table (Model Name, Model & Part Number, chunk 11)",
+        "src": "Product information — Item details table (Model Name, Model & Part Number)",
         "st": "verified",
         "note": ""
       },
       "response": {
         "v": "1 second",
-        "src": "About this item & Product information — Features & Specs (chunks 3 & 11)",
+        "src": "About this item & Product information — Features & Specs",
         "st": "verified",
         "note": ""
       },
       "accuracy": {
         "v": "±0.5 °F (±0.5℉); 0.1° display resolution",
-        "src": "Page title, About this item & Features & Specs (chunks 0, 3 & 11)",
+        "src": "Page title, About this item & Features & Specs",
         "st": "verified",
         "note": ""
       },
       "upper_temp": {
         "v": "572 °F",
-        "src": "Product information — Features & Specs table (Upper Temperature Rating, chunk 11)",
+        "src": "Product information — Features & Specs table (Upper Temperature Rating)",
         "st": "verified",
         "note": ""
       },
       "probe_length": {
         "v": "6.5 inches (Immersion Depth & Item Length)",
-        "src": "Product information — Features & Specs & Measurements tables (chunk 11)",
+        "src": "Product information — Features & Specs & Measurements tables",
         "st": "verified",
         "note": ""
       },
       "certification": {
         "v": "NIST and NSF (seller statement in Specification Met; certificates not independently inspected —)",
-        "src": "About this item & Product information — Features & Specs (chunks 3 & 11)",
+        "src": "About this item & Product information — Features & Specs",
         "st": "verified",
         "note": ""
       },
       "waterproof": {
         "v": "IP67 waterproof; fully waterproof",
-        "src": "Page title & About this item (chunks 0 & 3)",
+        "src": "Page title & About this item",
         "st": "verified",
         "note": ""
       },
       "display": {
         "v": "Auto-rotate bright LED screen; motion-activated",
-        "src": "Page title & About this item (chunks 0 & 3)",
+        "src": "Page title & About this item",
         "st": "verified",
         "note": ""
       },
       "care": {
         "v": "Wipe Clean",
-        "src": "Purchase options & Product information — Materials & Care (chunks 3 & 11)",
+        "src": "Purchase options & Product information — Materials & Care",
         "st": "verified",
         "note": ""
       },
       "included": {
         "v": "1 meat thermometer, 1 AAA battery, user manual, calibration certificate",
-        "src": "Product information — Item details table (Included Components, chunk 11)",
+        "src": "Product information — Item details table (Included Components)",
         "st": "verified",
         "note": ""
       }
@@ -368,63 +384,67 @@
     "catfile": "meat-thermometers.html",
     "submitted": "https://link.amazon/B0f3GKalj",
     "token": "B0f3GKalj",
+    "intended_asin": null,
+    "intended_status": "Not confirmed by the owner, so this field stays blank (FLG-001). The supplied token is 9 characters; Amazon defines an ASIN as a 10-character alphanumeric code (S27), so the token is a short-link code and not an ASIN. The value in the observed row below is the only identifier this site has verified.",
     "observed": "B0DZFD6R9Z",
     "observed_status": "Confirmed on 2026-11-20: short link fetched and resolved cleanly to amazon.com/dp/B0DZFD6R9Z",
-    "asin": "B0DZFD6R9Z",
+    "observed_source": "S19",
+    "confirmed": "2026-11-20",
     "listing": "https://www.amazon.com/dp/B0DZFD6R9Z",
+    "listing_source": "S14",
     "title": "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3",
     "fields": {
       "model": {
         "v": "CQ60-3C-Z1-E",
-        "src": "Product information — Item details table (Model & Part Number, chunk 8)",
+        "src": "Product information — Item details table (Model & Part Number)",
         "st": "verified",
         "note": ""
       },
       "probes": {
         "v": "3 ultra-thin probes plus hub (Included Components: 3 Probes, Hub)",
-        "src": "About this item & Product information — Item details (chunks 4 & 8)",
+        "src": "About this item & Product information — Item details",
         "st": "verified",
         "note": ""
       },
       "heat": {
         "v": "1000 °F heat safe (Upper Temperature Range: 1000 °F)",
-        "src": "Page title, About this item & Features & Specs (chunks 0, 4 & 7)",
+        "src": "Page title, About this item & Features & Specs",
         "st": "verified",
         "note": ""
       },
       "sensors": {
         "v": "5 sensors: 4 internal + 1 ambient",
-        "src": "About this item (chunk 4)",
+        "src": "About this item",
         "st": "verified",
         "note": ""
       },
       "connectivity": {
         "v": "Wi-Fi and Bluetooth, via CHEF iQ app",
-        "src": "About this item & Product information — Features & Specs (chunks 4 & 7)",
+        "src": "About this item & Product information — Features & Specs",
         "st": "verified",
         "note": ""
       },
       "battery": {
         "v": "Up to 50 hours on a full charge (About this item); 70 hours reported on an earlier capture of Product Description",
-        "src": "About this item (chunk 4) vs earlier capture of Product Description",
+        "src": "About this item vs earlier capture of Product Description",
         "st": "conflict",
         "note": "Both figures are published as reported; neither is chosen. The 70-hour text was reported by an earlier verification and is not in the fetched HTML."
       },
       "probe_length": {
         "v": "4.75 inches (Immersion Depth & Item Length)",
-        "src": "Product information — Features & Specs (chunk 7) & Measurements (chunk 8)",
+        "src": "Product information — Features & Specs & Measurements",
         "st": "verified",
         "note": ""
       },
       "warranty": {
         "v": "Two-year assurance provided by CHEF iQ (About this item) vs 3 Year (Item details Warranty Description)",
-        "src": "About this item (chunk 4) vs Product information — Item details Warranty Description (chunk 8)",
+        "src": "About this item vs Product information — Item details Warranty Description",
         "st": "conflict",
         "note": "Same listing states two-year assurance in About this item and 3 Year in Item details (prior register said 1-year) (,)."
       },
       "care": {
         "v": "Waterproof, dishwasher-safe probes",
-        "src": "About this item & Product information — Features & Specs (chunks 4 & 7)",
+        "src": "About this item & Product information — Features & Specs",
         "st": "verified",
         "note": ""
       }

@@ -10,6 +10,7 @@ Run: python3 scripts/check_site.py
 Exit 0 = pass, exit 1 = fail with a list of problems.
 """
 import json
+from urllib.parse import urlparse
 import pathlib
 import re
 import sys
@@ -299,16 +300,19 @@ raw = json.loads((ROOT / "data" / "products.json").read_text())
 editorial = json.loads((ROOT / "data" / "editorial.json").read_text())
 flags = json.loads((ROOT / "data" / "flags.json").read_text())
 sources = json.loads((ROOT / "data" / "sources.json").read_text())
+flag_ids = {f["id"] for f in flags}
+src_ids = {s["id"] for s in sources}
 
 if len(raw) != 5:
     err(f"products.json holds {len(raw)} products, expected 5")
 seen = set()
 for d in raw:
-    for key in ("id", "slug", "submitted", "token", "observed", "asin", "title", "listing",
-                "fields", "cat", "catfile", "questions"):
+    for key in ("id", "slug", "submitted", "token", "intended_asin", "intended_status",
+                "observed", "observed_status", "observed_source", "confirmed",
+                "listing", "listing_source", "title", "fields", "cat", "catfile", "questions"):
         if key not in d:
             err(f"products.json {d.get('id','?')}: missing key {key}")
-    target = d.get("observed") or d.get("asin")
+    target = d.get("observed")
     if not target:
         err(f"products.json {d['id']}: no observed ASIN recorded")
         continue
@@ -319,8 +323,28 @@ for d in raw:
         err(f"products.json {d['id']}: observed ASIN {target} is not a valid ASIN shape")
     if target in d["submitted"]:
         err(f"products.json {d['id']}: the submitted short link should not embed the ASIN")
-    if "intended" in d and d["intended"]:
-        err(f"products.json {d['id']}: intended ASIN must stay blank until the owner confirms it")
+    # The brief: store the intended ASIN and keep the observed redirect target in a separate
+    # field; never merge the two. The intended field therefore stays blank until the owner
+    # confirms it, and the two may never hold the same value.
+    if d.get("intended_asin"):
+        err(f"products.json {d['id']}: intended ASIN must stay blank until the owner confirms it "
+            f"(FLG-001)")
+    if d.get("intended_asin") and d.get("intended_asin") == target:
+        err(f"products.json {d['id']}: the intended ASIN and the observed redirect target hold the "
+            f"same value - they are separate fields and must not be merged")
+    if not d.get("intended_status"):
+        err(f"products.json {d['id']}: no status note explaining the blank intended field")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(d.get("confirmed") or "")):
+        err(f"products.json {d['id']}: the confirmation date is missing or not YYYY-MM-DD")
+    if d.get("listing") != f"https://www.amazon.com/dp/{target}":
+        err(f"products.json {d['id']}: the official listing URL does not match the observed ASIN")
+    for key in ("observed_source", "listing_source"):
+        if d.get(key) not in src_ids:
+            err(f"products.json {d['id']}: {key} {d.get(key)!r} is not a source id in sources.json")
+    if d.get("token") == target:
+        err(f"products.json {d['id']}: the short-link token and the observed ASIN are the same value")
+    if len(str(d.get("token") or "")) != 9:
+        err(f"products.json {d['id']}: the short-link token should be 9 characters")
     if d["id"] not in editorial:
         err(f"editorial.json missing a record for {d['id']}")
     for key, f in d["fields"].items():
@@ -331,8 +355,6 @@ for d in raw:
         if re.search(r"\$\s?\d", str(f["v"])):
             err(f"products.json {d['id']}.{key}: contains a price")
 
-flag_ids = {f["id"] for f in flags}
-src_ids = {s["id"] for s in sources}
 for f in flags:
     if not f["links"]:
         err(f"flags.json {f['id']}: no source link")
@@ -353,6 +375,7 @@ OFFICIAL_SOURCE_HOSTS = {
     "affiliate-program.amazon.com",   # Associates Operating Agreement and Program Policies
     "www.amazon.com",                 # official listing pages
     "sellercentral.amazon.com",       # Seller Central help hub (ASIN as product identifier)
+    "sell.amazon.com",                # Amazon Selling Partner Blog (the ASIN definition itself)
     "link.amazon",                    # the submitted short links (Amazon-operated)
     "www.ftc.gov",                    # FTC Endorsement Guides and Disclosures 101
     "developers.google.com",          # Google Search Central, outbound links
@@ -559,7 +582,7 @@ expected_events = {"page_view", "outbound_click", "guide_read", "search", "sugge
 if set(events_data.get("events", {}).keys()) != expected_events:
     err("data/events.json must define the exact five measurement events")
 app_js = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
-for token in ("function send(", "exportEvents", "searchIndex", ".navtoggle",
+for token in ("function send(", "exportEvents", "searchIndex", ".navtoggle", "SITE_CONFIG",
               "page_view", "outbound_click", "guide_read", "suggestion_rank"):
     if token not in app_js:
         err(f"assets/app.js missing required capability: {token}")
@@ -645,21 +668,6 @@ home = (ROOT / "index.html").read_text(encoding="utf-8")
 if 'class="router"' not in home:
     err("index.html: the answer-first router is missing")
 
-# ---------------------------------------------------------------- report
-print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
-      f"{len(flags)} flags, {len(sources)} sources")
-if notes:
-    print("\nnotes (not failures):")
-    for n in notes:
-        print("  -", n)
-if errors:
-    print(f"\n{len(errors)} PROBLEM(S):")
-    for e in errors:
-        print("  ✗", e)
-    sys.exit(1)
-print("ALL CHECKS PASS")
-
-
 # ---------------------------------------------------------------- reader voice (session 0acc86ad)
 # The site is a shop, not a newsroom. A shopper must never meet the project's filing system:
 # no chunk numbers, no bare flag IDs on the pages a buyer reads. Every flag stays published on
@@ -700,8 +708,9 @@ else:
     if BASE not in ftxt:
         err("findability.txt: canonical home not stated")
     for page in pages:
-        if f"{BASE}{page}" not in ftxt:
-            err(f"findability.txt: does not list {page}")
+        rel = str(page.relative_to(ROOT))
+        if f"{BASE}{rel}" not in ftxt:
+            err(f"findability.txt: does not list {rel}")
 
 
 # ---------------------------------------------------------------- analytics surface (session bba2deed)
@@ -720,3 +729,147 @@ for tm in re.finditer(r"<tbody>(.*?)</tbody>", vt, re.S):
     for rm in re.finditer(r"<tr>.*?</tr>", tm.group(1), re.S):
         if "<th" in rm.group(0) and "href=" not in rm.group(0) and 'scope="row"' in rm.group(0):
             err("verification.html: register row without source link")
+
+# T-29: measurement must be switchable from one file, and that file must actually be loaded.
+# A config that nothing reads is how a "measurement layer" quietly ships as dead code.
+for f in pages:
+    rel = str(f.relative_to(ROOT))
+    html = f.read_text(encoding="utf-8")
+    # Compare the two <script> tags, not any prose mention of the filenames.
+    srcs = re.findall(r'<script[^>]+src="[^"]*assets/(config|app)\.js"', html)
+    if "config" not in srcs:
+        err(f"{rel}: does not load assets/config.js, so the measurement switch cannot be set")
+    elif srcs.index("config") > srcs.index("app"):
+        err(f"{rel}: loads assets/app.js before assets/config.js, so the endpoint is not visible")
+
+config = (ROOT / "assets" / "config.js").read_text(encoding="utf-8")
+for key in ("analyticsEndpoint", "readerCaptureEndpoint"):
+    if key not in config:
+        err(f"assets/config.js: {key} is not declared")
+
+
+# ---------------------------------------------------------------- T-28 rules
+# Every external citation on the site must point at a host that is registered in sources.json.
+# The check is one-way on purpose: a host may be official without being cited yet, but nothing
+# may be cited that is not on the list. That is how a stray blog, forum or scraped mirror gets
+# caught before publication.
+registered_hosts = {urlparse(s["url"]).netloc.lower() for s in sources}
+# The site's own canonical host and this repository are not third-party citations.
+own_hosts = {urlparse(BASE).netloc.lower(), "github.com"}
+for f in pages:
+    rel = str(f.relative_to(ROOT))
+    for m in re.finditer(r'href="(https?://[^"]+)"', f.read_text(encoding="utf-8")):
+        host = urlparse(m.group(1)).netloc.lower()
+        if host and host not in registered_hosts and host not in own_hosts:
+            err(f"{rel}: cites {host}, which is not a registered official source "
+                f"(add it to data/sources.json with its URL and read date, or drop the link)")
+
+# The source register must carry a read date and state whether the page publishes its own
+# revision date. A citation without a date is not auditable.
+for s in sources:
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(s.get("checked") or "")):
+        err(f"sources.json {s['id']}: no YYYY-MM-DD read date")
+    if not s.get("used_for"):
+        err(f"sources.json {s['id']}: does not say what it was used for")
+    page_date = s.get("page_date", "")
+    if page_date and not re.search(r"\d{4}", str(page_date)):
+        err(f"sources.json {s['id']}: page_date {page_date!r} carries no year")
+    if not s["url"].startswith("https://"):
+        err(f"sources.json {s['id']}: source URL is not https")
+
+# Sourcing every table row. A table cell that states a fact has to offer a control the reader
+# can use to re-read the source. Three link shapes satisfy that: a hyperlink, a <button> that
+# opens the source panel, and an in-cell citation of a register id (S01, FLG-017) that resolves
+# on the source page. Internal scaffolding tables - the campaign ledger schema, the event table,
+# navigation, design and workflow notes - are not factual claims about a product or a policy,
+# so they are held to a caption instead: each must say, in its own caption, what it is.
+CITATION = re.compile(r'href="|data-src=|<button\b|\bS\d{2}\b|\bFLG-\d{3}\b')
+NO_CLAIM_CAPTION = re.compile(
+    r"schema|no rows|internal|workflow|checklist|navigation|design|decision|event|definition|"
+    r"template|example|plan|review log|does not|nothing|empty", re.I)
+for f in pages:
+    rel = str(f.relative_to(ROOT))
+    html = f.read_text(encoding="utf-8")
+    for tm in re.finditer(r"<table\b([^>]*)>(.*?)</table>", html, re.S):
+        attrs, table = tm.group(1), tm.group(2)
+        cap = re.search(r"<caption>(.*?)</caption>", table, re.S)
+        caption = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", cap.group(1))).strip() if cap else ""
+        body = re.search(r"<tbody>(.*?)</tbody>", table, re.S)
+        if not body:
+            continue
+        unsourced = 0
+        for row in re.finditer(r"<tr\b[^>]*>(.*?)</tr>", body.group(1), re.S):
+            if not CITATION.search(row.group(1)):
+                unsourced += 1
+        if not unsourced:
+            continue
+        # A table may opt out of row sourcing only by declaring itself a first-party record in the
+        # markup (data-own) AND explaining in its caption what it records and where that record
+        # lives. That keeps the exemption explicit, greppable and impossible to use silently.
+        if "data-own" in attrs:
+            if len(caption) < 40 or not re.search(r"data/|assets/|this site|this repository|own ",
+                                                  caption, re.I):
+                err(f"{rel}: a table is marked data-own but its caption does not say what it records "
+                    f"and where the record lives — caption: {caption[:90]!r}")
+            continue
+        if unsourced and not (cap and NO_CLAIM_CAPTION.search(caption)):
+            err(f"{rel}: a table has {unsourced} row(s) with no source control and a caption that "
+                f"does not declare the table internal — caption: {caption[:90]!r}")
+
+# An unverified value is allowed - the brief asks for it - but it must be visibly marked and
+# must never be presented as a checked fact. Blank cells are only legitimate when marked.
+for f in pages:
+    rel = str(f.relative_to(ROOT))
+    html = f.read_text(encoding="utf-8")
+    if re.search(r"<td>\s*</td>", html) and "unverified" not in html.lower():
+        err(f"{rel}: has an empty table cell and never uses the word unverified")
+
+# Every page must state which day its figures were read, so a reader can tell a fresh page from
+# a stale one. The date lives in the footer strip of each page.
+for f in pages:
+    rel = str(f.relative_to(ROOT))
+    html = f.read_text(encoding="utf-8")
+    tail = html[html.rfind("<footer"):] if "<footer" in html else html
+    if not re.search(r"\b(read|checked|verified|reviewed)\b", tail, re.I):
+        err(f"{rel}: the footer does not say when the content was last read")
+
+# The canonical ASIN definition has to be in the register and cited on the intent page, because
+# the whole intended/observed split rests on it.
+if "S27" not in src_ids:
+    err("sources.json: the official ASIN definition (S27) is not registered")
+else:
+    for p_path in prod_pages:
+        rel_p = str(p_path.relative_to(ROOT))
+        if "sell.amazon.com/blog/what-is-an-asin" not in p_path.read_text(encoding="utf-8"):
+            err(f"{rel_p}: the intent record does not cite the official ASIN definition (S27)")
+
+# The dated live pass must be a real file with real content, not a placeholder.
+live_path = ROOT / "data" / "verification-2026-11-20-live.json"
+if not live_path.exists():
+    err("data/verification-2026-11-20-live.json is missing")
+else:
+    live = json.loads(live_path.read_text(encoding="utf-8"))
+    if len(live.get("products", [])) != 5:
+        err("the live verification record must cover all five products")
+    for p in live.get("products", []):
+        if not p.get("fields"):
+            err(f"live verification record {p.get('id')}: no field rows")
+        for r in p.get("fields", []):
+            if r.get("status") not in ("verified", "conflict", "unverified"):
+                err(f"live verification {p.get('id')}/{r.get('field')}: status {r.get('status')!r} "
+                    f"is not one of verified/conflict/unverified")
+
+
+# ---------------------------------------------------------------- report
+print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
+      f"{len(flags)} flags, {len(sources)} sources")
+if notes:
+    print("\nnotes (not failures):")
+    for n in notes:
+        print("  -", n)
+if errors:
+    print(f"\n{len(errors)} PROBLEM(S):")
+    for e in errors:
+        print("  ✗", e)
+    sys.exit(1)
+print("ALL CHECKS PASS")

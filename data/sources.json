@@ -4,14 +4,16 @@
     "name": "Amazon Associates Program Operating Agreement (Section 5: disclosure wording)",
     "url": "https://affiliate-program.amazon.com/help/operating/agreement",
     "used_for": "Mandatory disclosure statement “As an Amazon Associate I earn from qualifying purchases.” (§5). Checked verbatim on 2026-11-20. The page reads 'Updated: October 15, 2025' (read 2026-11-20). §1 defines Special Links as the tagged link formats Amazon provides.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "page_date": "Updated: October 15, 2025"
   },
   {
     "id": "S02",
     "name": "Amazon Associates Program Policies (Commission Income, Participation Requirements, IP License & Agent Terms)",
     "url": "https://affiliate-program.amazon.com/help/operating/policies",
     "used_for": "Commission Income Statement §2(d)/(e)/(g) (search-referred, redirecting links, improperly formatted links). Participation Requirements §2(a)/(b) (Special Links; prices/availability only via Amazon-served links or API), §5 (no ML model training without express prior written approval), §6(t)/(v)/(w)/(y) (ratings, no cloaking, clear short links, no price tracking). IP License §1, §2(e)/(h)/(i)/(k) (no LLM/ML training, image/PAC caching & attribution), §4 Agent Terms (Agent/[name] user-agent identification).",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "page_date": "Updated: April 14, 2026"
   },
   {
     "id": "S03",
@@ -25,7 +27,8 @@
     "name": "Google Search Central — Qualify your outbound links",
     "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
     "used_for": "Use rel=\"sponsored\" (alone or combined with rel=\"nofollow\") for paid and affiliate links.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "page_date": "Last updated 2025-12-10 UTC"
   },
   {
     "id": "S10",
@@ -144,6 +147,15 @@
     "name": "U.S. Office of Personnel Management — Federal Holidays (2026 and 2027 tables)",
     "url": "https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/",
     "used_for": "2026 table: 'Thursday, November 26 — Thanksgiving Day'. 2027 table: 'Friday, January 01 — New Year's Day'. Used for the seasonal calendar dates in design-brief.html (FLG-052). Read 2026-11-20.",
-    "checked": "2026-11-20"
+    "checked": "2026-11-20",
+    "page_date": "2026 and 2027 schedules shown"
+  },
+  {
+    "id": "S27",
+    "name": "Amazon Selling Partner Blog — Understanding ASINs: your guide to Amazon's product identification system",
+    "url": "https://sell.amazon.com/blog/what-is-an-asin",
+    "used_for": "The official definition of the identifier the intent record is about: \"ASIN\" stands for \"Amazon Standard Identification Number\". It's a unique 10-character alphanumeric code assigned to every product listed in the Amazon store. Amazon also states the ASIN appears after \"/dp/\" in the product URL and in the product-information section of the listing. Read on 2026-11-20; the page shows Jun 4, 2025. Supersedes the open search recorded as FLG-053.",
+    "checked": "2026-11-20",
+    "page_date": "Jun 4, 2025"
   }
 ]

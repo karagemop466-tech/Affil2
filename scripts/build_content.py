@@ -81,7 +81,7 @@ def card(p, prefix):
         f'<h3><a href="{prefix}products/{p["slug"]}.html">{esc(SHORT[p["id"]])}</a></h3>\n'
         f'<p>{esc(p["blurb"])}</p>\n'
         f'<ul class="specs">{specs}</ul>\n'
-        f'<p class="cta"><a class="btn" href="https://www.amazon.com/dp/{p["asin"]}?tag={TAG}" '
+        f'<p class="cta"><a class="btn" href="https://www.amazon.com/dp/{p["observed"]}?tag={TAG}" '
         f'rel="sponsored nofollow" data-outbound="{p["id"]}" data-event="outbound_click">Check on Amazon (paid link)</a>\n'
         f'<a href="{prefix}products/{p["slug"]}.html">Read the breakdown →</a></p>\n'
         f'<p class="small">Special Link pending Associates test (FLG-004). '

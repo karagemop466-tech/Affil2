@@ -64,7 +64,9 @@
 <h2>What we measure</h2>
 <p>Five events, defined once and used consistently:</p>
 <p><strong>Where they go.</strong> By default the counts stay in your own browser (localStorage) and can be exported as CSV — nothing leaves your device. A self-hosted collector (<code>analytics/server.py</code>) is written, smoke-tested and deliberately switched off in <code>assets/config.js</code> until the owner chooses a host (SG-18 / Q-08). That endpoint never reads IP addresses, writes no access log, stores no identifiers, and keeps only aggregate counts. Either way there are no cookies, no fingerprinting, no referrer capture, and search events carry a result count — never what you typed.</p>
-<table class="events">
+<table class="events" data-own="measurement-schema">
+  <caption>This site&rsquo;s own event list, defined in data/events.json and implemented in
+    assets/app.js. It describes what this site counts, not a third-party claim.</caption>
   <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
   <tbody>
     <tr><td><code>page_view</code></td><td>Any page loads</td><td>Which pages are reached at all</td></tr>
@@ -122,6 +124,7 @@
       we could not verify.</p>
   </div>
 </footer>
+<script src="assets/config.js"></script>
 <script src="assets/app.js" defer></script>
 </body>
 </html>

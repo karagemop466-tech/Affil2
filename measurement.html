@@ -44,8 +44,8 @@
   scripts, this repository already includes the zero-dependency collector and strict schema below.</p>
 
 <h2>1. Five-event schema (<code>data/events.json</code>)</h2>
-<table class="events">
-  <caption>Privacy contract v1.0. Disallowed fields (<code>ip</code>, <code>user_agent</code>, <code>referrer</code>, <code>cookie</code>, <code>fingerprint</code>, <code>query_text</code>, <code>email</code>, <code>session_id</code>) are
+<table class="events" data-own="measurement-schema">
+  <caption>This site&rsquo;s own privacy contract v1.0. Disallowed fields (<code>ip</code>, <code>user_agent</code>, <code>referrer</code>, <code>cookie</code>, <code>fingerprint</code>, <code>query_text</code>, <code>email</code>, <code>session_id</code>) are
     stripped client-side and rejected with HTTP 400 by the collector.</caption>
   <thead><tr><th scope="col">Event</th><th scope="col">Trigger</th>
     <th scope="col">Allowed fields</th><th scope="col">Purpose</th></tr></thead>
@@ -107,6 +107,7 @@
       we could not verify.</p>
   </div>
 </footer>
+<script src="assets/config.js"></script>
 <script src="assets/app.js" defer></script>
 </body>
 </html>

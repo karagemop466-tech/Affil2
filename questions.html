@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Open Questions — ShopNow Kitchen</title>
-<meta name="description" content="23 questions that must be answered before a decision can reasonably be made, with how to discover each missing fact and what it blocks.">
+<meta name="description" content="27 questions that must be answered before a decision can reasonably be made, with how to discover each missing fact and what it blocks.">
 <link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/questions.html">
 <meta property="og:site_name" content="ShopNow Kitchen">
 <meta property="og:title" content="Open Questions — ShopNow Kitchen">
-<meta property="og:description" content="23 questions that must be answered before a decision can reasonably be made, with how to discover each missing fact and what it blocks.">
+<meta property="og:description" content="27 questions that must be answered before a decision can reasonably be made, with how to discover each missing fact and what it blocks.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/questions.html">
 <meta name="twitter:card" content="summary_large_image">
@@ -46,7 +46,7 @@
 
 <div class="panel">
   <h2>What this page is for</h2>
-  <p>23 questions. Most need the owner's account access or a yes/no decision; a few
+  <p>27 questions. Most need the owner's account access or a yes/no decision; a few
     need a seller to clarify a listing that contradicts itself, Amazon support to answer a policy
     question, or a qualified adviser for the jurisdictional one. Each row names how to go and get the
     answer, because a question you cannot close is not a plan.</p>
@@ -55,8 +55,10 @@
     does.</p>
 </div>
 
-<table class="questions">
-  <caption>Questions register. The answer column is intentionally not filled in with assumptions.</caption>
+<table class="questions" data-own="open-questions">
+  <caption>Questions register &mdash; this site&rsquo;s own open list, written in scripts/build_site.py (QUESTIONS) and
+    published as a working record rather than a sourced claim. The answer column is intentionally not
+    filled in with assumptions.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Question</th>
     <th scope="col">How to discover the missing information</th><th scope="col">What it blocks</th>
     <th scope="col">Who can answer</th><th scope="col">Status</th></tr></thead>
@@ -175,7 +177,27 @@
   <td>Once Search Console and the collector are live, compare which answers readers actually select against which product pages they open. Replace any question that does not change the shortlist.</td>
   <td>Decision-tool quality (SG-35)</td>
   <td>Owner + measured data</td>
-  <td><span class="unverified">Waiting on analytics</span></td></tr></tbody>
+  <td><span class="unverified">Waiting on analytics</span></td></tr><tr><td class="nowrap"><strong>Q-24</strong></td>
+  <td><strong>Should the fact-check pages stay in the sitemap?</strong><br><span class="small">There is one canonical host and 36 submitted URLs. Twenty-four are shopper pages; twelve are project records - the source register, the flag list, the questions list, the decision centre, the ledger, the brief, the platform note, the verification log and its siblings. Those twelve exist because the brief asked for them to be reviewable, not because a shopper searches for them.</span></td>
+  <td>Two routes, both defensible. (a) Keep every URL in the sitemap and let each record page declare itself as a project record in its structured data. (b) Drop the records to noindex,follow so the crawl budget concentrates on the buying pages, while keeping them reachable from the footer for review. The measurable test is which route produces more indexed guide pages and more outbound clicks per 28 days.</td>
+  <td>Findability: which pages earn the crawl budget</td>
+  <td>Owner + Search Console data</td>
+  <td><span class="unverified">Open - needs a decision before the next content wave</span></td></tr><tr><td class="nowrap"><strong>Q-25</strong></td>
+  <td><strong>Is one guide a week the right cadence, or is it the honest cadence?</strong><br><span class="small">The published schedule commits to one guide a week and to shipping nothing in a week with nothing worth saying. That is a sustainable rate for a single editor, but it is not yet tested against the time a line-by-line re-read of five listings actually takes.</span></td>
+  <td>Time one full cycle: re-read five listings, re-check the policy pages, draft, gate, publish. If a cycle exceeds a week, either the cadence drops to fortnightly or the verification pass is scoped to the listings a guide actually cites. Record the measured cycle time in the campaign ledger's provenance notes.</td>
+  <td>Publishing cadence (SG-16) and the schedule on guides.html</td>
+  <td>Owner</td>
+  <td><span class="unverified">Open - measure one cycle</span></td></tr><tr><td class="nowrap"><strong>Q-26</strong></td>
+  <td><strong>How should the site handle a listing that goes out of stock or changes variant?</strong><br><span class="small">P-05 is already a variation family and P-03's page points at a newer model. Amazon offer state changes between reads, which is why no price or availability is published. What is not decided is what a product page should do when the item it documents is no longer the default offer.</span></td>
+  <td>Add a dated 'offer note' line to each product page, refreshed with the verification pass: what the page documented, and whether the listing still offers that variant at the time of the last read. Do not switch the page to a different product without a new intent record.</td>
+  <td>Which product the page actually covers</td>
+  <td>Owner + verification pass</td>
+  <td><span class="unverified">Open - policy needed</span></td></tr><tr><td class="nowrap"><strong>Q-27</strong></td>
+  <td><strong>Which seasonal dates may be presented as dated facts?</strong><br><span class="small">Only the rows that link to a published schedule may. Three rows on the seasonal plan are federal holidays with the OPM source attached; Black Friday, Cyber Monday, Advent and Valentine's Day have no official publisher, so their rows say 'planning marker' instead of inventing a citation.</span></td>
+  <td>Keep it that way, or adopt a single commercial calendar publisher and register it in data/sources.json. Without a registered publisher, retail dates stay unlinked planning markers and any article built on them says so.</td>
+  <td>Seasonal planning and sourcing discipline</td>
+  <td>Owner</td>
+  <td><span class="unverified">Decided for now - revisit if a publisher is registered</span></td></tr></tbody>
 </table>
 
 <h2>What we do know, and where it came from</h2>
@@ -217,6 +239,7 @@
       we could not verify.</p>
   </div>
 </footer>
+<script src="assets/config.js"></script>
 <script src="assets/app.js" defer></script>
 </body>
 </html>

@@ -11,11 +11,17 @@
     };
 
     function getEndpoint() {
+      // One switch, three ways to set it, most explicit first: a page-level global, the meta tag
+      // the generator emits, then assets/config.js — which is where the owner turns measurement on.
       if (typeof window !== 'undefined' && typeof window.SN_COLLECT_ENDPOINT === 'string' && window.SN_COLLECT_ENDPOINT) {
         return window.SN_COLLECT_ENDPOINT;
       }
       var m = document.querySelector('meta[name="sn-collect-endpoint"]');
       if (m && m.content) return m.content.trim();
+      var cfg = (typeof window !== 'undefined' && window.SITE_CONFIG) || {};
+      if (typeof cfg.analyticsEndpoint === 'string' && cfg.analyticsEndpoint) {
+        return cfg.analyticsEndpoint.trim();
+      }
       var stored = localStorage.getItem('sn_collect_url');
       return stored ? stored.trim() : '';
     }

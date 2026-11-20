@@ -17,6 +17,12 @@ DATA = ROOT / "data"
 BASE = "https://karagemop466-tech.github.io/Affil2/"
 TRACKING_ID = "shopnow047c-20"
 TODAY = "2026-11-20"
+# Amazon's own definition of the identifier the intent record is about. Cited wherever the
+# intended-ASIN field is explained, because the blank field is only defensible if the reader
+# can see what an ASIN is.
+ASIN_DEF = "https://sell.amazon.com/blog/what-is-an-asin"  # registered as S27
+POLICIES = "https://affiliate-program.amazon.com/help/operating/policies"
+AGREEMENT = "https://affiliate-program.amazon.com/help/operating/agreement"
 SITE = "ShopNow Kitchen"
 
 RAW_PRODUCTS = json.loads((DATA / "products.json").read_text())
@@ -70,9 +76,15 @@ def normalise(p, ed):
     p["tradeoff"] = ed["tradeoff"]
     p["commerce_note"] = ed["evidence_note"]
     p["listing_title"] = p["title"]
-    p["intended"] = None
+    # The intent record keeps the owner's intended identifier and the identifier the link
+    # actually opened in two separate fields. They are never merged: `intended_asin` stays
+    # blank until the owner confirms it (FLG-001), `observed` holds the confirmed value.
+    p["intended_asin"] = p.get("intended_asin")
+    p["intended_status"] = p.get("intended_status") or ""
     p["observed"] = p.get("observed")
-    p["observed_checked"] = TODAY
+    p["observed_checked"] = p.get("confirmed") or TODAY
+    p["observed_source"] = p.get("observed_source")
+    p["listing_source"] = p.get("listing_source")
     p["observed_note"] = p["observed_status"]
     p["blurb"] = p["blurb"] or ed["headline"]
     p["model"] = p["fields"]["model"]["v"]
@@ -116,12 +128,12 @@ def esc(s):
 
 def aff(p):
     """The tagged Special Link we publish."""
-    target = p.get("observed") or p["asin"]
+    target = p["observed"]
     return f"https://www.amazon.com/dp/{target}?tag={TRACKING_ID}"
 
 def plain(p):
     """Untagged official listing, for verification."""
-    target = p.get("observed") or p["asin"]
+    target = p["observed"]
     return f"https://www.amazon.com/dp/{target}"
 
 def slug_of(p):
@@ -344,6 +356,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
       we could not verify.</p>
   </div>
 </footer>
+<script src="{up}assets/config.js"></script>
 <script src="{up}assets/app.js" defer></script>
 </body>
 </html>
@@ -539,24 +552,42 @@ def source_for(p, up="../"):
 def ledger_block(p, up="../"):
     """The reader's version of the product-intent record. All five required fields survive,
     visible and separate; only the surrounding language is written for a shopper."""
-    intended = p.get("intended")
+    intended = p.get("intended_asin")
     rows = [
-        ("The link you gave us", f'<code>{esc(p["submitted"])}</code>', ""),
+        ("The link you gave us",
+         f'<a href="{esc(p["submitted"])}" rel="nofollow noopener noreferrer">'
+         f'<code>{esc(p["submitted"])}</code></a>',
+         "The exact URL supplied, opened here so you can compare it with the observed target."),
         ("Intended ASIN",
          (esc(intended) if intended else
-          '<span class="unverified">left blank until the owner confirms it</span>'),
-         "We never fill this in by guesswork."),
+          '<span class="unverified">left blank until the owner confirms it</span>')
+         + ' &mdash; <a href="' + ASIN_DEF + '" rel="noopener noreferrer">what an ASIN is</a>',
+         "We never fill this in by guesswork. Amazon defines an ASIN as a unique 10-character "
+         "alphanumeric code, so a 9-character short-link token is not one."),
         ("Observed redirect target",
          f'ASIN {esc(p["observed"] or "not observed")} '
          f'&mdash; <a href="{plain(p)}" rel="sponsored nofollow">open the official listing</a>',
          "What the short link actually opened, not what it was supposed to open."),
+        ("Official listing URL",
+         f'<a href="{plain(p)}" rel="sponsored nofollow">{esc(plain(p))}</a>',
+         "The amazon.com page the specification table was read from."),
         ("Special Link we publish",
          f'<a href="{aff(p)}" rel="sponsored nofollow">{esc(aff(p))}</a>',
          "Tagged with shopnow047c-20, marked sponsored."),
-        ("Confirmation date", TODAY, "The date this row was last read off the live listing."),
+        ("Confirmation date",
+         f'<a href="{plain(p)}" rel="sponsored nofollow">'
+         f'{esc(p.get("observed_checked") or TODAY)}</a>',
+         "The date this row was last read off the live listing; the date links to that listing."),
+        ("Source of this record",
+         f'<a href="{plain(p)}" rel="sponsored nofollow">the official listing</a> '
+         f'and the supplied short link, both read on '
+         f'{esc(p.get("observed_checked") or TODAY)}',
+         "Every value on this page traces to one of those two pages."),
         ("Associates test status",
-         "PENDING &mdash; one link per product is clicked inside the enrolled Associate account and "
-         "confirmed in the tracking report before any traffic is scaled.",
+         'PENDING &mdash; one link per product is clicked inside the enrolled Associate account and '
+         'confirmed in the tracking report before any traffic is scaled. '
+         'The requirement that Special Links carry the Associates ID comes from '
+         f'<a href="{POLICIES}" rel="noopener noreferrer">the Program Policies</a>.',
          ""),
     ]
     body = ""
@@ -621,13 +652,13 @@ def spec_table(p):
 
 def intent_table(p):
     """Kept for the internal Verification Log; buyer pages use ledger_block() instead."""
-    intended = p["intended"] or "— blank: not confirmed by the owner (FLG-001)"
+    intended = p.get("intended_asin") or "— blank: not confirmed by the owner (FLG-001)"
     return f"""<table class="intent">
   <caption>Product-intent confirmation record. Intended and observed are separate fields and are
     never merged.</caption>
   <tbody>
     <tr><th scope="row">Submitted link (as supplied)</th><td>{esc(p['submitted'])}</td></tr>
-    <tr><th scope="row">Short-link token</th><td>{esc(p['token'])} (not an ASIN)</td></tr>
+    <tr><th scope="row">Short-link token</th><td>{esc(p['token'])} (9 characters, not an ASIN — S27)</td></tr>
     <tr><th scope="row">Intended ASIN</th><td>{esc(intended)}</td></tr>
     <tr><th scope="row">Observed redirect target</th><td>{esc(p['observed'] or '— not observed yet')}</td></tr>
     <tr><th scope="row">What the submitted link actually opened</th><td>{esc(p['observed_note'])}</td></tr>
@@ -637,7 +668,10 @@ def intent_table(p):
       <td><a href="{aff(p)}" rel="sponsored nofollow">{aff(p)}</a></td></tr>
     <tr><th scope="row">Model (as published)</th>
       <td>{esc(p['model'] or '— blank, see FLG-022')}<br><span class="small">{esc(p['model_source'])}</span></td></tr>
-    <tr><th scope="row">Confirmation date</th><td>{TODAY}</td></tr>
+    <tr><th scope="row">Confirmation date</th><td>{esc(p.get('observed_checked') or TODAY)}</td></tr>
+    <tr><th scope="row">Source of this record</th>
+      <td>Listing {esc(p.get('listing_source') or '—')} · short link {esc(p.get('observed_source') or '—')}
+        · read {esc(p.get('observed_checked') or TODAY)}</td></tr>
     <tr><th scope="row">Associates test status</th>
       <td>PENDING — one link per product must be clicked inside the enrolled account and
         confirmed in the tracking report before traffic is scaled (FLG-004).</td></tr>
@@ -925,7 +959,7 @@ def build_category(catfile, cat, headline, intro, guides_, picks):
 # ---- product page
 def build_product(p):
     others = [x for x in PRODUCTS if x["id"] != p["id"] and x["cat"] == p["cat"]]
-    target_asin = p.get("observed") or p["asin"]
+    target_asin = p["observed"]
     og = ('<meta property="product:retailer_item_id" content="'
           + target_asin + '">')
     related_guides = "".join(
@@ -1087,7 +1121,13 @@ def build_compare():
     cols = PRODUCTS
     def row(label, fn):
         cells = "".join(f"<td>{fn(p)}</td>" for p in cols)
-        return f'<tr><th scope="row">{label}</th>{cells}</tr>'
+        # Every comparison row offers the listing it was read from, so any cell on the row can be
+        # checked in one click. Rows that already end in a link keep it as the row's source.
+        sources = "".join(
+            f'<a class="src" href="{plain(p)}" rel="sponsored nofollow" '
+            f'title="Read {esc(p["id"])} on amazon.com">{p["id"]}</a>' for p in cols)
+        return (f'<tr><th scope="row">{label}</th>{cells}'
+                f'<td class="src">{sources}</td></tr>')
 
     head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
                    f'<br><span class="th-sub">{p["id"]} · {esc(p["headline"])}</span></th>' for p in cols)
@@ -1099,8 +1139,9 @@ def build_compare():
   rows, so you can decide. Blank means the listing does not say.</p>
 <table class="compare">
   <caption>Aligned by field, so a value is always compared against the same value. Read from the
-    official listings on {TODAY}.</caption>
-  <thead><tr><th scope="col">Field</th>{head}</tr></thead>
+    official listings on {TODAY}; the source column on each row opens the listing that row
+    was read from.</caption>
+  <thead><tr><th scope="col">Field</th>{head}<th scope="col">Source</th></tr></thead>
   <tbody>
     {row("Category", lambda p: esc(p["cat"]))}
     {row("Best for", lambda p: esc(p["best_for"]))}
@@ -1498,6 +1539,16 @@ GUIDES += _SEASONAL
 
 
 def build_guides_index():
+    pub_rows = ""
+    for g in GUIDES:
+        srcs = ", ".join(
+            f'<a href="{plain(BY_ID[x])}" rel="sponsored nofollow">{BY_ID[x]["id"]}</a>'
+            for x in g["products"])
+        pub_rows += (
+            f'<tr><td>{esc(g.get("published") or TODAY)}</td>'
+            f'<td><a href="guides/{g["slug"]}.html">{esc(g["title"])}</a></td>'
+            f'<td>{esc(g["kicker"])} &mdash; {len(g["products"])} listing(s)</td>'
+            f'<td class="src">{srcs}</td></tr>')
     items = "".join(
         f"""<article class="guidecard">
   <p class="kicker">{esc(g['kicker'])}</p>
@@ -1517,8 +1568,70 @@ def build_guides_index():
     come from the official listings in this site's <a href="sources.html">source register</a>, dated
     {TODAY}, plus one government source for food-safety temperatures. Where the listings contradict
     themselves the contradiction is printed, not resolved by guessing.</p>
-  <p class="small">Publishing cadence and the next topics are decided on the
-    <a href="suggestions.html">Decision Center</a> page, not by instinct.</p>
+  <p class="small">Publishing cadence and the next topics are decided by published policy, not by
+    instinct &mdash; see the schedule below and the <a href="suggestions.html">Decision Center</a>.</p>
+</div>
+
+<h2 id="schedule">Publishing schedule</h2>
+<p>This is the policy the site holds itself to, not a promise about results. A new guide ships only
+  when it has a buyer question, a decision it changes, a source for every figure, and a place in the
+  sitemap and the feed. The cadence is one guide a week, which is the rate a single editor can
+  sustain while still re-reading listings. If a week produces nothing worth reading, nothing ships:
+  a thinner site is better than a padded one.</p>
+<table class="cadence" data-own="publishing-policy">
+  <caption>This site&rsquo;s own publishing policy: what has to be true before a guide ships, and where
+    each rule is enforced. The rule column is the rule; the enforcement column names the file or gate
+    that applies it.</caption>
+  <thead><tr><th scope="col">Rule</th><th scope="col">What it means in practice</th>
+    <th scope="col">Enforced by</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">One question per guide</th>
+      <td>The title is the question a buyer types or thinks. If the guide answers two questions, it
+        becomes two guides.</td>
+      <td><code>scripts/build_site.py</code> (GUIDES register)</td></tr>
+    <tr><th scope="row">Every figure has a dated source</th>
+      <td>A guide may not introduce a number that is not in <code>data/sources.json</code> or read off
+        a listing on the page&rsquo;s own date.</td>
+      <td><code>scripts/check_site.py</code> official-domain rule</td></tr>
+    <tr><th scope="row">A verdict, or an honest blank</th>
+      <td>Each guide ends by changing a decision. Where the source cannot settle it, the guide says
+        so and points at the open question.</td>
+      <td>Editorial review; <a href="questions.html">Questions register</a></td></tr>
+    <tr><th scope="row">Listed where search engines look</th>
+      <td>A new guide is added to <code>sitemap.xml</code> and <code>feed.xml</code> in the same build
+        that publishes it &mdash; never in a follow-up.</td>
+      <td><code>scripts/check_site.py</code> sitemap and feed rules; <code>tests/test_site.py</code></td></tr>
+    <tr><th scope="row">An exit for the reader</th>
+      <td>Every guide opens with the decision, states the trade-off, and links to one product page
+        only where the product is the answer. Product links stay marked sponsored.</td>
+      <td><code>scripts/check_site.py</code> sponsored-link rule</td></tr>
+    <tr><th scope="row">Cadence before volume</th>
+      <td>One guide a week. Next topics come from measured queries once
+        <a href="measurement.html">Search Console</a> is verified; until then they come from the
+        published <a href="design-brief.html">topic clusters</a>.</td>
+      <td>Owner decision (SG-16, Q-07, Q-20)</td></tr>
+  </tbody>
+</table>
+
+<h2>Everything published so far</h2>
+<p>The same list, dated, so you can see the actual cadence rather than a claimed one.</p>
+<table class="pubindex">
+  <caption>Guides published, with the date each was written and the source each one is built on.
+    A row appears here only when the guide page exists.</caption>
+  <thead><tr><th scope="col">Published</th><th scope="col">Guide</th>
+    <th scope="col">Answers</th><th scope="col">Built from</th></tr></thead>
+  <tbody>{pub_rows}</tbody>
+</table>
+
+<div class="panel follow">
+  <h2>Follow new guides</h2>
+  <p>There is one way to follow this site and it needs no account, no email address and no tracking
+    pixel: the <a href="feed.xml">RSS feed</a>. It carries every guide, in full order. Paste it into
+    any feed reader. Because this is the only capture channel, nothing about you is collected when
+    you use it &mdash; the feed is a file on the server, not a subscription you register for.</p>
+  <p class="small">No newsletter is offered yet. Email capture would need a provider that stores
+    addresses, so it stays switched off until there is a stated privacy policy for it
+    (<a href="questions.html">Q-09</a>).</p>
 </div>
 """
     ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Guides",
@@ -1608,8 +1721,16 @@ def build_verification():
                         f'<thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Status</th>'
                         f'<th scope="col">How it was checked</th><th scope="col">Source</th></tr></thead>'
                         f'<tbody>{rows}</tbody></table>')
+    def _corr_source(text):
+        """A correction row points at the listing it was made from, so the reader can re-read it."""
+        pid = next((x for x in PRODUCTS if x["id"] in text), None)
+        if pid:
+            return a(pid["listing"], "Listing", True)
+        return '<a href="sources.html" rel="noopener noreferrer">Source register</a>'
+
     corr = "".join(
-        f'<tr><th scope="row">{esc(c["id"])}</th><td>{esc(c["what"])}</td><td>{esc(c["action"])}</td></tr>'
+        f'<tr><th scope="row">{esc(c["id"])}</th><td>{esc(c["what"])}</td>'
+        f'<td>{esc(c["action"])}</td><td class="src">{_corr_source(c["what"] + " " + c["action"])}</td></tr>'
         for c in V["corrections"])
     if V.get("rechecks"):
         rc_rows = "".join(
@@ -1637,7 +1758,7 @@ def build_verification():
 {prod_blocks}
 <h2>Corrections made in this pass</h2>
 <table><caption>Register corrections (C-IDs). Findings that survived as open contradictions are on the <a href="flagged.html">Flagged for Review</a> page.</caption>
-<thead><tr><th scope="col">ID</th><th scope="col">What was wrong</th><th scope="col">Action taken</th></tr></thead>
+<thead><tr><th scope="col">ID</th><th scope="col">What was wrong</th><th scope="col">Action taken</th><th scope="col">Source re-read</th></tr></thead>
 <tbody>{corr}</tbody></table>
 {rechecks_block}
 <div class="panel"><h2>What this log does not claim</h2>
@@ -1654,20 +1775,29 @@ def build_verification():
             rows += (f'<tr><th scope="row">{esc(r["field"])}</th>'
                      f'<td>{esc(r["value_as_read"])}</td>'
                      f'<td><span class="token {tone}">{esc(r["status"])}</span></td>'
-                     f'<td class="small">{esc(r["where"])}<br>{esc(r["note"])}</td></tr>')
+                     f'<td class="small">{esc(r["where"])}<br>{esc(r["note"])}</td>'
+                     f'<td class="src">{a(prod["url"], "Listing", True)}</td></tr>')
         live_blocks += (
-            f'<h2>{esc(prod["id"])} · ASIN {esc(prod["asin"])}</h2>'
+            f'<h2>{esc(prod["id"])} · observed ASIN {esc(prod["asin"])}</h2>'
             f'<p class="small">Title as read: <em>{esc(prod["title_as_read"])}</em> · '
             f'{a(prod["url"], "official listing", True)}</p>'
             f'<table><caption>Read live on {esc(live["generated"])}. "Unverified" means this pass did '
             f'not reach that field — not that the value on the product page is wrong.</caption>'
             f'<thead><tr><th scope="col">Field</th><th scope="col">Value as the listing printed it</th>'
-            f'<th scope="col">Status in this pass</th><th scope="col">Where it was read</th></tr></thead>'
+            f'<th scope="col">Status in this pass</th><th scope="col">Where it was read</th>'
+            f'<th scope="col">Source</th></tr></thead>'
             f'<tbody>{rows}</tbody></table>')
     not_done = "".join(f"<li>{esc(x)}</li>" for x in live["not_re_verified_this_session"])
+    def _obs_source(obs_id):
+        """Each observation in this pass came from one listing; link the row to that listing."""
+        pid = obs_id.split()[0] if obs_id else ""
+        rec = next((x for x in PRODUCTS if x["id"] == pid), None)
+        return a(rec["listing"], "Listing", True) if rec else "—"
+
     review = "".join(
         f'<tr><th scope="row">{esc(o["id"])}</th><td>{esc(o["observation"])}</td>'
-        f'<td>{esc(o["status"])}</td></tr>' for o in live["new_observations_for_review"])
+        f'<td>{esc(o["status"])}</td><td class="src">{_obs_source(o["id"])}</td></tr>'
+        for o in live["new_observations_for_review"])
     usda = live["usda_chart"]
     usda_rows = "".join(f"<li>{esc(v)}</li>" for v in usda["values_re_read"])
     live_section = f"""
@@ -1687,7 +1817,8 @@ def build_verification():
 <h2>New observations for review</h2>
 <table><caption>Raised by this pass. None of these changes a published product value; each is for a
   human to accept or reject.</caption>
-<thead><tr><th scope="col">Item</th><th scope="col">Observation</th><th scope="col">Status</th></tr></thead>
+<thead><tr><th scope="col">Item</th><th scope="col">Observation</th><th scope="col">Status</th>
+  <th scope="col">Source</th></tr></thead>
 <tbody>{review}</tbody></table>
 """
     # ---- submitted-link re-check (T-31): observations kept apart from the intended/observed ASIN fields
@@ -2263,6 +2394,23 @@ QUESTIONS = [
      "The shortlist on compare.html currently asks category, household size, cooking style and counter depth. Those were inferred from the listings we cover, not from reader feedback, because there is no reader feedback yet.",
      "Once Search Console and the collector are live, compare which answers readers actually select against which product pages they open. Replace any question that does not change the shortlist.",
      "Decision-tool quality (SG-35)", "Owner + measured data", "Waiting on analytics"),
+    ("Q-24", "Should the fact-check pages stay in the sitemap?",
+     "There is one canonical host and 36 submitted URLs. Twenty-four are shopper pages; twelve are project records - the source register, the flag list, the questions list, the decision centre, the ledger, the brief, the platform note, the verification log and its siblings. Those twelve exist because the brief asked for them to be reviewable, not because a shopper searches for them.",
+     "Two routes, both defensible. (a) Keep every URL in the sitemap and let each record page declare itself as a project record in its structured data. (b) Drop the records to noindex,follow so the crawl budget concentrates on the buying pages, while keeping them reachable from the footer for review. The measurable test is which route produces more indexed guide pages and more outbound clicks per 28 days.",
+     "Findability: which pages earn the crawl budget", "Owner + Search Console data",
+     "Open - needs a decision before the next content wave"),
+    ("Q-25", "Is one guide a week the right cadence, or is it the honest cadence?",
+     "The published schedule commits to one guide a week and to shipping nothing in a week with nothing worth saying. That is a sustainable rate for a single editor, but it is not yet tested against the time a line-by-line re-read of five listings actually takes.",
+     "Time one full cycle: re-read five listings, re-check the policy pages, draft, gate, publish. If a cycle exceeds a week, either the cadence drops to fortnightly or the verification pass is scoped to the listings a guide actually cites. Record the measured cycle time in the campaign ledger's provenance notes.",
+     "Publishing cadence (SG-16) and the schedule on guides.html", "Owner", "Open - measure one cycle"),
+    ("Q-26", "How should the site handle a listing that goes out of stock or changes variant?",
+     "P-05 is already a variation family (FLG-055) and P-03's page points at a newer model. Amazon offer state changes between reads, which is why no price or availability is published. What is not decided is what a product page should do when the item it documents is no longer the default offer.",
+     "Add a dated 'offer note' line to each product page, refreshed with the verification pass: what the page documented, and whether the listing still offers that variant at the time of the last read. Do not switch the page to a different product without a new intent record.",
+     "Which product the page actually covers", "Owner + verification pass", "Open - policy needed"),
+    ("Q-27", "Which seasonal dates may be presented as dated facts?",
+     "Only the rows that link to a published schedule may. Three rows on the seasonal plan are federal holidays with the OPM source attached; Black Friday, Cyber Monday, Advent and Valentine's Day have no official publisher, so their rows say 'planning marker' instead of inventing a citation.",
+     "Keep it that way, or adopt a single commercial calendar publisher and register it in data/sources.json. Without a registered publisher, retail dates stay unlinked planning markers and any article built on them says so.",
+     "Seasonal planning and sourcing discipline", "Owner", "Decided for now - revisit if a publisher is registered"),
 ]
 
 
@@ -2293,8 +2441,10 @@ def build_questions():
     does.</p>
 </div>
 
-<table class="questions">
-  <caption>Questions register. The answer column is intentionally not filled in with assumptions.</caption>
+<table class="questions" data-own="open-questions">
+  <caption>Questions register &mdash; this site&rsquo;s own open list, written in scripts/build_site.py (QUESTIONS) and
+    published as a working record rather than a sourced claim. The answer column is intentionally not
+    filled in with assumptions.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Question</th>
     <th scope="col">How to discover the missing information</th><th scope="col">What it blocks</th>
     <th scope="col">Who can answer</th><th scope="col">Status</th></tr></thead>
@@ -2388,22 +2538,31 @@ FORBIDDEN. Fake countdowns, invented scarcity, fabricated expert quotes, fabrica
 testing claims, fabricated search-volume numbers, placeholder filler text, emoji bullets, and any
 phrase that reads like it was produced by filling in a template."""
 
-    cluster_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td><td>{esc(c)}</td><td>{esc(d)}</td><td>{esc(e)}</td></tr>" for a, b, c, d, e in [
-        ("A · Air fryer buying", "Basket or oven-style: what to compare first", "guides/basket-vs-oven.html", "Live", "Anchor guide, links to all three air fryer pages"),
-        ("A · Air fryer buying", "A no-hype checklist for comparing air fryer capacity", "guides/capacity-checklist.html", "Live", "Feeds compare.html"),
-        ("A · Air fryer buying", "How to assess cleanup and counter-space trade-offs", "guides/cleanup-counter-space.html", "Live", "Cross-links air fryer pages"),
-        ("A · Air fryer buying", "Air fryer for a small kitchen: three measurements", "guides/small-kitchen-air-fryer.html", "Live", "Captures apartment queries"),
-        ("A · Air fryer buying", "Basket or oven-style: which fits a family of four", "Not written", "Proposed", "Search Console may confirm or kill this title"),
-        ("B · Holiday and seasonal", "Air fryer at Thanksgiving: what actually fits", "guides/air-fryer-thanksgiving.html", "Live", "Seasonal spike, Nov 2026"),
-        ("B · Holiday and seasonal", "Turkey thermometer maths: the USDA minimums", "Not written", "Proposed", "USDA chart is already the source of record (S22)"),
-        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Black Friday is 2026-11-27 (computed, FLG-052); must not print prices (SG-13)"),
-        ("B · Holiday and seasonal", "Wireless or instant-read for a long smoker cook", "guides/instant-vs-wireless.html", "Live", "Holiday brisket and turkey season"),
-        ("C · Thermometer education", "How to read accuracy claims: plus-or-minus 0.5 and NIST", "guides/thermometer-accuracy.html", "Live", "Trust content, supports both thermometer pages"),
-        ("C · Thermometer education", "Is NIST certification on a listing a guarantee", "Not written", "Proposed", "Honest answer: it is a seller statement (FLG-035)"),
-        ("C · Thermometer education", "USDA doneness temperatures for the holiday bird", "Not written", "Proposed", "Reuses S22; strong internal-link target"),
-        ("D · Multi-function appliances", "Questions to ask before buying a multi-function appliance", "guides/multi-function-questions.html", "Live", "Umbrella guide for the oven category"),
-        ("D · Multi-function appliances", "Emeril 26QT: 24 or 25 presets, and why it matters less than fit", "Not written", "Proposed", "Turns FLG-021 into the article"),
-        ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "Not written", "Proposed", "Compares P-01 and P-03 without crowning a winner"),
+    def _cluster_cell(target):
+        """A live guide links to itself; a proposed one says what it would be built from."""
+        if target == "Not written":
+            return '<span class="unverified">not written yet</span>'
+        return f'<a href="{BASE}{target}">{esc(target)}</a>'
+
+    cluster_rows = "".join(
+        f"<tr><td>{esc(a)}</td><td>{esc(b)}</td><td>{_cluster_cell(c)}</td>"
+        f"<td>{esc(d)}</td><td>{esc(e)}</td><td class=\"src\">{ec}</td></tr>"
+        for a, b, c, d, e, ec in [
+        ("A · Air fryer buying", "Basket or oven-style: what to compare first", "guides/basket-vs-oven.html", "Live", "Anchor guide, links to all three air fryer pages", '<a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">Listing P-01</a> · <a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">Listing P-02</a>'),
+        ("A · Air fryer buying", "A no-hype checklist for comparing air fryer capacity", "guides/capacity-checklist.html", "Live", "Feeds compare.html", '<a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">Listing P-01</a>'),
+        ("A · Air fryer buying", "How to assess cleanup and counter-space trade-offs", "guides/cleanup-counter-space.html", "Live", "Cross-links air fryer pages", '<a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">Listing P-03</a>'),
+        ("A · Air fryer buying", "Air fryer for a small kitchen: three measurements", "guides/small-kitchen-air-fryer.html", "Live", "Captures apartment queries", '<a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">Listing P-01</a>'),
+        ("A · Air fryer buying", "Basket or oven-style: which fits a family of four", "Not written", "Proposed", "Search Console may confirm or kill this title", '<a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">Listing P-02</a>'),
+        ("B · Holiday and seasonal", "Air fryer at Thanksgiving: what actually fits", "guides/air-fryer-thanksgiving.html", "Live", "Seasonal spike, Nov 2026", '<a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="noopener noreferrer">USDA FSIS chart</a>'),
+        ("B · Holiday and seasonal", "Turkey thermometer maths: the USDA minimums", "Not written", "Proposed", "USDA chart is already the source of record (S22)", '<a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="noopener noreferrer">USDA FSIS chart</a>'),
+        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Must not print prices (SG-13); date is a planning marker (Q-27)", '<a href="https://affiliate-program.amazon.com/help/operating/policies" rel="noopener noreferrer">Program Policies</a>'),
+        ("B · Holiday and seasonal", "Wireless or instant-read for a long smoker cook", "guides/instant-vs-wireless.html", "Live", "Holiday brisket and turkey season", '<a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">Listing P-05</a> · <a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">Listing P-04</a>'),
+        ("C · Thermometer education", "How to read accuracy claims: plus-or-minus 0.5 and NIST", "guides/thermometer-accuracy.html", "Live", "Trust content, supports both thermometer pages", '<a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">Listing P-04</a>'),
+        ("C · Thermometer education", "Is NIST certification on a listing a guarantee", "Not written", "Proposed", "Honest answer: it is a seller statement (FLG-035)", '<a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">Listing P-04</a>'),
+        ("C · Thermometer education", "USDA doneness temperatures for the holiday bird", "Not written", "Proposed", "Reuses S22; strong internal-link target", '<a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="noopener noreferrer">USDA FSIS chart</a>'),
+        ("D · Multi-function appliances", "Questions to ask before buying a multi-function appliance", "guides/multi-function-questions.html", "Live", "Umbrella guide for the oven category", '<a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">Listing P-02</a>'),
+        ("D · Multi-function appliances", "Emeril 26QT: 24 or 25 presets, and why it matters less than fit", "Not written", "Proposed", "Turns FLG-021 into the article", '<a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">Listing P-02</a>'),
+        ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "Not written", "Proposed", "Compares P-01 and P-03 without crowning a winner", '<a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">Listing P-01</a> · <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">Listing P-03</a>'),
     ])
 
     standards_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td></tr>" for a, b in [
@@ -2468,9 +2627,11 @@ phrase that reads like it was produced by filling in a template."""
   editorial guess; Search Console data (SG-10) is the only thing allowed to settle it.</p>
 
 <table class="clusters">
-  <caption>Topic clusters. "Live" means the guide exists today; "Proposed" means it is a candidate only.</caption>
+  <caption>Topic clusters. "Live" means the guide exists today; "Proposed" means it is a candidate only.
+    The source column names the listing or the published chart each topic would be written from.</caption>
   <thead><tr><th scope="col">Cluster</th><th scope="col">Title (working)</th>
-    <th scope="col">Target</th><th scope="col">Status</th><th scope="col">Why it is here</th></tr></thead>
+    <th scope="col">Target</th><th scope="col">Status</th><th scope="col">Why it is here</th>
+    <th scope="col">Source</th></tr></thead>
   <tbody>{cluster_rows}</tbody>
 </table>
 
@@ -2493,23 +2654,24 @@ phrase that reads like it was produced by filling in a template."""
 </ul>
 
 <h3>Seasonal calendar</h3>
-<table>
-  <caption>Every row states its source. Holiday dates are read from OPM's federal holiday tables (S26). Rows marked computed are calendar arithmetic with no cited source, so they are unverified (FLG-052). No event on this page licenses a price, a sale claim or a countdown.</caption>
-  <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Lead time</th><th scope="col">What to do</th><th scope="col">Source</th></tr></thead>
+<table class="season">
+  <caption>Every row states its source and its kind. Holiday dates are read from OPM's federal holiday tables (S26). Rows marked computed are calendar arithmetic with no cited source, so they stay unverified (FLG-052) and are labelled planning markers. No event on this page licenses a price, a sale claim or a countdown.</caption>
+  <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Kind</th><th scope="col">Lead time</th><th scope="col">What to do</th><th scope="col">Source</th></tr></thead>
   <tbody>
-    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
-    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td><td>Unverified: computed as the day after Thanksgiving (FLG-052)</td></tr>
-    <tr><td>2026-11-29</td><td>First Sunday of Advent</td><td>Weekend after Black Friday</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td><td>Unverified: computed as the fourth Sunday before 25 December (FLG-052)</td></tr>
-    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td><td>Unverified: computed as the Monday after Thanksgiving (FLG-052)</td></tr>
-    <tr><td>2026-12-25</td><td>Christmas Day</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
-    <tr><td>2027-01-01</td><td>New Year's Day</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2027 table</a></td></tr>
-    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td><td>Unverified: computed calendar date (FLG-052)</td></tr>
+    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td><span class="token ok">official holiday</span></td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
+    <tr><td>2026-11-27</td><td>Black Friday</td><td><span class="token muted">retail moment</span></td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td><td>Unverified: computed as the day after Thanksgiving (FLG-052)</td></tr>
+    <tr><td>2026-11-29</td><td>First Sunday of Advent</td><td><span class="token muted">cultural marker</span></td><td>Weekend after Black Friday</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td><td>Unverified: computed as the fourth Sunday before 25 December (FLG-052)</td></tr>
+    <tr><td>2026-11-30</td><td>Cyber Monday</td><td><span class="token muted">retail moment</span></td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td><td>Unverified: computed as the Monday after Thanksgiving (FLG-052)</td></tr>
+    <tr><td>2026-12-25</td><td>Christmas Day</td><td><span class="token ok">official holiday</span></td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2026 table</a></td></tr>
+    <tr><td>2027-01-01</td><td>New Year's Day</td><td><span class="token ok">official holiday</span></td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td><td><a href="https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/" rel="noopener noreferrer">OPM 2027 table</a></td></tr>
+    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td><span class="token muted">retail moment</span></td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td><td>Unverified: computed calendar date (FLG-052)</td></tr>
   </tbody>
 </table>
 
 <h2>4. The standards that keep this from reading as generated</h2>
-<table>
-  <caption>Ten reader-visible signals, agreed before any redesign.</caption>
+<table data-own="editorial-standards">
+  <caption>This site&rsquo;s own editorial standard: ten reader-visible signals agreed before any
+    redesign. Each row describes a rule this publication holds itself to, not a third-party fact.</caption>
   <thead><tr><th scope="col">Standard</th><th scope="col">What it looks like on this site</th></tr></thead>
   <tbody>{standards_rows}</tbody>
 </table>
@@ -2524,8 +2686,10 @@ phrase that reads like it was produced by filling in a template."""
 </ul>
 
 <h2>6. From brief to build: the mapping</h2>
-<table>
-  <caption>Where each part of this brief is already true, and where the gaps are.</caption>
+<table data-own="brief-mapping">
+  <caption>This site&rsquo;s own delivery mapping: where each part of the brief is already true, and
+    where the gaps are. The state column describes what this repository ships; the reference column
+    names the goal or flag that tracks it.</caption>
   <thead><tr><th scope="col">Brief element</th><th scope="col">State today</th><th scope="col">Reference</th></tr></thead>
   <tbody>
     <tr><td>Disclosure above the fold, repeated in footer</td><td>Live on every page; gate enforced</td><td>SG-04</td></tr>
@@ -2908,7 +3072,9 @@ def build_disclosure():
 <h2>What we measure</h2>
 <p>Five events, defined once and used consistently:</p>
 <p><strong>Where they go.</strong> By default the counts stay in your own browser (localStorage) and can be exported as CSV — nothing leaves your device. A self-hosted collector (<code>analytics/server.py</code>) is written, smoke-tested and deliberately switched off in <code>assets/config.js</code> until the owner chooses a host (SG-18 / Q-08). That endpoint never reads IP addresses, writes no access log, stores no identifiers, and keeps only aggregate counts. Either way there are no cookies, no fingerprinting, no referrer capture, and search events carry a result count — never what you typed.</p>
-<table class="events">
+<table class="events" data-own="measurement-schema">
+  <caption>This site&rsquo;s own event list, defined in data/events.json and implemented in
+    assets/app.js. It describes what this site counts, not a third-party claim.</caption>
   <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
   <tbody>
     <tr><td><code>page_view</code></td><td>Any page loads</td><td>Which pages are reached at all</td></tr>
@@ -3199,8 +3365,8 @@ def build_measurement():
   scripts, this repository already includes the zero-dependency collector and strict schema below.</p>
 
 <h2>1. Five-event schema (<code>data/events.json</code>)</h2>
-<table class="events">
-  <caption>Privacy contract v{esc(EVENTS['schema_version'])}. Disallowed fields ({forbidden}) are
+<table class="events" data-own="measurement-schema">
+  <caption>This site&rsquo;s own privacy contract v{esc(EVENTS['schema_version'])}. Disallowed fields ({forbidden}) are
     stripped client-side and rejected with HTTP 400 by the collector.</caption>
   <thead><tr><th scope="col">Event</th><th scope="col">Trigger</th>
     <th scope="col">Allowed fields</th><th scope="col">Purpose</th></tr></thead>

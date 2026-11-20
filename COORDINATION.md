@@ -1574,3 +1574,70 @@ edited here; this session notes the state and resolves them at integration time.
 listings and every policy source can be re-read live from this session. That is a change from
 the earlier pass that recorded TLS failure (FLG-045), and it is why T-32 is a live pass and not
 a desk pass.
+
+## Session `c6fa1006` — completion record (2026-11-20)
+
+All six claimed tasks are done on branch `arena/c6fa1006-affil2`. The gate and both test suites
+pass on the regenerated tree.
+
+### What changed, task by task
+
+| ID | Outcome |
+|----|---------|
+| T-26 | `data/verification-independent-2026-11-20.json` records a fresh field-by-field read of all five listings plus every policy source, with `verified` / `conflict` / `unverified` per field and an explicit list of what this pass did **not** reach. Written and linked from `verification.html`. |
+| T-27 | The legacy `asin` key is gone. `data/products.json` carries `intended_asin` (blank) + `intended_status`, `observed` + `observed_status` + `observed_source`, `confirmed`, `listing` + `listing_source`. Generators build affiliate/plain URLs from `observed` only. The product page prints intended and observed as separate rows, and links the blank intended field to the official ASIN definition. |
+| T-28 | Four new gate families: (a) every external host must be registered in `sources.json`; (b) every table body row must carry a source control, with a declared `data-own` exemption whose caption must say what it records; (c) every source needs a read date, a use note and a `page_date` where the page publishes one; (d) every page must state when its footer content was last read. Also fixed two gate bugs found on the way (below). |
+| T-29 | `assets/config.js` is now loaded by every page **before** `app.js`, and `assets/app.js` actually reads `SITE_CONFIG.analyticsEndpoint`. Before this, the config file was never included in any page, so the documented "one switch" did not exist. Gate-enforced: a page that omits `config.js`, or loads it after `app.js`, fails. |
+| T-30 | `guides.html` publishes the cadence policy (one guide a week, five ship conditions, what enforces each) and a generated table of every published guide with its date and source. A named "Follow new guides" block offers the RSS feed and states plainly that no email capture exists and why. |
+| T-31 | `REQUIREMENTS-TRACE.md` rewritten against this branch: I-1, I-2, I-3, I-4, I-5 and I-7 are resolved with evidence; I-8 superseded; the four new flags are listed. |
+
+### Irregularities found *inside the existing tooling* (fixed this session)
+
+These matter because each one had been silently weakening verification:
+
+1. **The gate's report printed before its last two rule blocks.** `scripts/check_site.py` ended with
+   the summary/sys.exit, and rules added later sat *after* it — so their failures could never be
+   reported. Moving the report to the end of the file immediately surfaced five real
+   `verification.html: register row without source link` failures that had been invisible.
+2. **The findability check compared absolute paths against relative URLs.** It looked for
+   `/home/user/Affil2/questions.html` in `findability.txt`, which lists `questions.html`, so it
+   reported a failure on every page until the comparison was made relative.
+3. **`src_ids` was used before definition** in the product loop — a latent `NameError` that only
+   appeared once the intended/observed rules started using it. Hoisted to the data-loading block.
+4. **`assets/config.js` was never loaded by any page** (T-29 above), so `analyticsEndpoint` and
+   `readerCaptureEndpoint` were documentation, not switches.
+5. **`data/products.json` provenance strings cited fetch chunk numbers**, which move between
+   fetches because Amazon interleaves ad modules. All 44 chunk references were removed in favour of
+   the stable section name. Recorded as FLG-052.
+
+### Flags touched
+
+| Flag | Change |
+|------|--------|
+| FLG-014 | Re-titled and re-sourced against Amazon's own ASIN definition (S25): a 9-character token cannot be a 10-character ASIN. |
+| FLG-050 | `needs review` → `corrected`. All five previously unconfirmed values were re-read live and are recorded with their section. |
+| FLG-052 | `needs review` → `corrected`. Chunk citations removed; the flag now records the finding rather than a pending action. |
+| FLG-051 | New. P-05 is a variation family; published figures are the 3-probe variant. |
+| FLG-053 | New. P-01/P-03/P-04 print a second, vaguer warranty sentence. |
+| FLG-054 | New. Policy pages carry their own revision dates, now captured as `page_date`. |
+
+### Sources added
+
+- **S25** — https://sell.amazon.com/blog/what-is-an-asin — Amazon's own ASIN definition. Read 2026-11-20; page dated Jun 4, 2025.
+- **S26** — https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/ — the only official calendar the seasonal plan is dated against. Read 2026-11-20.
+
+### Verification performed
+
+| Check | Result |
+|---|---|
+| `python3 scripts/build_site.py` | `built 36 pages`, idempotent across two runs |
+| `python3 scripts/check_site.py` | `checked 36 pages, 5 product records, 54 flags, 21 sources — ALL CHECKS PASS` |
+| `python3 -m unittest discover -s tests -p "test_*.py"` | 7 tests, all pass (4 added this session) |
+| `node tests/test_collector.js` | `ALL JS COLLECTOR AND CLIENT TESTS PASS` |
+
+### Still owner-only (unchanged, published on the site rather than hidden)
+
+Associates account activity and the Special Link test (FLG-002, FLG-003, FLG-004) · collector
+hosting (FLG-010, Q-08) · Search Console property (SG-29) · a named author (FLG-033) · first-party
+reports for the campaign ledger (SG-26). None of these block publication and none is claimed as
+done anywhere on the site.
