@@ -50,3 +50,20 @@ node tests/test_collector.js
 3. Decide whether to host the prepared collector and verify Search Console. Do not describe either as active until independently confirmed.
 4. Review article topics and publication cadence in `suggestions.html`; use real query data once available rather than asserting trend or conversion potential without evidence.
 5. Recheck listing claims and policy sources whenever products or operational practices change.
+
+## Reader-surface pass (2026-11-20, session `93894704` · T-30)
+
+Buyer-facing pages no longer carry the project's filing system: register codes and crawl citations were
+stripped from shop, category, comparison, search and guide copy, while `flagged.html` (58 flags),
+`sources.html` (22 sources) and `verification.html` still publish every one in full. Guide read times are
+computed from the page's own words, and all 13 guides and 5 product pages are signed by a dated role
+byline that links to the authorship note — no person was named, because the owner has not (FLG-033) and
+presenting an invented author would be deceptive. Two new sourced how-to guides were added (the USDA
+ice-water calibration test, and how to read a listing's contradictory fields). The Decision Center
+shortlist now assembles the next build prompt from one shared payload, identical server-side and in the
+browser. One defect of this pass's own making was found by reading the built pages — escaped copy that had
+been authored with entities printed its markup to readers — and is fixed plus gated (FLG-057).
+
+Gate and tests at integration: `checked 38 pages, 5 product records, 58 flags, 22 sources — ALL CHECKS
+PASS`; 7 Python tests OK; the Node collector/client suite passes. No price, rating, commission figure,
+conversion score or revenue forecast was added, and the campaign ledger stays empty.

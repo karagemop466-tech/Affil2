@@ -13,7 +13,7 @@ A static, publication-style shopping site for five submitted products: three air
 | `air-fryers.html` / `meat-thermometers.html` | Category shelves |
 | `compare.html` | Side-by-side fields and a three-question shortlist |
 | `guides.html` | Question-shaped buying guides, including seasonal and evergreen topics |
-| `suggestions.html` | Decision center: proposals to review before implementation |
+| `suggestions.html` | Decision center: 41 proposals, tickable into a copy-paste build prompt |
 | `questions.html` | Known, missing, and unverified questions with next steps |
 | `flagged.html` | Flagged for Review, with each open irregularity and its source links |
 | `executive-summary.html` | Reader-facing summary |
@@ -54,3 +54,22 @@ HTML pages, sitemap, RSS feed, robots file, and findability profile are generate
 - `COORDINATION.md` — task ownership, verification trail, PR and deployment record.
 
 Analytics is privacy-preserving by design. Events can be recorded locally; cross-visitor collection requires separately configured hosting. Search Console verification and Associates account/report access require owner credentials and are explicitly not claimed as completed.
+
+## Reader-surface conventions (enforced, not aspirational)
+
+`scripts/check_site.py` fails the build if any of these drift, because each one was once wrong on a
+published page:
+
+- **No page prints its own markup.** Escaped reader copy is decoded before it is escaped; the gate
+  unescapes every page's visible text and fails on any leftover `&entity;` or numeric entity (FLG-057).
+- **Reader voice.** No register code (`FLG-0xx`) or crawl citation (`chunk 7`) in a buyer-facing
+  sentence on the front page, shop, categories, compare, search or any guide. Audit surfaces publish all
+  58 flags in full, and every product page keeps its own record table.
+- **Derived numbers, dated bylines.** A guide's stated read time must match the words on the page
+  (225 wpm, rounded up), and every guide and product page carries a dated byline linking to
+  `about.html#who-writes-it`. The byline is a role, not a person: naming a human is open (FLG-033), and
+  Google's people-first guidance (S27) treats a fabricated author as deception, so none was invented.
+- **How-to pages cite an official source per figure.** `guides/thermometer-ice-test.html` quotes the
+  USDA FSIS food-thermometer factsheet (S24); `guides/read-an-air-fryer-listing.html` uses only dated
+  listing fields already in the register. Neither claims a test, a cook time, a popularity figure or a
+  lab.

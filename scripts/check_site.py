@@ -9,6 +9,7 @@ the product pages still carrying their separate intended/observed fields.
 Run: python3 scripts/check_site.py
 Exit 0 = pass, exit 1 = fail with a list of problems.
 """
+import html as htmlmod
 import json
 import pathlib
 import re
@@ -644,6 +645,106 @@ for p_ in sorted((ROOT / "products").glob("*.html")):
 home = (ROOT / "index.html").read_text(encoding="utf-8")
 if 'class="router"' not in home:
     err("index.html: the answer-first router is missing")
+
+# ---------------------------------------------------------------- reader-facing surfaces (session 93894704)
+# Two rules the shop-side polish pass depends on. Both are cheap to state and easy to regress,
+# which is why they are gate rules rather than a convention in a README nobody re-reads.
+
+SHOP_SURFACES = ["index.html", "shop.html", "air-fryers.html", "meat-thermometers.html", "compare.html"]
+SHOP_SURFACES += [str(g.relative_to(ROOT)) for g in (ROOT / "guides").glob("*.html")]
+
+def visible_text(html):
+    """Page text a reader actually sees: no script/style bodies, no tag attributes."""
+    t = re.sub(r"<script\b.*?</script>", " ", html, flags=re.S | re.I)
+    t = re.sub(r"<style\b.*?</style>", " ", t, flags=re.S | re.I)
+    t = re.sub(r"<head\b.*?</head>", " ", t, flags=re.S | re.I)
+    t = re.sub(r"<[^>]+>", " ", t)
+    return re.sub(r"\s+", " ", t)
+
+# 8. No page may print its own markup: escaped copy used to leak literal &amp;entity; text.
+for p in pages:
+    rel = str(p.relative_to(ROOT))
+    seen = htmlmod.unescape(visible_text(p.read_text(encoding="utf-8")))
+    # A bare `&amp;` after one decode pass is a legitimate encoded ampersand ("Design & Traffic"),
+    # which is how the nav labels are written. Anything else that is still markup after the browser
+    # has decoded once was double-encoded on the way in.
+    leak = sorted(e for e in set(re.findall(r"&(?:[a-z]{2,8}|#\d{1,4});", seen)) if e != "&amp;")
+    if leak:
+        err(f"{rel}: visible text prints its own markup {leak} — decode entities before esc() "
+            "(FLG-054)")
+
+# 9. Internal register codes belong on audit surfaces, not inside a buying sentence.
+for rel in SHOP_SURFACES:
+    f = ROOT / rel
+    if not f.exists():
+        err(f"{rel}: shop surface missing")
+        continue
+    leaked = sorted(set(re.findall(r"FLG-\d{3}", visible_text(f.read_text(encoding="utf-8")))))
+    if leaked:
+        err(f"{rel}: internal register code in buyer-facing copy: {leaked} "
+            "(keep the plain-language claim; the code goes on flagged.html)")
+
+# 10. A guide's read time is measured from the page, never typed into it.
+for rel in sorted(str(g.relative_to(ROOT)) for g in (ROOT / "guides").glob("*.html")):
+    html = (ROOT / rel).read_text(encoding="utf-8")
+    main = re.search(r"<main[^>]*>(.*?)</main>", html, re.S)
+    if not main:
+        err(f"{rel}: no <main> to measure")
+        continue
+    stated = re.findall(r"(\d+)\s*min read", visible_text(main.group(1)))
+    if len(stated) != 1:
+        err(f"{rel}: expected exactly one stated read time in the article, found {len(stated)}")
+        continue
+    words = len(visible_text(main.group(1)).split())
+    minutes = int(stated[0])
+    if not (words / 400 <= minutes <= max(1, words / 110)):
+        err(f"{rel}: states {minutes} min read for a {words}-word page; the figure must be derived "
+            "from the copy (see build_site.guide_minutes), not typed in")
+
+# 11. Every guide and product page carries the dated byline, and the byline has a target.
+for rel in sorted([str(g.relative_to(ROOT)) for g in (ROOT / "guides").glob("*.html")] +
+                  [str(x.relative_to(ROOT)) for x in (ROOT / "products").glob("*.html")]):
+    html = (ROOT / rel).read_text(encoding="utf-8")
+    if 'class="byline"' not in html:
+        err(f"{rel}: no byline block under the headline")
+    if "about.html#who-writes-it" not in html:
+        err(f"{rel}: byline does not lead to the authorship note")
+    if "Verified against the official listing on" not in html:
+        err(f"{rel}: byline carries no dated verification stamp")
+if 'id="who-writes-it"' not in (ROOT / "about.html").read_text():
+    err("about.html: the authorship anchor the bylines point at is missing")
+
+# 12. Decision Center: the shortlist must assemble into a build prompt, in the page and in the JS.
+sug_html = (ROOT / "suggestions.html").read_text(encoding="utf-8")
+sd = re.search(r'<script type="application/json" id="sugData">(.*?)</script>', sug_html, re.S)
+if not sd:
+    err("suggestions.html: no #sugData payload for the build-prompt assembler")
+    payload = {}
+else:
+    try:
+        payload = json.loads(sd.group(1).replace("<\\/", "</"))
+    except json.JSONDecodeError as e:
+        err(f"suggestions.html: #sugData does not parse: {e}")
+for key in ("date", "site", "tracking", "workflow", "constraints", "unanswered", "proposals"):
+    if key not in payload:
+        err(f"suggestions.html: #sugData is missing the {key!r} block")
+box = re.search(r'<textarea id="buildPrompt"[^>]*>(.*?)</textarea>', sug_html, re.S)
+if not box:
+    err("suggestions.html: no #buildPrompt textarea")
+else:
+    text = box.group(1)
+    for must in ("Standing constraints", "Do these proposals, in order:", "sponsored nofollow"):
+        if must not in text:
+            err(f"suggestions.html: the default build prompt does not carry {must!r}")
+    unshipped = re.findall(r'<tr data-sug="(SG-\d+)"', sug_html)
+    payload_ids = list((payload.get("proposals") or {}).keys())
+    if unshipped != payload_ids:
+        err("suggestions.html: the prompt payload and the proposal table are not the same register")
+    if "sponsored nofollow" not in str(payload.get("constraints")):
+        err("suggestions.html: the assembled prompt drops the sponsored-link constraint")
+for token in ("promptAssemble", "promptDefaultIds", "data-pick", "copyPrompt"):
+    if token not in app_js:
+        err(f"assets/app.js: build-prompt capability missing ({token})")
 
 # ---------------------------------------------------------------- report
 print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
