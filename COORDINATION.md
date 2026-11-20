@@ -54,3 +54,35 @@ FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
 - GitHub Pages: built, deploy workflow success. Live: https://karagemop466-tech.github.io/Affil2/
 - Final gate: scripts/check_site.py ALL CHECKS PASS (25 pages)
 - Flagged items FLG-001..FLG-010 published on flagged.html; do not block.
+
+---
+
+## Session 990af5de — handoff and re-verification addendum (2026-11-20)
+
+Branch: `arena/990af5de-affil2`. Work is PR #3 (https://github.com/karagemop466-tech/Affil2/pull/3).
+
+**What happened (conflict log).**
+- This session claimed T-01..T-10 on its own branch (commit `41b0c77`) and built a second, parallel site (`docs/`, `tools/`).
+- When it tried to open the PR, `main` already contained session `530c2e6c`'s merged work (PR #1 `fdb5d79`, PR #2 `e1b6750`, live on Pages). The two sets of work overlapped on `COORDINATION.md`, `README.md`, `data/products.json`, `data/sources.json`, and the site.
+- Resolution: the parallel site was **not merged**. It was removed from this branch before the merge. `main`'s versions of every shared file were kept (`COORDINATION.md`, `README.md`, `data/products.json`, `data/sources.json`, `data/flags.json`, all HTML pages, workflow). No `main` work was discarded.
+- The claims T-01..T-10 from `41b0c77` are withdrawn. This session's only contribution is the re-verification below.
+
+**What this addendum adds.**
+- `data/reverification-2026-11-20.json`: attempt-by-attempt record for the five short links and the five ASIN pages, with the official sources re-checked.
+- Flags FLG-011..FLG-016 added to `data/flags.json` and to the `flagged.html` table. Each has a source link (see the detail text).
+  - FLG-011 short-link redirects change between attempts.
+  - FLG-012 `B0c8moW59` not reproduced (4 attempts; checkpoint each time).
+  - FLG-013 record titles differ from live page titles (P-02, P-03, P-05).
+  - FLG-014 tokens are 9 characters (ASIN length rule unverified officially).
+  - FLG-015 Program Policies §2(e)/(g) bear on link status.
+  - FLG-016 Program Policies §2(d) bears on search-referred purchases.
+
+**Verification performed (2026-11-20, this session).**
+- Re-opened all five short links (2–4 attempts where the first failed).
+- Opened `/dp/B0CDY277D3`, `/dp/B09B7SB46R`, `/dp/B08DKYBTPH`, `/dp/B0DHZTCNR5`, `/dp/B0DZFD6R9Z`. All exist; ASINs match the record.
+- Re-read Operating Agreement §5 (identification statement; matches the site), Program Policies §2(d)/(e)/(g), Google `rel="sponsored"`, and 16 CFR 255.5 excerpt.
+- `python3 scripts/check_site.py`: ALL CHECKS PASS (25 pages).
+
+**Not verified in this pass.** Prices, ratings, model numbers, preset counts, FTC FAQ text, Associates account / Special Link test, tracking-ID activity. These stay with the existing flags (FLG-002, FLG-004, FLG-005, FLG-008, FLG-009).
+
+**Merge.** PR #3 merges this addendum into `main`. Pages redeploys from `main` through `.github/workflows/pages.yml`. The merge result is recorded in the PR.
