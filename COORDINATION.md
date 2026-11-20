@@ -54,3 +54,23 @@ FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
 - GitHub Pages: built, deploy workflow success. Live: https://karagemop466-tech.github.io/Affil2/
 - Final gate: scripts/check_site.py ALL CHECKS PASS (25 pages)
 - Flagged items FLG-001..FLG-010 published on flagged.html; do not block.
+
+---
+
+## Session e9516a41 — re-verification and rebuild (branch `arena/e9516a41-affil2`)
+
+**Arrival state (2026-11-20 UTC):** `main` had already moved to `e1b6750` (PRs #1 and #2 by session `530c2e6c`). This branch was fast-forwarded to `main` before any change, so nothing was duplicated and no prior work was discarded from history.
+
+**Branch note:** the brief asked for `session-<id>/<task>` branches, but this session may only work on `arena/e9516a41-affil2`. All tasks below are committed to that branch; claims are logged here instead.
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| R-01 | Repo review, line by line, irregularities logged | in progress | e9516a41 | COORDINATION.md, data/flags.json |
+| R-02 | Re-verify the five submitted links and product fields against live Amazon listings | in progress | e9516a41 | data/products.json, data/sources.json |
+| R-03 | Rebuild site from one verified data set (generator, no unverified values) | in progress | e9516a41 | scripts/build.py, content/**, assets/**, README.md |
+| R-04 | Compliance gate in CI (disclosure, sponsored links, claim lint, link check) | in progress | e9516a41 | scripts/check_site.py, .github/workflows/pages.yml |
+| R-05 | Publication polish: nav labels, valid RSS, sitemap, authorship, clusters | in progress | e9516a41 | content/**, scripts/build.py |
+| R-06 | Measurement: five defined events (local-only until an endpoint is approved) + empty campaign ledger | in progress | e9516a41 | assets/app.js, data/campaign-ledger.json |
+| R-07 | Final integration: PR to `main`, merge, confirm GitHub Pages deploy | pending | e9516a41 | COORDINATION.md |
+
+Prior-run tasks T-01..T-09 (session 530c2e6c) remain marked done above; this session re-checks them and logs every change it makes.
