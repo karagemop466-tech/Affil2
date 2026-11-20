@@ -449,3 +449,208 @@ pre.codebox{
   overflow-x:auto;font-size:13.5px;line-height:1.5;margin:16px 0
 }
 .pill.code{background:#eef4e0;border-color:#c3d69b;color:var(--ok)}
+.diagram-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;margin:18px 0
+}
+.diagram-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:14px
+}
+.diagram-card img{width:100%;height:auto;border-radius:8px;display:block}
+.diagram-card figcaption{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* November issue */
+:root{--cream:#faf8f2;--ink:#1c322b;--accent:#984224;--accent-d:#80391e;--paper:#fffffa}
+.masthead{background:#173c32}.mast{gap:10px}.brand span{color:#eac391}.search input{min-width:0;width:145px;background:#284c41}.search button{background:#eac391}#primary-nav a,.records summary{font-size:13px;padding:7px 8px}.records{position:relative;align-self:center;color:white}.records summary{cursor:pointer}.records div{position:absolute;right:0;z-index:10;width:210px;background:#173c32;padding:12px;color:transparent}.records div a{display:block}.disclosure{background:#efece1;color:#423e33;border-color:#d8d6c7}.issue{display:flex;align-items:center;gap:14px;font:bold 10px/1.3 var(--sans);letter-spacing:.16em;padding:21px 0}.issue span{flex:1;height:1px;background:#bfc6b8}.cover{display:grid;grid-template-columns:1fr 1.12fr;background:#1d453a;color:#fffaf1;overflow:hidden;border-radius:5px}.cover-copy{padding:clamp(25px,4vw,56px)}.cover-copy h1{font-size:clamp(40px,5vw,69px);letter-spacing:-.045em;line-height:.99;font-weight:500;margin:.32em 0}.cover-copy h1 em{color:#f5ce9b}.eyebrow{font-size:11px;letter-spacing:.18em;font-weight:bold;color:#f4d8b1}.cover-copy p:not(.eyebrow){max-width:38ch;font-size:16px;color:#f0eee4}.cover img{width:100%;height:100%;object-fit:cover;min-height:0}.cover-link{display:inline-block;background:#fcf7e9;color:#1d453a;border-radius:4px;padding:10px 17px;text-decoration:none;font-weight:700;font-size:14px}.dept{margin:38px 0}.kicker+h2{margin-top:0}.aisles{display:grid;grid-template-columns:1fr 1fr;gap:20px}.aisles a{display:flex;align-items:center;background:#efece1;color:var(--ink);overflow:hidden;border-radius:4px;text-decoration:none}.aisles img{width:38%;height:130px;object-fit:cover}.aisles span{padding:16px;font-size:10px;letter-spacing:.13em;font-weight:700}.aisles strong{display:block;font:600 clamp(20px,2.3vw,31px)/1.2 var(--serif);letter-spacing:-.03em;margin-top:6px}.aisles a:hover strong{text-decoration:underline}@media(max-width:760px){.cover,.aisles{grid-template-columns:1fr}.cover img{height:230px}.aisles img{height:98px}.records{align-self:start}.records div{position:static}.issue{font-size:9px}}
+
+
+/* Design & Traffic Brief: copy-paste prompt box */
+.promptbox {
+  background: #2b2622;
+  color: #f4ede4;
+  border: 1px solid #1f1b18;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  margin: 0.5rem 0 1.5rem;
+}
+
+/* ============================================================
+   Storefront layer — publication front page, photo cards.
+   Added with the T-17 rebuild; supersedes the flat illustration
+   cards but keeps the illustration tokens for product pages.
+   ============================================================ */
+
+/* ---------- photography ---------- */
+figure.photo{margin:0;position:relative}
+figure.photo img{
+  display:block;width:100%;height:auto;border-radius:var(--radius);
+  background:var(--cream-2)
+}
+.photo-cap{
+  font-size:11.5px!important;line-height:1.45;color:var(--muted)!important;
+  margin:7px 0 0!important;letter-spacing:0
+}
+.hero-photo img{
+  border-radius:var(--radius-lg);box-shadow:0 2px 6px rgba(23,20,15,.08),0 26px 50px -28px rgba(23,20,15,.45)
+}
+.hero-photo .photo-cap{max-width:44ch}
+
+/* ---------- hero refinements ---------- */
+.hero-facts{
+  display:flex;flex-wrap:wrap;gap:10px 26px;list-style:none;padding:16px 0 0;margin:18px 0 0;
+  border-top:1px solid var(--line-2);font-size:13.5px;color:var(--muted)
+}
+.hero-facts strong{font-family:var(--serif);font-size:19px;color:var(--accent);margin-right:4px}
+
+/* ---------- credibility strip ---------- */
+.strip{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px 30px;
+  background:var(--ink);color:#e8e0d3;border-radius:var(--radius-lg);
+  padding:20px 26px;margin:22px 0 8px;font-size:13.5px;line-height:1.55
+}
+.strip p{margin:0}
+.strip strong{display:block;color:#fff;font-weight:700;margin-bottom:2px}
+.strip strong::before{content:"✓";color:var(--gold);margin-right:7px}
+
+/* ---------- section heads ---------- */
+.sec-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:8px 24px}
+.sec-head h2{margin-bottom:.2em}
+.sec-head .muted{max-width:62ch;margin:0 0 .4em}
+
+/* ---------- product card, shop style ---------- */
+.grid{grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:26px}
+.card{padding:0;overflow:hidden;border-radius:var(--radius-lg)}
+.card-media{position:relative;background:var(--cream-2);line-height:0}
+.card-media img{border-radius:0;aspect-ratio:16/10;object-fit:cover}
+.card-media .badge{
+  position:absolute;top:12px;left:12px;background:rgba(23,20,15,.88);color:#fff;
+  font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  padding:5px 10px;border-radius:999px;backdrop-filter:blur(4px)
+}
+.card-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+.card .kicker{margin-bottom:7px;color:var(--muted)}
+.card h3{font-size:20.5px;margin:0 0 .4em;line-height:1.25}
+.card-blurb{font-size:14.5px;color:var(--ink-2);margin-bottom:.8em}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chip{
+  background:var(--cream-2);border:1px solid var(--line);border-radius:9px;
+  padding:6px 9px;line-height:1.25
+}
+.chip dt{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chip dd{margin:1px 0 0;font-size:12.5px;font-weight:600;color:var(--ink)}
+.bestfor,.catchline{font-size:13px!important;margin:0 0 6px!important;line-height:1.45}
+.bestfor strong{color:var(--ok);text-transform:uppercase;font-size:10.5px;letter-spacing:.07em}
+.catchline strong{color:var(--warn);text-transform:uppercase;font-size:10.5px;letter-spacing:.07em}
+.card .cta{margin:16px 0 8px}
+.card .btn{width:100%;flex-direction:column;gap:1px;padding:12px 18px}
+.btn-sub{
+  font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  opacity:.78
+}
+.micro{margin:0!important}
+.micro a{font-size:12.5px}
+
+/* ---------- buybox photo ---------- */
+.buybox{grid-template-columns:260px 1fr}
+.buybox-art{background:transparent;padding:0;display:block}
+.buybox-art img{border-radius:var(--radius)}
+
+/* ---------- latest guides + pick list ---------- */
+.split.wide-left{grid-template-columns:1.15fr .85fr}
+.latest{display:grid;gap:0;margin:12px 0 6px}
+.latest-item{padding:16px 0;border-bottom:1px solid var(--line)}
+.latest-item:first-child{padding-top:0}
+.latest-item:last-child{border-bottom:0}
+.latest-item h3{margin:.1em 0 .3em;font-size:19px}
+.latest-item h3 a{color:var(--ink);text-decoration:none}
+.latest-item h3 a:hover{color:var(--accent-d);text-decoration:underline}
+.latest-item p{font-size:14px;color:var(--ink-2);margin:0}
+.latest-item .kicker{margin-bottom:4px}
+.pick-panel{padding:24px}
+.pick-panel h3{margin:0 0 10px}
+.picklist{list-style:none;padding:0;margin:0}
+.picklist li{padding:11px 0;border-bottom:1px solid var(--line);display:grid;gap:2px}
+.picklist li:last-child{border-bottom:0}
+.picklist a{
+  font-family:var(--serif);font-size:16.5px;font-weight:650;color:var(--ink);
+  text-decoration:none;line-height:1.3
+}
+.picklist a:hover{color:var(--accent-d);text-decoration:underline}
+.picklist strong{color:var(--accent-d);font-weight:700}
+.picklist span{font-size:13px;color:var(--muted)}
+.pick-k{
+  display:block;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:2px
+}
+
+/* category page hero photo */
+.cat-photo{margin:0 0 26px}
+.cat-photo img{border-radius:var(--radius-lg);aspect-ratio:21/9;object-fit:cover}
+
+@media(max-width:1000px){
+  .split.wide-left{grid-template-columns:1fr}
+  .buybox{grid-template-columns:1fr}
+  .hero-photo .photo-cap{max-width:none}
+}
+@media(max-width:560px){
+  .card-body{padding:18px 18px 20px}
+  .strip{padding:18px 20px;border-radius:16px}
+  .hero-facts{gap:8px 18px}
+}
+
+/* product page photo */
+.pdp-head{grid-template-columns:1fr 340px;align-items:start;gap:32px}
+.pdp-art{background:transparent;border:0;padding:0}
+.pdp-art img{border-radius:var(--radius-lg);aspect-ratio:4/3;object-fit:cover;
+  box-shadow:0 2px 6px rgba(23,20,15,.07),0 22px 44px -26px rgba(23,20,15,.4)}
+@media(max-width:1000px){.pdp-head{grid-template-columns:1fr}.pdp-art{max-width:520px}}
+
+/* caption inside the card media band */
+.card-media{display:flex;flex-direction:column}
+.card-media .photo-cap{
+  margin:0!important;padding:7px 12px;background:var(--cream-2);color:var(--muted)!important;
+  font-size:10.5px!important;border-top:1px solid var(--line)
+}
+.card-media figure.photo{line-height:0}
+
+/* ---------- screen-reader-only class on generated pages ---------- */
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* image failure without a picture: keep the band calm, not broken */
+.card-media img{background:var(--cream-2)}
+
+/* ---------- compare: two at a time ---------- */
+.pairpick{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin:16px 0 6px}
+.pairpick label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);display:block}
+.pairpick select{
+  display:block;font:inherit;font-size:14px;font-weight:500;color:var(--ink);
+  padding:9px 12px;border:1.5px solid var(--line-2);border-radius:10px;background:#fff;
+  min-width:230px;text-transform:none;letter-spacing:0;margin-top:4px
+}
+.pairpick select:focus{outline:2px solid var(--accent);outline-offset:1px}
+table.pair td{font-size:13.5px}
+table.pair th[scope="row"]{width:20%}
+#pairView .btn{flex-direction:column;gap:1px}
+
+/* ---------- change log ---------- */
+table.changelog td:nth-child(3){font-size:13.5px;color:var(--ink-2)}
+table.changelog td:nth-child(1){font-size:12.5px}
+
+/* ---------- category directory: photo aisle cards ---------- */
+.aisles a{align-items:stretch}
+.aisles figure.photo{width:38%;margin:0;display:flex;flex-direction:column;justify-content:flex-end;
+  background:var(--cream-2);border-radius:0}
+.aisles figure.photo img{width:100%;height:150px;object-fit:cover;border-radius:0}
+.aisles figure.photo .photo-cap{font-size:9px;line-height:1.35;padding:5px 7px;color:var(--muted);
+  background:rgba(255,255,255,.72);margin:0}
+@media(max-width:760px){
+  .aisles figure.photo{width:40%}
+  .aisles figure.photo img{height:98px}
+  .aisles figure.photo .photo-cap{display:none}
+}

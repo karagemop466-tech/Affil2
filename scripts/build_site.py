@@ -138,6 +138,35 @@ def glyph(p, up=""):
         alt = "Editorial illustration of a basket air fryer — original artwork, not product photography"
     return f'<img src="{up}assets/illustrations/{fname}" alt="{esc(alt)}">'
 
+
+# ----- photography ---------------------------------------------------------
+# Editorial images are generated illustration, not photographs of the products.
+# Every page that shows one says so, and the gate fails if the caption is missing.
+PHOTO_CAPTION = ("Illustrative image, generated for this site &mdash; not a photograph of the "
+                 "product (FLG-036). No Amazon photography is used anywhere (FLG-007).")
+PHOTOS = {
+    "hero": ("assets/photos/hero-kitchen.jpg", 1264, 848,
+             "A dual-basket air fryer with both drawers open on a wooden counter, steam rising "
+             "from crisp potatoes, beside a folded linen towel and a probe thermometer"),
+    "air": ("assets/photos/air-fryers.jpg", 1264, 848,
+            "Three air fryer shapes on a stone counter: a dual-drawer basket fryer, a tall "
+            "single-basket fryer and a stainless French-door countertop oven"),
+    "thermo": ("assets/photos/thermometers.jpg", 1264, 848,
+               "A thin probe thermometer in a sliced roast on a board, with a small wireless "
+               "probe hub and a second probe in a joint of meat"),
+}
+
+
+def photo(key, up="", cls="", caption=True, eager=False, short=False):
+    src, w, h, alt = PHOTOS[key]
+    load = "eager" if eager else "lazy"
+    text = ("Illustrative image, generated for this site &mdash; not this product."
+            if short else PHOTO_CAPTION)
+    cap = f'<figcaption class="photo-cap">{text}</figcaption>' if caption else ""
+    return (f'<figure class="photo {cls}">'
+            f'<img src="{up}{src}" alt="{esc(alt)}" width="{w}" height="{h}" '
+            f'loading="{load}" decoding="async">{cap}</figure>')
+
 # --------------------------------------------------------------------------- shell
 
 NAV = [
@@ -151,6 +180,7 @@ NAV = [
 
 DASH = [
     ("suggestions.html", "Decision Center"),
+    ("design-brief.html", "Design &amp; Traffic Brief"),
     ("questions.html", "Open Questions"),
     ("flagged.html", "Flagged for Review"),
     ("sources.html", "Sources"),
@@ -197,7 +227,10 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
 <meta property="og:description" content="{esc(desc)[:300]}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{canon}">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="{BASE}assets/photos/hero-kitchen.jpg">
+<meta property="og:image:alt" content="Illustrative kitchen image, generated for this site">
+<meta name="twitter:image" content="{BASE}assets/photos/hero-kitchen.jpg">
 <link rel="stylesheet" href="{up}assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="{SITE} — Feed" href="{up}feed.xml">
 {ld}{extra_head}</head>
@@ -207,10 +240,10 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
   <div class="wrap mast">
     <a class="brand" href="{up}index.html">ShopNow<span>Kitchen</span></a>
     <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary">{nav}</nav>
+    <nav id="primary-nav" aria-label="Primary">{nav}<details class="records"><summary>Records</summary><div>{dash}</div></details></nav>
     <form class="search" action="{up}search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
-      <input id="q" name="q" type="search" placeholder="Search air fryers, thermometers, guides" autocomplete="off">
+      <input id="q" name="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
       <button type="submit">Search</button>
     </form>
   </div>
@@ -228,9 +261,10 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
       <a href="{up}sitemap.xml">Sitemap</a> · <a href="{up}feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
-      Inc. or its affiliates. This site is not endorsed by Amazon. Artwork is original illustration,
-      not product photography. Nothing here is a hands-on product test — every specification is read
-      from the official listing and dated. Last verified {TODAY}.</p>
+      Inc. or its affiliates. This site is not endorsed by Amazon. Scenes and diagrams are illustrations,
+      not product photography, and not a picture of the item reviewed (FLG-036). Nothing here is a
+      hands-on product test — every specification is read from the official listing and dated.
+      Last verified {TODAY}.</p>
     <p class="small">© 2026 {SITE}. <a href="{up}flagged.html">Flagged for Review</a> lists everything
       we could not verify.</p>
   </div>
@@ -249,10 +283,11 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
 
 def buybox(p, up, variant="full"):
     checks = "".join(f"<li>{esc(q)}</li>" for q, _ in p["questions"][:3])
+    photo_key = "thermo" if p["cat"] == "Meat Thermometers" else "air"
     return f"""<div class="buybox">
-  <div class="buybox-art">{glyph(p, up)}</div>
+  <div class="buybox-art">{photo(photo_key, up, caption=True, short=True)}</div>
   <div class="buybox-body">
-    <p class="kicker">{esc(p['cat'])} · {p['id']}</p>
+    <p class="kicker">{esc(p['cat'])} · {esc(p['brand'])}</p>
     <h3>{esc(p['headline'])}</h3>
     <p>{esc(p['blurb'])}</p>
     <dl class="factrow">
@@ -262,7 +297,7 @@ def buybox(p, up, variant="full"):
     <ul class="checks">{checks}</ul>
     <p class="cta">
       <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
-         data-event="outbound_click">{esc(p['headline'])} — see it on Amazon (paid link)</a>
+         data-event="outbound_click">Check price on Amazon<span class="btn-sub">paid link</span></a>
       <a class="btn ghost" href="{up}{slug_of(p)}">Full breakdown</a>
     </p>
     <p class="small">Prices, ratings and availability live on Amazon and change; we never print them
@@ -272,18 +307,26 @@ def buybox(p, up, variant="full"):
 </div>"""
 
 
-def card(p, up):
+def card(p, up, badge=""):
+    photo_key = "thermo" if p["cat"] == "Meat Thermometers" else "air"
+    chips = "".join(
+        f'<div class="chip"><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>' for k, v in p["card"][:3])
+    tag = f'<span class="badge">{esc(badge)}</span>' if badge else ""
     return f"""<article class="card">
-  <div class="card-art">{glyph(p, up)}</div>
-  <p class="kicker">{esc(p['cat'])}</p>
-  <h3><a href="{up}{slug_of(p)}">{esc(p['headline'])}</a></h3>
-  <p class="brandline">{esc(p['brand'])}</p>
-  <p>{esc(p['blurb'])}</p>
-  <p class="cta">
-    <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
-       data-event="outbound_click">Check price on Amazon (paid link)</a>
-  </p>
-  <p class="small"><a href="{up}{slug_of(p)}">Specs, trade-offs and questions &rarr;</a></p>
+  <div class="card-media">{photo(photo_key, up, caption=True, short=True)}{tag}</div>
+  <div class="card-body">
+    <p class="kicker">{esc(p['cat'])} · {esc(p['brand'])}</p>
+    <h3><a href="{up}{slug_of(p)}">{esc(p['headline'])}</a></h3>
+    <p class="card-blurb">{esc(p['blurb'])}</p>
+    <dl class="chips">{chips}</dl>
+    <p class="small bestfor"><strong>Best for</strong> {esc(p['best_for'])}</p>
+    <p class="small catchline"><strong>The catch</strong> {esc(p['tradeoff'])}</p>
+    <p class="cta">
+      <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
+         data-event="outbound_click">Check price on Amazon<span class="btn-sub">paid link</span></a>
+    </p>
+    <p class="small micro"><a href="{up}{slug_of(p)}">Full breakdown, specs and trade-offs &rarr;</a></p>
+  </div>
 </article>"""
 
 
@@ -395,33 +438,63 @@ BUILT = []
 # ---- home
 def build_home():
     featured = [BY_ID["P-01"], BY_ID["P-03"], BY_ID["P-04"]]
+    picks = "".join(
+        f'<li><a href="{slug_of(p)}"><span class="pick-k">{esc(p["cat"])}</span>'
+        f'<strong>{esc(p["brand"])}</strong> {esc(p["headline"])}</a>'
+        f'<span>{esc(p["best_for"])}</span></li>' for p in PRODUCTS)
+    latest = "".join(
+        f'''<article class="latest-item">
+  <p class="kicker">{esc(g["kicker"])}</p>
+  <h3><a href="guides/{g["slug"]}.html">{esc(g["title"])}</a></h3>
+  <p>{esc(g["sub"])}</p>
+</article>''' for g in GUIDES[:3])
     body = f"""
+<div class="issue"><b>THE KITCHEN EDIT</b><span></span> VOL. 01 &nbsp; / &nbsp; NOVEMBER 2026</div>
 <section class="hero">
   <div class="hero-copy">
-    <p class="kicker">Issue 01 · updated {TODAY}</p>
-    <h1>Buy the air fryer that fits your counter, not the one with the loudest listing.</h1>
-    <p class="lede">Five appliances. Two categories. Every number below is read off the official
-      Amazon listing and dated, every conflict is printed instead of smoothed over, and no price or
-      star rating is quoted. Start with the decision you actually have to make.</p>
+    <p class="kicker">The kitchen counter issue · updated {TODAY}</p>
+    <h1>One basket, two baskets, or an oven?</h1>
+    <p class="lede">Start with dinner. Five appliances we have read line by line: three air fryers and
+      two meat thermometers. What each is genuinely good at, what the catch is, and where the listing
+      contradicts itself. No prices, no star ratings, no pretending we cooked with them.</p>
     <p class="cta">
-      <a class="btn" href="guides.html">Find my air fryer</a>
-      <a class="btn ghost" href="compare.html">Compare all five</a>
+      <a class="btn" href="#the-picks">See the three picks</a>
+      <a class="btn ghost" href="guides/basket-vs-oven.html">Read the buying guide</a>
     </p>
-    <p class="small">Two baskets or one? Instant-read or wireless? Those are the real questions.</p>
+    <ul class="hero-facts">
+      <li><strong>5</strong> products, read from official listings</li>
+      <li><strong>8</strong> buying guides</li>
+      <li><strong>0</strong> prices or ratings quoted</li>
+    </ul>
   </div>
-  <div class="hero-art" aria-hidden="true">
-    <div class="hero-tile"><img src="assets/illustrations/air-fryer.svg" alt="Editorial illustration of a countertop air fryer — original artwork, not product photography"></div>
-    <div class="hero-tile"><img src="assets/illustrations/thermometer.svg" alt="Editorial illustration of a kitchen meat thermometer — original artwork, not product photography"></div>
+  <div class="hero-art">{photo("hero", "", "hero-photo", caption=True, eager=True)}</div>
+</section>
+
+<section class="dept">
+  <p class="kicker">The shop directory</p>
+  <h2>Shop by category</h2>
+  <div class="aisles">
+    <a href="air-fryers.html">{photo("air", "", "aisle-photo", caption=True, short=True)}
+      <span>01 / Appliances<strong>Air fryers &rarr;</strong></span></a>
+    <a href="meat-thermometers.html">{photo("thermo", "", "aisle-photo", caption=True, short=True)}
+      <span>02 / Tools<strong>Meat thermometers &rarr;</strong></span></a>
   </div>
 </section>
 
-<section>
-  <h2>The three that earn a recommendation</h2>
-  <p class="muted">Not the whole market &mdash; these five are the ones we cover. These are
-    the three we would start with, and the reason is written on each card.</p>
-  <div class="grid">
-    {"".join(card(p, "") for p in featured)}
+<section class="strip" aria-label="How this site works">
+  <p><strong>Every spec dated.</strong> Read off the official Amazon listing on {TODAY}, with the
+    source linked on every row.</p>
+  <p><strong>Conflicts printed.</strong> When a listing says two things, both are shown and flagged.</p>
+  <p><strong>No prices.</strong> Amazon policy governs price display, so the number stays on Amazon.</p>
+</section>
+
+<section id="the-picks">
+  <div class="sec-head">
+    <h2>The three we&rsquo;d start with</h2>
+    <p class="muted">Not the whole market &mdash; just the five links we were asked to cover. These
+      are the three we would start with, and the reason is on each card.</p>
   </div>
+  <div class="grid">{ "".join(card(p, "", b) for p, b in zip(featured, ["Best for two", "Biggest single basket", "Best for spot checks"])) }</div>
   <p class="small"><a href="shop.html">See all five products &rarr;</a></p>
 </section>
 
@@ -450,7 +523,7 @@ def build_home():
         us honest.</li>
       <li>We have not cooked with these units. The site says so instead of implying otherwise.</li>
     </ol>
-    <p class="small"><a href="how-we-choose.html">How we choose and what we won't claim &rarr;</a></p>
+    <p class="small"><a href="how-we-choose.html">How we choose and what we won&rsquo;t claim &rarr;</a></p>
   </aside>
 </section>
 
@@ -461,11 +534,23 @@ def build_home():
   {overview_table()}
 </section>
 
+<section class="split wide-left">
+  <div>
+    <h2>Latest guides</h2>
+    <div class="latest">{latest}</div>
+    <p class="small"><a href="guides.html">All eight guides &rarr;</a></p>
+  </div>
+  <aside class="panel pick-panel">
+    <h3>The five at a glance</h3>
+    <ul class="picklist">{picks}</ul>
+  </aside>
+</section>
+
 <section>
   <h2>What readers ask us most</h2>
   <div class="faq">
-    <details><summary>Do you show prices?</summary><p>No. Amazon's Program Policies allow a site to
-      show price and availability only when Amazon serves the link or the data comes through the
+    <details><summary>Do you show prices?</summary><p>No. Amazon&rsquo;s Program Policies allow a site
+      to show price and availability only when Amazon serves the link or the data comes through the
       Product Advertising or Creators API. This site does neither, so prices stay on Amazon where
       they are always current. That is also why nothing here is ever out of date on price.</p></details>
     <details><summary>Which one would you buy?</summary><p>It depends on one thing: do you cook two
@@ -473,7 +558,7 @@ def build_home():
       single basket, the 8-quart Chefman. If you want an oven that air-fries, the Emeril &mdash; and
       only if you have 16.9 inches of depth.</p></details>
     <details><summary>Are the star ratings on Amazon reliable?</summary><p>They are real, and they are
-      not shown here &mdash; partly policy, partly because a rating summarises other people's
+      not shown here &mdash; partly policy, partly because a rating summarises other people&rsquo;s
       kitchens. The specification table is more useful for your counter.</p></details>
     <details><summary>How current is this?</summary><p>Every listing was re-read on {TODAY}. Listings
       change; the date is printed on each product page so you can judge.</p></details>
@@ -490,7 +575,11 @@ def build_home():
 </section>
 """
     ld = [{"@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": BASE,
-           "publisher": dict(publisher_ld(), **{"@context": "https://schema.org"})}]
+           "publisher": dict(publisher_ld(), **{"@context": "https://schema.org"})},
+          {"@context": "https://schema.org", "@type": "ItemList", "name": "Products covered",
+           "itemListElement": [
+               {"@type": "ListItem", "position": i + 1, "name": p["brand"] + " — " + p["headline"],
+                "url": BASE + slug_of(p)} for i, p in enumerate(PRODUCTS)]}]
     BUILT.append(page("index.html",
                       f"{SITE} — air fryers and meat thermometers, compared honestly",
                       "Which air fryer fits your counter, and instant-read versus wireless "
@@ -549,10 +638,12 @@ def build_category(catfile, cat, headline, intro, guides_, picks):
         '<li><a href="' + h + '">' + esc(t) + '</a><span>' + esc(sub) + '</span></li>'
         for h, t, sub in guides_)
     box_items = "".join(buybox(p, "") for p in items)
+    cphoto = photo("thermo" if cat == "Meat Thermometers" else "air", "", "cat-photo", caption=True)
     body = f"""
 {breadcrumb([("Home", "index.html"), (cat, None)])}
 <h1>{esc(headline)}</h1>
 <p class="lede">{intro}</p>
+{cphoto}
 {box_items}
 <h2>Which one, in one line each</h2>
 <ul class="verdicts">
@@ -583,7 +674,7 @@ def build_product(p):
     <h1>{esc(p['headline'])}</h1>
     <p class="lede">{esc(p['blurb'])}</p>
   </div>
-  <div class="pdp-art">{glyph(p, "../")}</div>
+  <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../", "pdp-photo")}</div>
 </div>
 <div class="pdp-buy">
   <div>
@@ -591,7 +682,7 @@ def build_product(p):
     <p class="buyline">The catch <strong>{esc(p['tradeoff'])}</strong></p>
   </div>
   <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
-     data-event="outbound_click">Check the live price on Amazon (paid link)</a>
+     data-event="outbound_click">Check the live price on Amazon<span class="btn-sub">paid link</span></a>
 </div>
 <p class="small">We do not print the price here &mdash; Amazon's Program Policies only permit a site
   to show price and availability when Amazon serves the link or the data comes through their API.
@@ -625,7 +716,7 @@ def build_product(p):
 
 <p class="cta">
   <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
-     data-event="outbound_click">See it on Amazon (paid link)</a>
+     data-event="outbound_click">See it on Amazon<span class="btn-sub">paid link</span></a>
   <a class="btn ghost" href="../compare.html">Compare with the others</a>
 </p>
 
@@ -651,22 +742,65 @@ def build_product(p):
 
 
 # ---- compare
+# One set of renderers shared by the five-column table and the two-at-a-time view, so the
+# two views can never disagree about what a field says or why it is blank.
+NOT_STATED = "— <span class=\"unverified\">not stated on the listing</span>"
+NA_CAP = "— <span class=\"unverified\">n/a, measures temperature</span>"
+NA_POWER = "— <span class=\"unverified\">n/a, battery powered</span>"
+NOWEIGHT = "— <span class='unverified'>not stated on this listing (FLG-022)</span>"
+
+
+def spec(p, key, other=NOT_STATED):
+    f = p["fields"].get(key)
+    if not f or f["v"] is None:
+        return other
+    txt = esc(f["v"])
+    if f["st"] == "conflict":
+        txt += ' <span class="token conflict">see flags</span>'
+    return txt
+
+
+def by_category(p, key, fallbacks, other=NOT_STATED):
+    """Use the air-fryer field, or the nearest equivalent on a thermometer."""
+    if p["cat"] == "Meat Thermometers":
+        for k in fallbacks:
+            f = p["fields"].get(k)
+            if f and f["v"]:
+                txt = esc(f["v"])
+                if f["st"] == "conflict":
+                    txt += ' <span class="token conflict">see flags</span>'
+                return txt
+        return other
+    return spec(p, key, other)
+
+
+# the rows a head-to-head view compares, in order: label -> how to render
+PAIR_ROWS = [
+    ("Best for", lambda p: esc(p["best_for"])),
+    ("The catch", lambda p: esc(p["tradeoff"])),
+    ("Capacity", lambda p: spec(p, "capacity", NA_CAP)),
+    ("Temperature range", lambda p: by_category(p, "temperature", ["upper_temp", "heat"])),
+    ("Power / battery", lambda p: by_category(p, "power", ["battery"], NA_POWER)),
+    ("Presets", lambda p: spec(p, "presets", "— <span class='unverified'>no preset count on the listing</span>")),
+    ("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOT_STATED)),
+    ("Weight", lambda p: spec(p, "weight", NOWEIGHT)),
+    ("Probes", lambda p: spec(p, "probes", "— n/a, not a probe appliance")),
+    ("Response time", lambda p: spec(p, "response", "— n/a, not an instant-read")),
+    ("Stated accuracy", lambda p: spec(p, "accuracy", "— n/a")),
+    ("Heat rating", lambda p: spec(p, "heat", "— n/a")),
+    ("Connectivity", lambda p: spec(p, "connectivity", "— n/a, no app")),
+    ("Model on listing", lambda p: spec(p, "model", "— not on the fetched text")),
+    ("Warranty", lambda p: spec(p, "warranty", NOT_STATED)),
+    ("Price", lambda p: "— not shown, by policy"),
+    ("Star rating", lambda p: "— not shown, by policy"),
+]
+
+
 def build_compare():
     cols = PRODUCTS
     def row(label, fn):
         cells = "".join(f"<td>{fn(p)}</td>" for p in cols)
         return f'<tr><th scope="row">{label}</th>{cells}</tr>'
-
-    def spec(p, key, other="— <span class=\"unverified\">not stated on the listing</span>"):
-        f = p["fields"].get(key)
-        if not f or f["v"] is None:
-            return other
-        txt = esc(f["v"])
-        if f["st"] == "conflict":
-            txt += ' <span class="token conflict">see flags</span>'
-        return txt
-
-    NOCAP = "— <span class=\"unverified\">n/a, not a capacity appliance</span>"
 
     head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
                    f'<br><span class="th-sub">{p["id"]} · {esc(p["headline"])}</span></th>' for p in cols)
@@ -684,11 +818,11 @@ def build_compare():
     {row("Category", lambda p: esc(p["cat"]))}
     {row("Best for", lambda p: esc(p["best_for"]))}
     {row("The catch", lambda p: esc(p["tradeoff"]))}
-    {row("Capacity", lambda p: spec(p, "capacity", NOCAP))}
-    {row("Temperature range", lambda p: spec(p, "temperature", NOCAP))}
-    {row("Power / battery", lambda p: spec(p, "power", "see battery row"))}
-    {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOCAP))}
-    {row("Weight", lambda p: spec(p, "weight", NOCAP))}
+    {row("Capacity", lambda p: spec(p, "capacity", NA_CAP))}
+    {row("Temperature range", lambda p: by_category(p, "temperature", ["upper_temp", "heat"]))}
+    {row("Power / battery", lambda p: by_category(p, "power", ["battery"], NA_POWER))}
+    {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOT_STATED))}
+    {row("Weight", lambda p: spec(p, "weight", NOWEIGHT))}
     {row("Model on listing", lambda p: spec(p, "model", "— not on the fetched text"))}
     {row("Price", lambda p: "— not shown, by policy")}
     {row("Star rating", lambda p: "— not shown, by policy")}
@@ -696,6 +830,23 @@ def build_compare():
     {row("Buy link", lambda p: f'<a href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p["id"]}" data-event="outbound_click">Amazon (paid link)</a>')}
   </tbody>
 </table>
+<h2>Two at a time</h2>
+<div class="pairpick">
+  <label>Compare
+    <select id="pairA">
+      {"".join(f'<option value="{p["id"]}">{esc(p["brand"])} — {esc(p["headline"])}</option>' for p in cols)}
+    </select>
+  </label>
+  <label>with
+    <select id="pairB">
+      {"".join(f'<option value="{p["id"]}"{" selected" if i == 3 else ""}>{esc(p["brand"])} — {esc(p["headline"])}</option>' for i, p in enumerate(cols))}
+    </select>
+  </label>
+</div>
+<div id="pairView" aria-live="polite"></div>
+<noscript><p class="small">The two-at-a-time view needs JavaScript. The full table above carries the
+  same rows.</p></noscript>
+
 <h2>How to read this table</h2>
 <ol>
   <li><strong>Filter by form first.</strong> Two baskets, one basket, or an oven &mdash; that decision
@@ -708,11 +859,22 @@ def build_compare():
 <p class="small">Where a listing contradicts itself, the conflicting figures both appear in the
   cell and the flag ID is on the <a href="flagged.html">Flagged for Review</a> page.</p>
 """
+    pair_data = {}
+    for p in cols:
+        pair_data[p["id"]] = {
+            "name": esc(p["brand"]) + " — " + esc(p["headline"]),
+            "url": slug_of(p),
+            "buy": aff(p),
+            "rows": [[label, fn(p)] for label, fn in PAIR_ROWS],
+        }
+    pair_json = json.dumps(pair_data, ensure_ascii=False).replace("</", "<\\/")
+    extra = (f'<script type="application/json" id="pairData">{pair_json}</script>')
     BUILT.append(page("compare.html", f"Compare all five — {SITE}",
                       "Side-by-side table of all five products, aligned by field, with prices and "
                       "ratings deliberately omitted and conflicts left visible.",
-                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
-                                    "name": "Compare", "url": BASE + "compare.html"}))
+                      body, extra_head=extra,
+                      jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                              "name": "Compare", "url": BASE + "compare.html"}))
 
 
 # ---- guides
@@ -898,7 +1060,7 @@ GUIDES = [
             artefact on offer here."""),
             ("Look for a calibration path", """A thermometer you can verify is worth more than one you
             have to trust. The <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/food-thermometers">USDA
-            FSIS Food Thermometers guide</a> (source S23) describes the ice-water calibration test:
+            FSIS Food Thermometers guide</a> (source S24) describes the ice-water calibration test:
             immerse the stem at least 2 inches in an ice-water slurry for 30 seconds without touching
             the glass; a calibrated thermometer reads 32&nbsp;&deg;F. A unit that ships with a
             certificate and a clear calibration path is easier to keep honest."""),
@@ -1029,7 +1191,8 @@ def build_guide(g):
            "headline": g["title"], "description": g["sub"], "datePublished": TODAY,
            "dateModified": TODAY, "author": dict(publisher_ld(), **{"@context": "https://schema.org"}),
            "publisher": dict(publisher_ld(), **{"@context": "https://schema.org"}),
-           "mainEntityOfPage": BASE + "guides/" + g["slug"] + ".html"},
+           "mainEntityOfPage": BASE + "guides/" + g["slug"] + ".html",
+           "image": BASE + "assets/photos/hero-kitchen.jpg"},
           dict(crumbs_ld([("Home", "index.html"), ("Guides", "guides.html"),
                           (g["title"], "guides/" + g["slug"] + ".html")]),
                **{"@context": "https://schema.org"})]
@@ -1080,14 +1243,16 @@ def build_how():
 <h2>How conflicts are handled</h2>
 <p>When a listing contradicts itself, we print both figures in the specification table and give the
   contradiction an ID on the <a href="flagged.html">Flagged for Review</a> page. There are currently
-  several: preset counts, accessory counts, top temperature, wattage, capacity units and warranty
-  length. We do not average them, pick the flattering one, or quietly drop the awkward one.</p>
+  several: preset counts, accessory counts, model-number forms, top temperature, wattage, capacity
+  units, battery life and warranty length. We do not average them, pick the flattering one, or quietly
+  drop the awkward one.</p>
 
 <h2>How the money works</h2>
 <p>Outbound product links carry our Amazon Associate tag and are marked
   <strong>(paid link)</strong> next to the button, with <code>rel="sponsored nofollow"</code> on the
   anchor, per Google's guidance (S04). The disclosure statement sits under the masthead on every page
-  and repeats in the footer, per Amazon's Operating Agreement Section 5 (S01) and FTC guidance (S03).
+  and repeats in the footer, per Amazon's Operating Agreement Section 5 (S01) and FTC guidance on
+  making a disclosure hard to miss (S03, S23).
   Untagged listing links are published alongside so you can check our work without the tag.</p>
 
 <h2>How to tell us we are wrong</h2>
@@ -1151,11 +1316,12 @@ SUGGESTIONS = [
          verify="Product pages still say PENDING TEST. Cannot be completed without account access."),
     dict(id="SG-08", title="One indexable host with a sitemap, feed and structured data",
          what="Canonical tags, sitemap.xml, robots.txt, an RSS feed, JSON-LD on every page, and a "
-              "working on-site search.",
+              "working on-site search. The search was inert until T-17 (FLG-037); it now reads the "
+              "query and renders matches.",
          why="A crawler needs one canonical address per page and a reason to rank it. Duplicate "
              "hosts and dead search pages waste both.",
          impact="High — findability", effort="Done", status="Shipped",
-         verify="sitemap.xml lists every page; three JSON-LD blocks on product pages; search.html reads a generated index."),
+         verify="sitemap.xml lists every page; three JSON-LD blocks on product pages; search.html matches the generated index in the browser."),
     dict(id="SG-09", title="Make it read like a publication: authorship, brand, imagery, seasons",
          what="Named editorial standards page, consistent masthead and type, original illustration "
               "instead of stock or Amazon photography, and seasonal guides.",
@@ -1209,35 +1375,92 @@ SUGGESTIONS = [
          why="Cadence compounds; sporadic bursts do not.",
          impact="Medium — organic growth", effort="Ongoing", status="Blocked on Search Console",
          verify="Requires Search Console access (SG-10)."),
-    dict(id="SG-17", title="AI-powered affiliate platform architecture and Creators API pipeline",
-         what="Document every subsystem (research, market analysis, SEO drafting, Special Links vs "
-              "cloaking, analytics, scaling, compliance gate) alongside hard Creators API (S20/S21) "
+    dict(id="SG-17", title="Design & Traffic Brief and editorial standards prompt",
+         what="A publication-grade storefront design prompt, 4-cluster topic plan, seasonal "
+              "calendar, and 10 reader-visible editorial standards in design-brief.html.",
+         why="Gives the next design/content iteration an explicit, compliance-checked blueprint.",
+         impact="High — editorial & SEO plan", effort="Done (brief); implementation staged",
+         status="Shipped",
+         verify="design-brief.html published and linked from masthead Records menu and footer."),
+    dict(id="SG-18", title="Rotate the front-page picks on a dated editorial calendar",
+         what="Treat the three featured cards as an issue, not a permanent ranking: refresh them at "
+              "season boundaries (Thanksgiving, gifting, summer grilling) and print the issue date and "
+              "the reason for the change on the page.",
+         why="A front page that never changes gives a returning reader no reason to come back, and "
+             "search engines no signal that the page is maintained. A dated rotation does both without "
+             "inventing new facts.",
+         impact="Medium — repeat visits", effort="Small, needs an editorial calendar decision",
+         status="Partially shipped — dated issue line, rotation still open",
+         verify="index.html prints the issue date above the hero. The three picks themselves are "
+                "still static, so the rotation half of this proposal is open (Q-16)."),
+    dict(id="SG-19", title="Add intent landing pages generated from the same register",
+         what="One page per real buying shape already covered by the five products: a dual-basket "
+              "page, a small-kitchen page and a walk-away-thermometer page, each assembled from the "
+              "existing verified fields rather than new claims.",
+         why="People search for the shape of the problem, not for a product they have not heard of. "
+             "These pages give a crawler a reason to rank this site without adding a single unverified "
+             "sentence.",
+         impact="High — organic entry points", effort="Medium, blocked on query data",
+         status="Blocked on Search Console (SG-10)",
+         verify="Requires measured query evidence first; choosing topics by instinct is what this "
+                "site is trying to stop doing."),
+    dict(id="SG-20", title="Publish a dated change log for readers",
+         what="A dated list on the sources page of what changed: corrected values, withdrawn claims, "
+              "new guides — each with the flag ID that records it.",
+         why="A correction a reader cannot see is indistinguishable from a quiet edit. A visible change "
+             "log turns maintenance into evidence.",
+         impact="Medium — trust", effort="Small",
+         status="Shipped",
+         verify="sources.html, \"What changed, and when\": every corrected flag, newest first, with "
+                "its date."),
+    dict(id="SG-21", title="Add a two-product head-to-head view",
+         what="Pick any two of the five on the compare page and see their verified rows side by side, "
+              "built from the same register as the five-column table.",
+         why="Most real decisions are a choice between two, not five. A five-column table on a phone "
+             "is hard to read; a pair view is the same data at the size people actually use.",
+         impact="Medium — decision speed", effort="Small",
+         status="Shipped",
+         verify="compare.html, \"Two at a time\": two selectors, rows rendered from the embedded "
+                "register view. No new facts, no new links."),
+    dict(id="SG-22", title="Name an editor and decide the hands-on policy",
+         what="Either name a real person who owns the copy, or state permanently that this is a "
+              "documentation site with no hands-on testing. Both are defensible; silence is not.",
+         why="FTC guidance treats an implied experience claim as a problem, and a byline needs a real "
+             "person behind it. This is the one open item that touches compliance rather than polish.",
+         impact="High — compliance and trust", effort="Owner decision",
+         status="Blocked on the owner (FLG-032, FLG-033)",
+         verify="about.html currently states plainly that no author is named."),
+    dict(id="SG-23", title="Add cook-time and capacity proof content only after real testing",
+         what="Defer any “how long do chips take” or “how much fits” content until the appliances "
+              "can actually be cooked with, then publish it with the method written down.",
+         why="This is the content that would genuinely differentiate the site, and it is also the "
+             "content that cannot be produced honestly right now.",
+         impact="High — differentiation", effort="Needs product access",
+         status="Not started — blocked on hands-on testing",
+         verify="No page on this site claims a cook time."),
+    dict(id="SG-24", title="AI-powered affiliate platform architecture and Creators API pipeline",
+         what="Document all seven platform modules (research, pricing/commission bounds, SEO drafting, "
+              "Special Links vs cloaking, telemetry, scaling, CI gate) alongside Creators API (S20/S21) "
               "and ML-training/Agent Terms limits (Program Policies §5, IP License §1/§2(e)/§4).",
          why="Automating research or price ingestion without final Associates acceptance and "
-             "policy-compliant API handling would break program rules or hallucinate specs.",
-         impact="High — architecture and compliance", effort="Done (architecture); API gated on owner",
+             "policy-compliant API handling would violate program rules or hallucinate specs.",
+         impact="High — architecture and compliance", effort="Done (blueprint); API gated on owner",
          status="Blocked on Creators API",
-         verify="platform.html lists every module, what runs today, and exact policy gates (FLG-029)."),
-    dict(id="SG-18", title="Generate question-shaped article drafts from Search Console queries",
+         verify="platform.html documents every module, what runs today, and hard gates (FLG-029, Q-19)."),
+    dict(id="SG-25", title="Generate question-shaped article drafts from Search Console queries",
          what="Turn measured impressions and search queries from Search Console into structured, "
-              "listing-cited guides that pass the check_site.py compliance gate before merging.",
-         why="Query-driven drafting grows organic search without guessing topics.",
+              "listing-cited guides that pass scripts/check_site.py before merging.",
+         why="Query-driven drafting grows organic search from evidence instead of guesswork.",
          impact="High — organic discovery", effort="Owner action", status="Blocked on Search Console",
-         verify="Requires Search Console verification (SG-10, Q-16)."),
-    dict(id="SG-19", title="Human review and ranking before building new proposals",
-         what="Maintain suggestions.html so every directional proposal is scored, ordered, and "
-              "recorded with a concrete success metric before implementation.",
-         why="Separates backlog ideas from shipped capabilities cleanly.",
-         impact="Medium — roadmap hygiene", effort="Done", status="Shipped",
-         verify="suggestions.html interactive rank controls, shortlist table, and CSV export."),
-    dict(id="SG-20", title="Privacy-preserving self-hosted analytics endpoint",
+         verify="Requires Search Console verification (SG-10, Q-20)."),
+    dict(id="SG-26", title="Privacy-preserving self-hosted analytics endpoint",
          what="Ship zero-dependency Node.js (analytics/server.js) and Cloudflare Pages Function "
-              "(functions/api/collect.js) collectors plus non-blocking send() transport in app.js.",
-         why="GitHub Pages is static-only; shipping vetted collector code lets the owner turn on "
-             "cross-visitor measurement without cookies, third-party pixels, or rewriting pages.",
+              "(functions/api/collect.js) collectors plus gated send() transport in assets/app.js.",
+         why="GitHub Pages is static-only; shipping vetted collector code lets the owner enable "
+             "cross-visitor counts without cookies, third-party pixels, or page rewrites.",
          impact="High — measurement", effort="Code shipped; hosting is owner action",
          status="Code shipped — hosting pending",
-         verify="measurement.html, data/events.json, analytics/server.js, functions/api/collect.js, tests/test_collector.js (FLG-010)."),
+         verify="measurement.html, data/events.json, analytics/server.js, functions/api/collect.js, tests/test_collector.js (FLG-010, Q-08)."),
 ]
 
 
@@ -1303,9 +1526,13 @@ def build_suggestions():
     <tr><td>SG-14</td><td>Choose and attach a custom domain</td><td>Owner (decision)</td></tr>
     <tr><td>SG-15</td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
     <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
-    <tr><td>SG-17</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
-    <tr><td>SG-18</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
-    <tr><td>SG-20</td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
+    <tr><td>SG-18</td><td>Set an editorial calendar for the front-page picks</td><td>Owner (editorial decision)</td></tr>
+    <tr><td>SG-19</td><td>Approve intent landing pages generated from the register</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td>SG-22</td><td>Name an editor or fix the no-testing policy in writing</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-23</td><td>Defer cook-time content until hands-on testing exists</td><td>Owner (product access)</td></tr>
+    <tr><td>SG-24</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
+    <tr><td>SG-25</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td>SG-26</td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
   </tbody>
 </table>
 
@@ -1384,17 +1611,18 @@ QUESTIONS = [
      "Collector code (analytics/server.js, functions/api/collect.js) ships in the repo, while "
      "GitHub Pages is static-only so events stay in localStorage until hosted externally.",
      "Deploy to Cloudflare Pages or a Node host, verify GET /api/collect, and configure the endpoint.",
-     "Cross-visitor measurement (FLG-010, SG-20)", "Owner", "Code ready; unhosted"),
+     "Cross-visitor measurement (FLG-010, SG-26)", "Owner", "Code ready; unhosted"),
     ("Q-09", "Which reader-capture channel, if any?",
      "An RSS feed exists. Email capture and Search Console both need accounts.",
      "Verify the site in Search Console and submit the sitemap. Decide whether email is wanted.",
      "Growth loop (SG-10)", "Owner", "RSS only"),
     ("Q-10", "Which listing contradictions can be resolved with the seller?",
-     "There are now eight: Emeril preset count (24 vs 25), Emeril accessory count (6 vs 7), "
-     "Emeril model variant, Chefman 8-Qt temp (400 vs 450 °F), Chefman 8-Qt wattage (1700 vs 1000 W), "
-     "Chefman 6-Qt capacity (6 qt vs 6 L), CHEF iQ battery (50 vs 70 h), and CHEF iQ warranty (2 vs 3 yr).",
+     "Eight active discrepancies across the listings: Emeril preset count (24 vs 25), Emeril "
+     "accessory count (6 vs 7), Emeril model variant (4-00675-02X-VN vs earlier 4-00675-02), "
+     "Chefman 8-Qt temp (400 vs 450 °F), Chefman 8-Qt wattage (1700 vs 1000 W), Chefman 6-Qt "
+     "capacity (6 qt vs 6 L), CHEF iQ battery (50 vs 70 h), and CHEF iQ warranty (2 vs 3 yr).",
      "Ask each seller in writing, or read the printed manual. Until then both figures stay published.",
-     "Specification certainty (FLG-008, FLG-009, FLG-017 to FLG-022, FLG-031, FLG-034)", "Sellers", "Open"),
+     "Specification certainty (FLG-008, FLG-009, FLG-017 to FLG-022, FLG-031, FLG-034, FLG-038)", "Sellers", "Open"),
     ("Q-11", "What commission categories apply, and at what rate?",
      "Rates live in the Commission Income Statement inside the account and change by category.",
      "Read the Commission Income Statement in Associates Central. Do not publish a rate until it is "
@@ -1413,15 +1641,42 @@ QUESTIONS = [
      "Listings change. A site with a dated verification stamp needs a process for re-dating it.",
      "Set a re-verification interval, for example quarterly, and record each pass with its date.",
      "Trust over time (FLG-023)", "Owner", "Not defined"),
-    ("Q-15", "Will the Associates account qualify for Amazon Creators API credentials?",
+    ("Q-15", "Is the generated imagery acceptable, or must it be replaced before promotion?",
+     "The photographs on the front page and category pages are illustration, captioned as such on "
+     "every page that uses them. Whether that is good enough for the audience this site is aimed at "
+     "is an editorial and compliance judgement, not a fact.",
+     "Decide one of three: keep the captioned illustration, license real photography through the "
+     "Product Advertising or Creators API, or commission original photography. Do not silently drop "
+     "the caption.",
+     "Storefront credibility (FLG-036, FLG-007, SG-15)", "Owner", "Not decided"),
+    ("Q-16", "On what evidence are the three front-page picks chosen?",
+     "Today they are chosen on the shape of the decision - two zones, one big basket, one instant "
+     "read - and the page says so. That is an editorial argument, not a measurement.",
+     "Once clicks are recorded server-side (Q-08) and queries are visible (Q-09), choose the picks "
+     "from those two numbers and print the reason with the date.",
+     "Front-page rotation (SG-18, SG-19)", "Owner, then data", "Argument only, no data"),
+    ("Q-17", "What is this site for, in one sentence a reader could repeat?",
+     "Right now the answer is either \"honest specs for five appliances\" or \"the paperwork behind "
+     "an affiliate site\". They attract different readers, and only the first one buys anything.",
+     "Write the sentence, then delete or move to the footer every page that does not serve it. The "
+     "records already live in the footer, so nothing is lost.",
+     "Every editorial decision (SG-18 to SG-23)", "Owner", "Unwritten"),
+    ("Q-18", "Which jurisdiction's disclosure and consumer rules govern this site?",
+     "Amazon's Operating Agreement and US FTC guidance are quoted here because they are the sources "
+     "that are publicly checkable. Whether EU or Dutch consumer rules additionally apply to a reader "
+     "in the Netherlands has not been assessed, and this site does not guess at it.",
+     "Ask a qualified adviser which rules apply given where the owner and the readers are, then "
+     "record the answer with its date in the source register.",
+     "Disclosure wording and placement (S01, S03, S23)", "Qualified adviser", "Not assessed"),
+    ("Q-19", "Will the Associates account qualify for Amazon Creators API credentials?",
      "PA-API 5 returns HTTP 403 and Creators API requires final Associates acceptance plus "
      "qualifying sales (10 qualifying sales in the prior 30 days for catalog API access, S20/S21).",
      "Complete account review in Associates Central, verify qualified sales, and apply as primary account owner.",
-     "Automated product ingestion and legal price/image display (SG-13, SG-17, FLG-029)", "Owner", "Blocked on API acceptance"),
-    ("Q-16", "Which Search Console query metrics will pick the next buying guides?",
+     "Automated product ingestion and legal price/image display (SG-13, SG-24, FLG-029)", "Owner", "Blocked on API acceptance"),
+    ("Q-20", "Which Search Console query metrics will pick the next buying guides?",
      "Without Search Console property verification, organic queries, impressions, and CTR cannot be seen.",
      "Verify the canonical URL in Google Search Console, submit sitemap.xml, and review query reports monthly.",
-     "Topic selection and guide cadence (SG-16, SG-18)", "Owner", "Blocked on Search Console"),
+     "Topic selection and guide cadence (SG-16, SG-25)", "Owner", "Blocked on Search Console"),
 ]
 
 
@@ -1443,9 +1698,10 @@ def build_questions():
 
 <div class="panel">
   <h2>What this page is for</h2>
-  <p>{len(QUESTIONS)} questions, grouped by who can answer them. Owner account access, Amazon
-    support replies, seller clarifications on listing contradictions, and API eligibility each sit in
-    plain view instead of being replaced with assumptions.</p>
+  <p>{len(QUESTIONS)} questions. Most need the owner's account access or a yes/no decision; a few
+    need a seller to clarify a listing that contradicts itself, Amazon support to answer a policy
+    question, or a qualified adviser for the jurisdictional one. Each row names how to go and get the
+    answer, because a question you cannot close is not a plan.</p>
   <p class="small">If you only answer one thing, answer <strong>Q-04</strong> &mdash; whether the
     tagged links are being recorded. Everything about revenue depends on it, and nothing else
     does.</p>
@@ -1469,9 +1725,9 @@ def build_questions():
   <li><strong>The compliance rules are public and quoted.</strong> Amazon's Operating Agreement
     Section 5, Program Policies Participation Requirements §2(a), §2(b), §5, §6(t), §6(v), §6(w),
     §6(y), IP License §1, §2(e), §4 (Agent Terms), Commission Income Statement §2(d)/(e)/(g), FTC
-    disclosure guidance, and Google's outbound-link guidance are all linked with exact wording.</li>
+    disclosure guidance (S03, S23), and Google's outbound-link guidance (S04) are all linked with exact wording.</li>
   <li><strong>USDA publishes the minimum internal temperatures and calibration instructions</strong>
-    used in the thermometer guides (S22, S23), linked rather than paraphrased.</li>
+    used in the thermometer guides (S22, S24), linked rather than paraphrased.</li>
 </ul>
 
 <h2>What we deliberately do not know</h2>
@@ -1486,6 +1742,226 @@ def build_questions():
                       "made, with how to discover each missing fact and what it blocks.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Open Questions", "url": BASE + "questions.html"}))
+
+
+
+# ---- design & traffic brief
+def build_design_brief():
+    prompt_text = """You are designing the next version of ShopNow Kitchen, an independent publication-style
+Amazon affiliate website covering five specific products: three air fryers (Chefman 6 Quart Dual
+Basket, Chefman TurboFry 8 Qt, Emeril Lagasse 26QT French Door) and two meat thermometers
+(ThermoMaven 1 Sec instant-read, CHEF iQ Sense Gen3 wireless). Audience: US home cooks who want a
+confident answer to one question, not a catalog. Business goal: earn qualified clicks to Amazon
+through trust, never through pressure.
+
+Design like a small-batch food magazine that happens to sell via affiliate links, not like a
+generated content farm. Requirements:
+
+BRAND. Keep the name ShopNow Kitchen. Masthead with wordmark in a warm serif display face
+(Georgia, Iowan Old Style or similar) and body copy in a neutral humanist sans. Palette: charcoal
+ink, warm cream paper, one accent of paprika red, used only for links, price-adjacent details and
+the single primary call to action per view. Generous margins, a real baseline grid, 65 to 75
+characters per measure. No gradients, no glassmorphism, no stock-photo-style hero imagery.
+
+FRONT PAGE. In order: dated publication line and Associates disclosure strip; masthead; one-line
+editorial promise; hero with the single most useful question right now (for example, which air
+fryer fits a family of four); a seasonal spotlight module (Thanksgiving and holiday cooking in
+November and December); category rails for Air Fryers and Meat Thermometers as cards with original
+illustration; a latest-guides rail; a short list of what we will not print; footer with the full
+dashboard group.
+
+COMPONENTS. Product card: original illustration, listing-derived capacity or key stat, one
+trade-off sentence, a question it answers, and a tagged Special Link button labelled as a paid
+link. Comparison module: aligned rows, no star scores. Buy box: explicit question checklist the
+reader answers before clicking out. Disclosure label adjacent to every outbound button, never in a
+tooltip.
+
+TYPE AND TONE. Short declarative headlines. Second person. Sentences a person would say out loud.
+No exclamation marks, no superlatives without evidence, no fake urgency, no countdown timers.
+Never print prices, star ratings or review counts; those come only from Amazon-served links or the
+Creators API.
+
+ILLUSTRATION. Original SVG line-and-wash illustrations in a consistent style: air fryer, thermometer,
+basket, French doors, oven interior. Never product photos scraped from a listing, never Amazon
+imagery without the licence that comes with the Creators API.
+
+ACCESSIBILITY AND PERFORMANCE. WCAG AA contrast, visible focus states, semantic headings in order,
+alt text that describes the illustration, no layout shift, total page weight under one megabyte,
+no third-party fonts or trackers. Disclosure readable at 200 percent zoom.
+
+SEO AND STRUCTURED DATA. One canonical host, one h1 per page, JSON-LD (WebPage, Article on guides,
+FAQPage where the FAQ exists), sitemap and RSS regenerated on every build, Search Console-ready
+meta. Internal links favour depth: every guide links to two related guides and one category page.
+
+COMPLIANCE. Amazon Associates statement above the fold on every page; every outbound Amazon link
+rel=sponsored and nofollow and carrying the tag; FTC-clear disclosure next to each call to action;
+intended and observed ASIN fields kept separate; contradictions on a listing are printed, not
+smoothed over.
+
+FORBIDDEN. Fake countdowns, invented scarcity, fabricated expert quotes, fabricated hands-on
+testing claims, fabricated search-volume numbers, placeholder filler text, emoji bullets, and any
+phrase that reads like it was produced by filling in a template."""
+
+    cluster_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td><td>{esc(c)}</td><td>{esc(d)}</td><td>{esc(e)}</td></tr>" for a, b, c, d, e in [
+        ("A · Air fryer buying", "Basket or oven-style: what to compare first", "guides/basket-vs-oven.html", "Live", "Anchor guide, links to all three air fryer pages"),
+        ("A · Air fryer buying", "A no-hype checklist for comparing air fryer capacity", "guides/capacity-checklist.html", "Live", "Feeds compare.html"),
+        ("A · Air fryer buying", "How to assess cleanup and counter-space trade-offs", "guides/cleanup-counter-space.html", "Live", "Cross-links air fryer pages"),
+        ("A · Air fryer buying", "Air fryer for a small kitchen: three measurements", "guides/small-kitchen-air-fryer.html", "Live", "Captures apartment queries"),
+        ("A · Air fryer buying", "Basket or oven-style: which fits a family of four", "Not written", "Proposed", "Search Console may confirm or kill this title"),
+        ("B · Holiday and seasonal", "Air fryer at Thanksgiving: what actually fits", "guides/air-fryer-thanksgiving.html", "Live", "Seasonal spike, Nov 2026"),
+        ("B · Holiday and seasonal", "Turkey thermometer maths: the USDA minimums", "Not written", "Proposed", "USDA chart is already the source of record (S22)"),
+        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Black Friday is 2026-11-27; must not print prices (SG-13)"),
+        ("B · Holiday and seasonal", "Wireless or instant-read for a long smoker cook", "guides/instant-vs-wireless.html", "Live", "Holiday brisket and turkey season"),
+        ("C · Thermometer education", "How to read accuracy claims: plus-or-minus 0.5 and NIST", "guides/thermometer-accuracy.html", "Live", "Trust content, supports both thermometer pages"),
+        ("C · Thermometer education", "Is NIST certification on a listing a guarantee", "Not written", "Proposed", "Honest answer: it is a seller statement (FLG-035)"),
+        ("C · Thermometer education", "USDA doneness temperatures for the holiday bird", "Not written", "Proposed", "Reuses S22; strong internal-link target"),
+        ("D · Multi-function appliances", "Questions to ask before buying a multi-function appliance", "guides/multi-function-questions.html", "Live", "Umbrella guide for the oven category"),
+        ("D · Multi-function appliances", "Emeril 26QT: 24 or 25 presets, and why it matters less than fit", "Not written", "Proposed", "Turns FLG-021 into the article"),
+        ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "Not written", "Proposed", "Compares P-01 and P-03 without crowning a winner"),
+    ])
+
+    standards_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td></tr>" for a, b in [
+        ("Every claim traceable to a dated source", "The spec table links its source on every row; conflicts are printed verbatim."),
+        ("A named position or an honest blank", "No hands-on test is claimed anywhere; the review process is described on how-we-choose.html."),
+        ("Contradictions shown, not smoothed over", "P-02 lists both 24 and 25 presets; P-05 lists both 50 and 70 hours (FLG-008, FLG-021)."),
+        ("No invented numbers", "No search volume, no conversion rates, no commission figures; the ledger is empty by design."),
+        ("Questions as headlines", "Guides answer one buyer question each; the question came before the keyword."),
+        ("Real dates on everything", "Every page carries a last-verified date; re-verification is a scheduled pass, not a vibes check."),
+        ("Specific beats general", "'16.9 inches of depth plus door swing' beats 'spacious interior'."),
+        ("Trade-offs stated next to recommendations", "Every pick on the front page names what you give up."),
+        ("Disclosure as furniture, not fine print", "Associates statement above the fold on every page, repeated in the footer."),
+        ("One human editorial decision at the gate", "Automation drafts; the build gate and a human decide what ships (SG-12)."),
+    ])
+
+    body = f"""
+{breadcrumb([("Home", "index.html"), ("Design & Traffic Brief", None)])}
+<h1>Design &amp; Traffic Brief</h1>
+<p class="lede">Everything a designer &mdash; or a new prompt &mdash; needs to take this site from
+  verified and compliant to memorable, trustworthy and worth ranking. Nothing on this page
+  changes the site. It is a proposal, reviewed in the <a href="suggestions.html">Decision
+  Center</a> as SG-17.</p>
+
+<div class="panel">
+  <h2>How to use this brief in five minutes</h2>
+  <ol class="tight">
+    <li>Read <strong>The prompt</strong> below. If you agree with it, paste it into your design
+      tool of choice. If you do not, edit it there &mdash; it is written to be edited.</li>
+    <li>Pick <strong>two or three proposed topics</strong> from the cluster table, not twelve.</li>
+    <li>Rank <strong>SG-17</strong> in the Decision Center and export your ranking.</li>
+    <li>Anything shipped from this brief re-enters the build gate before publishing. No exceptions.</li>
+  </ol>
+</div>
+
+<h2>1. The prompt</h2>
+<p>Copy everything inside the box. It is a complete design brief for the next build of this site.</p>
+<pre class="promptbox">{esc(prompt_text)}</pre>
+
+<h2>2. Front page anatomy, in order</h2>
+<ol>
+  <li><strong>Utility strip</strong> — the Associates disclosure, one line, above everything.</li>
+  <li><strong>Masthead</strong> — wordmark, one primary nav group (Air Fryers, Meat Thermometers,
+    All products, Guides, Compare, How we choose), one search field.</li>
+  <li><strong>Editorial promise</strong> — one sentence naming who the site is for.</li>
+  <li><strong>Hero</strong> — the single most useful question of the week. Currently the family-of-four
+    air fryer question; swap seasonally.</li>
+  <li><strong>Seasonal spotlight</strong> — Thanksgiving and holiday cooking modules from mid-November
+    to end of December; New Year health angle from January.</li>
+  <li><strong>Category rails</strong> — Air Fryers and Meat Thermometers as illustrated card rails,
+    three cards each, each card naming a trade-off.</li>
+  <li><strong>Latest guides</strong> — four most recent, question-shaped.</li>
+  <li><strong>Refusals</strong> — "What we will never print", three bullets. This is the most
+    persuasive trust module on the page.</li>
+  <li><strong>Footer</strong> — the dashboard group: Decision Center, this brief, Open Questions,
+    Flagged for Review, Sources, Executive Summary, Campaign Ledger, About, Disclosure.</li>
+</ol>
+
+<h2>3. Organic traffic plan</h2>
+<p>Small sites win on question-shaped long-tail queries, internal links and consistency &mdash; not on
+  volume. Every topic below is tied to a product we already cover or a source we already cite.
+  <strong>Working titles are hypotheses, not claims of popularity.</strong> The order here is an
+  editorial guess; Search Console data (SG-10) is the only thing allowed to settle it.</p>
+
+<table class="clusters">
+  <caption>Topic clusters. "Live" means the guide exists today; "Proposed" means it is a candidate only.</caption>
+  <thead><tr><th scope="col">Cluster</th><th scope="col">Title (working)</th>
+    <th scope="col">Target</th><th scope="col">Status</th><th scope="col">Why it is here</th></tr></thead>
+  <tbody>{cluster_rows}</tbody>
+</table>
+
+<h3>Internal linking rules</h3>
+<ul>
+  <li>Every guide links down to at least one product page and across to at least two related guides.</li>
+  <li>Every product page links up to its category page and sideways to the compare table.</li>
+  <li>Category pages link only to live guides, never to proposed ones.</li>
+</ul>
+
+<h3>Findability checklist (mostly already live)</h3>
+<ul>
+  <li>One canonical host; canonical link on every page — <strong>done</strong> <a href="sources.html">(S04)</a>.</li>
+  <li>Sitemap regenerated and gated on every build — <strong>done</strong>.</li>
+  <li>RSS feed of guides — <strong>done</strong>, 8 items.</li>
+  <li>JSON-LD structured data on every page — <strong>done</strong>.</li>
+  <li>rel="sponsored nofollow" on every outbound product link — <strong>done and gated</strong>.</li>
+  <li>Search Console verification and sitemap submission — <strong>owner action, SG-10</strong>.</li>
+  <li>Custom domain — <strong>owner decision, SG-14</strong> (FLG-006).</li>
+</ul>
+
+<h3>Seasonal calendar</h3>
+<table>
+  <caption>Dates are calendar facts. No event on this page licenses a price, a sale claim or a countdown.</caption>
+  <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Lead time</th><th scope="col">What to do</th></tr></thead>
+  <tbody>
+    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td></tr>
+    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td></tr>
+    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td></tr>
+    <tr><td>2026-12-02</td><td>First week of Advent</td><td>First week of December</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td></tr>
+    <tr><td>2026-12-25</td><td>Christmas</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td></tr>
+    <tr><td>2027-01-02</td><td>New Year</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td></tr>
+    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td></tr>
+  </tbody>
+</table>
+
+<h2>4. The standards that keep this from reading as generated</h2>
+<table>
+  <caption>Ten reader-visible signals, agreed before any redesign.</caption>
+  <thead><tr><th scope="col">Standard</th><th scope="col">What it looks like on this site</th></tr></thead>
+  <tbody>{standards_rows}</tbody>
+</table>
+
+<h2>5. What this brief deliberately does not claim</h2>
+<ul>
+  <li>No keyword volume, difficulty or CPC figures. None have been measured (needs SG-10).</li>
+  <li>No promise that any topic ranks. Ranking is an outcome, not an input.</li>
+  <li>No hands-on testing claim for any product (FLG-032).</li>
+  <li>No commission rate or revenue forecast (Q-11; ledger is intentionally empty).</li>
+  <li>No suggestion that a product is "best" — this site recommends for fit, not in the abstract.</li>
+</ul>
+
+<h2>6. From brief to build: the mapping</h2>
+<table>
+  <caption>Where each part of this brief is already true, and where the gaps are.</caption>
+  <thead><tr><th scope="col">Brief element</th><th scope="col">State today</th><th scope="col">Reference</th></tr></thead>
+  <tbody>
+    <tr><td>Disclosure above the fold, repeated in footer</td><td>Live on every page; gate enforced</td><td>SG-04</td></tr>
+    <tr><td>Sponsored + nofollow on every outbound Amazon link</td><td>Live; gate enforced</td><td>SG-05, S04</td></tr>
+    <tr><td>Sitemap, RSS, canonical, JSON-LD</td><td>Live and gated</td><td>SG-08</td></tr>
+    <tr><td>Original illustration, no Amazon photography</td><td>Live; licence-safe</td><td>SG-09, FLG-007</td></tr>
+    <tr><td>Question-shaped guides with verdicts</td><td>8 live, 8 proposed above</td><td>SG-02</td></tr>
+    <tr><td>Weekly cadence chosen from queries</td><td>Blocked on Search Console</td><td>SG-16, SG-10, Q-09</td></tr>
+    <tr><td>Prices shown legally</td><td>Impossible until API access</td><td>SG-13, FLG-005</td></tr>
+    <tr><td>Parallel-session coordination</td><td>COORDINATION.md task board, active</td><td>Repo root</td></tr>
+  </tbody>
+</table>
+
+<p class="cta"><a class="btn" href="suggestions.html">Rank SG-17 in the Decision Center</a>
+  <a class="btn ghost" href="guides.html">Read the eight live guides</a></p>
+"""
+    BUILT.append(page("design-brief.html", f"Design & Traffic Brief — {SITE}",
+                      "A copy-paste design prompt, a topic-cluster traffic plan with a seasonal "
+                      "calendar, and the editorial standards checklist for a publication-grade "
+                      "affiliate site.",
+                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                                    "name": "Design & Traffic Brief", "url": BASE + "design-brief.html"}))
 
 
 # ---- flagged
@@ -1550,6 +2026,22 @@ def build_flagged():
                                     "name": "Flagged for Review", "url": BASE + "flagged.html"}))
 
 
+
+def changelog_rows():
+    """One row per corrected flag, newest flag id first, with the source it was re-read from."""
+    rows = ""
+    for f in sorted(FLAGS, key=lambda x: x["id"], reverse=True):
+        if f.get("severity") != "corrected":
+            continue
+        links = " ".join(
+            f'<a href="{source_url(sid)}" rel="sponsored nofollow">{esc(sid)}</a>'
+            for sid in f.get("links", []) if source_url(sid))
+        rows += (f'<tr><td class="nowrap">{TODAY}</td><td class="nowrap"><strong>{f["id"]}</strong></td>'
+                 f'<td>{esc(f["title"])}<br><span class="small">{esc(f["detail"])}</span></td>'
+                 f'<td class="src">{links or "&mdash;"}</td></tr>')
+    return rows or '<tr class="empty"><td colspan="4">No corrections recorded.</td></tr>'
+
+
 # ---- sources
 def build_sources():
     rows = "".join(
@@ -1580,6 +2072,16 @@ def build_sources():
   <thead><tr><th scope="col">ID</th><th scope="col">Source</th>
     <th scope="col">What it supports &amp; wording relied on</th><th scope="col">Read on</th></tr></thead>
   <tbody>{rows}</tbody>
+</table>
+
+<h2>What changed, and when</h2>
+<p>The corrections below are the ones a reader can see on this site. Each links to the flag that records
+it in full, including what the earlier version said.</p>
+<table class="changelog">
+  <caption>Corrections are dated and kept. Nothing on this site is quietly edited.</caption>
+  <thead><tr><th scope="col">Date</th><th scope="col">Flag</th><th scope="col">What changed</th>
+    <th scope="col">Source re-read</th></tr></thead>
+  <tbody>{changelog_rows()}</tbody>
 </table>
 
 <h2>How verification works</h2>
@@ -1650,16 +2152,16 @@ def build_exec():
 <ul>
   <li>Every product title, dimension, weight (where stated), wattage, temperature range and capacity
     on this site was read from the official listing and its Product information tables on {TODAY}.
-    Deep chunk inspection resolved previously blank weights (P-01 13.3 lb, P-03 12.8 lb), models
+    Deep chunk inspection verified previously blank weights (P-01 13.3 lb, P-03 12.8 lb), models
     (P-02 4-00675-02X-VN, P-04 HT07, P-05 CQ60-3C-Z1-E), temperatures (P-02 75&ndash;500 &deg;F, P-04
-    572 &deg;F), P-02 power (1700 W), and probe lengths (P-04 6.5 in, P-05 4.75 in).</li>
+    572 &deg;F), P-02 power (1700 W), and probe lengths (P-04 6.5 in, P-05 4.75 in) (FLG-040).</li>
   <li>All official policy sources &mdash; Operating Agreement Section 5 (S01), Program Policies
     Participation Requirements &sect;2(a)/(b), &sect;5, &sect;6(t)/(v)/(w)/(y), IP License &sect;1,
     &sect;2(e)/(h)/(i)/(k), &sect;4 Agent Terms, Commission Income Statement &sect;2(d)/(e)/(g) (S02),
-    FTC disclosure FAQ (S03), Google outbound-link qualification (S04), and Creators API / PA-API 5
-    notices (S20, S21) &mdash; are quoted in the <a href="sources.html">source register</a>.</li>
+    FTC disclosure guidance (S03, S23), Google outbound-link qualification (S04), and Creators API /
+    PA-API 5 notices (S20, S21) &mdash; are quoted in the <a href="sources.html">source register</a>.</li>
   <li>Food-safety temperatures and thermometer calibration guidance come from USDA FSIS charts (S22,
-    S23), not from product listings.</li>
+    S24), not from product listings.</li>
   <li>All five short links were fetched and their redirect targets observed separately from intent
     (including B0c8moW59 resolving to B0DHZTCNR5 on re-test while redirect instability stays under
     FLG-011).</li>
@@ -1676,7 +2178,7 @@ def build_exec():
   <li><strong>The link test.</strong> No tagged link has been clicked inside the enrolled account, so
     every product page still says PENDING TEST (FLG-004).</li>
   <li><strong>P-02 weight and warranty terms.</strong> Absent from the live listing HTML, so left
-    blank (FLG-022); an unverified Emeril weight figure from earlier editorial prose was removed.</li>
+    blank (FLG-022); an unverified Emeril weight figure from earlier editorial prose was removed (FLG-039).</li>
   <li><strong>Certification.</strong> NIST, NSF, and cETL appear on the listings. No certificate or
     test report has been seen (FLG-035).</li>
   <li><strong>Hands-on experience.</strong> None. Nothing on this site implies it was tested
@@ -1694,16 +2196,16 @@ def build_exec():
     <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in Features &amp; Specs, 1000 W in About this item</td></tr>
     <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in title/bullets, 6 liters in Measurements field</td></tr>
     <tr><td>FLG-008</td><td>CHEF iQ Sense</td><td>50 hours battery in About this item, 70 hours in earlier Product Description capture</td></tr>
-    <tr><td>FLG-019</td><td>CHEF iQ Sense</td><td>Two-year assurance in About this item vs 3 Year in Item details (prior register: 1-year)</td></tr>
+    <tr><td>FLG-038</td><td>CHEF iQ Sense</td><td>Two-year assurance in About this item vs 3 Year in Item details (prior register FLG-019)</td></tr>
   </tbody>
 </table>
 
 <h2>6. What would change the numbers</h2>
 <p>Two credentials, hosting for the collector, and one domain decision. Creators API access
-  (S20, S21) would make legal price and product-photo display possible (SG-13, SG-15, SG-17), which
+  (S20, S21) would make legal price and product-photo display possible (SG-13, SG-15, SG-24), which
   is the largest lever on conversion. Search Console verification would make query data available
-  (SG-10, SG-18), which is the only way to choose the next guide from evidence. Hosting the
-  shipped self-hosted analytics endpoint (<a href="measurement.html">SG-20</a>, FLG-010) enables
+  (SG-10, SG-25), which is the only way to choose the next guide from evidence. Hosting the
+  shipped self-hosted analytics endpoint (<a href="measurement.html">SG-26</a>, FLG-010) enables
   cross-visitor event counts without cookies, and a custom domain (SG-14, FLG-006) strengthens
   brand and indexation. Everything else on the <a href="suggestions.html">Decision Center</a> is
   shipped or blocked on owner account verification.</p>
@@ -1890,12 +2392,30 @@ def build_about():
   <a href="flagged.html">Flagged for Review</a> page has a source link and a suggested resolution,
   and corrections are dated rather than quietly applied.</p>
 
-<h2>Artwork and trademarks</h2>
-<p>All illustrations on this site are original editorial SVG artwork stored in
-  <code>assets/illustrations/</code>. No Amazon product photography is used anywhere, because the
-  licence for those images runs through Amazon's own terms (FLG-007). Product names, Amazon and
-  Amazon Associates are trademarks of Amazon.com, Inc. or its affiliates. This site is not endorsed
-  by Amazon, and nothing here implies that Amazon sponsors or approves it.</p>
+<h2>Imagery and trademarks</h2>
+<p>Two kinds of editorial imagery appear on this site, and both are explicitly labelled. The
+  photographs on the storefront pages were <strong>generated for this site</strong>: they show a
+  kitchen and appliances of no particular make, and every frame is captioned on the page so nobody
+  mistakes it for the specific product reviewed (FLG-036). Alongside them, original unbranded SVG
+  form-factor schematics stored in <code>assets/illustrations/</code> illustrate the three appliance
+  shapes covered here. No Amazon product photography is used anywhere (FLG-007).</p>
+<div class="diagram-row">
+  <figure class="diagram-card">
+    <img src="assets/illustrations/air-fryer.svg" width="720" height="320" alt="Editorial vector schematic of a basket air fryer — original illustration, not product photography">
+    <figcaption>Basket air fryer schematic (original vector artwork, not manufacturer photography).</figcaption>
+  </figure>
+  <figure class="diagram-card">
+    <img src="assets/illustrations/air-fryer-oven.svg" width="720" height="320" alt="Editorial vector schematic of an oven-style French-door air fryer — original illustration, not product photography">
+    <figcaption>Countertop air fryer oven schematic (original vector artwork).</figcaption>
+  </figure>
+  <figure class="diagram-card">
+    <img src="assets/illustrations/thermometer.svg" width="720" height="320" alt="Editorial vector schematic of a digital meat thermometer — original illustration, not product photography">
+    <figcaption>Meat thermometer schematic (original vector artwork).</figcaption>
+  </figure>
+</div>
+<p>Product names, Amazon and Amazon Associates are trademarks of Amazon.com, Inc. or its affiliates.
+  This site is not endorsed by Amazon, and nothing here implies that Amazon sponsors or approves
+  it.</p>
 
 <h2>Contact and change requests</h2>
 <p>There is no contact form and no email capture on this site. Change requests go through the
@@ -1961,11 +2481,11 @@ def build_platform():
         <code>compare.html</code>, JSON-LD (<code>Product</code>, <code>FAQPage</code>,
         <code>Article</code>, <code>BreadcrumbList</code>), <code>sitemap.xml</code>,
         <code>feed.xml</code>, and client search index.</td>
-      <td>Query-driven draft topics require Search Console verification (SG-10, Q-16). Special
+      <td>Query-driven draft topics require Search Console verification (SG-10, Q-20). Special
         Links and Program Content may not be used to train or fine-tune ML/LLM models without
         express prior written approval.</td>
       <td><a href="{source_url('S02')}" rel="sponsored nofollow">S02</a> &sect;5 &amp; IP &sect;1/&sect;2(e),
-        SG-02, SG-18</td>
+        SG-02, SG-25</td>
     </tr>
     <tr>
       <td><strong>4. Link management, Special Links &amp; anti-cloaking</strong></td>
@@ -1986,16 +2506,16 @@ def build_platform():
       <td>GitHub Pages hosts static assets only; cross-visitor collection waits until the owner
         deploys the Node/Cloudflare endpoint and sets <code>sn-collect-endpoint</code>. Conversion
         orders still require official Associates reports.</td>
-      <td><a href="{source_url('S03')}" rel="sponsored nofollow">S03</a>, FLG-010, SG-20, Q-08</td>
+      <td><a href="{source_url('S03')}" rel="sponsored nofollow">S03</a>, FLG-010, SG-26, Q-08</td>
     </tr>
     <tr>
       <td><strong>6. Performance optimization &amp; campaign scaling</strong></td>
       <td>Human-first <a href="suggestions.html">Decision Center</a> ranking and export workflow,
         Search Console &amp; RSS checklists (<a href="measurement.html">SG-10</a>), and auditability
         gates before traffic expansion.</td>
-      <td>Blocked on Q-04 (one-per-product Associates tracking test), Q-16 (Search Console query
+      <td>Blocked on Q-04 (one-per-product Associates tracking test), Q-20 (Search Console query
         metrics), and Q-05 (optional custom domain).</td>
-      <td>FLG-004, FLG-006, SG-07, SG-10, SG-16</td>
+      <td>FLG-004, FLG-006, SG-07, SG-10, SG-16, SG-24</td>
     </tr>
     <tr>
       <td><strong>7. Compliance &amp; disclosure automation</strong></td>
@@ -2025,9 +2545,10 @@ def build_platform():
     Commission Income Statement &sect;2(e)):</strong> Readers must always see clearly that they are
     clicking a paid link to Amazon. Redirecting links without user action can disqualify commissions.</li>
   <li><strong>No cached Amazon images or unrefreshed API prices (IP License &sect;2(h), &sect;2(i),
-    &sect;2(k)):</strong> Until Creators API credentials exist, this site uses original editorial SVG
-    illustrations in <code>assets/illustrations/</code> and leaves price/availability fields blank
-    by policy (FLG-005, FLG-007).</li>
+    &sect;2(k)):</strong> Until Creators API credentials exist, this site uses captioned generated
+    editorial imagery (<code>assets/photos/</code>, FLG-036) plus original SVG schematics
+    (<code>assets/illustrations/</code>) and leaves price/availability fields blank by policy
+    (FLG-005, FLG-007).</li>
 </ul>
 
 <h2>3. Deterministic 7-stage publishing pipeline</h2>
@@ -2108,13 +2629,13 @@ def build_measurement():
 <pre class="codebox"># Deploy the repository on Cloudflare Pages; /api/collect handles GET health and POST ingestion.
 # Bind optional KV namespace SN_EVENTS to store timestamped JSON event entries.</pre>
 
-<h2>4. Search Console &amp; reader-capture checklist (SG-10, Q-09, Q-16)</h2>
+<h2>4. Search Console &amp; reader-capture checklist (SG-10, Q-09, Q-20)</h2>
 <ol>
   <li><strong>RSS capture (live now):</strong> <a href="feed.xml">feed.xml</a> is valid RSS 2.0
     listing all eight buying guides and linked from every page head and footer.</li>
   <li><strong>Google Search Console (owner action):</strong> Verify property ownership for
     <code>{BASE}</code> (or custom domain under SG-14), submit <code>{BASE}sitemap.xml</code>, and
-    track impressions/CTR to choose new guide topics (SG-18).</li>
+    track impressions/CTR to choose new guide topics (SG-25).</li>
   <li><strong>Conversion truth stays in Associates Central:</strong> First-party click counts show
     reader exits, never Amazon purchases. Authorised Associates tracking reports go into
     <a href="campaign-ledger.html">campaign-ledger.html</a> once <a href="questions.html">Q-04</a>
@@ -2152,6 +2673,9 @@ def build_search():
                    "trade-offs", "page"),
                   ("How we choose", "how-we-choose.html",
                    "What verified means, what we have not tested, what we refuse to print", "page"),
+                  ("Design & Traffic Brief", "design-brief.html",
+                   "Copy-paste design prompt, a topic-cluster traffic plan, a seasonal calendar "
+                   "and the editorial standards checklist", "page"),
                   ("Decision Center", "suggestions.html",
                    "Proposals for this site, ranked before anything is built", "page"),
                   ("Open Questions", "questions.html",
@@ -2276,6 +2800,7 @@ def main():
     for g in GUIDES:
         build_guide(g)
     build_how()
+    build_design_brief()
     build_suggestions()
     build_questions()
     build_flagged()

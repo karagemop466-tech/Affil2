@@ -11,7 +11,10 @@
 <meta property="og:description" content="Privacy-preserving five-event measurement schema, self-hosted Node.js and Cloudflare Pages collectors, and Search Console onboarding steps.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/measurement.html">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://karagemop466-tech.github.io/Affil2/assets/photos/hero-kitchen.jpg">
+<meta property="og:image:alt" content="Illustrative kitchen image, generated for this site">
+<meta name="twitter:image" content="https://karagemop466-tech.github.io/Affil2/assets/photos/hero-kitchen.jpg">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Measurement and Collector", "url": "https://karagemop466-tech.github.io/Affil2/measurement.html"}</script>
@@ -22,10 +25,10 @@
   <div class="wrap mast">
     <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
     <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a></div></details></nav>
     <form class="search" action="search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
-      <input id="q" name="q" type="search" placeholder="Search air fryers, thermometers, guides" autocomplete="off">
+      <input id="q" name="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
       <button type="submit">Search</button>
     </form>
   </div>
@@ -72,13 +75,13 @@
 <pre class="codebox"># Deploy the repository on Cloudflare Pages; /api/collect handles GET health and POST ingestion.
 # Bind optional KV namespace SN_EVENTS to store timestamped JSON event entries.</pre>
 
-<h2>4. Search Console &amp; reader-capture checklist (SG-10, Q-09, Q-16)</h2>
+<h2>4. Search Console &amp; reader-capture checklist (SG-10, Q-09, Q-20)</h2>
 <ol>
   <li><strong>RSS capture (live now):</strong> <a href="feed.xml">feed.xml</a> is valid RSS 2.0
     listing all eight buying guides and linked from every page head and footer.</li>
   <li><strong>Google Search Console (owner action):</strong> Verify property ownership for
     <code>https://karagemop466-tech.github.io/Affil2/</code> (or custom domain under SG-14), submit <code>https://karagemop466-tech.github.io/Affil2/sitemap.xml</code>, and
-    track impressions/CTR to choose new guide topics (SG-18).</li>
+    track impressions/CTR to choose new guide topics (SG-25).</li>
   <li><strong>Conversion truth stays in Associates Central:</strong> First-party click counts show
     reader exits, never Amazon purchases. Authorised Associates tracking reports go into
     <a href="campaign-ledger.html">campaign-ledger.html</a> once <a href="questions.html">Q-04</a>
@@ -92,13 +95,14 @@
   <div class="wrap">
     <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
-    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
-      Inc. or its affiliates. This site is not endorsed by Amazon. Artwork is original illustration,
-      not product photography. Nothing here is a hands-on product test — every specification is read
-      from the official listing and dated. Last verified 2026-11-20.</p>
+      Inc. or its affiliates. This site is not endorsed by Amazon. Scenes and diagrams are illustrations,
+      not product photography, and not a picture of the item reviewed (FLG-036). Nothing here is a
+      hands-on product test — every specification is read from the official listing and dated.
+      Last verified 2026-11-20.</p>
     <p class="small">© 2026 ShopNow Kitchen. <a href="flagged.html">Flagged for Review</a> lists everything
       we could not verify.</p>
   </div>

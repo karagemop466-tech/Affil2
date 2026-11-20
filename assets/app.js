@@ -1,4 +1,4 @@
-// Privacy-preserving measurement, search, mobile navigation, ranking, and CSV export.
+// Privacy-preserving measurement, search, mobile navigation, pair compare, ranking, and CSV export.
 // Five events: page_view, outbound_click, guide_read, search, suggestion_rank.
 // No cookies, no third-party requests, no fingerprinting, and no raw search text logged.
 (function () {
@@ -57,6 +57,19 @@
       send(entry);
     }
 
+    function recordOutbound(pid) {
+      if (!pid) return;
+      log('outbound_click', { product: pid });
+      var c = {};
+      try { c = JSON.parse(localStorage.getItem('sn_clicks') || '{}'); } catch (_) { c = {}; }
+      c[pid] = (c[pid] || 0) + 1;
+      try { localStorage.setItem('sn_clicks', JSON.stringify(c)); } catch (_) {}
+      var el = document.getElementById('localClicks');
+      if (el) {
+        el.textContent = Object.values(c).reduce(function (x, y) { return x + y; }, 0);
+      }
+    }
+
     log('page_view');
     if (/\/guides\//.test(location.pathname)) log('guide_read');
 
@@ -77,19 +90,10 @@
       });
     }
 
-    // Outbound affiliate link clicks
+    // Outbound affiliate link clicks (supports static and dynamically rendered links)
     document.querySelectorAll('[data-outbound]').forEach(function (a) {
       a.addEventListener('click', function () {
-        var pid = a.getAttribute('data-outbound');
-        log('outbound_click', { product: pid });
-        var c = {};
-        try { c = JSON.parse(localStorage.getItem('sn_clicks') || '{}'); } catch (_) { c = {}; }
-        c[pid] = (c[pid] || 0) + 1;
-        try { localStorage.setItem('sn_clicks', JSON.stringify(c)); } catch (_) {}
-        var el = document.getElementById('localClicks');
-        if (el) {
-          el.textContent = Object.values(c).reduce(function (x, y) { return x + y; }, 0);
-        }
+        recordOutbound(a.getAttribute('data-outbound'));
       });
     });
 
@@ -242,6 +246,49 @@
           }
           runSearch(qVal, Boolean(qVal.trim()));
         });
+      }
+    }
+
+    // Two-at-a-time head-to-head compare view (compare.html)
+    var pairEl = document.getElementById('pairData');
+    if (pairEl) {
+      var pairData = {};
+      try { pairData = JSON.parse(pairEl.textContent || '{}'); } catch (_) { pairData = {}; }
+      var pairA = document.getElementById('pairA');
+      var pairB = document.getElementById('pairB');
+      var pairOut = document.getElementById('pairView');
+      if (pairA && pairB && pairOut) {
+        var renderPair = function () {
+          var idA = pairA.value;
+          var idB = pairB.value;
+          var A = pairData[idA];
+          var B = pairData[idB];
+          if (!A || !B) return;
+          if (idA === idB) {
+            pairOut.innerHTML = '<p class="small">Pick two different products.</p>';
+            return;
+          }
+          var rows = A.rows.map(function (r, i) {
+            var other = B.rows[i] ? B.rows[i][1] : '';
+            return '<tr><th scope="row">' + r[0] + '</th><td>' + r[1] + '</td><td>' + other + '</td></tr>';
+          }).join('');
+          pairOut.innerHTML = '<table class="compare pair"><caption>Same rows, same sources, two columns. ' +
+            'Blank-looking cells say why they are blank.</caption><thead><tr><th scope="col">Field</th>' +
+            '<th scope="col"><a href="' + A.url + '">' + A.name + '</a></th>' +
+            '<th scope="col"><a href="' + B.url + '">' + B.name + '</a></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+            '<p class="cta"><a class="btn" rel="sponsored nofollow" href="' + A.buy + '" data-outbound="' + idA + '">' +
+            'Check the first on Amazon<span class="btn-sub">paid link</span></a>' +
+            '<a class="btn ghost" rel="sponsored nofollow" href="' + B.buy + '" data-outbound="' + idB + '">' +
+            'Check the second<span class="btn-sub">paid link</span></a></p>';
+          pairOut.querySelectorAll('[data-outbound]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              recordOutbound(btn.getAttribute('data-outbound'));
+            });
+          });
+        };
+        pairA.addEventListener('change', renderPair);
+        pairB.addEventListener('change', renderPair);
+        renderPair();
       }
     }
 

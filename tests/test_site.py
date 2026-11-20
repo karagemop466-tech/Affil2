@@ -19,7 +19,7 @@ class SiteIntegrationTests(unittest.TestCase):
             [sys.executable, "scripts/build_site.py"],
             cwd=ROOT, capture_output=True, text=True, check=True,
         )
-        self.assertIn("built 31 pages", build_one.stdout)
+        self.assertIn("built 32 pages", build_one.stdout)
         snap_a = {
             p.relative_to(ROOT): p.read_text(encoding="utf-8")
             for p in sorted(ROOT.rglob("*.html")) if ".git" not in p.parts
@@ -55,7 +55,7 @@ class SiteIntegrationTests(unittest.TestCase):
         self.assertEqual(products["P-01"]["fields"]["capacity"]["st"], "conflict")
 
         self.assertEqual(products["P-02"]["fields"]["model"]["v"].split()[0], "4-00675-02X-VN")
-        self.assertEqual(products["P-02"]["fields"]["temperature"]["v"], "75–500 °F")
+        self.assertIn("75–500 °F", products["P-02"]["fields"]["temperature"]["v"])
         self.assertEqual(products["P-02"]["fields"]["power"]["v"], "120 volts / 1700 watts")
         self.assertIsNone(products["P-02"]["fields"]["weight"]["v"])
         self.assertEqual(products["P-02"]["fields"]["weight"]["st"], "unverified")
@@ -88,6 +88,8 @@ class SiteIntegrationTests(unittest.TestCase):
         sources_html = (ROOT / "sources.html").read_text(encoding="utf-8")
         self.assertNotIn("Ten sources", sources_html)
         self.assertIn("S23", sources_html)
+        self.assertIn("S24", sources_html)
+        self.assertTrue((ROOT / "design-brief.html").exists())
 
         sitemap = ET.fromstring((ROOT / "sitemap.xml").read_text(encoding="utf-8"))
         ns = "{http://www.sitemaps.org/schemas/sitemap/0.9}"

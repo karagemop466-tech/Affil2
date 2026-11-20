@@ -11,7 +11,10 @@
 <meta property="og:description" content="AI-powered affiliate platform blueprint: seven modules, what runs today, Creators API prerequisites, ML-training restrictions, and compliance gates.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/platform.html">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://karagemop466-tech.github.io/Affil2/assets/photos/hero-kitchen.jpg">
+<meta property="og:image:alt" content="Illustrative kitchen image, generated for this site">
+<meta name="twitter:image" content="https://karagemop466-tech.github.io/Affil2/assets/photos/hero-kitchen.jpg">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Platform Architecture", "url": "https://karagemop466-tech.github.io/Affil2/platform.html"}</script>
@@ -22,10 +25,10 @@
   <div class="wrap mast">
     <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
     <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a></div></details></nav>
     <form class="search" action="search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
-      <input id="q" name="q" type="search" placeholder="Search air fryers, thermometers, guides" autocomplete="off">
+      <input id="q" name="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
       <button type="submit">Search</button>
     </form>
   </div>
@@ -82,11 +85,11 @@
         <code>compare.html</code>, JSON-LD (<code>Product</code>, <code>FAQPage</code>,
         <code>Article</code>, <code>BreadcrumbList</code>), <code>sitemap.xml</code>,
         <code>feed.xml</code>, and client search index.</td>
-      <td>Query-driven draft topics require Search Console verification (SG-10, Q-16). Special
+      <td>Query-driven draft topics require Search Console verification (SG-10, Q-20). Special
         Links and Program Content may not be used to train or fine-tune ML/LLM models without
         express prior written approval.</td>
       <td><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="sponsored nofollow">S02</a> &sect;5 &amp; IP &sect;1/&sect;2(e),
-        SG-02, SG-18</td>
+        SG-02, SG-25</td>
     </tr>
     <tr>
       <td><strong>4. Link management, Special Links &amp; anti-cloaking</strong></td>
@@ -107,16 +110,16 @@
       <td>GitHub Pages hosts static assets only; cross-visitor collection waits until the owner
         deploys the Node/Cloudflare endpoint and sets <code>sn-collect-endpoint</code>. Conversion
         orders still require official Associates reports.</td>
-      <td><a href="https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking" rel="sponsored nofollow">S03</a>, FLG-010, SG-20, Q-08</td>
+      <td><a href="https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking" rel="sponsored nofollow">S03</a>, FLG-010, SG-26, Q-08</td>
     </tr>
     <tr>
       <td><strong>6. Performance optimization &amp; campaign scaling</strong></td>
       <td>Human-first <a href="suggestions.html">Decision Center</a> ranking and export workflow,
         Search Console &amp; RSS checklists (<a href="measurement.html">SG-10</a>), and auditability
         gates before traffic expansion.</td>
-      <td>Blocked on Q-04 (one-per-product Associates tracking test), Q-16 (Search Console query
+      <td>Blocked on Q-04 (one-per-product Associates tracking test), Q-20 (Search Console query
         metrics), and Q-05 (optional custom domain).</td>
-      <td>FLG-004, FLG-006, SG-07, SG-10, SG-16</td>
+      <td>FLG-004, FLG-006, SG-07, SG-10, SG-16, SG-24</td>
     </tr>
     <tr>
       <td><strong>7. Compliance &amp; disclosure automation</strong></td>
@@ -146,9 +149,10 @@
     Commission Income Statement &sect;2(e)):</strong> Readers must always see clearly that they are
     clicking a paid link to Amazon. Redirecting links without user action can disqualify commissions.</li>
   <li><strong>No cached Amazon images or unrefreshed API prices (IP License &sect;2(h), &sect;2(i),
-    &sect;2(k)):</strong> Until Creators API credentials exist, this site uses original editorial SVG
-    illustrations in <code>assets/illustrations/</code> and leaves price/availability fields blank
-    by policy (FLG-005, FLG-007).</li>
+    &sect;2(k)):</strong> Until Creators API credentials exist, this site uses captioned generated
+    editorial imagery (<code>assets/photos/</code>, FLG-036) plus original SVG schematics
+    (<code>assets/illustrations/</code>) and leaves price/availability fields blank by policy
+    (FLG-005, FLG-007).</li>
 </ul>
 
 <h2>3. Deterministic 7-stage publishing pipeline</h2>
@@ -176,13 +180,14 @@
   <div class="wrap">
     <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
-    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="platform.html">Platform Architecture</a> · <a href="measurement.html">Measurement &amp; Collector</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
-      Inc. or its affiliates. This site is not endorsed by Amazon. Artwork is original illustration,
-      not product photography. Nothing here is a hands-on product test — every specification is read
-      from the official listing and dated. Last verified 2026-11-20.</p>
+      Inc. or its affiliates. This site is not endorsed by Amazon. Scenes and diagrams are illustrations,
+      not product photography, and not a picture of the item reviewed (FLG-036). Nothing here is a
+      hands-on product test — every specification is read from the official listing and dated.
+      Last verified 2026-11-20.</p>
     <p class="small">© 2026 ShopNow Kitchen. <a href="flagged.html">Flagged for Review</a> lists everything
       we could not verify.</p>
   </div>

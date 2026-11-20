@@ -120,6 +120,13 @@
   },
   {
     "id": "S23",
+    "name": "FTC — Disclosures 101 for Social Media Influencers",
+    "url": "https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers",
+    "used_for": "Supports the placement rule this site follows: make sure people will see and understand the disclosure, place it so it is hard to miss, and do not bury it at the end of a page or anywhere that requires a click to reveal. Checked verbatim on 2026-11-20.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S24",
     "name": "USDA FSIS — Food Thermometers (Calibration & Use)",
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/food-thermometers",
     "used_for": "Official ice-water calibration test (immerse stem ≥2 inches in ice-water slurry for ≥30 seconds; calibrated thermometer reads 32 °F) and proper stem placement.",

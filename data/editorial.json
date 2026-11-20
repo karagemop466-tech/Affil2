@@ -7,7 +7,7 @@
     "faq": [
       [
         "What is the total capacity?",
-        "6 quarts, split into two independent 3-quart baskets, according to the listing title and bullets. The product-details Measurements field says 6 liters, which is about 6.3 quarts. Flagged as FLG-034."
+        "6 quarts, split into two independent 3-quart baskets, according to the listing title and bullets. The product-details Measurements field says 6 liters, which is about 6.3 US quarts. Flagged as FLG-034."
       ],
       [
         "Does it have a preheat function?",
@@ -179,7 +179,7 @@
       ],
       [
         "Is it dishwasher safe, and what is the warranty?",
-        "The listing says the probes are waterproof and dishwasher safe (hub care is unstated). On warranty, About this item states a two-year assurance while Item details Warranty Description says 3 Year (FLG-019)."
+        "The listing says the probes are waterproof and dishwasher safe (hub care is unstated). On warranty, About this item states a two-year assurance while Item details Warranty Description says 3 Year (FLG-038, FLG-019)."
       ]
     ],
     "evidence_note": "Prices, star ratings, review counts and 'bought in past month' figures were visible on the listings when read on 2026-11-20 but are deliberately NOT reproduced on this site. Amazon's Program Policies only allow a site to display price and availability if Amazon serves the link or the data comes via the Product Advertising / Creators API. This site does neither, so those fields stay blank here and readers are sent to the live listing. See FLG-005.",
@@ -198,7 +198,7 @@
       ],
       [
         "Do you need a warranty figure you can rely on?",
-        "The listing states two-year assurance in About this item and 3 Year in Item details (while an earlier register said 1-year). Flagged as FLG-019; confirm before relying on it."
+        "The listing states two-year assurance in About this item and 3 Year in Item details (while an earlier register said 1-year). Flagged as FLG-038 / FLG-019; confirm before relying on it."
       ]
     ]
   }

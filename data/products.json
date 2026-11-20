@@ -108,8 +108,8 @@
         "note": ""
       },
       "temperature": {
-        "v": "75–500 °F",
-        "src": "Product information — Features & Specs table (Min Temp 75 °F / Max Temp 500 °F, chunks 9–10)",
+        "v": "75–500 °F (Min Temperature Setting 75 °F, Max Temperature Setting 500 °F)",
+        "src": "Product information — Features & Specs table (chunks 9–10)",
         "st": "verified",
         "note": ""
       },
@@ -420,7 +420,7 @@
         "v": "Two-year assurance provided by CHEF iQ (About this item) vs 3 Year (Item details Warranty Description)",
         "src": "About this item (chunk 4) vs Product information — Item details Warranty Description (chunk 8)",
         "st": "conflict",
-        "note": "Same listing states two-year assurance in About this item and 3 Year in Item details (prior register said 1-year) (FLG-019)."
+        "note": "Same listing states two-year assurance in About this item and 3 Year in Item details (prior register said 1-year) (FLG-038, FLG-019)."
       },
       "care": {
         "v": "Waterproof, dishwasher-safe probes",

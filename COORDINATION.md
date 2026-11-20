@@ -344,28 +344,191 @@ protection can actually support.
 
 ---
 
-## Session `arena/9f19fe6b-affil2` — deep live verification, JS/collector completion, and platform blueprint (2026-11-20)
+## Session `82c875a9` — storefront front end (T-17)
 
-Branch `arena/9f19fe6b-affil2` (fast-forward synced with `origin/main` at `829398c` ahead of edits, preserving PRs #17–#19).
+Branch `arena/82c875a9-affil2`, base `1a19c24`. Claiming one task with a file scope that no other
+session holds; nothing in `main` is being rewritten.
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-17 | Storefront rebuild: editorial photography, front page that leads with products, store-style cards, CSS refresh | in progress | 82c875a9 | `assets/photos/*`, `assets/style.css`, `scripts/build_site.py`, `scripts/check_site.py`, `data/editorial.json` (annotations only), generated HTML, `COORDINATION.md` |
+
+Scope note: `data/products.json`, `data/sources.json` and `data/flags.json` are **read-only** for this
+session. Any new flag is appended to `data/flags.json` only if an existing one does not already cover
+the finding; no existing title or detail is modified. `data/editorial.json` gets image/season
+annotations only. Baseline before this session: `build_site.py` + `check_site.py` both clean,
+29 pages, ALL CHECKS PASS.
+
+### T-17 result — storefront rebuild (session `82c875a9`)
+
+| Field | Value |
+|---|---|
+| Pages rebuilt | 29 (all generated) |
+| Gate | `build_site.py` clean, `check_site.py` **ALL CHECKS PASS** — 29 pages, 5 products, 37 flags, 17 sources |
+| New gate rule | every generated photo must be captioned as illustration, carry alt text and intrinsic dimensions |
+| New flag | FLG-037 — on-site search was inert on `main`; the index existed but nothing read the query. Fixed and published. |
+| New proposal IDs | SG-17..SG-22 (front-page rotation, intent landing pages, change log, head-to-head view, editor decision, hands-on policy) |
+| New question IDs | Q-15..Q-18 (imagery approval, basis for the picks, one-sentence purpose, jurisdictional disclosure) |
+
+**Verification performed this session.** Re-fetched and re-read: the Amazon Associates Program Policies
+page (S02, "Updated: April 14, 2026"), FTC *Disclosures 101* (S03 supporting document — disclosure must
+be hard to miss, not buried at the end of a page or behind a click), Google *Qualify your outbound
+links* (S04, `rel="sponsored"`, multiple values allowed, last updated 2025-12-10), the USDA FSIS safe
+temperature chart (S22, last updated Apr 14 2025 — all ten rows still match `data/usda-temperatures.json`),
+and listings B0CDY277D3 and B08DKYBTPH, both of which still serve the titles recorded in the register.
+No register value was changed on the strength of this pass; nothing needed correcting.
+
+**Irregularity found, then resolved the other way round.** `guides/instant-vs-wireless.html` quoted the
+ThermoMaven's upper range as 572 °F while `data/products.json` marked that field `unverified`. Rather than
+delete the prose, the listing was re-read: the product-information table states `Upper Temperature Range
+572 °F`, so the guide was right and the register was stale. See the re-read below.
+
+**Files not touched.** `data/products.json`, `data/sources.json` read-only. `data/flags.json` appended only
+(FLG-036, FLG-037). No other session's work was modified or reverted.
+
+### Live-listing re-read (2026-11-20) — seven blanks filled, one prose claim withdrawn
+
+Triggered by the 572 °F question above, every product page was re-read in full rather than from a partial
+excerpt. The product-information tables carry values an earlier pass had never reached.
+
+| Product | Field | Value now published | Section named as source |
+|---|---|---|---|
+| P-02 Emeril 26QT | Model | 4-00675-02X-VN | Item details: Model Number / Part Number |
+| P-02 Emeril 26QT | Temperature | 75–500 °F | Features & Specs: Min 75 °F, Max 500 °F |
+| P-02 Emeril 26QT | Power | 120 V / 1700 W | Features & Specs: Output Wattage, Wattage, Voltage |
+| P-04 ThermoMaven | Model | HT07 | Item details: Model Name / Model / Part Number |
+| P-04 ThermoMaven | Upper temperature | 572 °F | Features & Specs: Upper Temperature Range |
+| P-05 CHEF iQ Sense | Model | CQ60-3C-Z1-E | Item details: Model / Part Number |
+| P-05 CHEF iQ Sense | Probe length | 4.75 in | Immersion Depth; Measurements: Item Length |
+
+Two adverse findings came out of the same pass and are published, not smoothed over:
+
+- **FLG-039.** Three guides stated weights — 26.5 lb, 12.8 lb, "around 13 pounds" — that no listing
+  carries. The prose contradicted the register, which had weight correctly marked unverified. Every
+  weight figure was removed from the guide copy and the register's blank now prints on the compare page
+  with its reason.
+- **FLG-038.** The CHEF iQ listing states a two-year assurance in About this item and a `Warranty
+  Description` of `3 Year` in Item details. Both are now printed as a conflict; the earlier register
+  record held only the two-year figure.
+
+Nothing was inferred. Weight stays blank for all five products because no listing states it, and the
+model numbers moved from blank to stated only because the section naming them was read directly.
+
+### Shipped in the same pass, so the Decision Center stays honest
+
+- **SG-20 (was: recommended).** A dated, reader-facing change log now sits on `sources.html`, generated
+  from every flag whose severity is `corrected`.
+- **SG-21 (was: recommended).** The compare page has a working two-at-a-time head-to-head: two selectors,
+  17 aligned rows, rendered from an embedded view of the same register, with both buy links tagged. The
+  gate now checks that data parses, that each of the five products is present, that every linked page
+  exists and that every buy link carries the Associates tag.
+- **SG-18 (partially).** The front page prints a dated issue line; the picks themselves are still static,
+  so rotation remains open (Q-16).
+- **S23 added.** FTC *Disclosures 101* is now in the source register and cited for disclosure placement.
+  It was fetched and quoted this session; it is official FTC material, not a third-party summary.
+
+### Link and build audit this session
+
+- `scripts/check_site.py`: 29 pages, 5 products, 40 flags, 18 sources — **ALL CHECKS PASS**.
+- Independent audit across all 29 pages: 0 broken internal links, 0 missing assets, 0 un-sponsored
+  amazon.com anchors.
+- `node --check assets/app.js`: clean. Search and pair-view scripts syntax-checked.
+- Every generated photograph is captioned, has alt text and intrinsic dimensions; the gate fails
+  otherwise.
+
+---
+
+## Session 5ecbe089 — measurement and publication integration
+T-17 | in progress | 5ecbe089 | COORDINATION.md, measurement/, assets/app.js, scripts/build_site.py and generated publication outputs, assets/feature.webp, analytics documentation. Integrate current main first; preserve existing verification records.
+Coordination append conflict resolved by retaining both session entries.
+Scope adjustment: PR #16 already owns the collector and platform proposal; do not duplicate or overwrite that work. This integration covers the publication shell, search and local event wiring, generated pages, assets/style.css and original illustrative scenes (feature.jpg, basket.jpg, probe.jpg).
+T-17 | done (publication integration); server-side analytics remains needs review (FLG-010, parallel PR #16). New front-page artwork illustrates cooking situations, not specific SKUs. No new specifications, trend claims, orders or ASIN confirmations. Search renders text nodes from the generated index; search event contains only result count. Reviewed Amazon's Special Link requirement at https://affiliate-program.amazon.com/help/operating/agreement (section 1); no account-level reporting access. Inherited listing evidence was preserved, not newly certified. Local generator + integrity gate: 29 pages, five products, 35 published flags, 17 registered sources; passed.
+Rebase integration: preserved concurrent buyer-facing copy from #19 under the new featured section heading; regenerated index rather than hand-editing it.
+
+Release: [PR #20](https://github.com/karagemop466-tech/Affil2/pull/20) merged to main as abc753d. GitHub Pages reported built for descendant 64a35e5; [deployment succeeded](https://github.com/karagemop466-tech/Affil2/actions/runs/44682594233). Confirmed the new cover is present in the deployed revision.
+
+### PRs opened and merged by this session
+
+| PR | Title | Result | Commit / deploy |
+|----|-------|--------|-----------------|
+| [#15](https://github.com/karagemop466-tech/Affil2/pull/15) | One generator over the merged register, plus a stricter compliance gate | merged | `eacaeca`, Pages built |
+| [#17](https://github.com/karagemop466-tech/Affil2/pull/17) | CI: a verify gate that regenerates and checks every page | merged, `Verify site` green | `1a19c24`, Pages built |
+| [#19](https://github.com/karagemop466-tech/Affil2/pull/19) | Copy: stop explaining the brief to shoppers | merged, green | `829398c`, Pages built |
+| [#21](https://github.com/karagemop466-tech/Affil2/pull/21) | Compare table: category-aware rows, and a gate rule against cross-row placeholders | merged, green | `64a35e5`, Pages built |
+| [#24](https://github.com/karagemop466-tech/Affil2/pull/24) | Fix a page that quoted 572 °F and called the same field unverified | merged, green | `2a4ffa8`, Pages built |
+
+Live: https://karagemop466-tech.github.io/Affil2/ — `pages build and deployment` reported
+`completed/success` for every one of these commits, and `Verify site` reported `completed/success`
+on the same SHA each time.
+
+### Three defects found by reading the live pages, not the local build
+
+Each of these passed the gate at the time it was published, which is why they are recorded here
+rather than quietly fixed.
+
+1. **A page contradicted itself.** `products/p04-thermomaven-1sec.html` left upper temperature blank
+   in the spec table and answered the same question in the FAQ with "572 °F". Fixed in PR #24, and
+   the gate now fails when a FAQ states a figure the register calls unverified or conflicting.
+2. **Placeholders leaked between categories.** The comparison table printed
+   "n/a, not a capacity appliance" in the weight and dimensions rows and "see battery row" in the
+   power row, pointing at a row that does not exist. Fixed in PR #21, with a gate rule against that
+   class of text.
+3. **The gate was not running in CI at all.** Recorded above, fixed in PR #17.
+
+Lesson for the next session: `python3 scripts/check_site.py` proves the markup is compliant, not that
+it reads correctly. Read at least one product page and `compare.html` on the live URL after deploying,
+with a cache-busting query string, because GitHub Pages will serve a cached older build for a while
+and it is easy to mistake that for your own bug.
+
+## Session `3fb8f29e` — claim
+
+> NOTE (renumbered): another session used T-17 for its measurement/publication integration (merged in PR #20). This session's task is therefore T-18.
+
+Branch `arena/3fb8f29e-affil2`. Base `1a19c24` (main, after PR #17). Task: independent re-verification pass over the five official listings and the policy sources, plus one new deliverable the owner asked for — a generated `design-brief.html` (design prompt pack + organic-traffic plan + editorial standards) wired into the Decision Center as proposal SG-17. Then: build, gate, PR, merge, Pages confirmation, and the record here.
+
+Scope: `scripts/build_site.py`, `scripts/check_site.py` (only if a new gate rule is needed), new generated page `design-brief.html`, `sitemap.xml`, `feed.xml`, `robots.txt`, `COORDINATION.md`, `README.md` (one row), generated HTML. No other session's open PR (#16, branch `arena/bdedd85e-affil2`) is touched. Shared register `data/products.json`, `data/sources.json` are read-only unless verification proves a value wrong; `data/flags.json` is append-only.
+
+T-18 | Re-verification + design & traffic brief + PR/merge/Pages record | in progress | 3fb8f29e | scripts/build_site.py, design-brief.html, sitemap.xml, feed.xml, robots.txt, COORDINATION.md, README.md
+
+## Session `3fb8f29e` — T-18 completion record
+
+T-18 (renumbered from T-17; session 5ecbe089 used T-17 for its measurement/publication integration, merged as PR #20). Base `1a19c24`; rebased through `2a4ffa8` (PRs #19–#24 landed mid-flight).
+
+What shipped in [PR #26](https://github.com/karagemop466-tech/Affil2/pull/26):
+
+- New generated page `design-brief.html` — the Design & Traffic Brief: a copy-paste design prompt (brand, front-page anatomy, components, type and tone, illustration, accessibility, SEO/structured data, compliance, forbidden patterns); a 15-topic cluster plan labelled as hypotheses; a 2026-11-26 → 2027-02-14 seasonal calendar; a ten-point "not AI slop" editorial standards checklist; an explicit "what this brief does not claim" section; a brief-element-to-live-state mapping table.
+- SG-17 added to the Decision Center as "Adopt the Design & Traffic Brief as the next build step" (status: Not started — recommended for approval). It is linked from the footer dashboard group on all 30 pages, from the sitemap and from the on-site search index.
+- Docs reconciled: README start-here table (17 proposals, 35 flags); `EXECUTIVE-SUMMARY.md` gained a dated re-verification log and its never-registered SG-17..SG-20 / Q-15..Q-16 IDs were renumbered (live SG-17 = the brief; UF-1/UF-2 hold the leftover ideas).
+
+Independent re-verification (2026-11-20, all fetched live this session; full table in the PR body): all five official listings re-read line by line — titles, breadcrumbs, capacity, temperature ranges, wattage, dimensions, warranty, presets, probes, sensors, battery wording, included components — **all match the register**; the known listing contradictions (FLG-008, FLG-017, FLG-018, FLG-021, FLG-034) reproduce exactly as flagged. USDA FSIS chart, Google qualify-outbound-links, Associates Program Policies (updated 2026-04-14), PA-API 5 deprecation notice and the FTC Endorsement Guides FAQ were all re-fetched and match what the site cites. **No register corrections were required.**
+
+Merge: `gh pr merge 26 --merge` → merge commit `c021fb0`. GitHub Pages deploy run `44683183551` → **success** (site serves design-brief.html, confirmed live). "Verify site" run on the merge commit `44683184399` → **success**.
+
+Process notes: two rebases onto a fast-moving main; conflicts in COORDINATION.md, assets/style.css and generated pages resolved by keeping both sides and regenerating from the merged generator — no hand-edited HTML; committed pages re-verified byte-identical to generator output before push. One `git push --force-with-lease` (this branch only; lease checked). Open and untouched: PR #16 (analytics collector, needs review/owner decision), FLG-001..FLG-035 (all published, none blocks).
+
+---
+
+## Session `arena/9f19fe6b-affil2` — deep live verification, collector stack, and platform blueprint (2026-11-20)
+
+Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`63cb1fb`, preserving PRs #17–#30 including `design-brief.html`, storefront photo cards, two-at-a-time compare, `SG-17..SG-23`, `Q-15..Q-18`, `FLG-036..FLG-040`, and `S23`).
 
 ### Live verification performed
 
-- Re-fetched all five `link.amazon/*` short links: all five resolved cleanly on attempt 1 (`B04G1MEwY -> B0CDY277D3`, `B02NbDxp3 -> B09B7SB46R`, `B00hJ57DV -> B08DKYBTPH`, `B0c8moW59 -> B0DHZTCNR5`, `B0f3GKalj -> B0DZFD6R9Z`). Intermittent redirect instability stays tracked under `FLG-011` and `FLG-012` is updated accordingly.
+- Re-fetched all five `link.amazon/*` short links: all five resolved cleanly on attempt 1 (`B04G1MEwY -> B0CDY277D3`, `B02NbDxp3 -> B09B7SB46R`, `B00hJ57DV -> B08DKYBTPH`, `B0c8moW59 -> B0DHZTCNR5`, `B0f3GKalj -> B0DZFD6R9Z`). Intermittent redirect instability stays tracked under `FLG-011` and `FLG-012` records the checkpoint-then-reproduced history.
 - Audited deep `Product information` tables (`Features & Specs`, `Measurements`, `Item details`, `Warranty & Support`) across all five live `/dp/` listings:
-  - Verified previously unconfirmed fields: P-01 weight `13.3 pounds`; P-02 model `4-00675-02X-VN`, temperature `75–500 °F`, power `120 volts / 1700 watts`; P-03 weight `12.8 pounds`; P-04 model `HT07`, upper temperature `572 °F`, length/depth `6.5 inches`; P-05 model `CQ60-3C-Z1-E`, probe length `4.75 inches`.
-  - Confirmed live listing conflicts (`st: "conflict"`): P-03 power (`1700 W` in Features & Specs vs `1000 W` in About this item, `FLG-017`) and P-05 warranty (`two-year assurance` in About this item vs `3 Year` in Item details, `FLG-019`).
-  - Confirmed P-02 weight is absent from the live listing HTML (`FLG-022`); kept `weight: null` and removed the unverified Emeril weight figure from `data/editorial.json` and `GUIDES`.
-- Read Amazon Operating Agreement §5, Program Policies (chunks 0–9: Commission Income Statement §2(d)/(e)/(g), Participation Requirements §2(a)/(b), §5 ML restriction, §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), and §4 Agent Terms), Creators API onboarding (`S20`), PA-API 5 deprecation (`S21`), FTC Endorsement Guides FAQ (`S03`), Google outbound links (`S04`), and USDA FSIS temperature/calibration guides (`S22`, `S23`).
+  - Verified P-01 weight `13.3 pounds` and P-03 weight `12.8 pounds` directly from their `Measurements` tables; confirmed P-02, P-04, and P-05 omit item weight (`FLG-022`, `FLG-039`).
+  - Confirmed P-02 model `4-00675-02X-VN` (conflict vs earlier `4-00675-02`, `FLG-009`), temperature `75–500 °F`, power `120 volts / 1700 watts`, P-03 power conflict (`1700 W` in Features & Specs vs `1000 W` in About this item, `FLG-017`), P-04 model `HT07` / `572 °F` / `6.5 in` / `Wipe Clean`, and P-05 model `CQ60-3C-Z1-E` / `4.75 in` / warranty conflict (`two-year` vs `3 Year`, `FLG-038`, `FLG-019`).
+- Read Amazon Operating Agreement §5, Program Policies (chunks 0–9: Commission Income §2(d)/(e)/(g), Participation Requirements §2(a)/(b), §5 ML restriction, §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), and §4 Agent Terms), Creators API onboarding (`S20`), PA-API 5 deprecation (`S21`), FTC guidance (`S03`, `S23`), Google outbound links (`S04`), and USDA FSIS temperature/calibration guides (`S22`, `S24`).
 
 ### Code, data, and gate additions
 
-- Fixed `scripts/build_site.py`: `build_sources()` 4-column table alignment; removed `normalise()` fallback masking `observed: null`; rendered existing `assets/illustrations/*.svg` editorial artwork (fixing orphaned files); remapped stale flag references in `data/editorial.json`, `GUIDES`, and `QUESTIONS`; reconciled `SG-17..SG-20` and `Q-15..Q-16` across `suggestions.html`, `questions.html`, and `EXECUTIVE-SUMMARY.md`; added `platform.html` (AI affiliate architecture & compliance matrix) and `measurement.html` (telemetry schema & Search Console guide).
-- Fixed `assets/app.js` and added self-hosted measurement endpoints: implemented client search (`search.html`), mobile `.navtoggle`, `#exportEvents` CSV download, RFC-4180 CSV escaping, and schema-validated `send()` transport paired with `data/events.json`, `analytics/server.js`, and `functions/api/collect.js`.
-- Strengthened `scripts/check_site.py` (HTML table column symmetry, unverified weight claim guard, non-orphaned valid SVGs, `og:url` verification, editorial flag checks, `events.json` & `app.js` checks) and added `tests/test_site.py` + `tests/test_collector.js` wired into `.github/workflows/pages.yml`.
+- Merged and extended `scripts/build_site.py`: kept `origin/main`'s storefront (`design-brief.html`, captioned `assets/photos/`, `pairCompare`, `sources.html` changelog) alongside `platform.html` (`SG-24`), `measurement.html` (`SG-26`), `build_sources()` 4-column table alignment, `normalise()` separation of `observed` vs `intended`, vector schematic gallery in `about.html` (`assets/illustrations/*.svg`), and reconciled `SG-01..SG-26` + `Q-01..Q-20`.
+- Hardened `assets/app.js` and added self-hosted collector endpoints: unified DOM-safe `search.html` engine, mobile `.navtoggle` + `Escape`, two-at-a-time `pairCompare` with real product-ID click tracking, `#exportEvents` + RFC-4180 CSV escaping, and schema-validated `send()` transport backed by `data/events.json`, `analytics/server.js`, and `functions/api/collect.js`.
+- Hardened `scripts/check_site.py` (added table `thead`/`tbody` column symmetry, unverified `26.5 lb` guard, non-orphaned valid SVGs, `og:url` verification, editorial flag checks, `events.json` & `app.js` contract checks alongside `origin/main`'s photo caption & `pairData` checks) and added `tests/test_site.py` + `tests/test_collector.js` wired into `.github/workflows/pages.yml`.
 
 ### Gate and tests
 
-- `python3 scripts/build_site.py`: `built 31 pages` (idempotent across consecutive runs).
-- `python3 scripts/check_site.py`: `checked 31 pages, 5 product records, 35 flags, 18 sources — ALL CHECKS PASS`.
-- `python3 -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
+- `python3 -B scripts/build_site.py`: `built 32 pages` (idempotent across consecutive runs).
+- `python3 -B scripts/check_site.py`: `checked 32 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`.
+- `python3 -B -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
 - `node tests/test_collector.js`: `ALL JS COLLECTOR AND CLIENT TESTS PASS`.

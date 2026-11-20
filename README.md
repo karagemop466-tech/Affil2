@@ -2,7 +2,7 @@
 
 A static, publication-style Amazon affiliate site covering five submitted products: three air
 fryers and two meat thermometers. Specifications are read from the official Amazon listings (including
-the deep `Product information` tables), dated and linked. Contradictions between listing fields are
+deep `Product information` tables), dated and linked. Contradictions between listing fields are
 printed rather than smoothed over. Prices, star ratings and review counts are deliberately excluded
 (Program Policies §2(b), §6(t)).
 
@@ -13,17 +13,18 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | If you want | Read |
 |---|---|
 | The short version | `EXECUTIVE-SUMMARY.md` |
-| What to decide next | `suggestions.html` — Decision Center, 20 proposals, rankable |
-| What is still unanswered | `questions.html` — Open Questions, 16 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 35 items |
-| Where every fact came from | `sources.html` — Source Register, 18 official sources |
+| What to decide next | `suggestions.html` — Decision Center, 26 proposals, rankable |
+| The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
+| What is still unanswered | `questions.html` — Open Questions, 20 rows |
+| What could not be verified | `flagged.html` — Flagged for Review, 40 flags, every one sourced |
+| Where every fact came from | `sources.html` — Source Register, 19 official sources + dated changelog |
 | AI platform blueprint & gates | `platform.html` — 7-module architecture & Creators API / ML policy limits |
 | Telemetry & collector guide | `measurement.html` — 5-event privacy schema & Search Console checklist |
 | How the site is built | `scripts/build_site.py` |
 
 ## Rebuild and check
 
-    python3 scripts/build_site.py                          # writes 31 pages, sitemap.xml, feed.xml, robots.txt
+    python3 scripts/build_site.py                          # writes 32 pages, sitemap.xml, feed.xml, robots.txt
     python3 scripts/check_site.py                          # compliance and integrity gate; exits 1 on any problem
     python3 -m unittest discover -s tests -p "test_*.py" -v
     node tests/test_collector.js                           # collector server, Cloudflare function & client DOM tests
@@ -38,13 +39,14 @@ generator output, if the gate fails, or if the unit/collector tests fail.
 |---|---|
 | `data/products.json` | the shared product register: titles, field values, provenance, status |
 | `data/editorial.json` | this site's voice: headlines, best-for, trade-offs, FAQ |
-| `data/sources.json` | 18 official sources with what each supports and the date checked |
-| `data/flags.json` | 35 flags: severity, detail, owner status, source links |
+| `data/sources.json` | 19 official sources (`S01`–`S04`, `S10`–`S24`) with what each supports and date checked |
+| `data/flags.json` | 40 flags (`FLG-001`–`FLG-040`): severity, detail, owner status, source links |
 | `data/events.json` | canonical 5-event privacy-preserving measurement schema and forbidden fields |
 | `data/reverification-2026-11-20.json` | attempt-by-attempt record of the short-link and deep-table tests |
-| `assets/style.css` | storefront stylesheet |
-| `assets/app.js` | five measured events, client search (`search.html`), mobile nav toggle, ranking, CSV export, `send()` transport |
-| `assets/illustrations/` | 3 original editorial SVG illustrations (not product photography) |
+| `assets/style.css` | storefront stylesheet, including photo-card and diagram styles |
+| `assets/photos/` | generated illustrative storefront scenes, captioned on every page that uses them (FLG-036) |
+| `assets/illustrations/` | 3 original editorial SVG schematics (`air-fryer.svg`, `air-fryer-oven.svg`, `thermometer.svg`) |
+| `assets/app.js` | five measured events, client search (`search.html`), pair compare (`compare.html`), mobile nav toggle, ranking, CSV export, gated `send()` |
 | `analytics/server.js` | zero-dependency Node.js self-hosted collector (`GET`/`POST /api/collect`) |
 | `functions/api/collect.js` | drop-in Cloudflare Pages Function collector matching `data/events.json` |
 | `scripts/` | single-source generator (`build_site.py`) and compliance gate (`check_site.py`) |
@@ -59,8 +61,9 @@ verification shows an inaccuracy or newly confirmed value.
 - The Amazon Associates statement appears twice on every page, the first time above `<main>`.
 - Every `amazon.com` link carries `rel="sponsored nofollow"`; every outbound product link carries the
   tracking ID (`shopnow047c-20`).
-- No `$` amount, star rating, review count, or unverified `26.5 lb` claim anywhere.
+- No `$` amount, star rating, review count, cross-row placeholder, or unverified `26.5 lb` claim anywhere.
 - No broken internal links, no missing assets, no orphaned SVG illustrations, no root-relative links.
+- Every generated photo (`assets/photos/`) has an explicit editorial illustration caption, alt text, and intrinsic dimensions.
 - Every `<table>` with `<thead>` matches column counts across all `<tbody>` rows.
 - Every page has one `<h1>`, canonical & `og:url` matching its path, valid JSON-LD, and an entry in
   `sitemap.xml`; `feed.xml` parses and its items exist.
