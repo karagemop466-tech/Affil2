@@ -341,6 +341,7 @@ It does not deploy, on purpose. This repository's Pages site is configured as **
 Given that the branch builder publishes whatever lands on `main`, the gate cannot block a merge by
 itself; it makes a breakage loud and immediate instead, which is what a repository without branch
 protection can actually support.
+
 ---
 
 ## Session `82c875a9` — storefront front end (T-17)
@@ -504,6 +505,8 @@ Independent re-verification (2026-11-20, all fetched live this session; full tab
 Merge: `gh pr merge 26 --merge` → merge commit `c021fb0`. GitHub Pages deploy run `44683183551` → **success** (site serves design-brief.html, confirmed live). "Verify site" run on the merge commit `44683184399` → **success**.
 
 Process notes: two rebases onto a fast-moving main; conflicts in COORDINATION.md, assets/style.css and generated pages resolved by keeping both sides and regenerating from the merged generator — no hand-edited HTML; committed pages re-verified byte-identical to generator output before push. One `git push --force-with-lease` (this branch only; lease checked). Open and untouched: PR #16 (analytics collector, needs review/owner decision), FLG-001..FLG-035 (all published, none blocks).
+
+---
 
 ## Session 42617e35 — independent re-verification, polish pass, and merge reconciliation
 
@@ -744,3 +747,29 @@ Auto-merged without conflict; outputs regenerated. Register rows for this sessio
 - **Gate added:** `check_site.py` fails on named inputs inside `role="search"` forms, on `URLSearchParams(location.search)` or `get('q')` query reading in `assets/app.js`, on a missing session-storage handoff or disclosure wording, and on the stale no-server claim. Upstream image-caption, no-invented-weight and pair-view gates are retained alongside these rules.
 - **Verification (after rebasing through PRs #22/#33/#36):** generator idempotent across consecutive runs; `python3 scripts/check_site.py` -> `checked 31 pages, 5 product records, 40 flags, 18 sources / ALL CHECKS PASS`; `node --check assets/app.js`; feed.xml and sitemap.xml parse; `git diff --check`. Node VM smoke: built-in search stores whitespace-normalized words in session storage, navigates with an unparameterized URL, hostile query strings render only through value/textContent, matching searches log a numeric result count with no query field, and the one-session handoff clears. No external source pages fetched; no product/source/flag facts changed. Scope stayed inside T-19: the collector proposal (#16) is untouched; the merged polish/content work (#22/#36) is preserved and regenerated on top of.
 
+---
+
+## Session `arena/9f19fe6b-affil2` — deep live verification, collector stack, and platform blueprint (2026-11-20)
+
+Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`0b509ab`, preserving PRs #17–#37 including `design-brief.html`, storefront photo cards, two-at-a-time compare, `guides/first-week-air-fryer.html`, privacy-preserving `sessionStorage` search handoff, `SG-17..SG-30`, `Q-15..Q-18`, `FLG-036..FLG-040`, and `S23`).
+
+### Live verification performed
+
+- Re-fetched all five `link.amazon/*` short links: all five resolved cleanly on attempt 1 (`B04G1MEwY -> B0CDY277D3`, `B02NbDxp3 -> B09B7SB46R`, `B00hJ57DV -> B08DKYBTPH`, `B0c8moW59 -> B0DHZTCNR5`, `B0f3GKalj -> B0DZFD6R9Z`). Intermittent redirect instability stays tracked under `FLG-011` and `FLG-012` records the checkpoint-then-reproduced history.
+- Audited deep `Product information` tables (`Features & Specs`, `Measurements`, `Item details`, `Warranty & Support`) across all five live `/dp/` listings:
+  - Verified P-01 weight `13.3 pounds` and P-03 weight `12.8 pounds` directly from their `Measurements` tables; confirmed P-02, P-04, and P-05 omit item weight (`FLG-022`, `FLG-039`).
+  - Confirmed P-02 model `4-00675-02X-VN` (conflict vs earlier `4-00675-02`, `FLG-009`), temperature `75–500 °F`, power `120 volts / 1700 watts`, P-03 power conflict (`1700 W` in Features & Specs vs `1000 W` in About this item, `FLG-017`), P-04 model `HT07` / `572 °F` / `6.5 in` / `Wipe Clean`, and P-05 model `CQ60-3C-Z1-E` / `4.75 in` / warranty conflict (`two-year` vs `3 Year`, `FLG-038`, `FLG-019`).
+- Read Amazon Operating Agreement §5, Program Policies (chunks 0–9: Commission Income §2(d)/(e)/(g), Participation Requirements §2(a)/(b), §5 ML restriction, §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), and §4 Agent Terms), Creators API onboarding (`S20`), PA-API 5 deprecation (`S21`), FTC guidance (`S03`, `S23`), Google outbound links (`S04`), and USDA FSIS temperature/calibration guides (`S22`, `S24`).
+
+### Code, data, and gate additions
+
+- Merged and extended `scripts/build_site.py`: kept `origin/main`'s storefront (`design-brief.html`, captioned `assets/photos/`, `pairCompare`, `guides/first-week-air-fryer.html`, `sources.html` changelog) alongside `platform.html` (`SG-31`), `measurement.html` (`SG-25`), `build_sources()` 4-column table alignment, `normalise()` separation of `observed` vs `intended`, vector schematic gallery in `about.html` (`assets/illustrations/*.svg`), and reconciled `SG-01..SG-32` + `Q-01..Q-20`.
+- Hardened `assets/app.js` and added self-hosted collector endpoints: unified DOM-safe `search.html` engine, mobile `.navtoggle` + `Escape`, two-at-a-time `pairCompare` with real product-ID click tracking, `#exportEvents` + RFC-4180 CSV escaping, and schema-validated `send()` transport backed by `data/events.json`, `analytics/server.js`, and `functions/api/collect.js`.
+- Hardened `scripts/check_site.py` (added table `thead`/`tbody` column symmetry, verified-weight guard against `data/products.json`, non-orphaned valid SVGs, `og:url` verification, editorial flag checks, `events.json` & `app.js` contract checks alongside `origin/main`'s photo caption & `pairData` checks) and added `tests/test_site.py` + `tests/test_collector.js` wired into `.github/workflows/pages.yml`.
+
+### Gate and tests
+
+- `python3 -B scripts/build_site.py`: `built 33 pages` (idempotent across consecutive runs).
+- `python3 -B scripts/check_site.py`: `checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`.
+- `python3 -B -m unittest discover -s tests -p "test_*.py" -v`: 3 tests OK.
+- `node tests/test_collector.js`: `ALL JS COLLECTOR AND CLIENT TESTS PASS`.

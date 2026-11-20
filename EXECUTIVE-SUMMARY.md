@@ -1,10 +1,16 @@
-# Executive Summary — ShopNow Kitchen (Session arena/436f4dbe-affil2)
+# Executive Summary — ShopNow Kitchen (Verified Update — Session arena/9f19fe6b-affil2)
 
 Date 2026-11-20 · Tracking ID in use `shopnow047c-20` (issuance unverified, FLG-002)
 Live site https://karagemop466-tech.github.io/Affil2/ · Full version with source links: `executive-summary.html`
 
 ## What this is
-A static publication-style Amazon affiliate site covering five submitted products in two categories: three air fryers and two meat thermometers. Every specification is read from the official Amazon listing, dated and linked. Where two parts of one listing disagree, both figures are printed and the disagreement is flagged. No price, star rating, review count or best-seller rank is reproduced, because Amazon's Program Policies 2(b) and 6(t) only permit that when Amazon serves the link or the data comes through the Product Advertising / Creators API.
+A static publication-style Amazon affiliate site covering five submitted products in two categories:
+three air fryers and two meat thermometers across 33 generated HTML pages (including 9 buying guides). Every specification is read
+from the official Amazon listing (including deep `Product information` tables), dated and linked.
+Where two parts of one listing disagree, both figures are printed and the disagreement is flagged.
+No price, star rating, review count or best-seller rank is reproduced, because Amazon's Program
+Policies Participation Requirements §2(b) and §6(t) only permit that when Amazon serves the link or
+the data comes through the Product Advertising / Creators API.
 
 ## The five products, as observed on 2026-11-20
 | ID | Submitted link | Observed ASIN | Official listing |
@@ -15,130 +21,93 @@ A static publication-style Amazon affiliate site covering five submitted product
 | P-04 | link.amazon/B0c8moW59 | B0DHZTCNR5 | https://www.amazon.com/dp/B0DHZTCNR5 |
 | P-05 | link.amazon/B0f3GKalj | B0DZFD6R9Z | https://www.amazon.com/dp/B0DZFD6R9Z |
 
-Four of the five short links resolved to a product page when followed. `B0c8moW59` returned a checkpoint page on every attempt (FLG-012). Redirects were not stable between visits (FLG-011), so each observed ASIN is a dated snapshot, not a permanent mapping.
+Earlier attempts on 2026-11-20 resolved four short links while `link.amazon/B0c8moW59` hit
+Amazon checkpoint/HTTP 500 pages four times (FLG-012). On follow-up re-test (`arena/9f19fe6b-affil2`,
+2026-11-20), all five short links resolved cleanly to their respective `/dp/<ASIN>` pages, including
+`B0c8moW59 -> B0DHZTCNR5`. Redirects can still behave inconsistently between visits (FLG-011), so each
+observed ASIN remains a dated snapshot rather than owner-confirmed intent (FLG-001).
 
-## Sources (official only)
+## Sources (19 official sources in `data/sources.json`)
 - S01 Operating Agreement §5 — https://affiliate-program.amazon.com/help/operating/agreement
-- S02 Program Policies §2(b), §6(t), §6(w), §6(y) — https://affiliate-program.amazon.com/help/operating/policies
+- S02 Program Policies (Commission Income §2(d)/(e)/(g), Participation §2(a)/(b), §5 ML restriction, §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), §4 Agent Terms) — https://affiliate-program.amazon.com/help/operating/policies
 - S03 FTC Endorsement Guides FAQ — https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking
 - S04 Google, Qualify your outbound links — https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links
-- S05–S09 the five listings, S10–S14 the supplied short links — all in `data/sources.json`
-- Food-safety temperatures in the thermometer guides come from the USDA FSIS chart, linked on the page
+- S10–S14 the five `/dp/` Amazon product listings; S15–S19 the five supplied `link.amazon` short links
+- S20 Amazon Creators API onboarding — https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api
+- S21 PA-API 5 deprecation notice — https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation
+- S22 USDA FSIS Safe Minimum Internal Temperature Chart; S23 FTC Disclosures 101; S24 USDA FSIS Food Thermometers calibration guide
 
-## What was wrong in the previous pass, and is now fixed
-| Flag | Was | Now |
-|------|-----|-----|
-| FLG-017 | P-03 wattage printed as 1700 W | 1000 W from About this item, 1700 W from the spec field, both shown |
-| FLG-019 | P-05 warranty printed as one year | two-year assurance, as the listing states |
-| FLG-020 | four product titles were paraphrased | exact listing titles, dated |
-| FLG-023 | the earlier log claimed a line-by-line check | re-checked; the claim is corrected in public |
-| FLG-024 | compare table shifted P-04/P-05 into wrong rows | aligned by field, generated from one register |
-| FLG-025 | RSS feed was not well-formed XML | parses, 8 items, checked by the gate |
-| FLG-026 | two Associates source URLs were dead | current policy pages, text checked |
-
-## Register fields re-read on 2026-11-20
-
-An earlier pass had marked several fields unverified because they were missing from a partial
-excerpt. Re-reading each official listing found them stated in the product-information tables, so they
-are now published with the section named as their source (FLG-040):
-
+## Register fields verified from deep Product information tables on 2026-11-20
 | Product | Field | Value now published | Where on the listing |
 |---|---|---|---|
-| P-02 Emeril 26QT | Model | 4-00675-02X-VN | Item details: Model Number / Part Number |
+| P-01 Chefman 6 Qt | Item Weight | 13.3 pounds | Product information — Measurements table |
+| P-02 Emeril 26QT | Model | 4-00675-02X-VN | Item details: Model Number / Part Number (conflict vs earlier `4-00675-02`, FLG-009) |
 | P-02 Emeril 26QT | Temperature | 75–500 °F | Features & Specs: Min 75 °F, Max 500 °F |
 | P-02 Emeril 26QT | Power | 120 V / 1700 W | Features & Specs: Output Wattage, Wattage, Voltage |
+| P-03 Chefman 8 Qt | Item Weight | 12.8 pounds | Product information — Measurements table |
+| P-03 Chefman 8 Qt | Power | 1700 W vs 1000 W | Features & Specs (`1700 W`) vs About this item (`1000 W`, FLG-017) |
 | P-04 ThermoMaven | Model | HT07 | Item details: Model Name / Model / Part Number |
-| P-04 ThermoMaven | Upper temperature | 572 °F | Features & Specs: Upper Temperature Range |
+| P-04 ThermoMaven | Upper temperature | 572 °F | Features & Specs: Upper Temperature Rating (also `6.5 in` depth, `Wipe Clean`) |
 | P-05 CHEF iQ Sense | Model | CQ60-3C-Z1-E | Item details: Model / Part Number |
 | P-05 CHEF iQ Sense | Probe length | 4.75 in | Immersion Depth; Measurements: Item Length |
+| P-05 CHEF iQ Sense | Warranty | 2-yr vs 3 Year | About this item (`two-year`) vs Item details (`3 Year`, FLG-038 / FLG-019) |
 
-Two things came out of the same pass and are published rather than quietly fixed. Three guides had
-stated weights (26.5 lb, 12.8 lb, "around 13 pounds") that no listing carries; those figures were
-removed and the removal is logged (FLG-039). And the CHEF iQ listing now shows a two-year assurance in
-one field and a 3 Year warranty description in another, so both are printed (FLG-038).
+An unverified Emeril (P-02) weight figure (`26.5 lb`) previously in three guides was purged because
+`B09B7SB46R` omits item weight (FLG-022, FLG-039), while `P-01` (`13.3 lb`) and `P-03` (`12.8 lb`)
+were confirmed directly in their `Measurements` tables.
 
-## Listing conflicts a buyer should see
+## Active listing conflicts published to buyers
 | Flag | Product | Contradiction |
 |------|---------|---------------|
-| FLG-008 | CHEF iQ Sense | 50 hours battery in About this item, 70 hours in Product Description |
-| FLG-009 | Emeril 26 QT | model number appears in more than one form; the item-details field now reads 4-00675-02X-VN |
-| FLG-038 | CHEF iQ Sense | two-year assurance in About this item, 3 Year warranty description in Item details |
-| FLG-018 | Chefman 8 Qt | 200–400 °F in About this item, 450 °F Hi-Fry in the title |
-| FLG-021 | Emeril 26 QT | 24 presets in the title, 25 in About this item |
-| FLG-034 | Chefman 6 Qt | 6 quarts in the title, 6 liters in the capacity field |
-| FLG-031 | Emeril 26 QT | six accessories in the title, seven in Configuration, six named |
+| FLG-008 | CHEF iQ Sense | 50 hours battery in About this item vs 70 hours in an earlier Product Description capture |
+| FLG-009 | Emeril 26 QT | `4-00675-02X-VN` in live Item details vs `4-00675-02` in an earlier capture |
+| FLG-017 | Chefman 8 Qt | `1700 W` in Features & Specs vs `1000 W` in About this item |
+| FLG-018 | Chefman 8 Qt | `400 °F` max in About this item & spec field vs `450 °F Hi-Fry` in title |
+| FLG-038 | CHEF iQ Sense | `two-year assurance` in About this item vs `3 Year` in Item details (prior register FLG-019) |
+| FLG-021 | Emeril 26 QT | 24 presets in title, Configuration & Description vs 25 in About this item |
+| FLG-031 | Emeril 26 QT | Six accessories in title & Included Components vs 7 in Configuration & Description |
+| FLG-034 | Chefman 6 Qt | 6 quarts in title & bullets vs 6 liters in Measurements field |
 
 ## Not verified, and published as such
 Intended ASIN per product (FLG-001) · whether the tracking ID is live (FLG-002) · whether the
 short-link format is permitted for this placement (FLG-003) · the one-per-product Special Link test
-(FLG-004) · NIST/NSF and cETL certification beyond the listing's own wording (FLG-035) · any
-hands-on experience (FLG-032) · a named author (FLG-033) · product weights, which no listing we read
-states, so none is printed for any of the five (FLG-022).
+(FLG-004) · P-02 item weight & HTML warranty terms (FLG-022) · NIST/NSF and cETL certification
+beyond listing statements (FLG-035) · any hands-on experience (FLG-032) · a named author (FLG-033).
 
 ## Decisions that change the numbers
-1. Complete the link test (SG-07) — nothing about revenue can be reported until it passes.
-2. Product Advertising API access (SG-13) — the only compliant route to showing prices.
-3. Search Console verification (SG-10) — the only way to pick the next guide from measured queries.
-4. A custom domain (SG-14, FLG-006) — canonicals currently point at the Pages subpath.
+1. Complete the link test (SG-07, Q-04) — nothing about revenue can be reported until it passes.
+2. Amazon Creators API access (SG-13, SG-31, Q-19) — the only compliant route to showing prices, product images, and automated catalog data (with ML training barred under Program Policies §5 / IP §1 & §2(e)).
+3. Search Console verification (SG-10, SG-29, SG-32, Q-20) — the only way to pick future guides from measured organic queries.
+4. Self-hosted analytics hosting (SG-25, Q-08) — deploy `analytics/server.js` or `functions/api/collect.js` beyond static GitHub Pages.
+5. A custom domain (SG-14, FLG-006, Q-05) — canonicals currently point at the Pages subpath.
 
 ## Honest position on revenue
-Zero, and no forecast. No commission rate, click, session or order figure is presented because nothing from an authorised first-party report exists yet. `campaign-ledger.html` is intentionally empty, with its schema and provenance rule written down so the first real row can be added without redesigning the page.
+Zero, and no forecast. No commission rate, click, session or order figure is presented because nothing
+from an authorised first-party report exists yet. `campaign-ledger.html` is intentionally empty, with
+its schema and provenance rule written down so the first real row can be added without redesigning
+the page.
 
 ## How the site is kept honest
-`scripts/build_site.py` generates every page from `data/*.json`; nothing is hand-edited.
-`scripts/check_site.py` fails the build if the disclosure is missing or below the fold, if any amazon.com link lacks `rel="sponsored nofollow"`, if a price or star rating appears, if a link is broken, if a page is missing from the sitemap, if JSON-LD does not parse, or if a flag is referenced that is not defined. CI runs both, and fails if the committed pages drift from the generator.
+`scripts/build_site.py` generates all 33 HTML pages from `data/*.json`; nothing is hand-edited.
+`scripts/check_site.py` fails the build if the disclosure is missing or below the fold, if any
+`amazon.com` link lacks `rel="sponsored nofollow"`, if a price, star rating, cross-row placeholder, or
+unverified weight claim appears, if a link or asset is broken, if any SVG schematic is orphaned, if
+any generated photo lacks a caption/alt/dimensions, if any table has mismatched `<thead>`/`<tbody>`
+column counts, if a page is missing from the sitemap, if JSON-LD does not parse, or if an undefined
+or unpublished flag exists. CI runs regeneration, drift detection, `check_site.py`, Python unit tests
+(`tests/test_site.py`), and Node.js collector/client tests (`tests/test_collector.js`).
 
-## Suggestions for improvement
-- SG-17 (live in the Decision Center): Adopt the Design & Traffic Brief as the next build step — a copy-paste design prompt, a topic-cluster plan with a seasonal calendar, and the editorial standards checklist, published at `design-brief.html`.
-- Proposed, not yet registered: an AI-assisted research dashboard that re-reads the five listings and flags new contradictions (blocked on Creators API eligibility — see S20/S21 and FLG-029/FLG-030).
-- Proposed, not yet registered: SEO article drafts generated from measured queries, fed into the existing guide pipeline (blocked on Search Console verification, SG-10).
-- The privacy-preserving, self-hosted analytics endpoint for the five defined events (Q-08) is open as PR #16 (branch arena/bdedd85e-affil2), not merged in this document.
-- The Suggestions review section exists at `suggestions.html`; rank SG-13, SG-14, SG-15, SG-16 and SG-17 there before anything is built.
+## Suggestions & Open Questions across sessions (`SG-17..SG-32`, `Q-15..Q-20`)
+- `SG-17` (`design-brief.html`): Publication design prompt, 4-cluster topic plan, seasonal calendar, and 10 editorial standards — shipped.
+- `SG-18`–`SG-24`, `SG-26`–`SG-30`, `Q-15`–`Q-18`: Storefront issue calendar, intent pages, dated reader change log (`sources.html`), 2-product compare (`compare.html`), first-week air fryer guide (`guides/first-week-air-fryer.html`), editor decision, hands-on policy, RSS/Search Console tracking, imagery & jurisdiction questions — shipped/tracked cleanly.
+- `SG-25` (`measurement.html`): Zero-dependency `analytics/server.js`, Cloudflare Pages `functions/api/collect.js`, `data/events.json`, RFC-4180 CSV export, and `assets/app.js` `send()` shipped in repo; external hosting remains pending (`FLG-010`, `Q-08`).
+- `SG-31` (`platform.html`) / `Q-19`: AI affiliate platform blueprint and compliance matrix shipped; automated catalog ingestion remains blocked until Creators API acceptance (`S20`, `S21`, `FLG-029`).
+- `SG-32` / `Q-20`: Question-shaped article generation from Search Console queries (blocked until SG-10 / SG-29 verification).
 
-## Open Questions register (beyond Q-14)
-- UF-1: How will an AI-powered research layer identify profitable niches beyond the five submitted products? (Discovery: Creators API eligibility and Commission Income Statement; blocks any niche-expansion automation)
-- UF-2: What organic traffic metrics will define success for the question-shaped guides? (Discovery: Search Console once SG-10 is verified; blocks SG-16)
-- Q-15 to Q-18 are now registered in `questions.html`; the register runs to Q-18.
-
-## Verification log (2026-11-20, session arena/436f4dbe-affil2)
-- All 29 pages built successfully by `scripts/build_site.py`.
-- `scripts/check_site.py` passed (ALL CHECKS PASS).
-- GitHub Pages deployment is live at https://karagemop466-tech.github.io/Affil2/ (source branch main, commit eacaeca2d55ce8d5d01ecbb6de74ee3fd8067297).
-- No manual input required; all tasks completed autonomously.
-
-## Re-verification log (2026-11-20, session arena/3fb8f29e-affil2)
-- All five official listings re-fetched and read line by line against `data/products.json`: titles, breadcrumbs, capacity, temperature ranges, wattage, dimensions, warranty, presets, probes, sensors, battery wording and included components all match the register. The known listing contradictions (24 vs 25 presets on the Emeril, 50 vs 70 hours on the CHEF iQ, 1000 W vs 1700 W on the Chefman 8 Qt, 6 quarts vs 6 litres capacity field on the Chefman 6 Qt) reproduce exactly as flagged.
-- USDA FSIS Safe Minimum Internal Temperature Chart re-fetched; the values on this site match verbatim (165 / 160 / 145+3 min / 145 / 165 °F), last updated 2025-04-14.
-- Google "Qualify your outbound links" re-fetched (last updated 2025-12-10); rel=sponsored for paid links confirmed.
-- Associates Program Policies page reachable and live (updated 2026-04-14); PA-API 5 deprecation notice re-fetched (HTTP 403, migrate to Creators API).
-- FTC Endorsement Guides FAQ re-fetched; disclosure-above-the-fold requirement reaffirmed.
-- No register corrections were required. 30 pages build; `check_site.py` passes ALL CHECKS.
-- New: `design-brief.html` — the Design & Traffic Brief (SG-17).
-
-## Storefront and verification pass (session `82c875a9`)
-
-The front end was rebuilt to read as a shop rather than a register, and the register was re-checked
-against the live listings, without adding a single unchecked claim.
-
-| Change | Where |
-|---|---|
-| Shop-style front page: dated issue line, photographed hero, category directory, three-point credibility strip, three picks with badges, latest guides and a five-product index | `index.html` |
-| Product cards rebuilt as shop cards: image band, capability chips, "best for" and "the catch" lines, buy button with a visible `paid link` label | every grid |
-| Category, shop and product pages carry a captioned image instead of a line drawing | `air-fryers.html`, `meat-thermometers.html`, `products/*` |
-| Two-at-a-time head-to-head on the compare page, 17 aligned rows rendered from the same register (SG-21, shipped) | `compare.html` |
-| A dated, reader-facing change log built from the corrected flags (SG-20, shipped) | `sources.html` |
-| Open Graph and Twitter image metadata so a shared link shows a picture | every page |
-| Six new proposals, renumbered SG-18 to SG-23, alongside the design brief at SG-17; four new open questions Q-15 to Q-18 | `suggestions.html`, `questions.html` |
-| Gate rules: every generated photo needs a caption, alt text and intrinsic dimensions; the pair-view data must parse and every buy link must carry the Associates tag | `scripts/check_site.py` |
-
-Seven register fields that an earlier pass had left blank because they were missing from a partial
-excerpt are now published with the section of the listing that states them (FLG-040): the Emeril's
-model, temperature range and wattage; the ThermoMaven's model and 572 °F upper range; the CHEF iQ's
-model and 4.75 in probe length. Two adverse findings are published rather than smoothed over: three
-guides had stated weights no listing carries, and those figures were removed (FLG-039); and the CHEF iQ
-listing contradicts itself on warranty length, so both figures are printed (FLG-038).
-
-Still unverified after all of this: intended ASINs (FLG-001), whether the tracking ID is live (FLG-002),
-the Special Link test (FLG-004), price display (FLG-005), analytics beyond the browser (FLG-010), and a
-named author (FLG-033).
-
+## Verification log (2026-11-20, session arena/9f19fe6b-affil2)
+- Synced cleanly with `origin/main` (`21424ae`, preserving PRs #17–#36 including `design-brief.html`, storefront photos, `pairCompare`, `guides/first-week-air-fryer.html`, and dated `sources.html` changelog).
+- Verified all 5 `link.amazon/*` short links, deep chunks across all 5 `/dp/` product pages, and official docs (`S01`–`S04`, `S20`–`S24`) live on 2026-11-20.
+- `python3 -B scripts/build_site.py` built all 33 pages idempotently.
+- `python3 -B scripts/check_site.py` passed (`checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`).
+- `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
+- `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).
