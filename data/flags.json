@@ -571,6 +571,26 @@
  },
  {
   "id": "FLG-052",
+  "title": "Seasonal calendar: two dates were wrong, and several remain computed without a source",
+  "detail": "The design brief's seasonal calendar listed New Year as 2027-01-02 (the official date in OPM's 2027 table is Friday, January 01) and placed the first week of Advent on 2026-12-02. The first Sunday of Advent in 2026 is 2026-11-29, which is the fourth Sunday before 25 December. Both corrected rows are shown in the calendar. Black Friday (2026-11-27, the day after Thanksgiving), Cyber Monday (2026-11-30) and Advent (2026-11-29) are computed from the calendar. No official source for those three dates has been cited, so they are labelled computed rather than sourced. Thanksgiving 2026-11-26 is confirmed in OPM's 2026 table.",
+  "links": [
+   "S26"
+  ],
+  "severity": "corrected",
+  "owner_status": "Corrected for New Year and the Advent row. Black Friday, Cyber Monday and Advent remain labelled computed. Owner may cite a source for these or accept the labels."
+ },
+ {
+  "id": "FLG-053",
+  "title": "Official Amazon page defining the ASIN not yet located",
+  "detail": "The brief rests the product-intent record on Amazon's ASIN definition. Three searches and three official Seller Central help pages were checked on 2026-11-20. The page for adding a product one at a time (G1471) lists UPC, EAN, ISBN or ASIN as accepted product identifiers, which is an official use of the term but not a definition. Third-party glossaries were not used as sources. The definition sentence is still unconfirmed, so the ASIN description on the site stays limited to what the listing pages show.",
+  "links": [
+   "S25"
+  ],
+  "severity": "unverified",
+  "owner_status": "Owner or next pass: find the official Amazon help page that defines the ASIN and add it to data/sources.json. Until then the definition is not stated as sourced."
+ },
+ {
+  "id": "FLG-054",
   "title": "Verification log weight rows are stale for P-01 and P-03",
   "detail": "The published Verification Log (data/verification.json, rendered on verification.html) still records the P-01 and P-03 item-weight rows as 'unverified — blank', with the method note 'No weight appears in the fetched listing text'. The register (data/products.json) and both product pages publish these weights as verified from the official Product information Measurements tables: P-01 13.3 pounds and P-03 12.8 pounds (see FLG-022 deep-table pass). The two documents contradict each other on the same field. The verification-log rows reflect an earlier, shallower fetch and were preserved untouched by later passes (additive-only rule). No product value is changed by this flag; the register stays authoritative and the stale rows need a correction pass over data/verification.json.",
   "links": [
