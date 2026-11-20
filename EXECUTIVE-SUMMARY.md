@@ -24,7 +24,7 @@ Observed destinations are recorded separately from owner-confirmed intent. The o
 
 ## Evidence and open gates
 
-The product facts and their provenance are in `data/products.json`; official sources are catalogued in `data/sources.json`. Listing contradictions and other unresolved matters are published on `flagged.html`. The 50-item review register is generated from `data/flags.json`; 19 official source records are listed in `sources.html`. Dates refer to evidence capture, not an assurance that a listing never changes.
+The product facts and their provenance are in `data/products.json`; official sources are catalogued in `data/sources.json`. Listing contradictions and other unresolved matters are published on `flagged.html`. The 51-item review register is generated from `data/flags.json`; 19 official source records are listed in `sources.html`. Dates refer to evidence capture, not an assurance that a listing never changes.
 
 Key owner-gated items: confirm intended products, confirm tracking-ID access/activity, perform the enrolled Special Link test, provide first-party reporting before entering campaign results, configure analytics hosting if cross-visitor measurement is wanted, and verify Search Console before using query data to select future articles. The campaign ledger remains empty by design. No revenue or conversion rate is claimed.
 
