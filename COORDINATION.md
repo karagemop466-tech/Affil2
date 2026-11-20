@@ -64,11 +64,29 @@ Started: 2026-11-20 (UTC). Scope: reader-facing polish pass ("reads like a shop,
 
 | ID | Task | Status | Owner | Files touched |
 |----|------|--------|-------|---------------|
-| T-10 | Re-verify 5 Amazon listings + program sources (S01–S04) line by line | in progress | 42617e35 | data/sources.json, sources.html, COORDINATION.md |
-| T-11 | Publication/shop redesign (imagery, brand, nav labels, front page leads with products) | in progress | 42617e35 | index.html, assets/style.css, assets/*, all .html (nav/footer) |
-| T-12 | Seasonal/trendy article cluster (holiday hosting + evergreen questions) | in progress | 42617e35 | guides/*.html, guides.html |
-| T-13 | Measurement layer: privacy-preserving outbound-click counter + self-hosted analytics endpoint spec, five defined events | in progress | 42617e35 | assets/app.js, analytics-endpoint/*, disclosure.html |
-| T-14 | Product-intent confirmation record + per-product Special Link test register (separate fields) | in progress | 42617e35 | data/products.json, sources.html |
-| T-15 | Decision registers: suggestions (SG-01..SG-30 incl. SG-27..SG-30) + open questions (known/unknown/how to close) | in progress | 42617e35 | suggestions.html, questions.html |
-| T-16 | Executive summary refresh + flagged refresh | in progress | 42617e35 | EXECUTIVE-SUMMARY.md, executive-summary.html, flagged.html, data/flags.json |
-| T-17 | Integration: sitemap/feed, check_site.py gate, PR to main + merge + Pages verify | unclaimed | 42617e35 | sitemap.xml, feed.xml, scripts/check_site.py, COORDINATION.md |
+| T-10 | Re-verify 5 Amazon listings + program sources (S01–S04) line by line | done | 42617e35 | data/sources.json, sources.html, COORDINATION.md |
+| T-11 | Publication/shop redesign (imagery, brand, nav labels, front page leads with products) | done | 42617e35 | index.html, assets/style.css, assets/*, all .html (nav/footer) |
+| T-12 | Seasonal/trendy article cluster (holiday hosting + evergreen questions) | done | 42617e35 | guides/*.html, guides.html |
+| T-13 | Measurement layer: privacy-preserving outbound-click counter + self-hosted analytics endpoint spec, five defined events | done | 42617e35 | assets/app.js, analytics-endpoint/*, disclosure.html |
+| T-14 | Product-intent confirmation record + per-product Special Link test register (separate fields) | done | 42617e35 | data/products.json, sources.html |
+| T-15 | Decision registers: suggestions (SG-01..SG-30 incl. SG-27..SG-30) + open questions (known/unknown/how to close) | done | 42617e35 | suggestions.html, questions.html |
+| T-16 | Executive summary refresh + flagged refresh | done | 42617e35 | EXECUTIVE-SUMMARY.md, executive-summary.html, flagged.html, data/flags.json |
+| T-17 | Integration: sitemap/feed, check_site.py gate, PR to main + merge + Pages verify | in progress | 42617e35 | sitemap.xml, feed.xml, scripts/check_site.py, COORDINATION.md |
+
+## Verification log — session 42617e35 (2026-11-20, official sources only)
+
+| Item | Method | Result |
+|---|---|---|
+| P-01 B0CDY277D3 | live listing fetch | Title/identity match (long-form title incl. baskets/finish recorded in products.json) |
+| P-02 B09B7SB46R | live listing fetch | Title/identity match; live title states **24** One-Touch Preset Options (FLG-009 evidence kept) |
+| P-03 B08DKYBTPH | live listing fetch | Title/identity match; live title states TurboFry 4-in-1, **450 °F Hi-Fry** (FLG-011 — title vs body wording, both published) |
+| P-04 B0DHZTCNR5 | live listing fetch | Title/identity match (HT07 family) |
+| P-05 B0DZFD6R9Z | live listing fetch | Title/identity match (Gen3; live title drops "[2025 Model]" bracket — same ASIN) |
+| S03 FTC Endorsement Guides FAQ | live fetch | Re-verified (affiliate-marketing section present) |
+| S04 Google Qualify outbound links | live fetch | Re-verified (rel=sponsored; multiple rel values valid) |
+| S15 USDA FSIS temperature chart | live fetch | Verified — poultry 165 °F, leftovers 165 °F, steaks 145 °F + 3-min rest (chart updated 2025-04-14). New source row. |
+| S01/S02 Associates OA/Policies | live fetch FAILED (login-gated) | **MANUAL REVIEW** — links published on sources.html for hand-check (FLG-012). Wording basis carried from 530c2e6c log; not claimed as re-verified. |
+
+Checks: `scripts/check_site.py` ALL CHECKS PASS (28 pages) — includes disclosure-before-`<main>`, sponsored marking on every Amazon link, (paid link) near every data-outbound, no price/star values, internal links + assets, sitemap coverage, feed coverage of all 9 guides, separate intended/observed fields in data registers, five instrumented events.
+
+New flags this session: FLG-011 (P-03 title vs body wording), FLG-012 (Associates pages not re-fetchable). FLG-007/FLG-010 updated (AI-generated editorial imagery; measurement layer shipped, endpoint deploy pending).

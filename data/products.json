@@ -1,262 +1,332 @@
 [
-  {
-    "id": "P-01",
-    "slug": "p01-chefman-6qt-dual-basket",
-    "submitted": "https://link.amazon/B04G1MEwY",
-    "token": "B04G1MEwY",
-    "observed": "B0CDY277D3",
-    "title": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff",
-    "brand": "Chefman",
-    "model": "RJ38-SQPF-3TDB-2W",
-    "cat": "Air Fryers",
-    "catfile": "air-fryers.html",
-    "specs": [
-      [
-        "Capacity",
-        "6 quarts total \u2014 two independent 3-quart baskets"
-      ],
-      [
-        "Temperature range",
-        "200\u2013450 \u00b0F (listing)"
-      ],
-      [
-        "Power",
-        "1700 watts / 120 volts"
-      ],
-      [
-        "Dimensions (D\u00d7W\u00d7H)",
-        "13.38 \u00d7 11.81 \u00d7 10.63 inches"
-      ],
-      [
-        "Weight",
-        "13.3 pounds"
-      ],
-      [
-        "Baskets",
-        "Nonstick, dishwasher-safe (listing)"
-      ],
-      [
-        "Controls",
-        "Touch / digital"
-      ],
-      [
-        "Safety",
-        "Automatic shutoff; cETL approved (listing)"
-      ]
-    ],
-    "blurb": "Two baskets you can watch through the windows, timed to finish together. The question is not whether it fries \u2014 it is whether two 3-quart baskets fit the way you actually cook.",
-    "questions": [
-      "Do you cook a main and a side at the same time, or one thing at a time?",
-      "Will 11.81 inches of width fit your counter, with clearance above?",
-      "Do you want to see the food, or do you prefer a single larger basket?"
-    ]
-  },
-  {
-    "id": "P-02",
-    "slug": "p02-emeril-26qt-french-door",
-    "submitted": "https://link.amazon/B02NbDxp3",
-    "token": "B02NbDxp3",
-    "observed": "B09B7SB46R",
-    "title": "Emeril Lagasse 26 QT Extra Large Air Fryer, Convection Toaster Oven with French Doors, Stainless Steel",
-    "brand": "Emeril Lagasse",
-    "model": "4-00675-02 (listing also shows 4-00675-02X-VN \u2014 see FLG-009)",
-    "cat": "Air Fryers",
-    "catfile": "air-fryers.html",
-    "specs": [
-      [
-        "Capacity",
-        "26 quarts (24.6 litres, listing)"
-      ],
-      [
-        "Temperature range",
-        "Up to 500 \u00b0F (listing)"
-      ],
-      [
-        "Power",
-        "1700 watts / 120 volts"
-      ],
-      [
-        "Dimensions (D\u00d7W\u00d7H)",
-        "16.9 \u00d7 15.8 \u00d7 14.8 inches"
-      ],
-      [
-        "Weight",
-        "26.5 pounds"
-      ],
-      [
-        "Exterior",
-        "Stainless steel"
-      ],
-      [
-        "Accessories listed",
-        "Grill plate, rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool"
-      ],
-      [
-        "Presets",
-        "24 or 25 \u2014 listing conflicts, see FLG-009"
-      ]
-    ],
-    "blurb": "A countertop oven that air-fries. The trade-off is footprint and weight: this is a 26-quart appliance, not a compact basket fryer.",
-    "questions": [
-      "Do you have 16.9 inches of depth plus clearance for French doors to swing?",
-      "Do you need rotisserie / pizza capacity, or is that unused space?",
-      "At 26.5 pounds, will you move it or leave it in one spot?"
-    ]
-  },
-  {
-    "id": "P-03",
-    "slug": "p03-chefman-8qt-turbrofry",
-    "submitted": "https://link.amazon/B00hJ57DV",
-    "token": "B00hJ57DV",
-    "observed": "B08DKYBTPH",
-    "title": "Chefman TurboFry Touch Air Fryer, XL 8-Qt Family Size, One-Touch Digital Control Presets, Stainless Steel",
-    "brand": "Chefman",
-    "model": "RJ38-SQSS-8T",
-    "cat": "Air Fryers",
-    "catfile": "air-fryers.html",
-    "specs": [
-      [
-        "Capacity",
-        "8 quarts"
-      ],
-      [
-        "Temperature range",
-        "200\u2013400 \u00b0F (listing)"
-      ],
-      [
-        "Power",
-        "1700 watts / 120 volts"
-      ],
-      [
-        "Dimensions (D\u00d7W\u00d7H)",
-        "12.75 \u00d7 13.5 \u00d7 10 inches"
-      ],
-      [
-        "Weight",
-        "12.8 pounds"
-      ],
-      [
-        "Presets",
-        "Four preset functions listed (fries, chicken, meat, fish)"
-      ],
-      [
-        "Basket",
-        "Nonstick, dishwasher-safe parts (listing)"
-      ],
-      [
-        "Reminder",
-        "LED shake reminder"
-      ]
-    ],
-    "blurb": "One big basket, four presets, no windows. Simpler than dual-basket \u2014 and the right choice if you cook one thing at a time for a household.",
-    "questions": [
-      "One basket or two \u2014 which matches your weeknight routine?",
-      "Is 400 \u00b0F top temperature enough for what you cook?",
-      "Do you want presets, or do you prefer manual control?"
-    ]
-  },
-  {
-    "id": "P-04",
-    "slug": "p04-thermomaven-1sec",
-    "submitted": "https://link.amazon/B0c8moW59",
-    "token": "B0c8moW59",
-    "observed": "B0DHZTCNR5",
-    "title": "ThermoMaven Professional Digital Meat Thermometer, 1 Sec Instant Read, \u00b10.5 \u00b0F Accuracy, NIST & NSF Certified",
-    "brand": "ThermoMaven",
-    "model": "HT07",
-    "cat": "Meat Thermometers",
-    "catfile": "meat-thermometers.html",
-    "specs": [
-      [
-        "Response time",
-        "1 second (listing)"
-      ],
-      [
-        "Accuracy",
-        "\u00b10.5 \u00b0F (listing)"
-      ],
-      [
-        "Certification stated",
-        "NIST & NSF (listing)"
-      ],
-      [
-        "Upper temperature range",
-        "572 \u00b0F (listing)"
-      ],
-      [
-        "Display",
-        "Digital, auto-rotate bright LED screen"
-      ],
-      [
-        "Waterproof",
-        "Highly waterproof (listing)"
-      ],
-      [
-        "Power",
-        "1 \u00d7 AAA battery included (listing)"
-      ],
-      [
-        "In the box",
-        "Thermometer, AAA battery, user manual, calibration certificate"
-      ]
-    ],
-    "blurb": "The instant-read you keep by the grill. Speed and accuracy are the whole point \u2014 everything else is secondary.",
-    "questions": [
-      "Do you check temperature at the grill, or do you want to walk away?",
-      "Will you calibrate it, and how often?",
-      "Do you need a certificate, or is the listing claim enough?"
-    ]
-  },
-  {
-    "id": "P-05",
-    "slug": "p05-chefiq-sense-gen3",
-    "submitted": "https://link.amazon/B0f3GKalj",
-    "token": "B0f3GKalj",
-    "observed": "B0DZFD6R9Z",
-    "title": "CHEF iQ Sense [2025 Model] Smart Wireless Meat Thermometer, 3 Ultra-Thin Probes, WiFi Unlimited Range, 1000 \u00b0F Heat Safe, 5 Sensors, Gen3",
-    "brand": "CHEF iQ",
-    "model": "CQ60-3C-Z1-E",
-    "cat": "Meat Thermometers",
-    "catfile": "meat-thermometers.html",
-    "specs": [
-      [
-        "Probes",
-        "3 ultra-thin probes + hub"
-      ],
-      [
-        "Connectivity",
-        "WiFi / Bluetooth via CHEF iQ app"
-      ],
-      [
-        "Heat rating",
-        "1000 \u00b0F heat safe (listing)"
-      ],
-      [
-        "Sensors",
-        "5 sensors (4 internal + ambient, listing)"
-      ],
-      [
-        "Battery",
-        "50 hours vs 70 hours \u2014 listing conflicts, see FLG-008"
-      ],
-      [
-        "Probe length",
-        "4.75 inches (listing)"
-      ],
-      [
-        "Care",
-        "Waterproof, dishwasher-safe probes (listing)"
-      ],
-      [
-        "Warranty stated",
-        "1-year limited warranty (listing)"
-      ]
-    ],
-    "blurb": "Three proteins, three donenesses, no standing by the grill. The cost of that freedom is an app, a hub, and charging.",
-    "questions": [
-      "Do you cook multiple proteins at once, or one at a time?",
-      "Are you comfortable relying on an app and WiFi for doneness?",
-      "Will you charge and clean three probes after every cook?"
-    ]
+ {
+  "id": "P-01",
+  "slug": "p01-chefman-6qt-dual-basket",
+  "submitted": "https://link.amazon/B04G1MEwY",
+  "token": "B04G1MEwY",
+  "observed": "B0CDY277D3",
+  "title": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff",
+  "brand": "Chefman",
+  "model": "RJ38-SQPF-3TDB-2W",
+  "cat": "Air Fryers",
+  "catfile": "air-fryers.html",
+  "specs": [
+   [
+    "Capacity",
+    "6 quarts total — two independent 3-quart baskets"
+   ],
+   [
+    "Temperature range",
+    "200–450 °F (listing)"
+   ],
+   [
+    "Power",
+    "1700 watts / 120 volts"
+   ],
+   [
+    "Dimensions (D×W×H)",
+    "13.38 × 11.81 × 10.63 inches"
+   ],
+   [
+    "Weight",
+    "13.3 pounds"
+   ],
+   [
+    "Baskets",
+    "Nonstick, dishwasher-safe (listing)"
+   ],
+   [
+    "Controls",
+    "Touch / digital"
+   ],
+   [
+    "Safety",
+    "Automatic shutoff; cETL approved (listing)"
+   ]
+  ],
+  "blurb": "Two baskets you can watch through the windows, timed to finish together. The question is not whether it fries — it is whether two 3-quart baskets fit the way you actually cook.",
+  "questions": [
+   "Do you cook a main and a side at the same time, or one thing at a time?",
+   "Will 11.81 inches of width fit your counter, with clearance above?",
+   "Do you want to see the food, or do you prefer a single larger basket?"
+  ],
+  "intended_asin": "",
+  "official_listing_url": "https://www.amazon.com/dp/B0CDY277D3",
+  "confirmation_date": "2026-11-20",
+  "confirmation_source": "https://www.amazon.com/dp/B0CDY277D3 (live listing page, title + identity re-verified 2026-11-20 by session 42617e35)",
+  "observed_redirect_target": "https://www.amazon.com/dp/B0CDY277D3",
+  "live_listing_title_2026_11_20": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black",
+  "reverify_note": "Live listing title matches registered product (long form incl. basket/finish details).",
+  "link_test": {
+   "status": "PENDING",
+   "tested_date": "",
+   "destination_confirmed": "",
+   "tracking_report_confirmed": "",
+   "note": "One link per product must be tested in the enrolled Associates workflow (Special Link destination + tracking report) before scaling. FLG-004 / Q-04."
   }
+ },
+ {
+  "id": "P-02",
+  "slug": "p02-emeril-26qt-french-door",
+  "submitted": "https://link.amazon/B02NbDxp3",
+  "token": "B02NbDxp3",
+  "observed": "B09B7SB46R",
+  "title": "Emeril Lagasse 26 QT Extra Large Air Fryer, Convection Toaster Oven with French Doors, Stainless Steel",
+  "brand": "Emeril Lagasse",
+  "model": "4-00675-02 (listing also shows 4-00675-02X-VN — see FLG-009)",
+  "cat": "Air Fryers",
+  "catfile": "air-fryers.html",
+  "specs": [
+   [
+    "Capacity",
+    "26 quarts (24.6 litres, listing)"
+   ],
+   [
+    "Temperature range",
+    "Up to 500 °F (listing)"
+   ],
+   [
+    "Power",
+    "1700 watts / 120 volts"
+   ],
+   [
+    "Dimensions (D×W×H)",
+    "16.9 × 15.8 × 14.8 inches"
+   ],
+   [
+    "Weight",
+    "26.5 pounds"
+   ],
+   [
+    "Exterior",
+    "Stainless steel"
+   ],
+   [
+    "Accessories listed",
+    "Grill plate, rack, bake pan, drip tray, crisper basket, rotisserie spit, fetch tool"
+   ],
+   [
+    "Presets",
+    "24 or 25 — listing conflicts, see FLG-009"
+   ]
+  ],
+  "blurb": "A countertop oven that air-fries. The trade-off is footprint and weight: this is a 26-quart appliance, not a compact basket fryer.",
+  "questions": [
+   "Do you have 16.9 inches of depth plus clearance for French doors to swing?",
+   "Do you need rotisserie / pizza capacity, or is that unused space?",
+   "At 26.5 pounds, will you move it or leave it in one spot?"
+  ],
+  "intended_asin": "",
+  "official_listing_url": "https://www.amazon.com/dp/B09B7SB46R",
+  "confirmation_date": "2026-11-20",
+  "confirmation_source": "https://www.amazon.com/dp/B09B7SB46R (live listing page, title + identity re-verified 2026-11-20 by session 42617e35)",
+  "observed_redirect_target": "https://www.amazon.com/dp/B09B7SB46R",
+  "live_listing_title_2026_11_20": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included",
+  "reverify_note": "Live listing title states 24 One-Touch Preset Options; listing body shows conflicting 24/25 and two model numbers (FLG-009). Title wording differs slightly from registered short form; same product and ASIN.",
+  "link_test": {
+   "status": "PENDING",
+   "tested_date": "",
+   "destination_confirmed": "",
+   "tracking_report_confirmed": "",
+   "note": "One link per product must be tested in the enrolled Associates workflow (Special Link destination + tracking report) before scaling. FLG-004 / Q-04."
+  }
+ },
+ {
+  "id": "P-03",
+  "slug": "p03-chefman-8qt-turbrofry",
+  "submitted": "https://link.amazon/B00hJ57DV",
+  "token": "B00hJ57DV",
+  "observed": "B08DKYBTPH",
+  "title": "Chefman TurboFry Touch Air Fryer, XL 8-Qt Family Size, One-Touch Digital Control Presets, Stainless Steel",
+  "brand": "Chefman",
+  "model": "RJ38-SQSS-8T",
+  "cat": "Air Fryers",
+  "catfile": "air-fryers.html",
+  "specs": [
+   [
+    "Capacity",
+    "8 quarts"
+   ],
+   [
+    "Temperature range",
+    "200–400 °F (listing)"
+   ],
+   [
+    "Power",
+    "1700 watts / 120 volts"
+   ],
+   [
+    "Dimensions (D×W×H)",
+    "12.75 × 13.5 × 10 inches"
+   ],
+   [
+    "Weight",
+    "12.8 pounds"
+   ],
+   [
+    "Presets",
+    "Four preset functions listed (fries, chicken, meat, fish)"
+   ],
+   [
+    "Basket",
+    "Nonstick, dishwasher-safe parts (listing)"
+   ],
+   [
+    "Reminder",
+    "LED shake reminder"
+   ]
+  ],
+  "blurb": "One big basket, four presets, no windows. Simpler than dual-basket — and the right choice if you cook one thing at a time for a household.",
+  "questions": [
+   "One basket or two — which matches your weeknight routine?",
+   "Is 400 °F top temperature enough for what you cook?",
+   "Do you want presets, or do you prefer manual control?"
+  ],
+  "intended_asin": "",
+  "official_listing_url": "https://www.amazon.com/dp/B08DKYBTPH",
+  "confirmation_date": "2026-11-20",
+  "confirmation_source": "https://www.amazon.com/dp/B08DKYBTPH (live listing page, title + identity re-verified 2026-11-20 by session 42617e35)",
+  "observed_redirect_target": "https://www.amazon.com/dp/B08DKYBTPH",
+  "live_listing_title_2026_11_20": "Chefman Air Fryer 8 Qt | TurboFry 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel",
+  "reverify_note": "Live listing title states TurboFry 4-in-1 with 450°F Hi-Fry option (functions: air fry/bake/dehydrate/frozen). Register rows recorded earlier same day from listing body (200-400°F standard range; four touch presets). Both published; refinement logged as FLG-011.",
+  "link_test": {
+   "status": "PENDING",
+   "tested_date": "",
+   "destination_confirmed": "",
+   "tracking_report_confirmed": "",
+   "note": "One link per product must be tested in the enrolled Associates workflow (Special Link destination + tracking report) before scaling. FLG-004 / Q-04."
+  }
+ },
+ {
+  "id": "P-04",
+  "slug": "p04-thermomaven-1sec",
+  "submitted": "https://link.amazon/B0c8moW59",
+  "token": "B0c8moW59",
+  "observed": "B0DHZTCNR5",
+  "title": "ThermoMaven Professional Digital Meat Thermometer, 1 Sec Instant Read, ±0.5 °F Accuracy, NIST & NSF Certified",
+  "brand": "ThermoMaven",
+  "model": "HT07",
+  "cat": "Meat Thermometers",
+  "catfile": "meat-thermometers.html",
+  "specs": [
+   [
+    "Response time",
+    "1 second (listing)"
+   ],
+   [
+    "Accuracy",
+    "±0.5 °F (listing)"
+   ],
+   [
+    "Certification stated",
+    "NIST & NSF (listing)"
+   ],
+   [
+    "Upper temperature range",
+    "572 °F (listing)"
+   ],
+   [
+    "Display",
+    "Digital, auto-rotate bright LED screen"
+   ],
+   [
+    "Waterproof",
+    "Highly waterproof (listing)"
+   ],
+   [
+    "Power",
+    "1 × AAA battery included (listing)"
+   ],
+   [
+    "In the box",
+    "Thermometer, AAA battery, user manual, calibration certificate"
+   ]
+  ],
+  "blurb": "The instant-read you keep by the grill. Speed and accuracy are the whole point — everything else is secondary.",
+  "questions": [
+   "Do you check temperature at the grill, or do you want to walk away?",
+   "Will you calibrate it, and how often?",
+   "Do you need a certificate, or is the listing claim enough?"
+  ],
+  "intended_asin": "",
+  "official_listing_url": "https://www.amazon.com/dp/B0DHZTCNR5",
+  "confirmation_date": "2026-11-20",
+  "confirmation_source": "https://www.amazon.com/dp/B0DHZTCNR5 (live listing page, title + identity re-verified 2026-11-20 by session 42617e35)",
+  "observed_redirect_target": "https://www.amazon.com/dp/B0DHZTCNR5",
+  "live_listing_title_2026_11_20": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5°F Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black",
+  "reverify_note": "Live listing title matches registered product (HT07 family).",
+  "link_test": {
+   "status": "PENDING",
+   "tested_date": "",
+   "destination_confirmed": "",
+   "tracking_report_confirmed": "",
+   "note": "One link per product must be tested in the enrolled Associates workflow (Special Link destination + tracking report) before scaling. FLG-004 / Q-04."
+  }
+ },
+ {
+  "id": "P-05",
+  "slug": "p05-chefiq-sense-gen3",
+  "submitted": "https://link.amazon/B0f3GKalj",
+  "token": "B0f3GKalj",
+  "observed": "B0DZFD6R9Z",
+  "title": "CHEF iQ Sense [2025 Model] Smart Wireless Meat Thermometer, 3 Ultra-Thin Probes, WiFi Unlimited Range, 1000 °F Heat Safe, 5 Sensors, Gen3",
+  "brand": "CHEF iQ",
+  "model": "CQ60-3C-Z1-E",
+  "cat": "Meat Thermometers",
+  "catfile": "meat-thermometers.html",
+  "specs": [
+   [
+    "Probes",
+    "3 ultra-thin probes + hub"
+   ],
+   [
+    "Connectivity",
+    "WiFi / Bluetooth via CHEF iQ app"
+   ],
+   [
+    "Heat rating",
+    "1000 °F heat safe (listing)"
+   ],
+   [
+    "Sensors",
+    "5 sensors (4 internal + ambient, listing)"
+   ],
+   [
+    "Battery",
+    "50 hours vs 70 hours — listing conflicts, see FLG-008"
+   ],
+   [
+    "Probe length",
+    "4.75 inches (listing)"
+   ],
+   [
+    "Care",
+    "Waterproof, dishwasher-safe probes (listing)"
+   ],
+   [
+    "Warranty stated",
+    "1-year limited warranty (listing)"
+   ]
+  ],
+  "blurb": "Three proteins, three donenesses, no standing by the grill. The cost of that freedom is an app, a hub, and charging.",
+  "questions": [
+   "Do you cook multiple proteins at once, or one at a time?",
+   "Are you comfortable relying on an app and WiFi for doneness?",
+   "Will you charge and clean three probes after every cook?"
+  ],
+  "intended_asin": "",
+  "official_listing_url": "https://www.amazon.com/dp/B0DZFD6R9Z",
+  "confirmation_date": "2026-11-20",
+  "confirmation_source": "https://www.amazon.com/dp/B0DZFD6R9Z (live listing page, title + identity re-verified 2026-11-20 by session 42617e35)",
+  "observed_redirect_target": "https://www.amazon.com/dp/B0DZFD6R9Z",
+  "live_listing_title_2026_11_20": "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3",
+  "reverify_note": "Live listing title shows Gen3 without the [2025 Model] bracket used in registered short title; same product and ASIN. Battery conflict remains FLG-008.",
+  "link_test": {
+   "status": "PENDING",
+   "tested_date": "",
+   "destination_confirmed": "",
+   "tracking_report_confirmed": "",
+   "note": "One link per product must be tested in the enrolled Associates workflow (Special Link destination + tracking report) before scaling. FLG-004 / Q-04."
+  }
+ }
 ]
