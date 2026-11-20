@@ -118,6 +118,21 @@ for p in pages:
         if (up + target) not in html:
             err(f"{rel}: footer missing link to {target}")
 
+    # --- images: every generated photo must be captioned as illustration, never as the product
+    for m in re.finditer(r'<img\b[^>]*src="((?:\.\./)*assets/photos/[^"]+)"[^>]*>', html):
+        asset = (p.parent / m.group(1)).resolve()
+        if not asset.exists():
+            err(f"{rel}: missing image {m.group(1)}")
+        if "assets/photos/" in m.group(1):
+            window = html[m.end():m.end() + 900]
+            if "Illustrative image, generated for this site" not in window:
+                err(f"{rel}: generated photo {m.group(1)} is not captioned as illustration")
+        tag = m.group(0)
+        if "alt=\"\"" in tag or "alt=" not in tag:
+            err(f"{rel}: image {m.group(1)} has no alt text")
+        if not re.search(r'width="\d+" height="\d+"', tag):
+            err(f"{rel}: image {m.group(1)} has no intrinsic dimensions")
+
     # --- structured data must parse
     for m in re.finditer(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
         try:
@@ -333,6 +348,27 @@ if "Sitemap: " + BASE + "sitemap.xml" not in robots:
     err("robots.txt does not point at the canonical sitemap")
 if "Disallow: /" in robots:
     err("robots.txt blocks the site")
+
+# ---------------------------------------------------------------- compare pair view
+comp = (ROOT / "compare.html").read_text()
+pm = re.search(r'<script type="application/json" id="pairData">(.*?)</script>', comp, re.S)
+if not pm:
+    err("compare.html: no embedded pair view data")
+else:
+    try:
+        pair = json.loads(pm.group(1))
+    except json.JSONDecodeError as e:
+        err(f"compare.html pair data does not parse: {e}")
+        pair = {}
+    if len(pair) != 5:
+        err(f"compare.html pair data holds {len(pair)} products, expected 5")
+    for pid, rec in pair.items():
+        if not (ROOT / rec["url"]).exists():
+            err(f"compare.html pair data links a missing page: {rec['url']}")
+        if "tag=shopnow047c-20" not in rec["buy"]:
+            err(f"compare.html pair data buy link for {pid} lacks the Associates tag")
+        if len(rec["rows"]) < 12:
+            err(f"compare.html pair data for {pid} has only {len(rec['rows'])} rows")
 
 # ---------------------------------------------------------------- search index
 search_html = (ROOT / "search.html").read_text()
