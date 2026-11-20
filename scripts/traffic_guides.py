@@ -112,138 +112,6 @@ trade-offs</a>. The wider fork, drawer or door, is
 <a href="basket-vs-oven.html">basket or oven-style</a>.</p></div>"""),
 
     # ------------------------------------------------------------------ 2
-    dict(slug="what-presets-tell-you",
-         title="How many presets do you actually need? What a preset count tells you, and what it hides",
-         sub="One of the five listings on this site disagrees with itself about how many presets it "
-             "has. That is a useful place to start.",
-         kicker="Buying guide · November 2026",
-         products=["P-02", "P-03", "P-01"],
-         intro="""Preset counts are the cheapest number in an appliance listing to inflate and the
-         easiest for a shopper to mistake for capability. Here is the whole argument for ignoring
-         them, using nothing but the listings this site was built from.""",
-         verdict="""Presets are shortcuts, not abilities. Buy on maximum temperature, basket shape,
-         usable area and shut-off behaviour. Treat the preset count as marketing copy: on one of
-         the five listings we read, the title and the bullets do not agree on it.""",
-         sections=[
-            ("What a preset physically is",
-             """A stored pairing of a temperature and a run time, sometimes with a fan speed. That
-             is all. A preset does not add heat, capacity or a cooking method; it saves you two
-             button presses on a dish you make often. Nothing on a specification sheet changes
-             because a tenth preset was added to the panel."""),
-            ("Why counts are not comparable between brands",
-             """Count what, exactly? On the 8-quart Chefman the listing names four: French fries,
-             chicken, meat, fish. On the Emeril oven the listing prints <em>24</em> one-touch
-             presets in its title and description and <em>25</em> cooking pre-sets in the
-             About-this-item bullets &#8212; the same page, both numbers, read on 2026-11-20. A
-             number that cannot stay still on one listing is not a measurement you should compare
-             across two."""),
-            ("What to read instead, on the same sheet",
-             """Four lines that actually change your experience. Maximum temperature: 450 &#176;F
-             with a Hi-Fry option on both Chefman units, 75&#8211;500 &#176;F as the stated range on
-             the oven-style unit. Whether the basket has a window. Whether there is an automatic
-             shut-off (all three listings state one). And whether the parts that touch food are
-             described as dishwasher-safe, which is a claim about a part, not a claim about your
-             evening."""),
-            ("The two presets worth having",
-             """If you take nothing else from this page: the useful controls are the ones that fix a
-             mistake, not the ones that name a food. A +2 minute button (stated on the dual-basket
-             listing) and a shake reminder (the LED shake reminder on the 8-quart) answer the two
-             things that actually go wrong in a small hot cavity: it needed longer, and it needed
-             turned. Frozen-chicken mode does not."""),
-            ("How to test a preset in your own week one",
-             """Pick the one preset closest to what you bought the appliance for. Run it exactly as
-             the manual says, then write down two things when it beeps: the surface you wanted and
-             whether the middle was done. That is the only comparison that means anything, because
-             the number in your kitchen is measured against your food, not against a marketing
-             table. We are deliberately not publishing cook times here. Nobody on this site cooked
-             in these units, and a time copied from a listing bullet is not a test result."""),
-         ],
-         extra="""<table><caption>Four listing lines, ranked by how much they change your dinner.</caption>
-<thead><tr><th scope="col">Line on the listing</th><th scope="col">What it can change</th>
-<th scope="col">What it cannot</th></tr></thead><tbody>
-<tr><th scope="row">Preset count (4, 24 or 25)</th><td>Button presses on a dish you repeat</td>
-<td>Heat, capacity, or how the food turns out</td></tr>
-<tr><th scope="row">Maximum temperature</th><td>Whether you can get a crisp surface</td>
-<td>Whether the middle is done at the same time</td></tr>
-<tr><th scope="row">Basket area and depth</th><td>How much sits in one layer, which is what crispness
-needs</td><td>Anything about flavour</td></tr>
-<tr><th scope="row">Automatic shut-off</th><td>What happens on the day you forget</td>
-<td>Whether you should have remembered</td></tr></tbody></table>
-<div class="panel"><p class="kicker">Sources</p><p>Preset, temperature and shut-off values above are
-quoted from the official listings on this site's <a href="../sources.html">source register</a>, read
-2026-11-20. Where a listing gives two figures, both are printed here and neither is chosen.</p></div>"""),
-
-    # ------------------------------------------------------------------ 3
-    dict(slug="ice-water-test",
-         title="The 30-second ice-water test that tells you whether your thermometer is lying",
-         sub="USDA publishes the method, and it needs a glass, ice and half a minute. Run it before "
-             "you need the number, not after.",
-         kicker="How-to · USDA method",
-         products=["P-04", "P-05"],
-         intro="""A thermometer is a measuring instrument, and instruments drift. The United States
-         Department of Agriculture publishes two ways to check one at home. The first takes thirty
-         seconds and needs nothing you do not already own.""",
-         verdict="""Test the week it arrives, not the week you need it. Ice water should read 32
-         &#176;F. If it does, you own a known instrument. If it does not, and the manual offers no
-         adjustment, you have learned something cheap, early.""",
-         sections=[
-            ("The method, in USDA's own terms",
-             """From the FSIS Food Thermometers factsheet, quoted rather than improved: fill a large
-             glass with ice cubes, add drinking water and stir well; immerse the stem a minimum of
-             2 inches into the mixture, touching neither the sides nor the bottom of the glass; wait
-             a minimum of 30 seconds and read it without lifting the stem out. It should read
-             <em>32 &#176;F</em>. If it does not, adjust according to the manufacturer's
-             instructions &#8212; some dials have a calibration nut, and some instruments simply do
-             not adjust."""),
-            ("The number USDA puts on this category",
-             """The same factsheet states that most food thermometers give an accurate reading within
-             2 to 4 &#176;F. Keep that next to what a listing promises: the ThermoMaven in this
-             category is described with an accuracy of &#177;0.5 &#176;F and 0.1&#176; display
-             resolution, and its box contents list includes a calibration certificate. A certificate
-             is a document you can ask for. It is not a test this site ran, and the listing's number
-             is the seller's statement, not an independent measurement."""),
-            ("The boiling-water half, and why altitude matters",
-             """USDA's second method: bring clean water to a boil, hold the stem at least 2 inches
-             deep without touching the pot, wait at least 30 seconds, and expect 212 &#176;F at sea
-             level. The factsheet adds two caveats people skip. For true accuracy use distilled
-             water, and remember boiling point falls with altitude &#8212; by at least 2 &#176;F and
-             sometimes 5 &#176;F. If you live above sea level, a reading slightly under 212 on this
-             test is physics, not a fault."""),
-            ("Placement, which is where most wrong numbers come from",
-             """The factsheet is blunt that a correct instrument in the wrong place reads wrong: the
-             thickest part of the food, away from bone, fat and gristle; for thin foods, inserted
-             through the side so the sensing area reaches the centre; for whole poultry, three
-             checks &#8212; innermost thigh, innermost wing, thickest breast. Instant-read sensing
-             areas are commonly 2 to 3 inches, which is why a probe dipped 1 inch into a steak tells
-             you about the surface. The two listings here give probe length figures of 6.5 inches and
-             4.75 inches in their length fields; read your manual for where the sensing area
-             actually ends."""),
-            ("Care, where the listing and the guidance pull in different directions",
-             """USDA's general advice is that most thermometers should not be immersed and should be
-             washed carefully by hand. The ThermoMaven listing says wipe clean, which agrees. The
-             CHEF iQ listing says its probes are waterproof and dishwasher-safe, which is a stronger
-             promise than the generic guidance and is the seller's own claim about its own parts.
-             Neither is a contradiction we can resolve for you: check the manual that arrives, because
-             that is the document the warranty refers to."""),
-         ],
-         extra="""<h2>Run the test, step by step</h2><ol class="tight">
-<li>Ice cubes in a tall glass. Water to fill the gaps. Stir, then wait a minute for the slurry to
-settle.</li>
-<li>Bury the stem at least 2 inches, clear of the glass sides and bottom.</li>
-<li>Wait at least 30 seconds. Do not lift it out to read.</li>
-<li>32 &#176;F means calibrated. Anything else: adjust if the manual says you can, note the offset
-if you cannot, and replace it if the offset moves between tests.</li>
-<li>Repeat once a season, and after a drop. A dropped dial is a re-test, not a debate.</li></ol>
-""" + USDA_TABLE +
-         _img("guide-ice-water.jpg",
-              "A tall glass of crushed ice and water with a folding digital thermometer inserted, "
-              "condensation on the glass, on a kitchen counter") + """
-<div class="panel"><p class="kicker">Keep reading</p><p>What an accuracy figure is worth:
-<a href="thermometer-accuracy.html">how to read accuracy claims</a>. Which instrument for which
-cook: <a href="instant-vs-wireless.html">instant-read or wireless</a>. The temperature each food has
-to reach: the chart above, and the <a href="../how-we-choose.html">policy behind this page</a>.</p></div>"""),
-
-    # ------------------------------------------------------------------ 4
     dict(slug="reheating-to-165",
          title="Reheating leftovers is a temperature, not a microwave guess: the 165-degree rule",
          sub="The USDA number for leftovers and casseroles, what a maximum-temperature line on an "
@@ -303,7 +171,7 @@ feeds</td></tr>
 <tr><th scope="row">Preset names</th><td>Guessing what the brand expects you to cook</td>
 <td>Anything about safety</td></tr></tbody></table>
 <div class="panel"><p class="kicker">Pair it with</p><p>The instrument you check with, and how to
-know it is telling the truth: <a href="ice-water-test.html">the ice-water test</a>. For the holiday
+know it is telling the truth: <a href="thermometer-ice-test.html">the ice-water test</a>. For the holiday
 run-up itself, <a href="holiday-capacity.html">the hosting capacity worksheet</a> and
 <a href="holiday-roast-thermometer.html">the roast question</a>.</p></div>"""),
 
@@ -382,7 +250,7 @@ wherever a certificate is mentioned.</p></div>
 <div class="panel"><p class="kicker">Where this fits</p><p>This is the same distinction this site
 draws about its own numbers, written out on <a href="../how-we-choose.html">how we choose</a> and
 tracked on the <a href="../sources.html">source register</a>. The ice-water test in
-<a href="ice-water-test.html">the calibration guide</a> is what to do with an instrument when no
+<a href="thermometer-ice-test.html">the ice-water calibration test</a> is what to do with an instrument when no
 document is available.</p></div>"""),
 
     # ------------------------------------------------------------------ 6
@@ -455,3 +323,61 @@ every product page opens the live listing, where the number is always current. S
 <a href="small-kitchen-air-fryer.html">measuring for a small kitchen</a> and
 <a href="multi-function-questions.html">questions to ask before a multi-function appliance</a>.</p></div>"""),
 ]
+
+
+GUIDES.append(dict(slug="first-week-wireless-probe",
+     title="First week with a leave-in probe: seven checks before a long cook depends on it",
+     sub="Pairing, the alert test across your own house, what a 1000-degree heat-safe figure refers to, and the two numbers one listing cannot agree on.",
+     kicker="How-to \u00b7 first week",
+     products=["P-05", "P-04"],
+     intro="""A leave-in probe is the only cooking instrument that has to work at a distance, on a network, on a battery, while you are somewhere else. That is four chances to fail, and none of them show up in a specification table. So run the whole chain once, this week, with nothing cooking.""",
+     verdict="""Do one dry run of the full chain \u2014 pair, place, alert, range, battery \u2014 before a four-hour cook depends on it, and keep a one-second instant-read for the spot checks a leave-in probe is not there to do. A cook is lost to a dropped connection far more often than to a wrong number.""",
+     sections=[
+       ("Pair it while the table is still clear",
+        """The CHEF iQ Sense listing states its probes work over Wi-Fi and Bluetooth through the CHEF iQ app, and the kit is three probes plus a hub. That is the setup to do on a quiet evening, not at four o'clock with a brisket already in. What the app asks for \u2014 account, firmware, which device is the hub \u2014 is not something this site has run hands-on, so treat the manual as the authority and treat this page as the checklist that says: do it before the day it matters."""),
+       ("What stays in the food, and what does not",
+        """USDA's own table of thermometer types describes wireless and smart models as designed to remain in the food while it cooks, giving live status, and calling for the sensing point at least an inch deep in the thickest part. The listing for this kit states the probes are heat safe to 1000 &#176;F. That is a rating of the probe, and this page will not tell you what the hub, its cable or its battery can take. That is a manual question, and it is the one people skip."""),
+       ("Test the alert, not just the number",
+        """Set a target a long way below what you will actually cook to, leave the phone in the room you will really be sitting in, and walk the probe away from the hub. You are measuring three things no listing states: how long the alert takes to arrive, whether it arrives at all past the far wall, and what happens when it drops and reconnects. Write down the worst spot in your house. That distance, not the marketing range, is the size of your cook."""),
+       ("The battery, and the two figures on one page",
+        """The listing carries two numbers for the same object: an About-this-item line stating up to 50 hours on a full charge, and 70 hours recorded on an earlier read of the same page. Both are printed on this site rather than quietly averaged, because choosing between them would be inventing a fact. Practically, it changes one habit: charge before a long cook rather than after."""),
+       ("The ambient sensor is the one people ignore",
+        """Five sensors is what the listing states: four internal and one ambient. The ambient channel is the difference between \u201cmy food is at 145\u201d and \u201cmy cooker is losing heat, so my food will be late\u201d. Before the long cook, find out what your app actually does with that channel \u2014 graph, alert, or nothing \u2014 because a sensor you never read is a spec you paid for."""),
+       ("What an instant-read still does that this cannot",
+        """A leave-in probe watches one joint in one place. The instant-read in this category states a one-second read, no app, no network, no pairing, and a wipe-clean body, which is what you want when you are checking four chicken breasts, a burger and the thickest part of a chop inside thirty seconds. The two instruments are not rivals; one is a lookout, the other is a question you ask a drawer."""),
+       ("Care, where the seller and the agency pull differently",
+        """The kit's listing states its probes are waterproof and dishwasher-safe. USDA's general care guidance for food thermometers is that most should not be immersed and should be washed by hand, and warns that faces and plastics can be damaged by heat. Neither statement is wrong about the other's product: one is a specific claim about specific parts, the other is general advice for the category. Read the manual that arrives, because that is the document a warranty refers to."""),
+     ],
+     extra="""<table><caption>A seven-day dry run. Nothing here is a cook time \u2014 there are no cook times on this site because nobody here cooked.</caption><thead><tr><th scope="col">Day</th><th scope="col">Check</th><th scope="col">What to write down</th></tr></thead><tbody>
+<tr><th scope="row">1</th><td>Pair probes and hub on the kitchen table</td><td>Which probe maps to which channel, and how long setup took</td></tr>
+<tr><th scope="row">2</th><td>Alert test from the room you actually sit in</td><td>Seconds until the phone notices, and the worst distance that still works</td></tr>
+<tr><th scope="row">3</th><td>Drop and recover: hub off, then on</td><td>Whether a missed alert re-sends or is simply gone</td></tr>
+<tr><th scope="row">4</th><td>Placement practice on a cold roast</td><td>Where the thickest part is, clear of bone, fat and gristle</td></tr>
+<tr><th scope="row">5</th><td>Charge, then note the figure you will plan against</td><td>The lower of the two numbers on the listing, deliberately</td></tr>
+<tr><th scope="row">6</th><td>Find the ambient channel in the app</td><td>Graph, alert, or absent</td></tr>
+<tr><th scope="row">7</th><td>Care check against the manual</td><td>What may be rinsed, what may not, and what voids nothing</td></tr></tbody></table>
+<div class="panel"><p class="kicker">Run the number first</p><p>A probe that drifts tells you nothing useful at any distance, so before the seven days are out, do the calibration check the USDA publishes: <a href="thermometer-ice-test.html">the ice-water test</a>. For the long-cook question this instrument answers, see <a href="holiday-roast-thermometer.html">when a wireless probe earns its keep</a>, and <a href="instant-vs-wireless.html">which type for which cook</a>.</p></div>"""))
+
+
+def _decode(g):
+    """The generator escapes the fields a reader sees first (title, sub, kicker, intro, verdict
+    and every section heading). An entity stored in one of those is escaped again, so the page
+    prints `&#8220;` where a quote mark belongs. Decode at the source, in the record, so no
+    renderer has to remember to do it. Raw section bodies and `extra` are HTML and are left alone.
+    """
+    import html as _h
+
+    def fix(v):
+        prev = None
+        while v != prev:
+            prev, v = v, _h.unescape(v)
+        return v
+    for k in ("title", "sub", "kicker", "intro", "verdict"):
+        if g.get(k):
+            g[k] = fix(g[k])
+    if g.get("sections"):
+        g["sections"] = [(fix(h), t) for h, t in g["sections"]]
+    return g
+
+
+GUIDES = [_decode(g) for g in GUIDES]

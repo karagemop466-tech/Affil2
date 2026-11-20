@@ -592,7 +592,7 @@
   {
     "id": "FLG-054",
     "title": "Verification log weight rows are stale for P-01 and P-03",
-    "detail": "The published Verification Log (data/verification.json, rendered on verification.html) still records the P-01 and P-03 item-weight rows as 'unverified \u2014 blank', with the method note 'No weight appears in the fetched listing text'. The register (data/products.json) and both product pages publish these weights as verified from the official Product information Measurements tables: P-01 13.3 pounds and P-03 12.8 pounds (see FLG-022 deep-table pass). The two documents contradict each other on the same field. The verification-log rows reflect an earlier, shallower fetch and were preserved untouched by later passes (additive-only rule). No product value is changed by this flag; the register stays authoritative and the stale rows need a correction pass over data/verification.json.",
+    "detail": "The published Verification Log (data/verification.json, rendered on verification.html) still records the P-01 and P-03 item-weight rows as 'unverified \u2014 blank', with the method note 'No weight appears in the fetched listing text'. The register (data/products.json) and both product pages publish these weights as verified from the official Product information Measurements tables: P-01 13.3 pounds and P-03 12.8 pounds (deep-table pass recorded on this page as an earlier flag). The two documents contradict each other on the same field. The verification-log rows reflect an earlier, shallower fetch and were preserved untouched by later passes (additive-only rule). No product value is changed by this flag; the register stays authoritative and the stale rows need a correction pass over data/verification.json.",
     "links": [
       "S10",
       "S12"
@@ -602,6 +602,48 @@
   },
   {
     "id": "FLG-055",
+    "title": "Guide read times were typed in, not measured",
+    "severity": "corrected",
+    "detail": "Every guide kicker on the published site asserted a fixed read time (4 to 7 minutes) that had no relation to the copy underneath it: the shortest guide was 380 words and claimed 6 minutes. Nothing checked the figure, because nothing was expected to. Read time is now computed at build from the page's own visible words at 225 words per minute, rounded up, and scripts/check_site.py recomputes it from the rendered page and fails if the stated minutes are inconsistent. The stale literals in the seasonal module's kickers were removed so a regenerated guide cannot print a number that its own text contradicts.",
+    "links": [
+      "S27"
+    ],
+    "owner_status": "Corrected; the figure is derived from the copy, not authored alongside it."
+  },
+  {
+    "id": "FLG-056",
+    "title": "Internal register codes were printed inside buyer-facing sentences",
+    "severity": "corrected",
+    "detail": "Flag identifiers and crawl citations (FLG-007, FLG-022, FLG-036, 'chunk 7', 'intent record') appeared in image captions, product-card trade-off lines, comparison-table cells, guide standfirsts and the search index. They are true, but they are production notes, and a reader deciding what to buy should not have to decode a filing system to get the caveat. The substance now stays in plain language and the code appears only on audit surfaces, with each product page keeping a full record table under its own heading. The gate fails if an FLG code or a chunk citation is visible on any shop or guide page.",
+    "links": [
+      "S27",
+      "S03"
+    ],
+    "owner_status": "Corrected on every reader page; flagged.html, sources.html and verification.html still carry all of them."
+  },
+  {
+    "id": "FLG-057",
+    "title": "Pages printed their own markup: double-escaped entities in reader copy",
+    "severity": "corrected",
+    "detail": "Guide fields that the renderer escapes (title, standfirst, intro, verdict) had been authored with HTML entity markup, so the escaping pass double-encoded them and readers saw the markup itself: thermometer-accuracy.html showed a visible plusmn entity where the sentence means plus-or-minus half a degree, and the first-week and Thanksgiving guides each showed a stray mdash entity. The page source looked correct, so this was found by reading the built pages rather than the registers. Fixed in the generator: escaped reader fields decode named and numeric entities to characters before escaping, every page rebuilt clean, and the gate now unescapes each page's visible text and fails on any entity sequence left. The same rule caught the leak in three further renderers during integration with another session's pass.",
+    "links": [
+      "S27"
+    ],
+    "owner_status": "Corrected; the gate rule covers all pages, not only the ones that were visibly wrong."
+  },
+  {
+    "id": "FLG-058",
+    "title": "P-04 accuracy claim and in-box certificate are still seller statements, not verified facts",
+    "severity": "unverified",
+    "detail": "The listing for the ThermoMaven 1 Sec (B0DHZTCNR5) states an accuracy of plus or minus 0.5 degrees F, a 0.1 degree display resolution, and lists a calibration certificate among the contents. None of that has been confirmed against a manufacturer document or a test, and the USDA FSIS factsheet notes only that most thermometers are accurate within 2 to 4 degrees F, which is a baseline for the category rather than a judgement on this unit. The site publishes the figure as the seller's claim, attributed and dated, and the ice-water test guide explains how to check it on your own unit. No page calls it verified.",
+    "links": [
+      "S13",
+      "S24"
+    ],
+    "owner_status": "Open; needs the manufacturer specification sheet or the certificate itself to move."
+  },
+  {
+    "id": "FLG-059",
     "title": "Unresolved git merge-conflict markers were committed to main inside the stylesheet",
     "detail": "On 2026-11-20 session 19dbf5e2 found three conflict markers left in the file on main: '<<<<<<< HEAD' at line 684, '=======' at 753 and '>>>>>>> origin/main' at 834 of assets/style.css. Both sides' rule blocks were intact between the markers, so the markers were deleted and both sides kept (session 35973829 removed the same markers independently the same day; this branch carried its own copy of the repair through the merge, so the two fixes agree), which leaves the stylesheet parseable and the brace count balanced (479/479). A browser skips a stray marker line, so the damage was invisible rather than catastrophic - but CSS error recovery can swallow the rule after an unmatched token, which is how the November layer lost .hero earlier. Request to the owner of scripts/check_site.py (T-30, session 57fc3be0): fail the build when any tracked file contains a merge marker. This session did not edit that file, per its claim.",
     "links": [
@@ -611,27 +653,7 @@
     "owner_status": "Repaired on 2026-11-20 and published here so the fix is auditable. The gate rule is a request, not an edit, because another session owns that file."
   },
   {
-    "id": "FLG-056",
-    "title": "Two published guides showed raw HTML entities to readers",
-    "detail": "The seasonal guides' hero paragraph, verdict box and one meta description printed '&#8212;' and '&#183;' as literal text, because HTML entities were stored in fields the generator runs through its escaper: the ampersand is escaped again and the entity dies. Found while checking a new guide, not reported by the gate, which parses tags but not escaped text. Fixed by normalising entities to characters once, in the generator, for title, sub, kicker, intro, verdict and section headings only - section bodies and extra HTML are raw and keep their entities. tests/test_site.py now asserts no double-escaped entity survives on any guide page.",
-    "links": [
-      "S10"
-    ],
-    "severity": "corrected",
-    "owner_status": "Repaired on 2026-11-20 with a regression test. No value changed; wording only."
-  },
-  {
-    "id": "FLG-057",
-    "title": "Two guides asserted a reading time that was three times the real length",
-    "detail": "The seasonal guides' kickers stated '7 min read' and '6 min read' as hand-written claims, while the generator computes an honest estimate from the words on the page and printed 'about 2 min of reading' on the same line. Two numbers for one thing, the wrong one first. The hardcoded claims were removed; the computed estimate stays, and every guide now carries exactly one reading time, derived rather than asserted. A count in prose is a claim: it either comes from the data or it does not appear.",
-    "links": [
-      "S10"
-    ],
-    "severity": "corrected",
-    "owner_status": "Repaired on 2026-11-20. Nothing was rounded up in the site's favour."
-  },
-  {
-    "id": "FLG-058",
+    "id": "FLG-060",
     "title": "Five products shared two images, and the images are renderings, not photographs",
     "detail": "Until this pass, all five product cards and all five product pages pointed at two image files, so the same photo of three fryers appeared under a thermometer card's neighbour and under every air fryer. That is the clearest remaining tell of a generated site, and a shop cannot lean on it. Five distinct renderings were commissioned for this site (assets/photos/p01..p05) and wired per product, plus a real og:image per product page. Two things follow, and both need an owner: first, a rendering is an editorial approximation, not an accurate picture of the SKU, so every one is captioned as illustrative and no Amazon photography is used (the site has no licence for it, and PA-API or Creators API imagery requires the owner's approved credentials); second, if the owner prefers no synthetic imagery at all on product pages, the fix is to remove the figures rather than to source photographs, which is a decision, not an automation.",
     "links": [
@@ -642,7 +664,7 @@
     "owner_status": "Published and labelled. Owner decision requested: keep labelled renderings, go to illustration-only SVG, or wait for API-supplied imagery (SG-13, SG-15)."
   },
   {
-    "id": "FLG-059",
+    "id": "FLG-061",
     "title": "The test suite hardcoded the page count, so publishing anything broke CI",
     "detail": "tests/test_site.py asserted the generator printed 'built 36 pages'. A new guide makes that false, which means the honest result of publishing content is a red build, and a red build that means nothing is a build people learn to ignore. The assertion now derives the expected number from the HTML files on disk, and a second test checks that every guide record produces a page, appears in sitemap.xml, feed.xml and findability.txt, ends on a tagged product line, and carries no escaped-entity artefacts.",
     "links": [
@@ -652,7 +674,7 @@
     "owner_status": "Repaired on 2026-11-20. Tests are stronger than before, not loosened."
   },
   {
-    "id": "FLG-060",
+    "id": "FLG-062",
     "title": "The reading-time estimate counted only part of the page",
     "detail": "The generator computed an honest estimate from intro, verdict and section prose, then printed it beside pages that also carry a table, a checklist and a sources panel: a 970-word guide was labelled 2 minutes. Found on 2026-11-20 while publishing the November wave. The estimate now counts the whole rendered page, stripped of markup, so the number on the line matches the words below it. If an estimate cannot include a section, it should not be printed next to it.",
     "links": [
@@ -662,7 +684,7 @@
     "owner_status": "Repaired on 2026-11-20 in scripts/build_site.py. Estimates rose across the guide set; nothing else on the page changed."
   },
   {
-    "id": "FLG-061",
+    "id": "FLG-063",
     "title": "A guide quotes OSHA, but osha.gov is not on the source-host allowlist",
     "detail": "The certification guide quotes OSHA's own description of the Nationally Recognized Testing Laboratory programme and links https://www.osha.gov/nationally-recognized-testing-laboratory-program, fetched and read on 2026-11-20. It was deliberately not added to data/sources.json: the build gate's I-4 rule documents that admitting a host to the official-source allowlist is an owner decision rather than a fix, so this session linked the document on the page instead of widening the gate for itself. Owner action: add 'www.osha.gov' to OFFICIAL_SOURCE_HOSTS in scripts/check_site.py (one line) if the federal source is acceptable, then register the row as S27.",
     "links": [
