@@ -131,5 +131,12 @@
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/food-thermometers",
     "used_for": "Official ice-water calibration test (immerse stem ≥2 inches in ice-water slurry for ≥30 seconds; calibrated thermometer reads 32 °F) and proper stem placement.",
     "checked": "2026-11-20"
+  },
+  {
+    "id": "S25",
+    "name": "Google Search Central — Creating helpful, reliable, people-first content",
+    "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
+    "used_for": "Authorship and accuracy standards this site follows. Quoted verbatim on 2026-11-20 (page last updated 2026-10-05 UTC): \"Do pages carry a byline, where one might be expected?\"; \"We strongly encourage adding accurate authorship information, such as bylines to content where readers might expect it\"; \"avoid using deceptive authorship information. Fabricating creator profiles (such as by using AI-generated headshots, made-up names, or false credentials…) is a form of deception\"; \"For informational pages, the content should be factually accurate\"; and \"automatically generating pages from feeds or using generative AI to produce large amounts of text without manual oversight or curation represents little to no effort\".",
+    "checked": "2026-11-20"
   }
 ]

@@ -113,6 +113,65 @@ DISCLOSURE = ("As an Amazon Associate I earn from qualifying purchases. Links ma
 def esc(s):
     return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
+
+# ---- register codes vs reader copy -----------------------------------------
+# A `FLG-xxx` code is an internal register reference: it belongs on an audit surface, not in the
+# middle of a sentence a shopper is reading on a shop page. Buyer-facing surfaces keep the substance
+# and drop the code; the audit tables on flagged.html, verification.html and sources.html keep both.
+FLAG_CODE = re.compile(r"\s*\(\s*(?:see\s+)?FLG-\d{3}\s*\)", re.I)
+FLAG_AS_FLAGGED = re.compile(r"\s*(?:,|;)?\s*(?:are|is|been)?\s*flagged as\s+FLG-\d{3}", re.I)
+
+
+def buyer(s):
+    """Reader-facing copy: same sentence, no internal ticket number in it."""
+    s = FLAG_AS_FLAGGED.sub("is flagged for review", str(s))
+    s = FLAG_CODE.sub("", s)
+    return re.sub(r"[ \t]+", " ", s).strip()
+
+
+# ---- byline -----------------------------------------------------------------
+# Role-based, because inventing a human byline would be a false claim. The desk is the publication's
+# editorial desk; about.html says plainly that a named author of record is still outstanding.
+DESK = "The Kitchen Desk"
+
+
+def byline(up=""):
+    """The stamp under every h1: who wrote it, what it was checked against, and when.
+
+    The byline links to the authorship note because that is what a byline is for — a reader
+    who wants to know who stands behind the number should be able to ask (S25).
+    """
+    return (f'<p class="byline"><span class="by-who">By <strong>{DESK}</strong></span>'
+            f'<span class="stamp">Verified against the official listing on {TODAY}</span>'
+            f'<a href="{up}about.html#who-writes-it">Who writes this</a>'
+            f'<a href="{up}how-we-choose.html">How we work</a></p>')
+
+
+# ---- read time --------------------------------------------------------------
+# A read time is a promise to a reader, so it is measured from the copy rather than typed into it.
+WORDS_PER_MIN = 225
+MIN_READ = re.compile(r"\s*(?:·|&#183;|&middot;)\s*\d+\s*min(?:ute)?s?\s+read", re.I)
+
+
+def guide_words(g):
+    parts = [MIN_READ.sub("", g.get("kicker", "")), g["title"], g["sub"], g["intro"], g["verdict"]]
+    parts += [f"{h} {t}" for h, t in g["sections"]]
+    parts.append(g.get("extra", ""))
+    text = MIN_READ.sub("", re.sub(r"<[^>]+>", " ", " ".join(str(x) for x in parts)))
+    return len(text.split())
+
+
+def guide_minutes(g):
+    """Minutes a careful reader needs, from the guide's own word count. Rounded up."""
+    return max(1, -(-guide_words(g) // WORDS_PER_MIN))
+
+
+def guide_kicker(g):
+    """Kicker for a guide: label plus a read time measured from the copy, never typed in."""
+    base = MIN_READ.sub("", g["kicker"]).replace("&#183;", "\u00b7").replace("&middot;", "\u00b7")
+    base = re.sub(r"\s*\u00b7\s*", " \u00b7 ", base).strip(" \u00b7")
+    return f"{base} \u00b7 {guide_minutes(g)} min read"
+
 def aff(p):
     """The tagged Special Link we publish."""
     target = p.get("observed") or p["asin"]
@@ -143,7 +202,7 @@ def glyph(p, up=""):
 # Editorial images are generated illustration, not photographs of the products.
 # Every page that shows one says so, and the gate fails if the caption is missing.
 PHOTO_CAPTION = ("Illustrative image, generated for this site &mdash; not a photograph of the "
-                 "product (FLG-036). No Amazon photography is used anywhere (FLG-007).")
+                 "product. No Amazon photography is used anywhere.")
 PHOTOS = {
     "hero": ("assets/photos/hero-kitchen.jpg", 1264, 848,
              "A dual-basket air fryer with both drawers open on a wooden counter, steam rising "
@@ -263,7 +322,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
       Inc. or its affiliates. This site is not endorsed by Amazon. Scenes and diagrams are illustrations,
-      not product photography, and not a picture of the item reviewed (FLG-036). Nothing here is a
+      not product photography, and not a picture of the item reviewed. Nothing here is a
       hands-on product test — every specification is read from the official listing and dated.
       Last verified {TODAY}.</p>
     <p class="small">© 2026 {SITE}. <a href="{up}flagged.html">Flagged for Review</a> lists everything
@@ -290,10 +349,10 @@ def buybox(p, up, variant="full"):
   <div class="buybox-body">
     <p class="kicker">{esc(p['cat'])} · {esc(p['brand'])}</p>
     <h3>{esc(p['headline'])}</h3>
-    <p>{esc(p['blurb'])}</p>
+    <p>{esc(buyer(p['blurb']))}</p>
     <dl class="factrow">
-      <div><dt>Best for</dt><dd>{esc(p['best_for'])}</dd></div>
-      <div><dt>The catch</dt><dd>{esc(p['tradeoff'])}</dd></div>
+      <div><dt>Best for</dt><dd>{esc(buyer(p['best_for']))}</dd></div>
+      <div><dt>The catch</dt><dd>{esc(buyer(p['tradeoff']))}</dd></div>
     </dl>
     <ul class="checks">{checks}</ul>
     <p class="cta">
@@ -311,17 +370,18 @@ def buybox(p, up, variant="full"):
 def card(p, up, badge=""):
     photo_key = "thermo" if p["cat"] == "Meat Thermometers" else "air"
     chips = "".join(
-        f'<div class="chip"><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>' for k, v in p["card"][:3])
+        f'<div class="chip"><dt>{esc(k)}</dt><dd>{esc(buyer(v))}</dd></div>' for k, v in p["card"][:3])
     tag = f'<span class="badge">{esc(badge)}</span>' if badge else ""
     return f"""<article class="card">
   <div class="card-media">{photo(photo_key, up, caption=True, short=True)}{tag}</div>
   <div class="card-body">
     <p class="kicker">{esc(p['cat'])} · {esc(p['brand'])}</p>
     <h3><a href="{up}{slug_of(p)}">{esc(p['headline'])}</a></h3>
-    <p class="card-blurb">{esc(p['blurb'])}</p>
+    <p class="card-blurb">{esc(buyer(p['blurb']))}</p>
     <dl class="chips">{chips}</dl>
-    <p class="small bestfor"><strong>Best for</strong> {esc(p['best_for'])}</p>
-    <p class="small catchline"><strong>The catch</strong> {esc(p['tradeoff'])}</p>
+    <p class="small bestfor"><strong>Best for</strong> {esc(buyer(p['best_for']))}</p>
+    <p class="small catchline"><strong>The catch</strong> {esc(buyer(p['tradeoff']))}
+      <a class="catchlink" href="{up}{slug_of(p)}#the-record">why we say that</a></p>
     <p class="cta">
       <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
          data-event="outbound_click">Check price on Amazon<span class="btn-sub">paid link</span></a>
@@ -442,10 +502,10 @@ def build_home():
     picks = "".join(
         f'<li><a href="{slug_of(p)}"><span class="pick-k">{esc(p["cat"])}</span>'
         f'<strong>{esc(p["brand"])}</strong> {esc(p["headline"])}</a>'
-        f'<span>{esc(p["best_for"])}</span></li>' for p in PRODUCTS)
+        f'<span>{esc(buyer(p["best_for"]))}</span></li>' for p in PRODUCTS)
     latest = "".join(
         f'''<article class="latest-item">
-  <p class="kicker">{esc(g["kicker"])}</p>
+  <p class="kicker">{esc(guide_kicker(g))}</p>
   <h3><a href="guides/{g["slug"]}.html">{esc(g["title"])}</a></h3>
   <p>{esc(g["sub"])}</p>
 </article>''' for g in GUIDES[:3])
@@ -587,8 +647,8 @@ def overview_table():
                  f"<td><a href=\"{slug_of(p)}\"><strong>{esc(p['brand'])}</strong> &mdash; "
                  f"{esc(p['headline'])}</a></td>"
                  f"<td>{esc(p['cat'])}</td>"
-                 f"<td>{esc(p['best_for'])}</td>"
-                 f"<td>{esc(p['tradeoff'])}</td>"
+                 f"<td>{esc(buyer(p['best_for']))}</td>"
+                 f"<td>{esc(buyer(p['tradeoff']))}</td>"
                  f"<td class=\"nowrap\"><a href=\"{aff(p)}\" rel=\"sponsored nofollow\" "
                  f"data-outbound=\"{p['id']}\" data-event=\"outbound_click\">Amazon (paid link)</a></td></tr>")
     return f"""<table class="overview">
@@ -623,8 +683,8 @@ def build_shop():
 def build_category(catfile, cat, headline, intro, guides_, picks):
     items = [p for p in PRODUCTS if p["cat"] == cat]
     verdict_items = "".join(
-        '<li><strong>' + esc(p["brand"]) + '</strong> &mdash; ' + esc(p["best_for"]) +
-        '. <em>Catch:</em> ' + esc(p["tradeoff"]) + '. <a href="' + slug_of(p) +
+        '<li><strong>' + esc(p["brand"]) + '</strong> &mdash; ' + esc(buyer(p["best_for"])) +
+        '. <em>Catch:</em> ' + esc(buyer(p["tradeoff"])) + '. <a href="' + slug_of(p) +
         '">Details</a></li>' for p in items)
     guide_items = "".join(
         '<li><a href="' + h + '">' + esc(t) + '</a><span>' + esc(sub) + '</span></li>'
@@ -664,14 +724,15 @@ def build_product(p):
   <div>
     <p class="kicker">{esc(p['cat'])} · {p['id']} · verified {TODAY}</p>
     <h1>{esc(p['headline'])}</h1>
-    <p class="lede">{esc(p['blurb'])}</p>
+    <p class="lede">{esc(buyer(p['blurb']))}</p>
+    {byline("../")}
   </div>
   <div class="pdp-art">{photo("thermo" if p["cat"] == "Meat Thermometers" else "air", "../", "pdp-photo")}</div>
 </div>
 <div class="pdp-buy">
   <div>
-    <p class="buyline">Best for <strong>{esc(p['best_for'])}</strong></p>
-    <p class="buyline">The catch <strong>{esc(p['tradeoff'])}</strong></p>
+    <p class="buyline">Best for <strong>{esc(buyer(p['best_for']))}</strong></p>
+    <p class="buyline">The catch <strong>{esc(buyer(p['tradeoff']))}</strong></p>
   </div>
   <a class="btn" href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p['id']}"
      data-event="outbound_click">Check the live price on Amazon<span class="btn-sub">paid link</span></a>
@@ -695,7 +756,7 @@ def build_product(p):
   Amazon, quoted exactly rather than paraphrased, so you can match it against the page you land
   on. Brand: {esc(p['brand'])}.{(" Model: " + esc(p['model']) + ".") if p['model'] else " The listing does not publish a model number."}</p>
 
-<h2>Product-intent confirmation record</h2>
+<h2 id="the-record">Product-intent confirmation record</h2>
 {intent_table(p)}
 
 {usda_block(p)}
@@ -739,16 +800,16 @@ def build_product(p):
 NOT_STATED = "— <span class=\"unverified\">not stated on the listing</span>"
 NA_CAP = "— <span class=\"unverified\">n/a, measures temperature</span>"
 NA_POWER = "— <span class=\"unverified\">n/a, battery powered</span>"
-NOWEIGHT = "— <span class='unverified'>not stated on this listing (FLG-022)</span>"
+NOWEIGHT = "— <span class='unverified'>not stated on this listing</span>"
 
 
 def spec(p, key, other=NOT_STATED):
     f = p["fields"].get(key)
     if not f or f["v"] is None:
         return other
-    txt = esc(f["v"])
+    txt = esc(buyer(f["v"]))
     if f["st"] == "conflict":
-        txt += ' <span class="token conflict">see flags</span>'
+        txt += ' <span class="token conflict">both figures shown</span>'
     return txt
 
 
@@ -758,9 +819,9 @@ def by_category(p, key, fallbacks, other=NOT_STATED):
         for k in fallbacks:
             f = p["fields"].get(k)
             if f and f["v"]:
-                txt = esc(f["v"])
+                txt = esc(buyer(f["v"]))
                 if f["st"] == "conflict":
-                    txt += ' <span class="token conflict">see flags</span>'
+                    txt += ' <span class="token conflict">both figures shown</span>'
                 return txt
         return other
     return spec(p, key, other)
@@ -768,8 +829,8 @@ def by_category(p, key, fallbacks, other=NOT_STATED):
 
 # the rows a head-to-head view compares, in order: label -> how to render
 PAIR_ROWS = [
-    ("Best for", lambda p: esc(p["best_for"])),
-    ("The catch", lambda p: esc(p["tradeoff"])),
+    ("Best for", lambda p: esc(buyer(p["best_for"]))),
+    ("The catch", lambda p: esc(buyer(p["tradeoff"]))),
     ("Capacity", lambda p: spec(p, "capacity", NA_CAP)),
     ("Temperature range", lambda p: by_category(p, "temperature", ["upper_temp", "heat"])),
     ("Power / battery", lambda p: by_category(p, "power", ["battery"], NA_POWER)),
@@ -809,7 +870,7 @@ def build_compare():
   <tbody>
     {row("Category", lambda p: esc(p["cat"]))}
     {row("Best for", lambda p: esc(p["best_for"]))}
-    {row("The catch", lambda p: esc(p["tradeoff"]))}
+    {row("The catch", lambda p: esc(buyer(p["tradeoff"])))}
     {row("Capacity", lambda p: spec(p, "capacity", NA_CAP))}
     {row("Temperature range", lambda p: by_category(p, "temperature", ["upper_temp", "heat"]))}
     {row("Power / battery", lambda p: by_category(p, "power", ["battery"], NA_POWER))}
@@ -1151,7 +1212,8 @@ GUIDES = [
 
     ]
 from seasonal_guides import GUIDES as _SEASONAL
-GUIDES += _SEASONAL
+from howto_guides import GUIDES as _HOWTO
+GUIDES += _SEASONAL + _HOWTO
 
 
 
@@ -1160,7 +1222,7 @@ GUIDES += _SEASONAL
 def build_guides_index():
     items = "".join(
         f"""<article class="guidecard">
-  <p class="kicker">{esc(g['kicker'])}</p>
+  <p class="kicker">{esc(guide_kicker(g))}</p>
   <h3><a href="guides/{g['slug']}.html">{esc(g['title'])}</a></h3>
   <p>{esc(g['sub'])}</p>
   <p class="small">Covers {", ".join(BY_ID[x]['brand'] for x in g['products'])}</p>
@@ -1191,15 +1253,16 @@ def build_guides_index():
 
 def build_guide(g):
     rel = [BY_ID[x] for x in g["products"]]
-    secs = "".join(f"<h2>{esc(h)}</h2><p>{t}</p>" for h, t in g["sections"])
+    secs = "".join(f"<h2>{esc(h)}</h2><p>{buyer(t)}</p>" for h, t in g["sections"])
     items = "".join(
         f'<li><a href="../{slug_of(p)}">{esc(p["brand"])} — {esc(p["headline"])}</a>'
-        f'<span>{esc(p["best_for"])}</span></li>' for p in rel)
+        f'<span>{esc(buyer(p["best_for"]))}</span></li>' for p in rel)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (g['title'][:40] + "…", None)], "../")}
-<p class="kicker">{esc(g['kicker'])} · verified {TODAY}</p>
+<p class="kicker">{esc(guide_kicker(g))} · verified {TODAY}</p>
 <h1>{esc(g['title'])}</h1>
 <p class="lede">{esc(g['intro'])}</p>
+{byline("../")}
 <div class="verdict-box">
   <p class="kicker">The short answer</p>
   <p>{esc(g['verdict'])}</p>
@@ -1324,6 +1387,14 @@ def build_how():
   <li><strong>A "best" verdict</strong> without your counter measurements and household size. We give
     you the trade-off instead.</li>
 </ul>
+
+<h2>How a page is signed, and why</h2>
+<p>Every guide and every product page carries the desk byline, the date the numbers were read, and a
+  link back to this page. Three publisher promises sit behind that line, each taken from
+  <a href="{source_url('S25')}">Google's people-first guidance</a> (S25): a page should say who wrote
+  it; it should say how it was written; and its figures should be accurate. Read times on this site are
+  therefore counted from the copy at build time rather than typed in, and internal register codes are
+  kept off buyer-facing sentences, because neither is a fact a shopper can use.</p>
 
 <h2>How conflicts are handled</h2>
 <p>When a listing contradicts itself, we print both figures in the specification table and give the
@@ -1570,10 +1641,149 @@ SUGGESTIONS = [
          why="Query-driven drafting grows organic search from evidence instead of guesswork.",
          impact="High — organic discovery", effort="Owner action", status="Blocked on Search Console",
          verify="Requires Search Console verification (SG-10, SG-29, Q-20)."),
+    dict(id="SG-33", title="Keep internal register codes out of buyer-facing sentences",
+         what="The FLG-xxx identifiers stay on the audit surfaces — this page, Flagged for Review, "
+              "Sources, the Verification Log and the record table at the foot of each product page — "
+              "and are stripped from the front page, shop, category, compare and guide copy.",
+         why="A ticket number in the middle of a buying sentence is the clearest tell that a page was "
+             "written for an auditor rather than a shopper. The substance stays; the code becomes a link.",
+         impact="High — reads like a shop", effort="Done", status="Shipped",
+         verify="scripts/check_site.py fails if a FLG- code appears in the visible copy of index.html, "
+                "shop.html, a category page, compare.html or any guide page; flagged.html still lists all."),
+    dict(id="SG-34", title="Measure every guide's read time from its own copy",
+         what="The 'N min read' figure in a guide kicker is computed at build time from the guide's "
+              "word count at 225 words per minute, rounded up. The hardcoded numbers it replaced are "
+              "removed from all rendered kickers, including the seasonal module's stale literals.",
+         why="A typed-in read time is a guess dressed as a fact, and it is the exact kind of number "
+             "that makes a page feel generated. Ours can only move when the copy moves.",
+         impact="Medium — credibility of every guide", effort="Done", status="Shipped",
+         verify="scripts/check_site.py recomputes each guide page's visible word count and fails if the "
+                "stated minutes are inconsistent with it; the old 6-minute figure on a 2-minute guide is gone."),
+    dict(id="SG-35", title="Sign every guide and product page with a dated desk byline",
+         what="A byline block under every h1 on guide and product pages: who wrote it (The Kitchen "
+              "Desk), what the numbers were checked against, and the date. about.html explains why the "
+              "byline is a role and not a person.",
+         why="A publication has a voice on the page, not only in the footer. A role byline is the "
+             "honest version until the owner names an editor of record, which stays open.",
+         impact="Medium — publication feel", effort="Done", status="Shipped",
+         verify="Every guides/*.html and products/*.html page carries class=\"byline\"; the gate fails "
+                "otherwise; about.html names the desk and the outstanding item."),
+    dict(id="SG-36", title="Add two sourced how-to guides: the ice-water test and reading a listing",
+         what="guides/thermometer-ice-test.html (the USDA FSIS calibration method, verbatim steps, plus "
+              "what a ±0.5 °F listing claim means against USDA's 2–4 °F baseline) and "
+              "guides/read-an-air-fryer-listing.html (title vs bullets vs spec table, with the "
+              "contradictions this site already documents). Both generated, both in sitemap and feed.",
+         why="Useful pages that answer a question in the reader's words are how a small site earns a "
+             "click. Both are built only from the official listings and one .gov factsheet, each linked.",
+         impact="High — organic entry points", effort="Done", status="Shipped",
+         verify="Both pages build from scripts/howto_guides.py; every figure cites S24 (fsis.usda.gov) "
+                "or a dated listing field in data/products.json; no cook-time, popularity or volume claim."),
+    dict(id="SG-37", title="Turn the Decision Center shortlist into a copy-paste build prompt",
+         what="Tick the proposals you want and the page assembles a prompt for the next build session: "
+              "the chosen IDs, each one's what/why/cost/definition of done, the repo's standing "
+              "constraints, and the list of unresolved owner questions. It renders server-side, so it "
+              "works with JavaScript off.",
+         why="Ranking a proposal is not the same as instructing a build. This closes the gap between "
+             "the decision and the prompt that executes it, without anyone retyping the rules.",
+         impact="High — faster, safer handoff", effort="Done", status="Shipped",
+         verify="suggestions.html carries id=\"sugData\" and id=\"buildPrompt\"; assets/app.js rebuilds "
+                "the text from the ticks and copies it; tests/test_collector.js covers the assembly."),
 ]
 
 
+ENTITIES = {"&amp;": "&", "&mdash;": "\u2014", "&ndash;": "\u2013", "&ldquo;": "\"}",
+            "&rdquo;": "\"}", "&lsquo;": "'", "&rsquo;": "'", "&nbsp;": " ", "&deg;": "\u00b0",
+            "&plusmn;": "\u00b1", "&amp;": "&"}
+
+
+def unent(t):
+    """Turn markup entities back into characters, for copy that will be pasted as plain text."""
+    t = str(t)
+    for k, v in ENTITIES.items():
+        t = t.replace(k, v)
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def sug_payload():
+    """One blob of prompt text, rendered into the page and reassembled by assets/app.js.
+
+    Both the server-rendered default and the browser-side rebuild read this, so the two can
+    not drift apart into two different instructions for the same decision.
+    """
+    return {
+        "date": TODAY,
+        "site": BASE,
+        "tracking": TRACKING_ID,
+        "workflow": [
+            "Repo: karagemop466-tech/Affil2. Every page is generated by scripts/build_site.py from "
+            "data/*.json; the read paths and the audit tables all come from the same registers.",
+            "Read COORDINATION.md first. Claim a task ID with your session ID and your file scope, "
+            "commit the claim, and work only inside that scope; never take a task another session "
+            "claimed.",
+            "Never hand-edit generated HTML. Edit the generator or the data, re-run "
+            "`python3 scripts/build_site.py`, then `python3 scripts/check_site.py`, "
+            "`python3 -m unittest discover -s tests -p \"test_*.py\"` and "
+            "`node tests/test_collector.js`.",
+            "Rebase onto main before pushing; open a PR, merge it, then confirm the GitHub Pages run "
+            "and record PR, merge commit and deploy result in COORDINATION.md.",
+        ],
+        "constraints": [
+            "The Associates disclosure appears twice on every page, the first time above <main>.",
+            "Every amazon.com link carries rel=\"sponsored nofollow\" and the tracking ID.",
+            "No price, star rating, review count, sales rank or commission figure anywhere: "
+            "Program Policies \u00a72(b) and \u00a76(t).",
+            "A value is published only with a dated official source; anything else stays blank and "
+            "gets a flag in data/flags.json (append-only, new IDs only).",
+            "No hands-on, performance, popularity or search-volume claim: nobody has cooked with these "
+            "products, and the site says so.",
+            "data/products.json, data/sources.json and data/verification.json are shared registers: "
+            "correct them from a live re-read, never for convenience.",
+            "Keep internal FLG- codes out of buyer-facing sentences; they belong on the audit surfaces.",
+        ],
+        "unanswered": (
+            "Do not assume answers to the owner questions on questions.html (Q-01\u2026Q-20): intended "
+            "ASINs, tracking-ID status, short-link compliance, the one-per-product link test, a custom "
+            "domain, a named editor of record, Creators API acceptance and Search Console verification "
+            "all remain open. Any proposal above marked \"Blocked\" needs one of those answers before it "
+            "can be finished \u2014 say so on the page rather than inventing an answer."),
+        "proposals": {x["id"]: {k: unent(x[k]) for k in
+                               ("title", "what", "why", "impact", "effort", "status", "verify")}
+                      for x in SUGGESTIONS},
+    }
+
+
+def decision_prompt(ids, payload):
+    """Assemble the build instruction the Decision Center hands to the next session."""
+    lines = [f"ShopNow Kitchen \u2014 build task from the Decision Center ({payload['date']})", "",
+             f"Site: {payload['site']}  \u00b7  Tracking ID: {payload['tracking']} "
+             "(issuance unverified; see FLG-002)", ""]
+    lines += [f"- {w}" for w in payload["workflow"]]
+    lines += ["", "Do these proposals, in order:"]
+    n = 0
+    for pid in ids:
+        sg = payload["proposals"].get(pid)
+        if not sg:
+            continue
+        n += 1
+        lines += [
+            f"{n}. {pid} \u2014 {sg['title']}",
+            f"   What: {sg['what']}",
+            f"   Why: {sg['why']}",
+            f"   Impact / cost: {sg['impact']} \u00b7 {sg['effort']} \u00b7 status {sg['status']}",
+            f"   Definition of done: {sg['verify']}",
+        ]
+    lines += ["", f"Selected: {n} proposal(s) of {len(payload['proposals'])} on the register.", "",
+              "Standing constraints \u2014 do not trade any of these away to finish faster:"]
+    lines += [f"- {c}" for c in payload["constraints"]]
+    lines += ["", payload["unanswered"]]
+    return "\n".join(lines)
+
+
 def build_suggestions():
+    payload = sug_payload()
+    sug_json = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
+    default_prompt = decision_prompt([x["id"] for x in SUGGESTIONS
+                                     if not x["status"].startswith("Shipped")], payload)
     rows = ""
     for s in SUGGESTIONS:
         rows += f"""<tr data-sug="{s['id']}">
@@ -1588,6 +1798,8 @@ def build_suggestions():
     <button type="button" class="rankbtn" data-up="{s['id']}" aria-label="Move {s['id']} up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="{s['id']}" aria-label="Move {s['id']} down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
+    <label class="pick"><input type="checkbox" data-pick="{s['id']}"
+      aria-label="Include {s['id']} in the build prompt"> in&nbsp;prompt</label>
   </td>
 </tr>"""
     body = f"""
@@ -1647,6 +1859,18 @@ def build_suggestions():
     <tr><td>SG-32</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
   </tbody>
 </table>
+
+<h2>Build prompt for what you choose</h2>
+<p class="small">Tick <em>in&nbsp;prompt</em> on the rows you want, and this box assembles the
+  instruction for the next build session: the proposals, their cost, the repo's standing constraints,
+  and what is still unanswered. Left unticked it defaults to everything not yet shipped. It is written
+  by the generator, so it is already correct before any script runs.</p>
+<script type="application/json" id="sugData">{sug_json}</script>
+<p><textarea id="buildPrompt" rows="18" readonly>{esc(default_prompt)}</textarea></p>
+<p class="cta"><button type="button" class="btn" id="copyPrompt">Copy this prompt</button>
+  <span id="promptState" class="small" aria-live="polite"></span></p>
+<p class="small">Copying keeps the text with your ranking export. The proposals themselves are
+  unchanged by ticking &mdash; nothing here writes to the repository.</p>
 
 <h2>Record a decision</h2>
 <form id="decisionForm" class="decision-form">
@@ -2485,14 +2709,17 @@ def build_about():
   recommendation here is influenced by which product pays more &mdash; partly because no commission
   rate for any of these products has been confirmed, and this site does not publish one.</p>
 
-<h2>Who writes it</h2>
-<p><strong>Editor of record:</strong> not named. Rather than invent a byline, this site states
-  plainly that there is no named human author behind the copy yet and that this is an outstanding item
-  (FLG-033). That is a real gap, not a design choice, and it is honest to say so.</p>
-<p><strong>What the writer does:</strong> opens the official listing, reads each value off the page,
+<h2 id="who-writes-it">Who writes it</h2>
+<p><strong>The byline you see on every guide and product page is {DESK}</strong> — the name this
+  publication uses for the desk that reads listings, records values with their dates, and writes the
+  copy. It is a role byline, deliberately. There is no named human author of record yet, and rather
+  than invent a person to carry a byline, the site says so and keeps the item open (FLG-033) until the
+  owner names someone. When a name exists it replaces the desk name on the same line, in the same
+  place, with the same dated verification stamp.</p>
+<p><strong>What the desk does:</strong> opens the official listing, reads each value off the page,
   records it with a date and a URL, and raises a flag whenever two parts of the same page disagree.
   The process is written out on the <a href="how-we-choose.html">How we choose</a> page.</p>
-<p><strong>What the writer has not done:</strong> cooked with any of these appliances, measured any of
+<p><strong>What the desk has not done:</strong> cooked with any of these appliances, measured any of
   them, or seen a certification document. No page on this site claims otherwise.</p>
 
 <h2>Why only five products</h2>
@@ -2506,6 +2733,37 @@ def build_about():
   made, not an argument to be had. Every flag on the
   <a href="flagged.html">Flagged for Review</a> page has a source link and a suggested resolution,
   and corrections are dated rather than quietly applied.</p>
+
+<h2>How this content was made</h2>
+<p>Google's guidance on people-first content asks a publisher to say who made a page, how it was made,
+  and to keep it factually accurate. In answer, in plain terms:</p>
+<ul class="tight">
+  <li><strong>How:</strong> every figure on this site was taken by reading an official source &mdash; an
+    Amazon listing's own title, bullets or Product information tables, or a USDA/FTC/Google page &mdash;
+    then written up against that dated record. Nothing was scraped into a template, and no number here is
+    remembered rather than looked up.</li>
+  <li><strong>What it is not:</strong> a test report. No product was bought, cooked with, weighed or
+    calibrated for this site, and no page implies otherwise.</li>
+  <li><strong>Why the byline is a desk and not a person:</strong> a fabricated name, headshot or
+    credential is what Google calls deceptive authorship information. A role byline carries the same
+    accountability without inventing a biography. The named editor of record is an open item, not a
+    styling choice.</li>
+  <li><strong>Source for those standards:</strong>
+    <a href="{source_url('S25')}">Google Search Central &mdash; Creating helpful, reliable,
+    people-first content</a> (S25 in the <a href="sources.html">source register</a>).</li>
+</ul>
+
+<h2>How a page is signed</h2>
+<p>Every guide and every product page carries the same three-part stamp under its headline: who wrote
+  it ({DESK}), what the numbers were checked against, and the date they were read. A read time on a
+  guide is measured from the copy on the page at build time, never typed in by hand, because a
+  promise to a reader should be derived from the thing being promised.</p>
+<p>The site's internal register codes — the <code>FLG-</code> numbers that track every conflict and
+  every blank — live on this page, on the
+  <a href="flagged.html">Flagged for Review</a> page and in the audit tables at the bottom of each
+  product page. They are deliberately kept out of buyer-facing sentences: a shopper comparing two
+  air fryers should read &ldquo;the listing states two different wattages&rdquo;, not a ticket number.
+  Everything a code refers to is still one click away.</p>
 
 <h2>Imagery and trademarks</h2>
 <p>Two kinds of editorial imagery appear on this site, and both are explicitly labelled. The
@@ -2773,7 +3031,7 @@ def build_search():
         index.append({
             "t": f"{p['brand']} — {p['headline']}",
             "u": slug_of(p),
-            "d": f"{p['cat']}. {p['best_for']}. {p['tradeoff']}. "
+            "d": f"{p['cat']}. {buyer(p['best_for'])}. {buyer(p['tradeoff'])}. "
                  f"Listing title: {p['listing_title']}. Specs: " +
                  " ".join(f'{r["label"]} {r["value"]}' for r in p["spec_rows"]
                           if r["value"]),
@@ -2896,7 +3154,9 @@ def main():
          ("guides/small-kitchen-air-fryer.html", "Air fryer for a small kitchen",
           "Three measurements that decide it."),
          ("guides/air-fryer-thanksgiving.html", "Air fryer at Thanksgiving",
-          "What actually fits, and what does not.")],
+          "What actually fits, and what does not."),
+         ("guides/read-an-air-fryer-listing.html", "How to read an air fryer listing",
+          "Which block on the page a number is worth trusting.")],
         ["P-01", "P-03", "P-02"])
     build_category(
         "meat-thermometers.html", "Meat Thermometers",
@@ -2906,7 +3166,9 @@ def main():
         [("guides/instant-vs-wireless.html", "Instant-read or wireless: which do you need?",
           "Speed in your hand versus freedom to walk away."),
          ("guides/thermometer-accuracy.html", "How to read accuracy claims",
-          "What ±0.5 °F and NIST actually mean.")],
+          "What ±0.5 °F and NIST actually mean."),
+         ("guides/thermometer-ice-test.html", "The two-minute ice-water test",
+          "USDA's calibration check, step by step.")],
         ["P-04", "P-05"])
     for p in PRODUCTS:
         build_product(p)

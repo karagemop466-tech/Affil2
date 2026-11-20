@@ -3,6 +3,50 @@
 // No cookies, no third-party requests, no fingerprinting, and no search query text in URLs or logs.
 (function () {
   'use strict';
+  // ---- Decision Center build-prompt assembly (SG-37) ---------------------------
+  // The page ships a server-rendered prompt; ticking rows rebuilds it from the same
+  // JSON block, so the instruction in the box and the proposal register cannot drift.
+  function promptAssemble(ids, data) {
+    var p = data || {};
+    var props = p.proposals || {};
+    var lines = [
+      'ShopNow Kitchen \u2014 build task from the Decision Center (' + (p.date || '') + ')',
+      '',
+      'Site: ' + (p.site || '') + '  \u00b7  Tracking ID: ' + (p.tracking || '') +
+        ' (issuance unverified; see FLG-002)',
+      ''
+    ];
+    (p.workflow || []).forEach(function (w) { lines.push('- ' + w); });
+    lines.push('', 'Do these proposals, in order:');
+    var n = 0;
+    (ids || []).forEach(function (id) {
+      var sg = props[id];
+      if (!sg) return;
+      n += 1;
+      lines.push(n + '. ' + id + ' \u2014 ' + sg.title);
+      lines.push('   What: ' + sg.what);
+      lines.push('   Why: ' + sg.why);
+      lines.push('   Impact / cost: ' + sg.impact + ' \u00b7 ' + sg.effort + ' \u00b7 status ' + sg.status);
+      lines.push('   Definition of done: ' + sg.verify);
+    });
+    lines.push('', 'Selected: ' + n + ' proposal(s) of ' + Object.keys(props).length +
+      ' on the register.', '',
+      'Standing constraints \u2014 do not trade any of these away to finish faster:');
+    (p.constraints || []).forEach(function (c) { lines.push('- ' + c); });
+    if (p.unanswered) lines.push('', p.unanswered);
+    return lines.join('\n');
+  }
+
+  function promptDefaultIds(data) {
+    var props = (data && data.proposals) || {};
+    return Object.keys(props).filter(function (id) {
+      return !/^shipped/i.test(props[id].status || '');
+    });
+  }
+
+  if (typeof globalThis !== 'undefined' && globalThis) {
+    globalThis.snPrompt = { assemble: promptAssemble, defaultIds: promptDefaultIds };
+  }
   try {
     var ALLOWED = { page_view: 1, outbound_click: 1, guide_read: 1, search: 1, suggestion_rank: 1 };
     var FORBIDDEN = {
@@ -368,6 +412,64 @@
           try { localStorage.removeItem('sn_rank'); } catch (_) {}
           location.reload();
         });
+      }
+
+      // Wire the build-prompt box to the ticks in the table.
+      var sugDataEl = document.getElementById('sugData');
+      var promptBox = document.getElementById('buildPrompt');
+      var promptState = document.getElementById('promptState');
+      var sugData = null;
+      if (sugDataEl) {
+        try { sugData = JSON.parse(sugDataEl.textContent || ''); } catch (_) { sugData = null; }
+      }
+      if (promptBox && sugData) {
+        function pickedIds() {
+          var ticks = [].slice.call(document.querySelectorAll('#sugTable [data-pick]'))
+            .filter(function (c) { return c.checked; })
+            .map(function (c) { return c.getAttribute('data-pick'); });
+          var order = Object.keys(sugData.proposals || {});
+          if (!ticks.length) return promptDefaultIds(sugData);
+          return order.filter(function (id) { return ticks.indexOf(id) >= 0; });
+        }
+        function renderPrompt() {
+          var ids = pickedIds();
+          promptBox.value = promptAssemble(ids, sugData);
+          if (promptState) {
+            promptState.textContent = ids.length
+              ? 'Assembled from ' + ids.length + ' proposal(s). Copy it into the build session.'
+              : 'Nothing is open on this register.';
+          }
+        }
+        document.querySelectorAll('#sugTable [data-pick]').forEach(function (c) {
+          c.addEventListener('change', renderPrompt);
+        });
+        var copyBtn = document.getElementById('copyPrompt');
+        if (copyBtn) {
+          copyBtn.addEventListener('click', function () {
+            var legacy = function () {
+              try {
+                promptBox.removeAttribute('readonly');
+                promptBox.select();
+                var ok = document.execCommand && document.execCommand('copy');
+                promptBox.setAttribute('readonly', '');
+                return !!ok;
+              } catch (_) { return false; }
+            };
+            var tell = function (ok) {
+              if (promptState) {
+                promptState.textContent = ok
+                  ? 'Copied. Paste it straight into the next build prompt.'
+                  : 'Copy blocked by the browser \u2014 select the box and copy manually.';
+              }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(promptBox.value).then(function () { tell(true); },
+                                                                  function () { tell(legacy()); });
+            } else {
+              tell(legacy());
+            }
+          });
+        }
       }
 
       var f = document.getElementById('decisionForm');
