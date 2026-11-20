@@ -180,10 +180,12 @@ Also re-read live: the USDA FSIS Safe Minimum Internal Temperature Chart (page s
 updated 2025-04-14) and the FTC Endorsement Guides FAQ. Both corroborate what the site already
 cites (S22, S03).
 
-**New findings, added as flags and published on Flagged for Review:** FLG-041 (a long
-`Specification Met` list is a seller self-declaration, not tested certification), FLG-042 (P-03's
-page points to a newer model than the one submitted), FLG-043 (buy-box offer state changes between
-reads), FLG-044 (the five register values this pass did not reach, queued for next time).
+**New findings, added as flags and published on Flagged for Review:** FLG-047 (a long
+`Specification Met` list is a seller self-declaration, not tested certification), FLG-048 (P-03's
+page points to a newer model than the one submitted), FLG-049 (buy-box offer state changes between
+reads), FLG-050 (the five register values this pass did not reach, queued for next time). Renumbered
+from the originally assigned 041–044 because a parallel session publishing at the same time had
+already used those IDs; no flag was overwritten.
 
 **Not verified this session, and still not claimed:** short-link redirects, the Associates
 agreement and program policy wording (login-gated), whether the tracking ID is issued, whether
@@ -211,3 +213,17 @@ and any hands-on performance.
 The gate now also fails if a crawl-chunk citation or a bare flag ID appears on any of the 25
 reader-facing pages, and if `findability.txt` omits a submitted page. The new rules were written
 after the rewrite, and passing them is what makes the rewrite stay done.
+
+## Shipped and live
+
+| Where | What |
+|---|---|
+| https://karagemop466-tech.github.io/Affil2/ | Front page in shop voice, dated trust strip, cards tagged by reason-to-buy |
+| `products/*.html` | Reader-voice specs, "what comes with it", "where this link actually goes", related guides |
+| `compare.html` | Five-column table plus the three-question category-aware shortlist |
+| `findability.txt` | Site profile for crawlers and AI agents |
+| `verification.html` | The independent live pass, 33 field rows with per-row status |
+| `flagged.html` | 50 flags, every one sourced; FLG-047–050 are this session's |
+| `suggestions.html` / `questions.html` | SG-33–35 and Q-21–23 from this session |
+
+PR #49 merged (commit `c50a7fa`), CI green, Pages `built`, live pages verified by fetching them.
