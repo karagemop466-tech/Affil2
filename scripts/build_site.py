@@ -655,7 +655,9 @@ def build_compare():
         cells = "".join(f"<td>{fn(p)}</td>" for p in cols)
         return f'<tr><th scope="row">{label}</th>{cells}</tr>'
 
-    def spec(p, key, other="— <span class=\"unverified\">not stated on the listing</span>"):
+    NOT_STATED = "— <span class=\"unverified\">not stated on the listing</span>"
+
+    def spec(p, key, other=NOT_STATED):
         f = p["fields"].get(key)
         if not f or f["v"] is None:
             return other
@@ -664,7 +666,21 @@ def build_compare():
             txt += ' <span class="token conflict">see flags</span>'
         return txt
 
-    NOCAP = "— <span class=\"unverified\">n/a, not a capacity appliance</span>"
+    NA_CAP = "— <span class=\"unverified\">n/a, measures temperature</span>"
+    NA_POWER = "— <span class=\"unverified\">n/a, battery powered</span>"
+
+    def by_category(p, key, fallbacks, other=NOT_STATED):
+        """Use the air-fryer field, or the nearest equivalent on a thermometer."""
+        if p["cat"] == "Meat Thermometers":
+            for k in fallbacks:
+                f = p["fields"].get(k)
+                if f and f["v"]:
+                    txt = esc(f["v"])
+                    if f["st"] == "conflict":
+                        txt += ' <span class="token conflict">see flags</span>'
+                    return txt
+            return other
+        return spec(p, key, other)
 
     head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
                    f'<br><span class="th-sub">{p["id"]} · {esc(p["headline"])}</span></th>' for p in cols)
@@ -682,11 +698,11 @@ def build_compare():
     {row("Category", lambda p: esc(p["cat"]))}
     {row("Best for", lambda p: esc(p["best_for"]))}
     {row("The catch", lambda p: esc(p["tradeoff"]))}
-    {row("Capacity", lambda p: spec(p, "capacity", NOCAP))}
-    {row("Temperature range", lambda p: spec(p, "temperature", NOCAP))}
-    {row("Power / battery", lambda p: spec(p, "power", "see battery row"))}
-    {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOCAP))}
-    {row("Weight", lambda p: spec(p, "weight", NOCAP))}
+    {row("Capacity", lambda p: spec(p, "capacity", NA_CAP))}
+    {row("Temperature range", lambda p: by_category(p, "temperature", ["upper_temp", "heat"]))}
+    {row("Power / battery", lambda p: by_category(p, "power", ["battery"], NA_POWER))}
+    {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOT_STATED))}
+    {row("Weight", lambda p: spec(p, "weight", NOT_STATED))}
     {row("Model on listing", lambda p: spec(p, "model", "— not on the fetched text"))}
     {row("Price", lambda p: "— not shown, by policy")}
     {row("Star rating", lambda p: "— not shown, by policy")}
