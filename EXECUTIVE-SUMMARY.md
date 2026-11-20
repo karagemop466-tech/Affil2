@@ -87,3 +87,26 @@ redesigning the page.
 amazon.com link lacks `rel="sponsored nofollow"`, if a price or star rating appears, if a link is
 broken, if a page is missing from the sitemap, if JSON-LD does not parse, or if a flag is referenced
 that is not defined. CI runs both, and fails if the committed pages drift from the generator.
+
+## Storefront pass (T-17, session 82c875a9)
+
+The front end was rebuilt to read as a shop rather than a register, without adding a single unchecked
+claim.
+
+| Change | Where |
+|---|---|
+| Photo-led front page: hero image, a three-point credibility strip, three dated picks with badges, latest guides and a five-product index | `index.html` |
+| Product cards rebuilt as shop cards: image band, capability chips, "best for" and "the catch" lines, priced-link button with a visible `paid link` label | every grid |
+| Category and product pages carry a captioned image band instead of a line drawing | `air-fryers.html`, `meat-thermometers.html`, `products/*` |
+| On-site search actually works: query parsing, scoring, results, and the `search` event recorded locally (it was inert before — FLG-037) | `assets/app.js` |
+| Open Graph / Twitter image metadata so a shared link shows a picture | every page |
+| Six new proposals (SG-17 to SG-22) and four new open questions (Q-15 to Q-18) | `suggestions.html`, `questions.html` |
+| A build-gate rule: every generated photo must be captioned as illustration, must have alt text, and must have intrinsic dimensions | `scripts/check_site.py` |
+
+Two honesty notes that go with it. The photographs are generated imagery of a generic appliance, not
+the products reviewed, and every one carries a caption saying so (FLG-036). And the search defect is
+published on the flag register rather than quietly fixed (FLG-037).
+
+Still unverified, unchanged by this pass: intended ASINs (FLG-001), whether the tracking ID is live
+(FLG-002), the Special Link test (FLG-004), price display (FLG-005), analytics beyond the browser
+(FLG-010), and a named author (FLG-033).
