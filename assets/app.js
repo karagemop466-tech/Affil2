@@ -1,41 +1,11 @@
-// Privacy-preserving measurement: localStorage only, no cookies/trackers. Five events are defined:
-// page_view, outbound_click, guide_read, search, suggestion_rank. None is sent anywhere; there is
-// no analytics endpoint configured on this site.
+// Privacy-preserving measurement: localStorage only, no cookies/trackers. Five events: page_view, outbound_click, guide_read, search, suggestion_rank
 (function(){try{
- function download(n,c){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download=n;a.click();}
- function csvCell(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
  var ev=JSON.parse(localStorage.getItem('sn_events')||'[]');
  function log(e,d){ev.push(Object.assign({e:e,t:Date.now(),page:location.pathname},d||{}));localStorage.setItem('sn_events',JSON.stringify(ev.slice(-500)));}
  log('page_view');
  if(/guides\//.test(location.pathname)) log('guide_read');
  document.querySelectorAll('[data-outbound]').forEach(function(a){a.addEventListener('click',function(){log('outbound_click',{product:a.getAttribute('data-outbound')});var c=JSON.parse(localStorage.getItem('sn_clicks')||'{}');c[a.getAttribute('data-outbound')]=(c[a.getAttribute('data-outbound')]||0)+1;localStorage.setItem('sn_clicks',JSON.stringify(c));var el=document.getElementById('localClicks');if(el)el.textContent=Object.values(c).reduce(function(x,y){return x+y},0);});});
  var ex=document.getElementById('exportClicks');if(ex)ex.addEventListener('click',function(){var c=localStorage.getItem('sn_clicks')||'{}';download('clicks.csv','product,clicks\n'+Object.entries(JSON.parse(c)).map(function(x){return x[0]+','+x[1]}).join('\n'));});
- // Search: runs entirely in the browser over the embedded index. Logs that a search ran and how
- // many results it returned — never the query words.
- var idxEl=document.getElementById('searchIndex');
- if(idxEl){
-   try{
-     var index=JSON.parse(idxEl.textContent);
-     var params=new URLSearchParams(location.search);
-     var q=(params.get('q')||'').trim().toLowerCase();
-     var box=document.getElementById('results');
-     var meta=document.getElementById('searchMeta');
-     if(q){
-       var terms=q.split(/\s+/).filter(Boolean);
-       var hits=index.filter(function(it){
-         var hay=(it.t+' '+it.d+' '+(it.k||'')).toLowerCase();
-         return terms.every(function(t){return hay.indexOf(t)!==-1;});
-       });
-       if(box){
-         box.innerHTML = hits.length
-           ? hits.map(function(it){return '<article class="hit"><p class="where">'+(it.k||'page').replace(/</g,'&lt;')+'</p><h3><a href="'+it.u+'">'+it.t.replace(/</g,'&lt;')+'</a></h3><p>'+it.d.replace(/</g,'&lt;').slice(0,220)+'</p></article>';}).join('')
-           : '<p class="small">No pages matched. Try a broader word — the index only covers this site.</p>';
-       }
-       if(meta) meta.textContent = hits.length+' result'+(hits.length===1?'':'s')+' for your search. Matching happened in your browser; nothing was sent anywhere.';
-       log('search',{hits:hits.length});
-     }
-   }catch(e){/* search stays silent on malformed index */}
- }
  // Suggestions ranking
  var rank=JSON.parse(localStorage.getItem('sn_rank')||'[]');
  function renderRank(){document.querySelectorAll('#sugTable tbody tr').forEach(function(tr,i){var s=tr.querySelector('.rank');if(s)s.textContent=rank.indexOf(tr.getAttribute('data-sug'))>=0?('#'+(rank.indexOf(tr.getAttribute('data-sug'))+1)):'';});}
@@ -45,6 +15,50 @@
  var er=document.getElementById('exportRank');if(er)er.addEventListener('click',function(){download('ranking.csv','rank,suggestion\n'+rank.map(function(s,i){return (i+1)+','+s}).join('\n'));});
  var rr=document.getElementById('resetRank');if(rr)rr.addEventListener('click',function(){localStorage.removeItem('sn_rank');location.reload();});
  var f=document.getElementById('decisionForm');if(f)f.addEventListener('submit',function(e){e.preventDefault();localStorage.setItem('sn_decision',JSON.stringify({chosen:f.chosen.value,why:f.why.value,measure:f.measure.value,t:Date.now()}));document.getElementById('decisionSaved').textContent='Saved locally at '+new Date().toISOString()+'. Export it with your ranking.';});}
- // Export the local event log (Disclosure & Privacy page, button #exportEvents)
- var ee=document.getElementById('exportEvents');if(ee)ee.addEventListener('click',function(){var rows=['t,event,page,detail'];ev.forEach(function(r){var d=Object.assign({},r);delete d.e;delete d.t;delete d.page;rows.push(csvCell(new Date(r.t).toISOString())+','+csvCell(r.e)+','+csvCell(r.page)+','+csvCell(JSON.stringify(d)));});download('events.csv',rows.join('\n'));});
+ var eventExport=document.getElementById('exportEvents');
+ if(eventExport)eventExport.addEventListener('click',()=>{
+   const rows=JSON.parse(localStorage.getItem('sn_events')||'[]');
+   download('events.csv','event,utc,product,result_count\n'+rows.map(r=>[r.e,new Date(r.t).toISOString(),r.product||'',r.results??''].join(',')).join('\n'));
+ });
+ function download(n,c){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download=n;a.click();}
 }catch(e){}})();
+// Keep navigation and search operational even when browser storage is disabled.
+(() => {
+ const toggle=document.querySelector('.navtoggle'), nav=document.querySelector('#primary-nav');
+ toggle?.addEventListener('click',()=>toggle.setAttribute('aria-expanded',nav.classList.toggle('open')));
+ const index=document.querySelector('#searchIndex'); if(!index)return;
+ const q=(new URLSearchParams(location.search).get('q')||'').trim(); document.querySelector('#sq').value=q;
+ if(!q)return;
+ const tokens=q.toLowerCase().split(/\s+/), hits=JSON.parse(index.textContent).filter(x=>tokens.every(t=>(x.t+' '+x.d+' '+x.k).toLowerCase().includes(t)));
+ document.querySelector('#searchMeta').textContent=hits.length?`${hits.length} matching pages`:'No matches. Try “basket”, “wireless” or “capacity”.';
+ for(const hit of hits){const p=document.createElement('p'),a=document.createElement('a');a.href=hit.u;a.textContent=hit.t;p.append(a);document.querySelector('#results').append(p)}
+ if(hits.length)try{const events=JSON.parse(localStorage.getItem('sn_events')||'[]');events.push({e:'search',t:Date.now(),results:hits.length});localStorage.setItem('sn_events',JSON.stringify(events.slice(-500)))}catch{}
+})();
+
+// compare page: two-at-a-time head-to-head, rendered from the embedded register view
+(function(){
+ var el=document.getElementById('pairData');if(!el)return;
+ var data={};try{data=JSON.parse(el.textContent||'{}');}catch(e){return;}
+ var a=document.getElementById('pairA'),b=document.getElementById('pairB');
+ var out=document.getElementById('pairView');if(!a||!b||!out)return;
+ function esc(t){return String(t==null?'':t);}
+ function render(){
+  var A=data[a.value],B=data[b.value];
+  if(!A||!B)return;
+  if(a.value===b.value){out.innerHTML='<p class="small">Pick two different products.</p>';return;}
+  var rows=A.rows.map(function(r,i){
+    var other=B.rows[i]?B.rows[i][1]:'';
+    return '<tr><th scope="row">'+r[0]+'</th><td>'+r[1]+'</td><td>'+other+'</td></tr>';
+  }).join('');
+  out.innerHTML='<table class="compare pair"><caption>Same rows, same sources, two columns. '+
+   'Blank-looking cells say why they are blank.</caption><thead><tr><th scope="col">Field</th>'+
+   '<th scope="col"><a href="'+A.url+'">'+A.name+'</a></th>'+
+   '<th scope="col"><a href="'+B.url+'">'+B.name+'</a></th></tr></thead><tbody>'+rows+'</tbody></table>'+
+   '<p class="cta"><a class="btn" rel="sponsored nofollow" href="'+A.buy+'" data-outbound="pair">'+
+   'Check the first on Amazon<span class="btn-sub">paid link</span></a>'+
+   '<a class="btn ghost" rel="sponsored nofollow" href="'+B.buy+'" data-outbound="pair">'+
+   'Check the second<span class="btn-sub">paid link</span></a></p>';
+ }
+ a.addEventListener('change',render);b.addEventListener('change',render);render();
+
+})();

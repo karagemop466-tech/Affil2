@@ -12,9 +12,10 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | If you want | Read |
 |---|---|
 | The short version | `EXECUTIVE-SUMMARY.md` |
-| What to decide next | `suggestions.html` — Decision Center, 21 proposals, rankable |
-| What is still unanswered | `questions.html` — Open Questions, 14 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 37 items |
+| What to decide next | `suggestions.html` — Decision Center, 31 proposals, rankable (each cites its evidence) |
+| The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards |
+| What is still unanswered | `questions.html` — Open Questions, 18 rows |
+| What could not be verified | `flagged.html` — Flagged for Review, 42 flags, every one sourced |
 | Where every fact came from | `sources.html` — source register |
 | How the site is built | `scripts/build_site.py` |
 
@@ -36,8 +37,9 @@ generator output, and again if the gate fails.
 | `data/sources.json` | every source with what it supports and the date checked |
 | `data/flags.json` | the flag register: severity, detail, resolution, source links |
 | `data/reverification-2026-11-20.json` | attempt-by-attempt record of the short-link tests |
+| `assets/style.css` | storefront stylesheet, including the photo-card layer |
+| `assets/photos/` | generated illustrative imagery, captioned on every page that uses it (FLG-036) |
 | `scripts/analytics_server.py` | optional, self-hosted collector for the five events (not deployed) |
-| `assets/style.css` | storefront stylesheet |
 | `assets/app.js` | five measured events, search, ranking, CSV export |
 | `scripts/` | generator and gate |
 
@@ -74,11 +76,11 @@ words. Readers can export their own event log (Disclosure page) and click counts
 `scripts/analytics_server.py` is an optional, self-hosted collector for the same five events. It
 stores per-day aggregate counts only — no identifier, cookie, IP address, user agent or raw search
 term — and it is not deployed or wired to any page. If it is ever deployed behind HTTPS at a
-same-origin route, the disclosure must be updated before any event is sent (SG-30).
+same-origin route, the disclosure must be updated before any event is sent (SG-25).
 
 Hosting note: this site is served by GitHub Pages, which documents IP-address logging for security
 purposes; the disclosure distinguishes that from the site's local browser events. Whether Pages is
-the right host for a commercial-affiliate publication is an open question tracked as FLG-036/SG-27.
+the right host for a commercial-affiliate publication is an open question tracked as FLG-041/SG-31.
 
 ## Deprecated
 

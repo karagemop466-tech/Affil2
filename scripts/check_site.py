@@ -118,6 +118,21 @@ for p in pages:
         if (up + target) not in html:
             err(f"{rel}: footer missing link to {target}")
 
+    # --- images: every generated photo must be captioned as illustration, never as the product
+    for m in re.finditer(r'<img\b[^>]*src="((?:\.\./)*assets/photos/[^"]+)"[^>]*>', html):
+        asset = (p.parent / m.group(1)).resolve()
+        if not asset.exists():
+            err(f"{rel}: missing image {m.group(1)}")
+        if "assets/photos/" in m.group(1):
+            window = html[m.end():m.end() + 900]
+            if "Illustrative image, generated for this site" not in window:
+                err(f"{rel}: generated photo {m.group(1)} is not captioned as illustration")
+        tag = m.group(0)
+        if "alt=\"\"" in tag or "alt=" not in tag:
+            err(f"{rel}: image {m.group(1)} has no alt text")
+        if not re.search(r'width="\d+" height="\d+"', tag):
+            err(f"{rel}: image {m.group(1)} has no intrinsic dimensions")
+
     # --- structured data must parse
     for m in re.finditer(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
         try:
@@ -135,6 +150,12 @@ for p in pages:
     h1s = re.findall(r"<h1[ >]", html)
     if len(h1s) != 1:
         err(f"{rel}: {len(h1s)} h1 elements, expected exactly 1")
+
+    # --- no cross-row placeholders: a cell must not point at another row
+    for bad in ("see battery row", "see flags row", "n/a, not a capacity appliance",
+                "TODO", "TBD"):
+        if bad in html:
+            err(f"{rel}: placeholder cell text {bad!r}")
 
     # --- no placeholder or template debris (outside script bodies, which hold JSON)
     prose = re.sub(r"<script\b.*?</script>", "", html, flags=re.S)
@@ -180,7 +201,7 @@ if "Intended ASIN" in compare:
     err("compare.html: must not expose the intent record outside product pages")
 
 suggest = (ROOT / "suggestions.html").read_text()
-for sid in ("SG-27", "SG-28", "SG-29", "SG-30"):
+for sid in ("SG-27", "SG-28", "SG-29", "SG-30", "SG-31", "SG-32"):
     if f'<strong>{sid}</strong>' not in suggest:
         err(f"suggestions.html: {sid} missing")
 evidence_cells = len(re.findall(r'class="small evidence"', suggest))
@@ -237,6 +258,34 @@ for p in prod_pages:
             if food.split(" —")[0] not in html:
                 err(f"{rel}: USDA row missing: {food[:40]}")
 
+
+# ---------------------------------------------------------------- FAQ claims
+# A FAQ may not state a value the register marks as unverified or conflicting without saying so.
+reg_by_id = {d["id"]: d for d in json.loads((ROOT / "data" / "products.json").read_text())}
+ed_all = json.loads((ROOT / "data" / "editorial.json").read_text())
+UNITS = r"(?:°F|°C|watts?|W\b|volts|hours?|quarts?|liters?|inches|in\b|pounds|lb\b|seconds?|probes?)"
+for pid, rec in ed_all.items():
+    reg = reg_by_id[pid]
+    verified_nums = set()
+    for key, f in reg["fields"].items():
+        if f["v"] and f["st"] == "verified":
+            verified_nums.update(re.findall(r"\d+(?:\.\d+)?", f["v"]))
+    unver_nums = set()
+    for key, f in reg["fields"].items():
+        if f["v"] is None or f["st"] in ("unverified", "conflict"):
+            # a figure mentioned only as "removed, was 572 F" is still not a confirmed value
+            blob = " ".join(str(x) for x in (f["v"] or "", f.get("src", ""), f.get("note", "")))
+            unver_nums.update(re.findall(r"\d+(?:\.\d+)?", blob))
+    for q, a in rec["faq"]:
+        names_conflict = re.search(r"FLG-\d{3}|both|vs\.?|two figures|conflict|against each other",
+                                   a, re.I) is not None
+        for num in re.findall(r"\d+(?:\.\d+)?", a):
+            if num in unver_nums and num not in verified_nums and not names_conflict:
+                err(f"editorial.json {pid} FAQ '{q[:40]}': states {num} as fact, but the register "
+                    f"marks that value unverified or conflicting and the answer does not say so")
+        if re.search(r"\b(is|are|reads|reaches)\s+(?:exactly\s+)?\d+" + UNITS, a) and \
+                "flag" not in a.lower() and "blank" not in a.lower() and "not " not in a.lower()[:40]:
+            notes.append(f"editorial.json {pid} FAQ states a figure as fact: {q[:40]}")
 
 # ---------------------------------------------------------------- data integrity
 raw = json.loads((ROOT / "data" / "products.json").read_text())
@@ -388,6 +437,42 @@ if "Sitemap: " + BASE + "sitemap.xml" not in robots:
     err("robots.txt does not point at the canonical sitemap")
 if "Disallow: /" in robots:
     err("robots.txt blocks the site")
+
+# ---------------------------------------------------------------- no invented weights
+# No listing we read states a product weight, so no page may quote one. The two pages that
+# document the withdrawal are the only place the old figures may appear.
+WEIGHT_RE = re.compile(r"\b\d+(?:\.\d+)?\s?(?:lb|lbs|pounds?)\b", re.I)
+WEIGHT_EXEMPT = {"flagged.html", "sources.html"}
+for f in pages:
+    rel = f.name if f.parent == ROOT else f"{f.parent.name}/{f.name}"
+    if rel in WEIGHT_EXEMPT:
+        continue
+    txt = re.sub(r"<[^>]+>", " ", f.read_text())
+    for m in WEIGHT_RE.finditer(txt):
+        err(f"{rel}: quotes a product weight ({m.group(0).strip()}) that no listing states (FLG-022/FLG-039)")
+    if re.search(r"\b(?:footprint and weight|weight and footprint|weigh(?:s|ing) \w+ ?(?:lb|pounds))", txt, re.I):
+        err(f"{rel}: promises weight information while no weight is published (FLG-022)")
+
+# ---------------------------------------------------------------- compare pair view
+comp = (ROOT / "compare.html").read_text()
+pm = re.search(r'<script type="application/json" id="pairData">(.*?)</script>', comp, re.S)
+if not pm:
+    err("compare.html: no embedded pair view data")
+else:
+    try:
+        pair = json.loads(pm.group(1))
+    except json.JSONDecodeError as e:
+        err(f"compare.html pair data does not parse: {e}")
+        pair = {}
+    if len(pair) != 5:
+        err(f"compare.html pair data holds {len(pair)} products, expected 5")
+    for pid, rec in pair.items():
+        if not (ROOT / rec["url"]).exists():
+            err(f"compare.html pair data links a missing page: {rec['url']}")
+        if "tag=shopnow047c-20" not in rec["buy"]:
+            err(f"compare.html pair data buy link for {pid} lacks the Associates tag")
+        if len(rec["rows"]) < 12:
+            err(f"compare.html pair data for {pid} has only {len(rec['rows'])} rows")
 
 # ---------------------------------------------------------------- search index
 search_html = (ROOT / "search.html").read_text()
