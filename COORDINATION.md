@@ -1431,6 +1431,24 @@ because parallel sessions read the same stale prompt. Flag IDs are safe (monoton
 
 **Local validation (2026-11-20):** `python3 scripts/build_site.py` → built 36 pages; `python3 scripts/check_site.py` → 36 pages, 5 products, 51 flags, 19 sources, ALL CHECKS PASS; Python unittest → 3 tests OK; `node tests/test_collector.js` → ALL JS COLLECTOR AND CLIENT TESTS PASS. Additional internal href/src scan found zero missing local targets. GitHub Pages API reported `built`, source `main`, URL `https://karagemop466-tech.github.io/Affil2/` before the latest documentation-only changes; deployment for PR #57 is pending.
 
+### T-26 release record (session `35973829`, recorded after merge)
+
+| Field | Value |
+|---|---|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/54 |
+| Merge | `gh pr merge 54 --merge` → merge commit `3592af9c3649c9919ab53ddba914cf1f0dfc2d0b`, state MERGED, 2026-11-20T06:45:41Z |
+| CI on PR | `Regenerate and gate` → pass (run 44690029449) |
+| Verify site on merge | run 44690087556 (`3592af9`) → success |
+| GitHub Pages | `pages build and deployment` for `3592af9` was cancelled by a higher-priority queued deploy (known Pages behaviour, same as PR #7's run); the superseding deploy of `70644a6` (descendant containing `3592af9`) run 44690125567 → **completed/success**. Pages API: status `built`, https://karagemop466-tech.github.io/Affil2/ |
+| Live verification | `verification.html` fetched from the deployed URL after deploy: disclosure strip above the fold, method legend, every register row carries an official-source link, R-01..R-16 addendum present. Independent audit of all 36 deployed/local pages: 0 broken internal links, 0 product links missing `rel="sponsored"`, disclosure above `<main>` on every page. |
+| PR #46 disposition | auto-marked MERGED (`06:32:39Z`) once its commits landed via PR #54 — content integrated, not discarded. |
+| Gates at release | `build_site.py` 36 pages idempotent; `check_site.py` → 36 pages, 5 products, 52 flags, 19 sources ALL CHECKS PASS; Python 3 OK; `test_collector.js` ALL PASS; feed/sitemap XML valid; `git diff --check` clean. |
+| New in this release | FLG-054 + correction C-08 (see below). |
+| ID collision | This session's task was renumbered T-21 → T-24 → **T-26**; T-26's short-link re-check slot on main belongs to session 505e685a — IDs collide again, recorded here per protocol; the work itself is distinct and no record was overwritten. Flag IDs collided too: main took FLG-052 (seasonal calendar) and FLG-053 (ASIN definition), so this session finding renumbered to FLG-054. |
+
+### Finding published in this release: FLG-054 (needs review, does not block)
+
+Reading the **deployed** `verification.html` (not just the gate) surfaced one contradiction the gate does not catch: the Verification Log's P-01/P-03 weight rows still read `unverified — blank` from an earlier shallow fetch, while `data/products.json` and both product pages publish `13.3 pounds` / `12.8 pounds` as verified from the official Measurements tables (FLG-022's deep pass). Published as **FLG-054** on `flagged.html` with sources S10/S12, plus correction **C-08** in `data/verification.json`'s corrections table. No register value was changed; the stale rows are left for the verification-log owner under the additive-only rule.
 ## Session `arena/7481731c-affil2` — T-31 (2026-11-20 UTC): claim, merge with main, completion
 
 **Renumbered from T-26.** This session first claimed T-26 on its base (`4ddede5`). While it worked, `main` gained a T-26 short-link re-check from session `614b9fe7` (PR #55) and a T-26..T-30 claim from session `57fc3be0`. The claim is therefore recorded here as **T-31**, the next free number after T-30. Nothing from the earlier T-26 claim survives under that number.
