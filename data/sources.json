@@ -3,7 +3,7 @@
     "id": "S01",
     "name": "Amazon Associates Program Operating Agreement (Section 5: disclosure wording)",
     "url": "https://affiliate-program.amazon.com/help/operating/agreement",
-    "used_for": "Mandatory disclosure statement “As an Amazon Associate I earn from qualifying purchases.” (§5). Checked verbatim on 2026-11-20.",
+    "used_for": "Mandatory disclosure statement “As an Amazon Associate I earn from qualifying purchases.” (§5). Checked verbatim on 2026-11-20. The page reads 'Updated: October 15, 2025' (read 2026-11-20). §1 defines Special Links as the tagged link formats Amazon provides.",
     "checked": "2026-11-20",
     "revision": "Updated October 15, 2025 (read in full, chunks 0–2, on 2026-11-20; §5 statement verified verbatim; §12 incorporates the most up-to-date Program Policies)"
   },
@@ -70,35 +70,35 @@
     "id": "S15",
     "name": "Short link link.amazon/B04G1MEwY (P-01) — followed redirect",
     "url": "https://link.amazon/B04G1MEwY",
-    "used_for": "Observed redirect target B0CDY277D3.",
+    "used_for": "Observed redirect target B0CDY277D3. Re-check on 2026-11-20 (FLG-051): the same submitted link returned the amazon.com home page as its final URL, which does not reproduce this row. See data/link-resolution-2026-11-20.json.",
     "checked": "2026-11-20"
   },
   {
     "id": "S16",
     "name": "Short link link.amazon/B02NbDxp3 (P-02) — followed redirect",
     "url": "https://link.amazon/B02NbDxp3",
-    "used_for": "Observed redirect target B09B7SB46R.",
+    "used_for": "Observed redirect target B09B7SB46R. Re-check on 2026-11-20 (FLG-051): the same submitted link returned the amazon.com home page as its final URL, which does not reproduce this row. See data/link-resolution-2026-11-20.json.",
     "checked": "2026-11-20"
   },
   {
     "id": "S17",
     "name": "Short link link.amazon/B00hJ57DV (P-03) — followed redirect",
     "url": "https://link.amazon/B00hJ57DV",
-    "used_for": "Observed redirect target B08DKYBTPH (intermittent checkpoint/500 observed earlier; FLG-011).",
+    "used_for": "Observed redirect target B08DKYBTPH (intermittent checkpoint/500 observed earlier; FLG-011). Re-check on 2026-11-20 (FLG-051): the same submitted link returned the amazon.com home page as its final URL, which does not reproduce this row. See data/link-resolution-2026-11-20.json.",
     "checked": "2026-11-20"
   },
   {
     "id": "S18",
     "name": "Short link link.amazon/B0c8moW59 (P-04) — followed redirect on re-test",
     "url": "https://link.amazon/B0c8moW59",
-    "used_for": "Earlier pass returned checkpoint/500 4/4 times (FLG-012); follow-up fetch on 2026-11-20 resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent stability remains flagged under FLG-011).",
+    "used_for": "Earlier pass returned checkpoint/500 4/4 times (FLG-012); follow-up fetch on 2026-11-20 resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent stability remains flagged under FLG-011). Re-check on 2026-11-20 (FLG-051): the same submitted link returned the amazon.com home page as its final URL, which does not reproduce this row. See data/link-resolution-2026-11-20.json.",
     "checked": "2026-11-20"
   },
   {
     "id": "S19",
     "name": "Short link link.amazon/B0f3GKalj (P-05) — followed redirect",
     "url": "https://link.amazon/B0f3GKalj",
-    "used_for": "Observed redirect target B0DZFD6R9Z (intermittent homepage redirect observed earlier; FLG-011).",
+    "used_for": "Observed redirect target B0DZFD6R9Z (intermittent homepage redirect observed earlier; FLG-011). Re-check on 2026-11-20 (FLG-051): the same submitted link returned the amazon.com home page as its final URL, which does not reproduce this row. See data/link-resolution-2026-11-20.json.",
     "checked": "2026-11-20"
   },
   {
@@ -140,5 +140,19 @@
     "used_for": "Official ice-water calibration test (immerse stem ≥2 inches in ice-water slurry for ≥30 seconds; calibrated thermometer reads 32 °F) and proper stem placement.",
     "checked": "2026-11-20",
     "revision": "Live on 2026-11-20; calibration and placement guidance confirmed"
+  },
+  {
+    "id": "S25",
+    "name": "Amazon Seller Central help — Add one product at a time (help article G1471)",
+    "url": "https://sellercentral.amazon.com/help/hub/reference/external/G1471",
+    "used_for": "Official Amazon page that lists 'UPC, EAN, ISBN, or ASIN' as product identifiers accepted when adding a product. It uses ASIN as a term but does not define it. The ASIN definition sentence is not yet located (FLG-053). Read 2026-11-20.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S26",
+    "name": "U.S. Office of Personnel Management — Federal Holidays (2026 and 2027 tables)",
+    "url": "https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/",
+    "used_for": "2026 table: 'Thursday, November 26 — Thanksgiving Day'. 2027 table: 'Friday, January 01 — New Year's Day'. Used for the seasonal calendar dates in design-brief.html (FLG-052). Read 2026-11-20.",
+    "checked": "2026-11-20"
   }
 ]

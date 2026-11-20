@@ -26,6 +26,7 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
 | T-27 | Reconcile open PRs (#47, #51, #53) and record dispositions | done | a150712 | COORDINATION.md only |
 | T-30 | Final integration: documentation reconciliation, official-source pass, gates, PR and Pages verification | in progress | 57fc3be0 | COORDINATION.md, README.md, EXECUTIVE-SUMMARY.md, data/verification-2026-11-20-pass3.json |
+| T-31 | Live re-check of the five /dp/ listings (titles, ASINs) and the five short-link final URLs (corroborates FLG-051, does not duplicate it); calendar corrections against OPM (2026, 2027 tables); official-host gate for source URLs (I-4); I-5 page date; ASIN-definition search (I-7, open); REQUIREMENTS-TRACE update | done (PR #59 merged 465ea6f; Pages built) | 7481731c | `data/link-resolution-2026-11-20.json` (new), `data/flags.json` (append only: FLG-052, FLG-053), `data/sources.json` (append only: S25, S26; used_for text on S01, S15–S19), `scripts/build_site.py`, `scripts/check_site.py`, generated pages, `REQUIREMENTS-TRACE.md`, `COORDINATION.md` |
 
 > **Session `57fc3be0` claim (2026-11-20).** Branch `arena/57fc3be0-affil2`, base `4ddede5` (main).
 > This session takes the **final-integration** role described in the brief: it re-verifies the combined
@@ -1430,9 +1431,131 @@ because parallel sessions read the same stale prompt. Flag IDs are safe (monoton
 
 **Local validation (2026-11-20):** `python3 scripts/build_site.py` → built 36 pages; `python3 scripts/check_site.py` → 36 pages, 5 products, 51 flags, 19 sources, ALL CHECKS PASS; Python unittest → 3 tests OK; `node tests/test_collector.js` → ALL JS COLLECTOR AND CLIENT TESTS PASS. Additional internal href/src scan found zero missing local targets. GitHub Pages API reported `built`, source `main`, URL `https://karagemop466-tech.github.io/Affil2/` before the latest documentation-only changes; deployment for PR #57 is pending.
 
+### T-26 release record (session `35973829`, recorded after merge)
+
+| Field | Value |
+|---|---|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/54 |
+| Merge | `gh pr merge 54 --merge` → merge commit `3592af9c3649c9919ab53ddba914cf1f0dfc2d0b`, state MERGED, 2026-11-20T06:45:41Z |
+| CI on PR | `Regenerate and gate` → pass (run 44690029449) |
+| Verify site on merge | run 44690087556 (`3592af9`) → success |
+| GitHub Pages | `pages build and deployment` for `3592af9` was cancelled by a higher-priority queued deploy (known Pages behaviour, same as PR #7's run); the superseding deploy of `70644a6` (descendant containing `3592af9`) run 44690125567 → **completed/success**. Pages API: status `built`, https://karagemop466-tech.github.io/Affil2/ |
+| Live verification | `verification.html` fetched from the deployed URL after deploy: disclosure strip above the fold, method legend, every register row carries an official-source link, R-01..R-16 addendum present. Independent audit of all 36 deployed/local pages: 0 broken internal links, 0 product links missing `rel="sponsored"`, disclosure above `<main>` on every page. |
+| PR #46 disposition | auto-marked MERGED (`06:32:39Z`) once its commits landed via PR #54 — content integrated, not discarded. |
+| Gates at release | `build_site.py` 36 pages idempotent; `check_site.py` → 36 pages, 5 products, 52 flags, 19 sources ALL CHECKS PASS; Python 3 OK; `test_collector.js` ALL PASS; feed/sitemap XML valid; `git diff --check` clean. |
+| New in this release | FLG-054 + correction C-08 (see below). |
+| ID collision | This session's task was renumbered T-21 → T-24 → **T-26**; T-26's short-link re-check slot on main belongs to session 505e685a — IDs collide again, recorded here per protocol; the work itself is distinct and no record was overwritten. Flag IDs collided too: main took FLG-052 (seasonal calendar) and FLG-053 (ASIN definition), so this session finding renumbered to FLG-054. |
+
+### Finding published in this release: FLG-054 (needs review, does not block)
+
+Reading the **deployed** `verification.html` (not just the gate) surfaced one contradiction the gate does not catch: the Verification Log's P-01/P-03 weight rows still read `unverified — blank` from an earlier shallow fetch, while `data/products.json` and both product pages publish `13.3 pounds` / `12.8 pounds` as verified from the official Measurements tables (FLG-022's deep pass). Published as **FLG-054** on `flagged.html` with sources S10/S12, plus correction **C-08** in `data/verification.json`'s corrections table. No register value was changed; the stale rows are left for the verification-log owner under the additive-only rule.
+## Session `arena/7481731c-affil2` — T-31 (2026-11-20 UTC): claim, merge with main, completion
+
+**Renumbered from T-26.** This session first claimed T-26 on its base (`4ddede5`). While it worked, `main` gained a T-26 short-link re-check from session `614b9fe7` (PR #55) and a T-26..T-30 claim from session `57fc3be0`. The claim is therefore recorded here as **T-31**, the next free number after T-30. Nothing from the earlier T-26 claim survives under that number.
+
+**Duplicate finding dropped.** The short-link re-check this session did has the same result as main's FLG-051 and `data/verification-2026-11-20-shortlinks.json` (both 2026-11-20, every link ended on the amazon.com home page). This session's flag for it (FLG-052 on the branch) was **dropped** to avoid two records of one finding. FLG-051 is the single record. This session adds its own detail as attempt-by-attempt evidence in `data/link-resolution-2026-11-20.json`, which cross-refers to FLG-051.
+
+**Flag IDs after merge:** FLG-051 is main's short-link record. FLG-052 is the seasonal-calendar correction (branch numbering FLG-053). FLG-053 is the ASIN-definition gap (branch numbering FLG-054).
+
+### Sources checked (live, 2026-11-20, official only)
+
+- Listing pages, title and ASIN re-read: https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z. Each resolves to a product page whose title contains the register title. Prices and ratings were seen and deliberately not recorded (Program Policies, S02).
+- Submitted short links, final URL: https://link.amazon/B04G1MEwY · https://link.amazon/B02NbDxp3 · https://link.amazon/B00hJ57DV · https://link.amazon/B0c8moW59 · https://link.amazon/B0f3GKalj. Every fetch ended on https://www.amazon.com/ (P-01 and P-04 twice). Not called invalid (FLG-003, FLG-051).
+- OPM federal holidays: https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/ (2026: Thursday, November 26, Thanksgiving Day; 2027: Friday, January 01, New Year's Day). Registered as S26.
+- Associates Operating Agreement: https://affiliate-program.amazon.com/help/operating/agreement ("Updated: October 15, 2025"; §1 defines Special Links). S01 row updated.
+- Seller Central, Add one product at a time (help G1471): https://sellercentral.amazon.com/help/hub/reference/external/G1471. Lists "UPC, EAN, ISBN, or ASIN" as accepted identifiers and does not define ASIN. Registered as S25. Also checked, no ASIN definition: G200426310, G200182950.
+
+### What changed
+
+1. `data/link-resolution-2026-11-20.json` (new): the five short-link attempts and the five listing re-reads, kept apart from the intended and observed ASIN fields. Short-link results cross-refer to FLG-051.
+2. Seasonal calendar in `design-brief.html` (FLG-052): New Year corrected from 2027-01-02 to 2027-01-01 (OPM 2027). The Advent row was 2026-12-02 and is now 2026-11-29 (the fourth Sunday before 25 December, computed). Black Friday, Cyber Monday and Advent are labelled computed, with no cited source. The table gained a Source column; every row is either linked to OPM or marked unverified.
+3. ASIN definition (FLG-053): three official Seller Central pages checked. None defines ASIN. The gap is published, not filled from third-party glossaries.
+4. Gate (`scripts/check_site.py`): an official-host allowlist for every source URL (closes I-4, and any new host must be approved by a person). A consistency check on the link-resolution record: submitted links match the register, listing titles contain the register titles, no prices, and a home-page result cannot be marked as reproducing the earlier record. Each negative case was run on a deliberately bad copy and failed as intended.
+5. `verification.html` gained a submitted-link re-check section, generated from the JSON record.
+6. `REQUIREMENTS-TRACE.md`: rows 9, 14, 27, 28 and 36 updated; I-2, I-4 and I-5 closed; I-7 open; section 5 added with the sources.
+
+### Verification performed
+
+- Build run twice; the second run changed nothing.
+- `python3 scripts/check_site.py`: ALL CHECKS PASS (36 pages, 5 product records, 53 flags, 21 sources at the time of the record; re-run after the merge, see the PR record).
+- `python3 -m unittest discover -s tests -p "test_*.py"`: 3 tests OK. `node tests/test_collector.js`: ALL JS COLLECTOR AND CLIENT TESTS PASS.
+
+### Irregularities (published on Flagged for Review; none blocks)
+
+- **FLG-051 (main, not changed here):** submitted short links ended on the amazon.com home page. Same-day records in `data/products.json` and S15–S19 say the links resolved. The cause is unknown. Owner action: open each link in a normal browser.
+- **FLG-052 (corrected, partly unverified):** calendar dates corrected. Black Friday, Cyber Monday and Advent remain computed.
+- **FLG-053 (unverified):** no official Amazon page defining ASIN was located.
+- `data/products.json` `observed_status` text still says the links "resolved cleanly" on 2026-11-20. It was left as the earlier record. The conflict is recorded in FLG-051, and changing the text needs the owner's browser check.
+
+### Handoffs and conflicts (logged per protocol)
+
+- **Merge with main.** `origin/main` moved from `4ddede5` to `629a00c` during this session. The merge conflicted in six files. Resolution: `EXECUTIVE-SUMMARY.md`, `README.md`, `executive-summary.html` and `sources.html` take main's version (the generated pages were regenerated afterwards); `data/flags.json` is main's 51 flags plus this session's two; this section and the task row were added to main's `COORDINATION.md`. No other session's record was discarded.
+- **Flag FLG-051 is held on two open branches.** `arena/ca4af934-affil2` also uses FLG-051 for a different item. That branch is not merged, so whichever PR merges second must renumber. This session did not touch it.
+- **Source IDs S25 and S26 are new.** If another open branch also adds S25 or S26, the second to merge must renumber.
+- **Stray conflict markers in `assets/style.css` (found after merge, fixed here).** `origin/main` already contained the three conflict marker lines (`<<<<<<< HEAD`, `=======`, `>>>>>>> origin/main`) around two independent CSS blocks (the reader-facing additions, and the router/guide-step block). Resolution: the marker lines were deleted and both blocks kept; no selector appears in both. A repo-wide scan for markers now comes back empty. Session `614b9fe7` or `35973829` likely left them (cause unconfirmed); the owner of `style.css` should check that no rule was dropped on their side.
+- **PR:** https://github.com/karagemop466-tech/Affil2/pull/59 (`arena/7481731c-affil2` → `main`), opened 2026-11-20.
+- **Merge result:** merged with a merge commit at `465ea6f` (2026-11-20T06:49:41Z). Branch head before merge: `f0c3fdf`. Checks on the PR: none configured on the branch; `main` verify and Pages build ran on `465ea6f`.
+- **Pages deploy:** the GitHub Pages build for `465ea6f` completed with status `built` and no error (`gh api repos/karagemop466-tech/Affil2/pages/builds/latest`). Verify site (`pages.yml`) completed with success on `465ea6f`. Live-URL spot checks were not possible from this sandbox (outbound access is limited to GitHub and package hosts); the content was confirmed on `main` instead: `verification.html` has the `link-recheck` section, `design-brief.html` has the corrected dates 2026-11-29 and 2027-01-01, `flagged.html` lists FLG-051..FLG-053, and `assets/style.css` has no conflict markers.
+- Open PRs from other sessions were not edited. Final integration (T-30, `57fc3be0`) remains that session's task. This PR merges into `main` and is logged so that session can rebase.
+
+### Still blocked (owner account or decision; not claimed here)
+
+Special Link test in Associates Central (FLG-004). Tracking-ID activity (FLG-002). Intended ASINs (FLG-001). Short-link compliance (FLG-003). Analytics hosting (FLG-010). Search Console (SG-29). Named author (FLG-033). Reader-capture provider (SG-30).
+## Session `a27b2deb` — claim (2026-11-20 06:27 UTC, `active`)
+
+Branch `arena/a27b2deb-affil2`, single record commit rebased onto the then-current `main` tip (exact merge SHA in the follow-up record below). The pass ran while several other sessions' PRs merged (#49, #50, #52, #53, #55, #56 and later); their independent live reads corroborate this session's.
+
+**T-21 claim** | Independent line-by-line re-verification pass (all five official listings, every register field; policy sources reachable from the sandbox) + GitHub Pages deploy-state check via the GitHub API + verification of session `cb967199`'s open-PR disposition record against the live PR list + full gate/test run | Status: in progress | Owner: `a27b2deb` | Files touched: `COORDINATION.md`; append-only additions to `data/flags.json` only if new issues are found; no generated pages, no product/source value edits unless a live discrepancy is proven (then flag, don't overwrite).
+
+### T-21 (a27b2deb) completion — independent live re-verification pass (2026-11-20 ~06:40 UTC)
+
+**Naming note:** the label `T-21` was concurrently used by session `c449a2ad` (requirements traceability, per the T-23 record) and by PR #47 (`ca4af934`). This session claimed `T-21` first at 06:27 UTC (commit `07eac6f`, pushed before either of those appeared on the board); to disambiguate, this pass is **T-21 (a27b2deb): live re-verification**. It is a COORDINATION.md-only record; nothing else was edited, and no data/generator/page file was touched.
+
+**Why this pass matters:** session `b6b809da` (T-23, PR #48) could not reach any external host and published FLG-045 recording that no source was re-read in their pass. **This session successfully re-fetched every live source below through the page-fetch tool**, so the site's register values now again stand on same-day live reads rather than only on the earlier dated captures.
+
+**Live listing re-reads (all five official listings, fetched 2026-11-20 this session; chunk layout of the pages differed from earlier captures and re-rendered between fetches, so chunk indexes are not stable identifiers — fields are cited by section instead):**
+
+| Record | Listing (fetched live) | Re-confirmed live this pass | Not re-surfaced in this render (stands on the dated capture, unchanged) |
+|---|---|---|---|
+| P-01 B0CDY277D3 | https://www.amazon.com/dp/B0CDY277D3 | Exact title; 13.38"D × 11.81"W × 10.63"H; capacity conflict live (spec table "6 liters" vs bullets "combined 6-quart"/"individual 3-quart baskets" — FLG-034 both sides live); 200–450 °F; 120 Volts/1700 Watts; model string `RJ38-SQPF-3TDB-2W` printed in Product Description; 1-year Chefman assurance; Special Feature row "+ 2Min Button, Automatic Shut-Off, Dual Zone Features, Hi-Fry, Mute"; cETL; dishwasher-safe baskets | Measurements-table Item Weight row (13.3 lb) — this render did not surface the table |
+| P-02 B09B7SB46R | https://www.amazon.com/dp/B09B7SB46R | Exact title (24 presets, six accessories); Item details Model Number & Part Number `4-00675-02X-VN` (FLG-009 live); Configuration "24 Functions and 7 Accessories" vs title "Six … Accessories" (FLG-031 both sides live); About this item "25 COOKING PRE-SETS" vs title 24 (FLG-021 both sides live); Min 75 °F / Max 500 °F; Output Wattage & Wattage 1700 W, Voltage 120 V; Capacity 24.6 liters vs "26-QUART CAPACITY" bullet; 16.9"D × 15.8"W × 14.8"H; Measurements table has **no Item Weight row** (blank stays blank, FLG-022); Warranty & Support offers PDF links only, no duration (blank stays blank); Included Components lists six items; ASIN B09B7SB46R | — (deep tables fully surfaced this pass) |
+| P-03 B08DKYBTPH | https://www.amazon.com/dp/B08DKYBTPH | Exact title (450 °F Hi-Fry side of FLG-018 live); bullet "temperature range from 200-400°F" (spec side live); "1000 Watts/120 Volts – RJ38-SQSS-8T" in About this item (1000 W side of FLG-017 live + model confirmed); 12.75"D × 13.5"W × 10"H; 8 quarts; four presets (fries, chicken, meat, fish); Special Feature row "Automatic Shut-Off, LED Shake Reminder, Programmable"; 1-year Chefman warranty; top-rack dishwasher-safe basket & tray; cETL | Features & Specs 1700 W row, Measurements Item Weight row (12.8 lb), Item details "Model Number: Large Air Fryer" oddity (FLG-017/FLG-040) — table not surfaced this render |
+| P-04 B0DHZTCNR5 | https://www.amazon.com/dp/B0DHZTCNR5 | Exact title; Specification Met "NIST, NSF"; Product Care Instructions "Wipe Clean"; Included Components "1*Meat Thermometer, 1*AAA Battery, 1*User Manual, 1*Calibration Certificate"; About this item ±0.5 ℉ NIST-certified accuracy; "accurate temperature readings in just 1 second"; bright LED screen, auto-rotate, motion-activated wake/sleep; "Fully Waterproof" + IP67 in title; breadcrumb Meat Thermometers | Item details model row (HT07), Upper Temperature Rating row (572 °F), probe-length row (6.5 in) — table not surfaced this render |
+| P-05 B0DZFD6R9Z | https://www.amazon.com/dp/B0DZFD6R9Z | Exact title; Included Components "3 Probes, Hub"; Special Feature "5 Sensors, Unlimited Range"; Connectivity Technology "Bluetooth, Wi Fi"; About this item "4 internal temperature sensors. Additionally, an ambient sensor" (= 5 sensors); "built to endure 1000°F heat"; "running for up to 50 hours on a full charge" (FLG-008 live side); "Waterproof and dishwasher-safe probes"; "two-year assurance provided by CHEF iQ" (FLG-038 live side); buy-box variant selector confirms this ASIN is the 3-probe configuration | Item details model row (CQ60-3C-Z1-E), Immersion Depth/Item Length rows (4.75 in), Item details Warranty Description row ("3 Year") — table not surfaced this render |
+
+**Result:** no register value contradicted. Every conflict pair published on `flagged.html` (FLG-008, FLG-009, FLG-017, FLG-018, FLG-021, FLG-031, FLG-034, FLG-038) was observed live on the listing again, both sides, exactly as recorded. No new flags needed; `data/flags.json`, `data/products.json`, `data/sources.json` untouched.
+
+**Policy/source re-reads this pass (page-fetch tool):**
+
+| Source | URL | Result |
+|---|---|---|
+| S03 FTC Endorsement Guides FAQ | https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking | Live. Confirms: endorsements must be honest and not misleading; a connection a significant minority wouldn't expect "should be disclosed clearly and conspicuously"; Guides revised 2023 with a new definition of "clearly and conspicuously". Matches the site's disclosure copy. |
+| S04 Google Qualify outbound links | https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links | Live (page last updated 2025-12-10). Confirms: `rel="sponsored"` marks "advertisements or paid placements"; multiple rel values allowed as space/comma-separated list. Matches the site's sponsored-link implementation. |
+| S22 USDA FSIS Safe Minimum Internal Temperature Chart | https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart | Live (page last updated Apr 14, 2025). Poultry 165 °F; ground meats 160 °F; steaks/chops/roasts 145 °F + ≥3-min rest; fish 145 °F; leftovers/casseroles 165 °F — matches `data/usda-temperatures.json` row for row and the guide copy citing it. |
+| S01/S02 Associates OA + Program Policies | https://affiliate-program.amazon.com/help/operating/agreement · https://affiliate-program.amazon.com/help/operating/policies | Not re-fetched this pass (login-gated in earlier same-day sessions); left for manual review as recorded in FLG-026/FLG-045 notes. No wording asserted. |
+
+**GitHub Pages state via API (this pass, first direct API check):** `repos/.../pages` → status `built`, build_type `legacy`, html_url https://karagemop466-tech.github.io/Affil2/ , source `main` `/`, https_enforced `true`; `pages/builds/latest` → status `built`, error null, build for merge commit `4dd7cdd` (PR #41) recorded at 06:25:09Z, superseded by later builds as PRs #42–#48 merged. Deploy for this session's own merge is recorded below.
+
+**Open-PR disposition check (per claim):** session `cb967199`'s dispositions are confirmed executed — PR #28, #34, #35 now closed. PR #16 remains open at check time (owner session's claim; not touched from here). Two newer PRs (#47, #49) belong to their own sessions, not touched from here; #49 subsequently merged (its `data/verification-2026-11-20-live.json` live reads corroborate this session's independent fetches; the append-only flag register kept growing through those merges; at this session's base every ID cited above is still present with unchanged meaning).
+
+**Gate on this session's branch:** `build_site.py` → 36 pages idempotent; `check_site.py` → ALL CHECKS PASS (36 pages, 5 product records, 19 sources; 51 flags at this session's base, append-only thereafter); `unittest` → 3 tests OK; `node tests/test_collector.js` → ALL PASS. `git diff --check` clean; only `COORDINATION.md` modified.
+
+**Still owner-gated (unchanged, not guessed):** FLG-001 intended-ASIN confirmation; FLG-002 tracking-ID activity; FLG-003 short-link compliance status; FLG-004 Special Link test in the enrolled Associates workflow; FLG-010/028/033 collector deployment + Search Console; FLG-019/FLG-032 first-party revenue data.
+
+**PR note (added ~06:55 UTC):** this session's first record PR (#51) was closed at 06:44:21Z without comment while this session was rebuilding it against the fast-moving main (it had been showing CONFLICTING during rebuilds). Re-opened as a fresh PR from the same single-commit branch; contents unchanged except this note.
+
+## Session `a27b2deb` — T-21 integration record (2026-11-20 ~07:00 UTC)
+
+**Merge:** PR [#61](https://github.com/karagemop466-tech/Affil2/pull/61) merged at 06:54:06Z → merge commit `85ee0ce`; branch was a single commit (`8d1006e`) on the then-current `main` tip, touching `COORDINATION.md` only (42 insertions, verified via `git show --stat`).
+
+**GitHub Pages:** `GET /repos/…/pages/builds/latest` after the merge → `status: built`, `error: null`, `commit: 85ee0ce…`, `created: 2026-11-20T06:54:07Z` — the deploy pipeline built this session's own merge commit. An HTTPS fetch of the live pages from this sandbox is not possible (`github.io` fails TLS here — the same environment limit session `b6b809da` published as FLG-045), so the API result above is the deploy verification of record. The merge changed only `COORDINATION.md`, so no generated page content changed in this deploy.
+
+**Register corrections at merge time:** the append-only register stood at **53 flags / 21 sources** when PR #61 merged (merges #56–#60 landed between the drafting of the block above and the merge; the block's "51 flags / 19 sources" described its draft-time base). The gate was re-run on the exact pushed commit with those counts: 36 pages, 5 product records, ALL CHECKS PASS, 3 unittest OK, JS collector tests pass. Every flag ID cited in the T-21 block (FLG-008, FLG-009, FLG-017, FLG-018, FLG-021, FLG-031, FLG-034, FLG-038, FLG-022, FLG-045) was still present with unchanged meaning at merge time.
+
+**PR irregularity (recorded per protocol):** this session's first record PR **#51 was closed at 06:44:21Z without comment** by another session while this session was actively rebuilding it against the fast-moving main (it showed CONFLICTING during the rebuilds because its then-head was mid-replacement). Nothing was lost: the identical content, plus a note about the closure, was re-opened as PR #61 and merged. The board was exceptionally hot during this pass — PRs #50, #52, #53, #55, #56, #57, #60 from other sessions merged while this record was being built.
 ## Session `arena/195d1d32-affil2` — live source re-verification close-out, row-level sourcing, gate hardening (2026-11-20)
 
-Branch `arena/195d1d32-affil2`, base `c8b8926` (main at PR #31); integrated onto main `629a00c` after PRs #29/#53–#58 merged mid-session.
+Branch `arena/195d1d32-affil2`, base `c8b8926` (main at PR #31); integrated onto main through `2c41e4a` as PRs #29/#41/#50–#65 from parallel sessions merged mid-session — each reconciliation resolved without discarding the other session's work.
 
 ### Claim (2026-11-20, `active`)
 
