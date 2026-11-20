@@ -54,3 +54,21 @@ FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
 - GitHub Pages: built, deploy workflow success. Live: https://karagemop466-tech.github.io/Affil2/
 - Final gate: scripts/check_site.py ALL CHECKS PASS (25 pages)
 - Flagged items FLG-001..FLG-010 published on flagged.html; do not block.
+
+---
+
+# Session 2 — `42617e35`  Branch: `arena/42617e35-affil2`  Base: e1b6750 (main)
+Started: 2026-11-20 (UTC). Scope: reader-facing polish pass ("reads like a shop, not an audit"), seasonal/trendy article clusters, decision-making registers (suggestions + questions), measurement layer (click counter + self-hosted analytics endpoint spec, five events), product-intent/link-test register fields, line-by-line re-verification against official sources.
+
+> Claim note: no other session has an open claim (all T-01..T-09 done/owned by `530c2e6c`, inactive). Scopes below are claimed by `42617e35` on this branch. Shared outputs (sitemap, feed, nav) are edited by this session as the current integration session and re-verified before merge.
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-10 | Re-verify 5 Amazon listings + program sources (S01–S04) line by line | in progress | 42617e35 | data/sources.json, sources.html, COORDINATION.md |
+| T-11 | Publication/shop redesign (imagery, brand, nav labels, front page leads with products) | in progress | 42617e35 | index.html, assets/style.css, assets/*, all .html (nav/footer) |
+| T-12 | Seasonal/trendy article cluster (holiday hosting + evergreen questions) | in progress | 42617e35 | guides/*.html, guides.html |
+| T-13 | Measurement layer: privacy-preserving outbound-click counter + self-hosted analytics endpoint spec, five defined events | in progress | 42617e35 | assets/app.js, analytics-endpoint/*, disclosure.html |
+| T-14 | Product-intent confirmation record + per-product Special Link test register (separate fields) | in progress | 42617e35 | data/products.json, sources.html |
+| T-15 | Decision registers: suggestions (SG-01..SG-30 incl. SG-27..SG-30) + open questions (known/unknown/how to close) | in progress | 42617e35 | suggestions.html, questions.html |
+| T-16 | Executive summary refresh + flagged refresh | in progress | 42617e35 | EXECUTIVE-SUMMARY.md, executive-summary.html, flagged.html, data/flags.json |
+| T-17 | Integration: sitemap/feed, check_site.py gate, PR to main + merge + Pages verify | unclaimed | 42617e35 | sitemap.xml, feed.xml, scripts/check_site.py, COORDINATION.md |
