@@ -24,9 +24,25 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-23 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | done | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
 | T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
-| T-26 | Independent short-link re-check (5 submitted links) + repo gate/test re-run; new flag FLG-051 for non-reproduced redirects; no recorded values changed | done | 614b9fe7 | data/verification-2026-11-20-shortlinks.json, data/flags.json (append only), COORDINATION.md, generated flagged/sources/executive-summary pages |
-| T-28 | AI-powered product research engine: scripts/research_engine.py analyses first-party event data (zero-result searches, guide reads, outbound clicks) and emits ranked research suggestions for the Decision Center | done | 505e685a | scripts/research_engine.py |
-| T-29 | Campaign optimization advisor: scripts/campaign_optimizer.py analyses first-party click data and emits ranked optimization recommendations (content investment, placement review, conversion gaps) | done | 505e685a | scripts/campaign_optimizer.py |
+| T-27 | Reconcile open PRs (#47, #51, #53) and record dispositions | done | a150712 | COORDINATION.md only |
+| T-30 | Final integration: documentation reconciliation, official-source pass, gates, PR and Pages verification | in progress | 57fc3be0 | COORDINATION.md, README.md, EXECUTIVE-SUMMARY.md, data/verification-2026-11-20-pass3.json |
+
+> **Session `57fc3be0` claim (2026-11-20).** Branch `arena/57fc3be0-affil2`, base `4ddede5` (main).
+> This session takes the **final-integration** role described in the brief: it re-verifies the combined
+> data line by line against official sources, reconciles the open PRs left by earlier sessions, makes
+> the published counts self-generating so they cannot drift, confirms the site builds with no broken
+> links, and publishes to GitHub Pages.
+> **Scope claimed:** `COORDINATION.md`, `README.md`, `EXECUTIVE-SUMMARY.md`,
+> `data/verification-2026-11-20-pass3.json` (new), and the verification section of
+> `scripts/build_site.py` + `scripts/check_site.py`.
+> **Scope NOT claimed (not edited by this session):** `data/products.json`, `data/sources.json`,
+> `data/editorial.json`, `data/events.json`, `analytics/`, `functions/`, `assets/app.js`,
+> `assets/style.css` — shared records owned by other sessions. Requests against them are logged here.
+> Shared outputs (data tables, index, navigation) are changed by this integration session **only
+> after** the other tasks above are done, per the brief.
+> Live-source note: `curl` cannot reach `amazon.com` / `ftc.gov` / `developers.google.com` /
+> `affiliate-program.amazon.com` from this sandbox (TLS blocked on every request), but the
+> `fetch_page` tool **can**. Verification therefore uses `fetch_page` against the official URLs.
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -1403,3 +1419,13 @@ because parallel sessions read the same stale prompt. Flag IDs are safe (monoton
 | CI before merge | "Regenerate and gate" — pass; "Verify site" — success |
 | Pages | latest build `built` at `b1362ba4…`, https://karagemop466-tech.github.io/Affil2/ |
 | Gate at merge | 36 pages, 5 product records, 51 flags, 19 sources — ALL CHECKS PASS |
+
+## Session `57fc3be0` integration update (2026-11-20)
+
+**T-26 — limited independent live pass:** fetched all five official Amazon `/dp/` pages and recorded only the observed page titles and ASINs in `data/verification-2026-11-20-pass3.json`. Fetched S01/S02 Amazon policy pages (publicly reachable; S02 page says updated 2026-04-14), S03 FTC Endorsement Guides FAQ, and S04 Google Search Central outbound-link guidance. The exact scope and limitations are recorded in that JSON; this was not a full spec re-verification and does not confirm seller claims, intended ASINs, short-link compliance, Associates enrollment, tracking ID, or report data. The FTC page says endorsements must be honest/not misleading and material connections should be disclosed clearly/conspicuously. Google says use `rel="sponsored"` for ads/paid placements and supports multiple values. Amazon OA displayed update date 2025-10-15; no account-only facts asserted.
+
+**T-28 — documentation reconciled:** replaced README duplicate rows and stale counts/claims; rewrote EXECUTIVE-SUMMARY.md to reflect the five products, 51 review flags, 19 sources, owner-gated items, and the empty campaign ledger. Generator and compliance/test gates pass; documentation changes are not generated HTML.
+
+**PR reconciliation:** PR #53 is merged (confirmed); its docs work is included in main history. PR #47 and PR #51 were closed after review: #47's unrelated divergent tree diff would remove substantial current functionality (including analytics, findability, compliance checks, and shared records); #51's narrative is coordination-only. Their own branches were not merged, and neither closure changes the standing verification data or the unresolved status of submitted short links. The closure rationale and the narrower live pass are retained here.
+
+**Local validation (2026-11-20):** `python3 scripts/build_site.py` → built 36 pages; `python3 scripts/check_site.py` → 36 pages, 5 products, 51 flags, 19 sources, ALL CHECKS PASS; Python unittest → 3 tests OK; `node tests/test_collector.js` → ALL JS COLLECTOR AND CLIENT TESTS PASS. Additional internal href/src scan found zero missing local targets. GitHub Pages API reported `built`, source `main`, URL `https://karagemop466-tech.github.io/Affil2/` before the latest documentation-only changes; deployment for PR #57 is pending.
