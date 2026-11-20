@@ -118,6 +118,26 @@ for p in pages:
         if (up + target) not in html:
             err(f"{rel}: footer missing link to {target}")
 
+    # --- images: every generated photo must be captioned as illustration, never as the product
+    for m in re.finditer(r'<img\b[^>]*src="((?:\.\./)*assets/photos/[^"]+)"[^>]*>', html):
+        asset = (p.parent / m.group(1)).resolve()
+        if not asset.exists():
+            err(f"{rel}: missing image {m.group(1)}")
+        if "assets/photos/" in m.group(1):
+            window = html[m.end():m.end() + 900]
+            if "Illustrative image, generated for this site" not in window:
+                err(f"{rel}: generated photo {m.group(1)} is not captioned as illustration")
+        tag = m.group(0)
+        if "alt=\"\"" in tag or "alt=" not in tag:
+            err(f"{rel}: image {m.group(1)} has no alt text")
+        if not re.search(r'width="\d+" height="\d+"', tag):
+            err(f"{rel}: image {m.group(1)} has no intrinsic dimensions")
+    # --- search controls must not serialize query text into a request URL
+    for form in re.finditer(r'<form\b[^>]*\brole="search"[^>]*>(.*?)</form>', html, re.S | re.I):
+        for input_tag in re.findall(r"<input\b[^>]*>", form.group(1), re.I):
+            if re.search(r"\bname=", input_tag):
+                err(f"{rel}: search input has a name and could serialize query text into a request URL")
+
     # --- structured data must parse
     for m in re.finditer(r'<script type="application/ld\+json">(.*?)</script>', html, re.S):
         try:
@@ -334,8 +354,54 @@ if "Sitemap: " + BASE + "sitemap.xml" not in robots:
 if "Disallow: /" in robots:
     err("robots.txt blocks the site")
 
+# ---------------------------------------------------------------- no invented weights
+# No listing we read states a product weight, so no page may quote one. The two pages that
+# document the withdrawal are the only place the old figures may appear.
+WEIGHT_RE = re.compile(r"\b\d+(?:\.\d+)?\s?(?:lb|lbs|pounds?)\b", re.I)
+WEIGHT_EXEMPT = {"flagged.html", "sources.html"}
+for f in pages:
+    rel = f.name if f.parent == ROOT else f"{f.parent.name}/{f.name}"
+    if rel in WEIGHT_EXEMPT:
+        continue
+    txt = re.sub(r"<[^>]+>", " ", f.read_text())
+    for m in WEIGHT_RE.finditer(txt):
+        err(f"{rel}: quotes a product weight ({m.group(0).strip()}) that no listing states (FLG-022/FLG-039)")
+    if re.search(r"\b(?:footprint and weight|weight and footprint|weigh(?:s|ing) \w+ ?(?:lb|pounds))", txt, re.I):
+        err(f"{rel}: promises weight information while no weight is published (FLG-022)")
+
+# ---------------------------------------------------------------- compare pair view
+comp = (ROOT / "compare.html").read_text()
+pm = re.search(r'<script type="application/json" id="pairData">(.*?)</script>', comp, re.S)
+if not pm:
+    err("compare.html: no embedded pair view data")
+else:
+    try:
+        pair = json.loads(pm.group(1))
+    except json.JSONDecodeError as e:
+        err(f"compare.html pair data does not parse: {e}")
+        pair = {}
+    if len(pair) != 5:
+        err(f"compare.html pair data holds {len(pair)} products, expected 5")
+    for pid, rec in pair.items():
+        if not (ROOT / rec["url"]).exists():
+            err(f"compare.html pair data links a missing page: {rec['url']}")
+        if "tag=shopnow047c-20" not in rec["buy"]:
+            err(f"compare.html pair data buy link for {pid} lacks the Associates tag")
+        if len(rec["rows"]) < 12:
+            err(f"compare.html pair data for {pid} has only {len(rec['rows'])} rows")
+# ---------------------------------------------------------------- search privacy
+app_js = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+if re.search(r"URLSearchParams\(\s*location\.search", app_js) or ".get('q')" in app_js or '.get("q")' in app_js:
+    err("assets/app.js: reads search text from the request URL; built-in search must use session storage")
+if "sn_search_query" not in app_js or "sessionStorage" not in app_js:
+    err("assets/app.js: session-storage handoff for built-in search is missing")
+if "session storage" not in (ROOT / "disclosure.html").read_text(encoding="utf-8").lower():
+    err("disclosure.html: search query handling is not explained in the privacy statement")
+
 # ---------------------------------------------------------------- search index
 search_html = (ROOT / "search.html").read_text()
+if re.search(r"nothing is sent to\s+a server", search_html, re.I):
+    err("search.html: claims nothing is sent to a server, but page requests reach the host; use the session-storage wording")
 m = re.search(r'<script type="application/json" id="searchIndex">(.*?)</script>',
               search_html, re.S)
 if not m:

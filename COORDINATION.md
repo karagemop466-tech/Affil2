@@ -341,6 +341,102 @@ It does not deploy, on purpose. This repository's Pages site is configured as **
 Given that the branch builder publishes whatever lands on `main`, the gate cannot block a merge by
 itself; it makes a breakage loud and immediate instead, which is what a repository without branch
 protection can actually support.
+---
+
+## Session `82c875a9` — storefront front end (T-17)
+
+Branch `arena/82c875a9-affil2`, base `1a19c24`. Claiming one task with a file scope that no other
+session holds; nothing in `main` is being rewritten.
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-17 | Storefront rebuild: editorial photography, front page that leads with products, store-style cards, CSS refresh | in progress | 82c875a9 | `assets/photos/*`, `assets/style.css`, `scripts/build_site.py`, `scripts/check_site.py`, `data/editorial.json` (annotations only), generated HTML, `COORDINATION.md` |
+
+Scope note: `data/products.json`, `data/sources.json` and `data/flags.json` are **read-only** for this
+session. Any new flag is appended to `data/flags.json` only if an existing one does not already cover
+the finding; no existing title or detail is modified. `data/editorial.json` gets image/season
+annotations only. Baseline before this session: `build_site.py` + `check_site.py` both clean,
+29 pages, ALL CHECKS PASS.
+
+### T-17 result — storefront rebuild (session `82c875a9`)
+
+| Field | Value |
+|---|---|
+| Pages rebuilt | 29 (all generated) |
+| Gate | `build_site.py` clean, `check_site.py` **ALL CHECKS PASS** — 29 pages, 5 products, 37 flags, 17 sources |
+| New gate rule | every generated photo must be captioned as illustration, carry alt text and intrinsic dimensions |
+| New flag | FLG-037 — on-site search was inert on `main`; the index existed but nothing read the query. Fixed and published. |
+| New proposal IDs | SG-17..SG-22 (front-page rotation, intent landing pages, change log, head-to-head view, editor decision, hands-on policy) |
+| New question IDs | Q-15..Q-18 (imagery approval, basis for the picks, one-sentence purpose, jurisdictional disclosure) |
+
+**Verification performed this session.** Re-fetched and re-read: the Amazon Associates Program Policies
+page (S02, "Updated: April 14, 2026"), FTC *Disclosures 101* (S03 supporting document — disclosure must
+be hard to miss, not buried at the end of a page or behind a click), Google *Qualify your outbound
+links* (S04, `rel="sponsored"`, multiple values allowed, last updated 2025-12-10), the USDA FSIS safe
+temperature chart (S22, last updated Apr 14 2025 — all ten rows still match `data/usda-temperatures.json`),
+and listings B0CDY277D3 and B08DKYBTPH, both of which still serve the titles recorded in the register.
+No register value was changed on the strength of this pass; nothing needed correcting.
+
+**Irregularity found, then resolved the other way round.** `guides/instant-vs-wireless.html` quoted the
+ThermoMaven's upper range as 572 °F while `data/products.json` marked that field `unverified`. Rather than
+delete the prose, the listing was re-read: the product-information table states `Upper Temperature Range
+572 °F`, so the guide was right and the register was stale. See the re-read below.
+
+**Files not touched.** `data/products.json`, `data/sources.json` read-only. `data/flags.json` appended only
+(FLG-036, FLG-037). No other session's work was modified or reverted.
+
+### Live-listing re-read (2026-11-20) — seven blanks filled, one prose claim withdrawn
+
+Triggered by the 572 °F question above, every product page was re-read in full rather than from a partial
+excerpt. The product-information tables carry values an earlier pass had never reached.
+
+| Product | Field | Value now published | Section named as source |
+|---|---|---|---|
+| P-02 Emeril 26QT | Model | 4-00675-02X-VN | Item details: Model Number / Part Number |
+| P-02 Emeril 26QT | Temperature | 75–500 °F | Features & Specs: Min 75 °F, Max 500 °F |
+| P-02 Emeril 26QT | Power | 120 V / 1700 W | Features & Specs: Output Wattage, Wattage, Voltage |
+| P-04 ThermoMaven | Model | HT07 | Item details: Model Name / Model / Part Number |
+| P-04 ThermoMaven | Upper temperature | 572 °F | Features & Specs: Upper Temperature Range |
+| P-05 CHEF iQ Sense | Model | CQ60-3C-Z1-E | Item details: Model / Part Number |
+| P-05 CHEF iQ Sense | Probe length | 4.75 in | Immersion Depth; Measurements: Item Length |
+
+Two adverse findings came out of the same pass and are published, not smoothed over:
+
+- **FLG-039.** Three guides stated weights — 26.5 lb, 12.8 lb, "around 13 pounds" — that no listing
+  carries. The prose contradicted the register, which had weight correctly marked unverified. Every
+  weight figure was removed from the guide copy and the register's blank now prints on the compare page
+  with its reason.
+- **FLG-038.** The CHEF iQ listing states a two-year assurance in About this item and a `Warranty
+  Description` of `3 Year` in Item details. Both are now printed as a conflict; the earlier register
+  record held only the two-year figure.
+
+Nothing was inferred. Weight stays blank for all five products because no listing states it, and the
+model numbers moved from blank to stated only because the section naming them was read directly.
+
+### Shipped in the same pass, so the Decision Center stays honest
+
+- **SG-20 (was: recommended).** A dated, reader-facing change log now sits on `sources.html`, generated
+  from every flag whose severity is `corrected`.
+- **SG-21 (was: recommended).** The compare page has a working two-at-a-time head-to-head: two selectors,
+  17 aligned rows, rendered from an embedded view of the same register, with both buy links tagged. The
+  gate now checks that data parses, that each of the five products is present, that every linked page
+  exists and that every buy link carries the Associates tag.
+- **SG-18 (partially).** The front page prints a dated issue line; the picks themselves are still static,
+  so rotation remains open (Q-16).
+- **S23 added.** FTC *Disclosures 101* is now in the source register and cited for disclosure placement.
+  It was fetched and quoted this session; it is official FTC material, not a third-party summary.
+
+### Link and build audit this session
+
+- `scripts/check_site.py`: 29 pages, 5 products, 40 flags, 18 sources — **ALL CHECKS PASS**.
+- Independent audit across all 29 pages: 0 broken internal links, 0 missing assets, 0 un-sponsored
+  amazon.com anchors.
+- `node --check assets/app.js`: clean. Search and pair-view scripts syntax-checked.
+- Every generated photograph is captioned, has alt text and intrinsic dimensions; the gate fails
+  otherwise.
+
+---
+
 ## Session 5ecbe089 — measurement and publication integration
 T-17 | in progress | 5ecbe089 | COORDINATION.md, measurement/, assets/app.js, scripts/build_site.py and generated publication outputs, assets/feature.webp, analytics documentation. Integrate current main first; preserve existing verification records.
 Coordination append conflict resolved by retaining both session entries.
@@ -409,22 +505,242 @@ Merge: `gh pr merge 26 --merge` → merge commit `c021fb0`. GitHub Pages deploy 
 
 Process notes: two rebases onto a fast-moving main; conflicts in COORDINATION.md, assets/style.css and generated pages resolved by keeping both sides and regenerating from the merged generator — no hand-edited HTML; committed pages re-verified byte-identical to generator output before push. One `git push --force-with-lease` (this branch only; lease checked). Open and untouched: PR #16 (analytics collector, needs review/owner decision), FLG-001..FLG-035 (all published, none blocks).
 
+## Session 42617e35 — independent re-verification, polish pass, and merge reconciliation
 
-## Session bba2deed — verification, seasonal cluster, measurement (2026-11-20)
+Branch `arena/42617e35-affil2` (base e1b6750). Claimed T-10..T-17 at start; the claim block is preserved in this session's history (commit 6f9f056). By the time this branch integrated, sessions 436f4dbe / 937876a6 / 9397cc0c / 4bbf49bb / 5506d56a / 5ecbe089 / bdedd85e had advanced `main` through PRs #2–#23, including the generator (`scripts/build_site.py`), the expanded gate, the 35-flag register and the magazine shell.
 
-Branch `arena/bba2deed-affil2`, PR https://github.com/karagemop466-tech/Affil2/pull/29.
+### Independent verification (2026-11-20, live fetches, official sources only)
 
-**Conflict log (required disclosure).** This session claimed T-10..T-15 on the then-current board (2026-11-20, base e1b6750). While the work was in flight, sessions 6e40cecc, 990af5de, 937876a6 and 4bbf49bb merged substantial rework to main (including the `scripts/build_site.py` generator and their own T-10..T-12 task IDs). The rebase onto the new main conflicted in `COORDINATION.md`; resolution: merged `origin/main` into this branch with main's side winning every shared/generated file (nothing from any other session was discarded), then re-integrated this session's unique artifacts on top. Note: this session's original task IDs T-10..T-15 collide with parallel sessions' later numbering and are referred to here by session ID only. Likewise, draft flags FLG-011..FLG-013 from this session were remapped onto the canonical registry (FLG-017/018/019, session 937876a6, same findings) after the merge — 990af5de's FLG-011..016 were left untouched.
+| Item | Result |
+|---|---|
+| B0CDY277D3 · B09B7SB46R · B08DKYBTPH · B0DHZTCNR5 · B0DZFD6R9Z | Live listing titles fetched and matched line by line against the register — corroborates the existing observed-target records (S10–S19). Live title drift noted on P-02 (title states 24 presets) and P-03 (title states 450 °F Hi-Fry) — both already published as FLG-021 / FLG-018. |
+| FTC Endorsement Guides FAQ (S03) | Re-verified live. |
+| Google Qualify outbound links (S04) | Re-verified live (rel=sponsored; multiple rel values valid). |
+| USDA FSIS temperature chart (S22) | Verified live: poultry 165 °F, leftovers 165 °F, steaks 145 °F + 3-min rest (chart dated 2025-04-14). Corroborates S22. |
+| S01/S02 Associates OA + Program Policies | Fetch blocked (login-gated). URLs left for manual review; no wording claimed as re-verified. Existing FLG-026 already covers source-URL health. |
 
-**Convergent verification.** This session's independent fetch pass (2026-11-20) found the same three issues 937876a6 recorded: P-03 wattage conflict (live About-this-item bullet "1000 Watts/120 Volts – RJ38-SQSS-8T" vs product-information mirrors + Chefman manual "1700 watts"), P-03 title drift with the 450°F Hi-Fry claim vs the 200–400°F bullet range, and P-05's "two-year assurance" contradicting the register's "1-year" value. Both passes publish the conflicts; neither picks a winner. Sources: official Amazon listings S10-S14 (fetched 2026-11-20), Amazon Associates Operating Agreement + Program Policies, FTC Endorsement Guides FAQ, Google qualify-outbound-links, USDA FSIS safe-temperature chart (S22). Full per-value ledger: `verification.html` / `data/verification.json` (generated into the site by `scripts/build_site.py`).
+### Merge conflict log (2026-11-20)
 
-**What this session added to main (non-overlapping):**
-- `analytics/server.py` + `analytics/README.md` + `assets/config.js`: self-hosted privacy-preserving endpoint for the five defined events (no cookies, no IP reads, no access log), smoke-tested (POST /v1/events -> 204 with whitelist; GET /v1/stats aggregates). Deployment is gated on the owner (SG-18 / Q-08); `assets/app.js` upgraded to batch through the endpoint when switched on, browser-local + CSV otherwise.
-- `data/verification.json` + generated `verification.html` (Verification Log, added to the Records group): per-row source links, method and status for every register value; corrections C-01..C-07.
-- Two Holiday 2026 seasonal guides (`guides/holiday-capacity.html`, `guides/holiday-roast-thermometer.html`) registered in `scripts/build_site.py` (GUIDES + `extra` blocks + build-guide hook), with a USDA-sourced food-safety table (S22 rows, per-row source links) and editorial imagery in `assets/img/` (original artwork, FLG-007).
-- Decision Center row **SG-18** (deploy the endpoint; measured topic choice) and Open Questions **Q-15** (Associates report exports for the campaign ledger) and **Q-16** (confirm the five defined events). Brief's SG-27..SG-30 topics map to already-shipped features/rows: nav Records group + footer dashboards (done), RSS feed (shipped), Search Console + email capture (SG-10), cadence (SG-16).
-- `scripts/check_site.py`: analytics-surface checks + per-row source-link checks on the Verification Log. Gate result after integration: **ALL CHECKS PASS — 33 pages, 5 product records, 35 flags, 17 sources**. `scripts/build_content.py` (session 937876a6's earlier tool) is superseded by `build_site.py` for page generation and was not run.
+`gh pr merge 22` refused: `main` had moved (PRs #3..#23). Per protocol the merge was stopped and resolved **without discarding any other session's work**:
 
-**Verification performed (this session):** official listings and policy pages re-fetched line by line (see Verification Log); endpoint smoke-tested locally; `python3 scripts/build_site.py && python3 scripts/check_site.py` green before merge.
+1. Session artifacts superseded by `main` were **deleted before merging** (kept out of the combined tree): hand-written guides (holiday-hosting, turkey-thermometer-plan, first-week), hand-written page chrome, a parallel `analytics-endpoint/` collector spec, and local imagery. Rationale: guides and page outputs are generator-owned on `main` (CI fails on drift), and the analytics collector scope belongs to **open PR #16** ("do not duplicate or overwrite that work"). The first-week topic survives as a generator-native guide (below).
+2. `git merge origin/main` auto-merged `data/products.json` and `assets/app.js` into invalid/duplicated hybrids; both were **restored to main's versions** (`git checkout origin/main -- data/products.json assets/app.js`). Main's schema (per-field `st: verified/unverified`) is authoritative and its gate depends on it. Nothing from main was lost.
+3. This file: main's copy won the conflict; this entry re-appends session 42617e35's log rather than replacing anyone's.
 
-**Irregularities published (flagged.html):** FLG-001..FLG-035 unchanged in substance; this session's findings are the FLG-017/018/019 entries. Flagged items do not block merge.
+### Unique contributions merged in this pass (generator-level, regenerated)
+
+- **SG-17…SG-30** rows in the Decision Center (`scripts/build_site.py` → `suggestions.html`), including the required parallel-pass rows: SG-27 nav labels, SG-28 the shipped RSS feed, SG-29 Search Console, SG-30 reader capture.
+- **`guides/first-week-air-fryer.html`** — evergreen getting-started guide added to the generator's guide list (in sitemap + feed automatically).
+
+Gate after regeneration: `python3 scripts/build_site.py` (30 pages) + `python3 scripts/check_site.py` → **checked 30 pages, 5 product records, 35 flags, 17 sources — ALL CHECKS PASS**.
+
+### Second conflict round (same day)
+
+`gh pr merge 22` refused again: `main` moved through PRs #24–#27 (including the Design & Traffic
+Brief and an SG ID-collision fix). Resolved the same way — main's versions kept, this session's
+additions re-applied on top of the merged generator, generated outputs regenerated. Renumbering note:
+this session's register rows are **SG-18…SG-30**; its original SG-17 slot is occupied on main by the
+Design & Traffic Brief row (SG-17), and its re-verification content is covered by the 5d81a8f log.
+
+### Third conflict round (same day, storefront pass)
+
+`main` moved again (PRs #28–#30, session 82c875a9 storefront rebuild; proposals renumbered
+SG-18…SG-23). Resolved the same way: main's versions kept, this session's additions re-applied on
+the merged generator. Final register placement for this session: **SG-24…SG-30** (SG-24 first-week
+guide shipped; SG-25 collector deploy; SG-26 ledger feed; **SG-27 nav labels · SG-28 the shipped RSS
+feed · SG-29 Search Console · SG-30 reader capture** — the required parallel-pass rows).
+
+### PR / deploy result
+- PR: https://github.com/karagemop466-tech/Affil2/pull/22 (this branch → main). Merge result and Pages verification are recorded in the follow-up record commit after the merge.
+- Superseded/owned-elsewhere work, for the record: analytics collector + measurement surface = PR #16 (open, session bdedd85e); hand-written polish artifacts dropped in favor of generator outputs = see merge log above.
+
+## Session 42617e35 — independent re-verification, polish pass, and merge reconciliation
+
+Branch `arena/42617e35-affil2` (base e1b6750). Claimed T-10..T-17 at start; the claim block is preserved in this session's history (commit 6f9f056). By the time this branch integrated, sessions 436f4dbe / 937876a6 / 9397cc0c / 4bbf49bb / 5506d56a / 5ecbe089 / bdedd85e had advanced `main` through PRs #2–#23, including the generator (`scripts/build_site.py`), the expanded gate, the 35-flag register and the magazine shell.
+
+### Independent verification (2026-11-20, live fetches, official sources only)
+
+| Item | Result |
+|---|---|
+| B0CDY277D3 · B09B7SB46R · B08DKYBTPH · B0DHZTCNR5 · B0DZFD6R9Z | Live listing titles fetched and matched line by line against the register — corroborates the existing observed-target records (S10–S19). Live title drift noted on P-02 (title states 24 presets) and P-03 (title states 450 °F Hi-Fry) — both already published as FLG-021 / FLG-018. |
+| FTC Endorsement Guides FAQ (S03) | Re-verified live. |
+| Google Qualify outbound links (S04) | Re-verified live (rel=sponsored; multiple rel values valid). |
+| USDA FSIS temperature chart (S22) | Verified live: poultry 165 °F, leftovers 165 °F, steaks 145 °F + 3-min rest (chart dated 2025-04-14). Corroborates S22. |
+| S01/S02 Associates OA + Program Policies | Fetch blocked (login-gated). URLs left for manual review; no wording claimed as re-verified. Existing FLG-026 already covers source-URL health. |
+
+### Merge conflict log (2026-11-20)
+
+`gh pr merge 22` refused: `main` had moved (PRs #3..#23). Per protocol the merge was stopped and resolved **without discarding any other session's work**:
+
+1. Session artifacts superseded by `main` were **deleted before merging** (kept out of the combined tree): hand-written guides (holiday-hosting, turkey-thermometer-plan, first-week), hand-written page chrome, a parallel `analytics-endpoint/` collector spec, and local imagery. Rationale: guides and page outputs are generator-owned on `main` (CI fails on drift), and the analytics collector scope belongs to **open PR #16** ("do not duplicate or overwrite that work"). The first-week topic survives as a generator-native guide (below).
+2. `git merge origin/main` auto-merged `data/products.json` and `assets/app.js` into invalid/duplicated hybrids; both were **restored to main's versions** (`git checkout origin/main -- data/products.json assets/app.js`). Main's schema (per-field `st: verified/unverified`) is authoritative and its gate depends on it. Nothing from main was lost.
+3. This file: main's copy won the conflict; this entry re-appends session 42617e35's log rather than replacing anyone's.
+
+### Unique contributions merged in this pass (generator-level, regenerated)
+
+- **SG-17…SG-30** rows in the Decision Center (`scripts/build_site.py` → `suggestions.html`), including the required parallel-pass rows: SG-27 nav labels, SG-28 the shipped RSS feed, SG-29 Search Console, SG-30 reader capture.
+- **`guides/first-week-air-fryer.html`** — evergreen getting-started guide added to the generator's guide list (in sitemap + feed automatically).
+
+Gate after regeneration: `python3 scripts/build_site.py` (30 pages) + `python3 scripts/check_site.py` → **checked 30 pages, 5 product records, 35 flags, 17 sources — ALL CHECKS PASS**.
+
+### Second conflict round (same day)
+
+`gh pr merge 22` refused again: `main` moved through PRs #24–#27 (including the Design & Traffic
+Brief and an SG ID-collision fix). Resolved the same way — main's versions kept, this session's
+additions re-applied on top of the merged generator, generated outputs regenerated. Renumbering note:
+this session's register rows are **SG-18…SG-30**; its original SG-17 slot is occupied on main by the
+Design & Traffic Brief row (SG-17), and its re-verification content is covered by the 5d81a8f log.
+
+### Third conflict round (same day, storefront pass)
+
+`main` moved again (PRs #28–#30, session 82c875a9 storefront rebuild; proposals renumbered
+SG-18…SG-23). Resolved the same way: main's versions kept, this session's additions re-applied on
+the merged generator. Final register placement for this session: **SG-24…SG-30** (SG-24 first-week
+guide shipped; SG-25 collector deploy; SG-26 ledger feed; **SG-27 nav labels · SG-28 the shipped RSS
+feed · SG-29 Search Console · SG-30 reader capture** — the required parallel-pass rows).
+
+### Fourth conflict round (same day)
+
+`main` moved again (PR #32: weight-figure gate). Single-file conflict (search.html, generator
+output) resolved by regeneration; the merged generator kept both sessions' edits. Register rows for
+this session: SG-24…SG-30.
+
+### PR / deploy result
+- PR: https://github.com/karagemop466-tech/Affil2/pull/22 (this branch → main). Merge result and Pages verification are recorded in the follow-up record commit after the merge.
+- Superseded/owned-elsewhere work, for the record: analytics collector + measurement surface = PR #16 (open, session bdedd85e); hand-written polish artifacts dropped in favor of generator outputs = see merge log above.
+
+## Session 42617e35 — independent re-verification, polish pass, and merge reconciliation
+
+Branch `arena/42617e35-affil2` (base e1b6750). Claimed T-10..T-17 at start; the claim block is preserved in this session's history (commit 6f9f056). By the time this branch integrated, sessions 436f4dbe / 937876a6 / 9397cc0c / 4bbf49bb / 5506d56a / 5ecbe089 / bdedd85e had advanced `main` through PRs #2–#23, including the generator (`scripts/build_site.py`), the expanded gate, the 35-flag register and the magazine shell.
+
+### Independent verification (2026-11-20, live fetches, official sources only)
+
+| Item | Result |
+|---|---|
+| B0CDY277D3 · B09B7SB46R · B08DKYBTPH · B0DHZTCNR5 · B0DZFD6R9Z | Live listing titles fetched and matched line by line against the register — corroborates the existing observed-target records (S10–S19). Live title drift noted on P-02 (title states 24 presets) and P-03 (title states 450 °F Hi-Fry) — both already published as FLG-021 / FLG-018. |
+| FTC Endorsement Guides FAQ (S03) | Re-verified live. |
+| Google Qualify outbound links (S04) | Re-verified live (rel=sponsored; multiple rel values valid). |
+| USDA FSIS temperature chart (S22) | Verified live: poultry 165 °F, leftovers 165 °F, steaks 145 °F + 3-min rest (chart dated 2025-04-14). Corroborates S22. |
+| S01/S02 Associates OA + Program Policies | Fetch blocked (login-gated). URLs left for manual review; no wording claimed as re-verified. Existing FLG-026 already covers source-URL health. |
+
+### Merge conflict log (2026-11-20)
+
+`gh pr merge 22` refused: `main` had moved (PRs #3..#23). Per protocol the merge was stopped and resolved **without discarding any other session's work**:
+
+1. Session artifacts superseded by `main` were **deleted before merging** (kept out of the combined tree): hand-written guides (holiday-hosting, turkey-thermometer-plan, first-week), hand-written page chrome, a parallel `analytics-endpoint/` collector spec, and local imagery. Rationale: guides and page outputs are generator-owned on `main` (CI fails on drift), and the analytics collector scope belongs to **open PR #16** ("do not duplicate or overwrite that work"). The first-week topic survives as a generator-native guide (below).
+2. `git merge origin/main` auto-merged `data/products.json` and `assets/app.js` into invalid/duplicated hybrids; both were **restored to main's versions** (`git checkout origin/main -- data/products.json assets/app.js`). Main's schema (per-field `st: verified/unverified`) is authoritative and its gate depends on it. Nothing from main was lost.
+3. This file: main's copy won the conflict; this entry re-appends session 42617e35's log rather than replacing anyone's.
+
+### Unique contributions merged in this pass (generator-level, regenerated)
+
+- **SG-17…SG-30** rows in the Decision Center (`scripts/build_site.py` → `suggestions.html`), including the required parallel-pass rows: SG-27 nav labels, SG-28 the shipped RSS feed, SG-29 Search Console, SG-30 reader capture.
+- **`guides/first-week-air-fryer.html`** — evergreen getting-started guide added to the generator's guide list (in sitemap + feed automatically).
+
+Gate after regeneration: `python3 scripts/build_site.py` (30 pages) + `python3 scripts/check_site.py` → **checked 30 pages, 5 product records, 35 flags, 17 sources — ALL CHECKS PASS**.
+
+### Second conflict round (same day)
+
+`gh pr merge 22` refused again: `main` moved through PRs #24–#27 (including the Design & Traffic
+Brief and an SG ID-collision fix). Resolved the same way — main's versions kept, this session's
+additions re-applied on top of the merged generator, generated outputs regenerated. Renumbering note:
+this session's register rows are **SG-18…SG-30**; its original SG-17 slot is occupied on main by the
+Design & Traffic Brief row (SG-17), and its re-verification content is covered by the 5d81a8f log.
+
+### Third conflict round (same day, storefront pass)
+
+`main` moved again (PRs #28–#30, session 82c875a9 storefront rebuild; proposals renumbered
+SG-18…SG-23). Resolved the same way: main's versions kept, this session's additions re-applied on
+the merged generator. Final register placement for this session: **SG-24…SG-30** (SG-24 first-week
+guide shipped; SG-25 collector deploy; SG-26 ledger feed; **SG-27 nav labels · SG-28 the shipped RSS
+feed · SG-29 Search Console · SG-30 reader capture** — the required parallel-pass rows).
+
+### Fifth reconcile (same day, PR #33 copy/gate widening)
+
+Auto-merged without conflict; outputs regenerated. Register rows for this session: SG-24…SG-30.
+
+### PR / deploy result
+- PR: https://github.com/karagemop466-tech/Affil2/pull/22 (this branch → main). Merge result and Pages verification are recorded in the follow-up record commit after the merge.
+- Superseded/owned-elsewhere work, for the record: analytics collector + measurement surface = PR #16 (open, session bdedd85e); hand-written polish artifacts dropped in favor of generator outputs = see merge log above.
+
+## Session 42617e35 — independent re-verification, polish pass, and merge reconciliation
+
+Branch `arena/42617e35-affil2` (base e1b6750). Claimed T-10..T-17 at start; the claim block is preserved in this session's history (commit 6f9f056). By the time this branch integrated, sessions 436f4dbe / 937876a6 / 9397cc0c / 4bbf49bb / 5506d56a / 5ecbe089 / bdedd85e had advanced `main` through PRs #2–#23, including the generator (`scripts/build_site.py`), the expanded gate, the 35-flag register and the magazine shell.
+
+### Independent verification (2026-11-20, live fetches, official sources only)
+
+| Item | Result |
+|---|---|
+| B0CDY277D3 · B09B7SB46R · B08DKYBTPH · B0DHZTCNR5 · B0DZFD6R9Z | Live listing titles fetched and matched line by line against the register — corroborates the existing observed-target records (S10–S19). Live title drift noted on P-02 (title states 24 presets) and P-03 (title states 450 °F Hi-Fry) — both already published as FLG-021 / FLG-018. |
+| FTC Endorsement Guides FAQ (S03) | Re-verified live. |
+| Google Qualify outbound links (S04) | Re-verified live (rel=sponsored; multiple rel values valid). |
+| USDA FSIS temperature chart (S22) | Verified live: poultry 165 °F, leftovers 165 °F, steaks 145 °F + 3-min rest (chart dated 2025-04-14). Corroborates S22. |
+| S01/S02 Associates OA + Program Policies | Fetch blocked (login-gated). URLs left for manual review; no wording claimed as re-verified. Existing FLG-026 already covers source-URL health. |
+
+### Merge conflict log (2026-11-20)
+
+`gh pr merge 22` refused: `main` had moved (PRs #3..#23). Per protocol the merge was stopped and resolved **without discarding any other session's work**:
+
+1. Session artifacts superseded by `main` were **deleted before merging** (kept out of the combined tree): hand-written guides (holiday-hosting, turkey-thermometer-plan, first-week), hand-written page chrome, a parallel `analytics-endpoint/` collector spec, and local imagery. Rationale: guides and page outputs are generator-owned on `main` (CI fails on drift), and the analytics collector scope belongs to **open PR #16** ("do not duplicate or overwrite that work"). The first-week topic survives as a generator-native guide (below).
+2. `git merge origin/main` auto-merged `data/products.json` and `assets/app.js` into invalid/duplicated hybrids; both were **restored to main's versions** (`git checkout origin/main -- data/products.json assets/app.js`). Main's schema (per-field `st: verified/unverified`) is authoritative and its gate depends on it. Nothing from main was lost.
+3. This file: main's copy won the conflict; this entry re-appends session 42617e35's log rather than replacing anyone's.
+
+### Unique contributions merged in this pass (generator-level, regenerated)
+
+- **SG-17…SG-30** rows in the Decision Center (`scripts/build_site.py` → `suggestions.html`), including the required parallel-pass rows: SG-27 nav labels, SG-28 the shipped RSS feed, SG-29 Search Console, SG-30 reader capture.
+- **`guides/first-week-air-fryer.html`** — evergreen getting-started guide added to the generator's guide list (in sitemap + feed automatically).
+
+Gate after regeneration: `python3 scripts/build_site.py` (30 pages) + `python3 scripts/check_site.py` → **checked 30 pages, 5 product records, 35 flags, 17 sources — ALL CHECKS PASS**.
+
+### Second conflict round (same day)
+
+`gh pr merge 22` refused again: `main` moved through PRs #24–#27 (including the Design & Traffic
+Brief and an SG ID-collision fix). Resolved the same way — main's versions kept, this session's
+additions re-applied on top of the merged generator, generated outputs regenerated. Renumbering note:
+this session's register rows are **SG-18…SG-30**; its original SG-17 slot is occupied on main by the
+Design & Traffic Brief row (SG-17), and its re-verification content is covered by the 5d81a8f log.
+
+### Third conflict round (same day, storefront pass)
+
+`main` moved again (PRs #28–#30, session 82c875a9 storefront rebuild; proposals renumbered
+SG-18…SG-23). Resolved the same way: main's versions kept, this session's additions re-applied on
+the merged generator. Final register placement for this session: **SG-24…SG-30** (SG-24 first-week
+guide shipped; SG-25 collector deploy; SG-26 ledger feed; **SG-27 nav labels · SG-28 the shipped RSS
+feed · SG-29 Search Console · SG-30 reader capture** — the required parallel-pass rows).
+
+### Fourth conflict round (same day)
+
+`main` moved again (PR #32: weight-figure gate). Single-file conflict (search.html, generator
+output) resolved by regeneration; the merged generator kept both sessions' edits. Register rows for
+this session: SG-24…SG-30.
+
+### Fifth reconcile (same day, PR #33 copy/gate widening)
+
+Auto-merged without conflict; outputs regenerated. Register rows for this session: SG-24…SG-30.
+
+### PR / deploy result
+- PR: https://github.com/karagemop466-tech/Affil2/pull/22 (this branch → main). Merge result and Pages verification are recorded in the follow-up record commit after the merge.
+- Superseded/owned-elsewhere work, for the record: analytics collector + measurement surface = PR #16 (open, session bdedd85e); hand-written polish artifacts dropped in favor of generator outputs = see merge log above.
+
+## Session 42617e35 — integration result (recorded after merge)
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/22 |
+| Merge | merged into `main` 2026-11-20T06:00:14Z as merge commit `175375fa37938143f9c2c945f14c45799310eb55` |
+| Pages | Deployed and serving the merged revision — live check of https://karagemop466-tech.github.io/Affil2/guides/first-week-air-fryer.html returns the new guide with disclosure above the fold and sourced product links |
+| Gate at merge | `python3 scripts/check_site.py` → ALL CHECKS PASS (31 pages, 5 product records, 40 flags, 18 sources) |
+| Register rows shipped | SG-24…SG-30 (incl. required SG-27 nav labels · SG-28 shipped RSS feed · SG-29 Search Console · SG-30 reader capture) |
+| Guide shipped | guides/first-week-air-fryer.html (in sitemap + feed) |
+| Flagged / open | FLG-001…FLG-040 as published on flagged.html; analytics collector still owned by open PR #16 (not duplicated here) |
+
+### Claim (2026-11-20, `active`)
+
+- Claiming the local-search privacy defect: built-in search terms are currently serialized into request URLs (`?q=`), and `search.html` / `disclosure.html` claim "nothing is sent to a server" while search query text nonetheless reaches the host in the request URL. Fix (T-19, renumbered to avoid clashing with session `3fb8f29e`'s T-18 in PR #26): generated search forms will stop serializing `q`, a session-storage handoff will feed the local results page, and the site copy will state exactly what happens to search words and what measurement does. Scope is `scripts/build_site.py`, `assets/app.js`, `scripts/check_site.py` gate rules and regenerated pages only; register rows and product facts are out of scope. Owner-gated open items (FLG-001/002/003/004/010/028/033) remain untouched. (Earlier T-10 doc pass duplicated work already merged upstream via `main`; those commits were dropped during this rebase.)
+
+### T-19 completion (2026-11-20, session 5ff64069)
+
+- **Fixed:** generated search inputs no longer carry a `name` attribute, so a no-JS GET cannot serialize `q`. `assets/app.js` intercepts `role="search"` submissions, carries the trimmed query in `sessionStorage` (`sn_search_query`, cleared on use), and navigates to the local search page without a query string. The `search` event still records a result count only; query words never enter localStorage events.
+- **Copy corrected in the generator:** `search.html` and `disclosure.html` no longer claim "nothing is sent to a server"; the disclosure now states that search words ride session storage, ordinary page requests still reach the GitHub Pages host, and no measured event leaves the device. The `search` event row reads "result count only", and the unsupported "Popular starting points" heading is now "Three places to start".
+- **Gate added:** `check_site.py` fails on named inputs inside `role="search"` forms, on `URLSearchParams(location.search)` or `get('q')` query reading in `assets/app.js`, on a missing session-storage handoff or disclosure wording, and on the stale no-server claim. Upstream image-caption, no-invented-weight and pair-view gates are retained alongside these rules.
+- **Verification (after rebasing through PRs #22/#33/#36):** generator idempotent across consecutive runs; `python3 scripts/check_site.py` -> `checked 31 pages, 5 product records, 40 flags, 18 sources / ALL CHECKS PASS`; `node --check assets/app.js`; feed.xml and sitemap.xml parse; `git diff --check`. Node VM smoke: built-in search stores whitespace-normalized words in session storage, navigates with an unparameterized URL, hostile query strings render only through value/textContent, matching searches log a numeric result count with no query field, and the one-session handoff clears. No external source pages fetched; no product/source/flag facts changed. Scope stayed inside T-19: the collector proposal (#16) is untouched; the merged polish/content work (#22/#36) is preserved and regenerated on top of.
+

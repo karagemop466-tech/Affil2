@@ -96,10 +96,10 @@
     "title": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included",
     "fields": {
       "model": {
-        "v": null,
-        "src": "Item details table (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Earlier records listed 4-00675-02 and 4-00675-02X-VN; FLG-009 reports both on the listing. Neither appeared in this check’s fetched text, so the model is left blank."
+        "v": "4-00675-02X-VN",
+        "src": "Item details: Model Number and Part Number, both stated as 4-00675-02X-VN",
+        "st": "verified",
+        "note": ""
       },
       "capacity": {
         "v": "26 quarts (Product Details: 24.6 liters)",
@@ -108,16 +108,16 @@
         "note": ""
       },
       "temperature": {
-        "v": null,
-        "src": "About this item / Product Details (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "75–500 °F (Min Temperature Setting 75 °F, Max Temperature Setting 500 °F)",
+        "src": "Features & Specs table",
+        "st": "verified",
+        "note": ""
       },
       "power": {
-        "v": null,
-        "src": "About this item (not visible in fetched text)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "120 volts / 1700 watts",
+        "src": "Features & Specs table (Output Wattage and Wattage both 1700 W; Voltage 120 V)",
+        "st": "verified",
+        "note": ""
       },
       "dimensions": {
         "v": "16.9 in D × 15.8 in W × 14.8 in H",
@@ -169,7 +169,7 @@
       "Do you need rotisserie or pizza capacity, or is that unused space?",
       "Will you move it, or leave it in one spot?"
     ],
-    "blurb": "A countertop oven that air-fries. The trade-off is footprint and weight: this is a 26-quart appliance, not a compact basket fryer."
+    "blurb": "A countertop oven that air-fries. The trade-off is counter footprint: this is a 26-quart appliance, not a compact basket fryer."
   },
   {
     "id": "P-03",
@@ -274,10 +274,10 @@
     "title": "ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black",
     "fields": {
       "model": {
-        "v": null,
-        "src": "Not visible in fetched text (register listed HT07; removed)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "HT07",
+        "src": "Item details: Model Name, Model and Part Number, all HT07",
+        "st": "verified",
+        "note": ""
       },
       "response": {
         "v": "1 second",
@@ -316,10 +316,10 @@
         "note": ""
       },
       "upper_temp": {
-        "v": null,
-        "src": "Not visible in fetched text (register said 572 °F; removed)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "572 °F",
+        "src": "Features & Specs table (Upper Temperature Range)",
+        "st": "verified",
+        "note": ""
       }
     },
     "card": [
@@ -357,10 +357,10 @@
     "title": "CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3",
     "fields": {
       "model": {
-        "v": null,
-        "src": "Not visible in fetched text (register listed CQ60-3C-Z1-E; removed)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "CQ60-3C-Z1-E",
+        "src": "Item details: Model and Part Number, both CQ60-3C-Z1-E",
+        "st": "verified",
+        "note": ""
       },
       "probes": {
         "v": "3 ultra-thin probes plus hub (Included Components: 3 Probes, Hub)",
@@ -393,16 +393,16 @@
         "note": "Both figures are published as reported; neither is chosen. The 70-hour text was reported by an earlier verification (FLG-008) and is not in the text fetched for this check."
       },
       "probe_length": {
-        "v": null,
-        "src": "Not visible in fetched text (register said 4.75 in; removed)",
-        "st": "unverified",
-        "note": "Not visible in the fetched listing text — left blank (unverified)."
+        "v": "4.75 inches",
+        "src": "Features & Specs: Immersion Depth 4.75 in; Measurements: Item Length 4.75 in",
+        "st": "verified",
+        "note": ""
       },
       "warranty": {
-        "v": "Two-year assurance provided by CHEF iQ",
-        "src": "About this item",
-        "st": "verified",
-        "note": "Register previously said 1-year; the listing says two-year (corrected)."
+        "v": "Two-year assurance in About this item vs 3 Year in the Warranty Description field",
+        "src": "About this item; Item details (Warranty Description)",
+        "st": "conflict",
+        "note": "The listing states both a two-year assurance and a 3 Year warranty description (FLG-038)."
       },
       "care": {
         "v": "Waterproof, dishwasher-safe probes",
