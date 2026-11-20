@@ -24,7 +24,7 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-23 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | done | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
 | T-24 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | done | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
 | T-25 | Live re-verification of the five listings' published specs + policy sources; dated record | done | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
-| T-26 | Live re-check of the five submitted short links (final-URL log kept apart from intent records); live title re-read of the five /dp/ listings; official-domain gate for source URLs (I-4); computed label for the Black Friday date (I-2); official ASIN-definition source search (I-7); REQUIREMENTS-TRACE status update | in progress | 7481731c | `data/link-resolution-2026-11-20.json` (new), `data/flags.json` (append only), `data/sources.json` (append only), `scripts/build_site.py`, `scripts/check_site.py`, `verification.html` / `design-brief.html` (generated), `REQUIREMENTS-TRACE.md`, `COORDINATION.md` |
+| T-26 | Live re-check of the five submitted short links (final-URL log kept apart from intent records); live title re-read of the five /dp/ listings; official-domain gate for source URLs (I-4); computed label for the Black Friday date (I-2); official ASIN-definition source search (I-7); REQUIREMENTS-TRACE status update | done | 7481731c | `data/link-resolution-2026-11-20.json` (new), `data/flags.json` (append only), `data/sources.json` (append only), `scripts/build_site.py`, `scripts/check_site.py`, `verification.html` / `design-brief.html` (generated), `REQUIREMENTS-TRACE.md`, `COORDINATION.md` |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -1321,3 +1321,40 @@ Branch `arena/7481731c-affil2`, base `4ddede5` (main, after PR #52). Session ID 
 **Why.** The brief asks for line-by-line verification from official sources and for flags on anything unverified. Three items are in reach from the sandbox now: `fetch_page` reaches amazon.com (earlier sessions could not), the gate can enforce an official-domain rule that I-4 says is missing, and I-2 can be closed by labelling the date as computed. Owner-gated items (Associates Central, Search Console, analytics hosting, author) stay blocked and are not claimed.
 
 **Claimed.** Items listed in the table row above. **Not claimed:** `data/products.json` values, PRs #47, #51 and #53 (open, owned by other sessions), `analytics/`, `functions/`, `data/events.json`.
+
+### T-26 completion record (session `7481731c`, 2026-11-20 UTC)
+
+| Field | Value |
+|---|---|
+| Branch | `arena/7481731c-affil2`, base `4ddede5` (main, after PR #52) |
+| Status | done (ready for PR; PR and merge record added below once made) |
+| Files changed | `data/link-resolution-2026-11-20.json` (new), `data/flags.json` (append only: FLG-052..054), `data/sources.json` (append only: S25, S26; `used_for` text added to S01, S15–S19), `scripts/build_site.py`, `scripts/check_site.py`, generated pages (`design-brief.html`, `verification.html`, `flagged.html`, `sources.html`, `executive-summary.html`, `search.html`), `README.md`, `EXECUTIVE-SUMMARY.md` (one command line), `REQUIREMENTS-TRACE.md` (rows 9, 14, 27, 28, 36; I-2, I-4, I-5, I-7; section 5), `COORDINATION.md` |
+
+**Sources checked (live, 2026-11-20, official only):**
+- Listing pages, title and ASIN re-read: https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z. All five resolve to product pages whose titles contain the register titles.
+- Submitted short links, final URL: https://link.amazon/B04G1MEwY · https://link.amazon/B02NbDxp3 · https://link.amazon/B00hJ57DV · https://link.amazon/B0c8moW59 · https://link.amazon/B0f3GKalj. Every fetch ended on https://www.amazon.com/ (round 2 for P-01 and P-04 gave the same). Not called invalid.
+- OPM federal holidays: https://www.opm.gov/policy-data-oversight/pay-leave/federal-holidays/ (2026: Thanksgiving Thursday 26 Nov; 2027: New Year's Day Friday 01 Jan).
+- Associates Operating Agreement: https://affiliate-program.amazon.com/help/operating/agreement ("Updated: October 15, 2025"; §1 Special Links).
+- Seller Central help G1471: https://sellercentral.amazon.com/help/hub/reference/external/G1471 (lists ASIN as an accepted product identifier; no definition). Other Seller Central pages checked: G200426310, G200182950 (no ASIN definition).
+
+**Work done:**
+1. Recorded the five short-link final URLs in `data/link-resolution-2026-11-20.json`, kept apart from the intended and observed ASIN fields.
+2. Added `FLG-052` (short-link conflict with same-day records in `data/products.json` and S15–S19), `FLG-053` (seasonal calendar errors, and computed-only dates), `FLG-054` (ASIN definition not located).
+3. Corrected the seasonal calendar: New Year 2027-01-02 → 2027-01-01 (OPM 2027); the Advent row 2026-12-02 → 2026-11-29 (computed); Black Friday, Cyber Monday and Advent labelled computed; a Source column added to every calendar row, linking OPM where the date is sourced.
+4. Gate (`scripts/check_site.py`): official-host allowlist for source URLs (I-4); link-resolution consistency (submitted link matches the register; titles contain the register title; no price; a home-page result cannot be marked as reproduced); each negative case was run against a deliberately bad copy and failed as intended.
+5. Verification log: a new submitted-link re-check section, generated from the JSON.
+
+**Verification performed:** build run twice with no change on the second run; `scripts/check_site.py` ALL CHECKS PASS (36 pages, 5 product records, 53 flags, 21 sources); `python3 -m unittest discover -s tests` 3 tests OK; `node tests/test_collector.js` pass.
+
+**Irregularities (published on Flagged for Review, none blocks):**
+- **FLG-052 (conflict):** submitted short links ended on the amazon.com home page in today's fetches, contrary to same-day records in `data/products.json` and S15–S19. Cause unknown. Owner action: open each link in a normal browser.
+- **FLG-053 (corrected, partly unverified):** calendar errors fixed; Black Friday, Cyber Monday and Advent remain computed.
+- **FLG-054 (unverified):** no official Amazon page defining ASIN located.
+- Not changed: `data/products.json` `observed_status` text, which says the links "resolved cleanly" on 2026-11-20. It is kept as the earlier record, because the conflict is now recorded in FLG-052 and changing it needs the owner's browser check.
+
+**Flag IDs:** open branch `ca4af934-affil2` already holds FLG-051 (not on `main`). This session used FLG-052..054 to avoid a collision. FLG-051 is left unused here.
+
+**Not done, and why:** Special Link test in Associates Central (FLG-004), tracking-ID activity (FLG-002), intended ASINs (FLG-001), analytics hosting (FLG-010), Search Console (SG-29), named author (FLG-033) and reader-capture provider (SG-30) all need owner accounts or decisions. They remain blocked and are not claimed here.
+
+**Handoff / conflict log:** none. Open PRs #47, #51 and #53 belong to other sessions and were not touched. No file owned by another session was edited.
+

@@ -203,7 +203,7 @@ and any hands-on performance.
 ## Verification behind this summary
 
     python3 scripts/build_site.py        # 36 pages, idempotent
-    python3 scripts/check_site.py        # 36 pages, 5 product records, 44 flags, 19 sources - ALL CHECKS PASS
+    python3 scripts/check_site.py        # 36 pages, 5 product records, 53 flags, 21 sources - ALL CHECKS PASS (T-26 state)
     python3 -m unittest discover -s tests -p "test_*.py"     # 3 tests OK
     node tests/test_collector.js         # ALL JS COLLECTOR AND CLIENT TESTS PASS
     node --check assets/app.js           # syntax OK

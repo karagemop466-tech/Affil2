@@ -347,6 +347,58 @@ for s in sources:
     if not s["url"].startswith("https://"):
         err(f"sources.json {s['id']}: url is not https")
 
+# I-4: every source must sit on a host the owner has approved as an official publisher of that document.
+# Adding a host here is a decision, not a fix: check the page is published by the owner first.
+OFFICIAL_SOURCE_HOSTS = {
+    "affiliate-program.amazon.com",   # Associates Operating Agreement and Program Policies
+    "www.amazon.com",                 # official listing pages
+    "sellercentral.amazon.com",       # Seller Central help hub (ASIN as product identifier)
+    "link.amazon",                    # the submitted short links (Amazon-operated)
+    "www.ftc.gov",                    # FTC Endorsement Guides and Disclosures 101
+    "developers.google.com",          # Google Search Central, outbound links
+    "www.fsis.usda.gov",              # USDA FSIS food-safety charts
+    "www.opm.gov",                    # OPM federal holiday tables
+}
+for s in sources:
+    m = re.match(r"https://([^/]+)/", s["url"])
+    host = m.group(1) if m else ""
+    if host not in OFFICIAL_SOURCE_HOSTS:
+        err(f"sources.json {s['id']}: host '{host}' is not on the official-source allowlist (I-4)")
+
+# T-26: submitted-link re-check record (data/link-resolution-2026-11-20.json)
+src_ids_all = {s["id"] for s in sources}
+lr = json.loads((ROOT / "data" / "link-resolution-2026-11-20.json").read_text())
+if re.search(r"\$\s?\d", json.dumps(lr)):
+    err("link-resolution-2026-11-20.json: contains a price (Program Policies, S02)")
+by_prod = {d["id"]: d for d in raw}
+for sl in lr["short_links"]:
+    p_ = by_prod.get(sl["product"])
+    if p_ is None:
+        err(f"link-resolution: unknown product {sl['product']}")
+        continue
+    if p_["submitted"] != sl["submitted"]:
+        err(f"link-resolution {sl['product']}: submitted link differs from products.json")
+    if sl["source_row"] not in src_ids_all:
+        err(f"link-resolution {sl['product']}: source {sl['source_row']} is not in sources.json")
+    homepage_seen = any(t["final_url"].rstrip("/") == "https://www.amazon.com" for t in sl["attempts"])
+    if homepage_seen and sl["reproduces_earlier_record"]:
+        err(f"link-resolution {sl['product']}: recorded as reproducing the earlier record although a re-check ended on the home page")
+    if not homepage_seen and not sl["reproduces_earlier_record"]:
+        err(f"link-resolution {sl['product']}: no home-page result, but the record is not marked as reproduced")
+for lp in lr["listing_pages"]:
+    p_ = by_prod.get(lp["product"])
+    if p_ is None:
+        err(f"link-resolution: unknown listing product {lp['product']}")
+        continue
+    if lp["asin_in_url"] != (p_.get("observed") or p_.get("asin")):
+        err(f"link-resolution {lp['product']}: ASIN read from the listing differs from the register")
+    if not lp["final_url"].startswith(f"https://www.amazon.com/dp/{lp['asin_in_url']}"):
+        err(f"link-resolution {lp['product']}: final listing URL does not carry the ASIN")
+    if p_["title"] not in lp["title_as_read"]:
+        err(f"link-resolution {lp['product']}: title as read does not contain the register title")
+    if lp["source_row"] not in src_ids_all:
+        err(f"link-resolution {lp['product']}: source {lp['source_row']} is not in sources.json")
+
 # every flag referenced in the HTML must exist, and every defined flag must be published
 flag_refs = set()
 for p in pages:
