@@ -54,9 +54,9 @@ node tests/test_collector.js
 ## Reader-surface pass (2026-11-20, session `93894704` · T-30)
 
 Buyer-facing pages no longer carry the project's filing system: register codes and crawl citations were
-stripped from shop, category, comparison, search and guide copy, while `flagged.html` (58 flags),
+stripped from shop, category, comparison, search and guide copy, while `flagged.html` (66 flags),
 `sources.html` (22 sources) and `verification.html` still publish every one in full. Guide read times are
-computed from the page's own words, and all 13 guides and 5 product pages are signed by a dated role
+computed from the page's own words, and all 18 guides and 5 product pages are signed by a dated role
 byline that links to the authorship note — no person was named, because the owner has not (FLG-033) and
 presenting an invented author would be deceptive. Two new sourced how-to guides were added (the USDA
 ice-water calibration test, and how to read a listing's contradictory fields). The Decision Center
@@ -64,6 +64,52 @@ shortlist now assembles the next build prompt from one shared payload, identical
 browser. One defect of this pass's own making was found by reading the built pages — escaped copy that had
 been authored with entities printed its markup to readers — and is fixed plus gated (FLG-057).
 
-Gate and tests at integration: `checked 38 pages, 5 product records, 58 flags, 22 sources — ALL CHECKS
-PASS`; 7 Python tests OK; the Node collector/client suite passes. No price, rating, commission figure,
+Gate and tests at integration: `checked 43 pages, 5 product records, 66 flags, 22 sources —
+ALL CHECKS PASS`; 22 Python tests OK; the Node collector/client suite passes. No price, rating, commission figure,
 conversion score or revenue forecast was added, and the campaign ledger stays empty.
+
+## Traffic wave, per-product imagery, and the gate that was not running (2026-11-20, session `19dbf5e2` · T-31…T-34)
+
+**Editorial.** Five new question-shaped guides went live for the six weeks of demand that follow
+publication — whether a dual basket is worth it, the 165 °F leftover rule, what a certification line on
+a spec sheet actually promises, the five checks before gifting an appliance in December, and a
+seven-day dry run for a leave-in probe. Guide count: 18. Two further topics this session drafted were
+**retired rather than published**, because a parallel session shipped the same topics in the meantime;
+their unique substance was folded into the live pages instead of competing with them. Every figure in
+the new copy is read from `data/products.json` or the USDA FSIS records in the source register: no
+price, no rating, no review count, no cook time, and no claim that anybody here cooked in these units.
+
+**Storefront.** The five products shared two image files across 43 pages. Each now has its own original
+rendering on its card, its shop box, its category box and its product page, with matching `og:image`
+and `twitter:image`, so a shared page looks like the product rather than like the homepage. No Amazon
+photography is used anywhere: the site holds no licence for it, and every image is captioned as an
+illustration made for this site.
+
+**Decisions made reviewable.** The Decision Center now opens with three coherent paths — finish the
+storefront, grow the traffic, build the machine — each naming what it needs, what it must not do, and
+how the owner would know it worked, instead of leaving 46 proposals to be ranked one row at a time.
+Six new open questions (Q-24…Q-29) record what only the owner can decide: the masthead and byline,
+whether labelled renderings are acceptable, the publishing cadence, the next products, whether cook
+times are ever allowed, and whether `osha.gov` may be admitted to the official-source allowlist.
+
+**The significant finding.** `scripts/check_site.py` printed its verdict and exited in the middle of the
+file, so the reader-voice, verification-link and findability rules appended below that line ran *after*
+the result and could never fail a build — three sessions had cited them as enforcement while they were
+unread. Running them honestly produced 97 real defects, all fixed in the generator rather than by
+loosening a rule: 44 register rows with no source link (the page promised one in every row), the audit
+copy of the product-intent record still printed on all five product pages above the shop-voice version,
+and a coverage check that compared an absolute path against a URL prefix so it could never match
+(FLG-064, FLG-065, FLG-066). Two of this session's own findings were dropped as duplicates of work a
+parallel session had already merged.
+
+Still owner-gated, unchanged, and now recorded in the same place as everything else that is unknown:
+the Special Link test (Q-04/FLG-004), Associate ID activity (Q-02/FLG-002), the `link.amazon` short-link
+compliance question (Q-03/FLG-003 — not asserted invalid), the short-link re-check that landed on the
+Amazon homepage rather than the listings (FLG-051), the domain and brand decision (Q-05/Q-24), Creators
+API acceptance (Q-19), Search Console verification (Q-20) and the analytics collector host (SG-25). The
+campaign ledger remains empty by design: it is fed only from authorised first-party reports.
+
+Gate and tests after this session: `checked 43 pages, 5 product records, 66 flags, 22 sources —
+ALL CHECKS PASS`, every rule reachable; 22 Python tests OK; the Node collector and client suite passes;
+two consecutive builds are byte-identical. Deployed to GitHub Pages (`status = built`) and verified on
+the live product and guide pages, not only in the repository.

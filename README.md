@@ -64,11 +64,16 @@ published page:
   unescapes every page's visible text and fails on any leftover `&entity;` or numeric entity (FLG-057).
 - **Reader voice.** No register code (`FLG-0xx`) or crawl citation (`chunk 7`) in a buyer-facing
   sentence on the front page, shop, categories, compare, search or any guide. Audit surfaces publish all
-  58 flags in full, and every product page keeps its own record table.
+  66 flags in full, and every product page keeps its own record table.
 - **Derived numbers, dated bylines.** A guide's stated read time must match the words on the page
   (225 wpm, rounded up), and every guide and product page carries a dated byline linking to
   `about.html#who-writes-it`. The byline is a role, not a person: naming a human is open (FLG-033), and
   Google's people-first guidance (S27) treats a fabricated author as deception, so none was invented.
+- **The report runs last.** `check_site.py` once printed its verdict and exited in the middle of the
+  file, so every rule appended below it — reader voice, the verification source-link rule, the
+  `findability.txt` coverage rule — ran after the result and could never fail a build. The verdict is
+  now the last statement in the file, which is the only shape in which a long rule list is trustworthy
+  (FLG-064).
 - **How-to pages cite an official source per figure.** `guides/thermometer-ice-test.html` quotes the
   USDA FSIS food-thermometer factsheet (S24); `guides/read-an-air-fryer-listing.html` uses only dated
   listing fields already in the register. Neither claims a test, a cook time, a popularity figure or a
