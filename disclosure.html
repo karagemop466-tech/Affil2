@@ -64,16 +64,22 @@
 <h2>What we measure</h2>
 <p>Five events, defined once and used consistently:</p>
 <table class="events">
-  <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
+  <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th>
+    <th scope="col">Documented at</th></tr></thead>
   <tbody>
-    <tr><td><code>page_view</code></td><td>Any page loads</td><td>Which pages are reached at all</td></tr>
+    <tr><td><code>page_view</code></td><td>Any page loads</td><td>Which pages are reached at all</td>
+      <td class="src"><a href="measurement.html">measurement schema</a></td></tr>
     <tr><td><code>outbound_click</code></td><td>A tagged Amazon link is clicked</td>
-      <td>Which product a reader actually leaves for</td></tr>
-    <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td></tr>
+      <td>Which product a reader actually leaves for</td>
+      <td class="src"><a href="measurement.html">measurement schema</a>, <a href="flagged.html#FLG-010">FLG-010</a></td></tr>
+    <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td>
+      <td class="src"><a href="measurement.html">measurement schema</a></td></tr>
     <tr><td><code>search</code></td><td>A built-in search runs</td>
-      <td>Result count only &mdash; the words typed are not recorded</td></tr>
+      <td>Result count only &mdash; the words typed are not recorded</td>
+      <td class="src"><a href="measurement.html">measurement schema</a></td></tr>
     <tr><td><code>suggestion_rank</code></td><td>A proposal is reordered on the Decision Center</td>
-      <td>Which direction is actually preferred</td></tr>
+      <td>Which direction is actually preferred</td>
+      <td class="src"><a href="measurement.html">measurement schema</a>, <a href="suggestions.html">Decision Center</a></td></tr>
   </tbody>
 </table>
 <p>All five are counted in your browser's local storage by default. Search words are held in

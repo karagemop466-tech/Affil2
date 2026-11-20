@@ -60,8 +60,8 @@
   <caption>32 proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
-    <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
-  <tbody><tr data-sug="SG-01">
+    <th scope="col">How to check it</th><th scope="col">Provenance</th><th scope="col">Your rank</th></tr></thead>
+  <tbody><tr id="SG-01" data-sug="SG-01">
   <td class="nowrap"><strong>SG-01</strong></td>
   <td><strong>Lead the front page with products, not with verification</strong><br><span class="small">Rebuild the landing page as a publication front page. Keep every dashboard surface reachable from one footer group.</span></td>
   <td>A reader arriving from search wants to know which air fryer to buy. They do not want a methodology essay. Verification still exists, one click away.</td>
@@ -69,12 +69,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">Visible on index.html: hero, three featured products, one nav group.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-01" aria-label="Move SG-01 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-01" aria-label="Move SG-01 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-02">
+</tr><tr id="SG-02" data-sug="SG-02">
   <td class="nowrap"><strong>SG-02</strong></td>
   <td><strong>Publish question-shaped guides, then measure arrivals</strong><br><span class="small">Eight guides built from real buying decisions, each added to the sitemap and the RSS feed, each ending in a verdict.</span></td>
   <td>Long-tail question queries are how a small site earns its first organic traffic. A guide that answers one question beats a listicle.</td>
@@ -82,12 +83,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">guides.html lists eight; sitemap.xml and feed.xml include all eight.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-02" aria-label="Move SG-02 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-02" aria-label="Move SG-02 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-03">
+</tr><tr id="SG-03" data-sug="SG-03">
   <td class="nowrap"><strong>SG-03</strong></td>
   <td><strong>Measure clicks before optimising anything</strong><br><span class="small">Five defined events (data/events.json), counted locally with no cookies and no third party, exportable to CSV, with a self-hosted collector ready in analytics/server.js.</span></td>
   <td>Optimising without a click count is guesswork. Doing it with a tracker would be worse.</td>
@@ -95,12 +97,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">measurement.html and disclosure.html document the five events; assets/app.js implements them.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-03" aria-label="Move SG-03 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-03" aria-label="Move SG-03 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-04">
+</tr><tr id="SG-04" data-sug="SG-04">
   <td class="nowrap"><strong>SG-04</strong></td>
   <td><strong>Disclosure above the fold on every page, repeated in the footer</strong><br><span class="small">A strip directly under the masthead carrying the exact Associates statement, plus a repeat in the footer.</span></td>
   <td>Amazon's Operating Agreement Section 5 requires the statement; FTC guidance says a disclosure buried on another page is likely to be missed.</td>
@@ -108,12 +111,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">Every generated page contains the statement twice; the build gate fails otherwise.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-04" aria-label="Move SG-04 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-04" aria-label="Move SG-04 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-05">
+</tr><tr id="SG-05" data-sug="SG-05">
   <td class="nowrap"><strong>SG-05</strong></td>
   <td><strong>Mark every outbound product link as sponsored</strong><br><span class="small">Visible (paid link) label next to each button, rel="sponsored nofollow" on each anchor, plus an untagged listing link for verification.</span></td>
   <td>Google asks for rel=sponsored on paid links; FTC asks for a clear label near the link.</td>
@@ -121,12 +125,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">Gate fails on any amazon.com anchor without rel=sponsored.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-05" aria-label="Move SG-05 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-05" aria-label="Move SG-05 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-06">
+</tr><tr id="SG-06" data-sug="SG-06">
   <td class="nowrap"><strong>SG-06</strong></td>
   <td><strong>Keep intended and observed product identity in separate fields</strong><br><span class="small">Every product page shows the submitted link, the short-link token, the intended ASIN (blank), the observed redirect target, and the date each was read.</span></td>
   <td>Merging them would manufacture intent the owner never confirmed.</td>
@@ -134,12 +139,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">Gate fails if a product page drops either field.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-06" aria-label="Move SG-06 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-06" aria-label="Move SG-06 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-07">
+</tr><tr id="SG-07" data-sug="SG-07">
   <td class="nowrap"><strong>SG-07</strong></td>
   <td><strong>Test one Special Link per product inside the enrolled account</strong><br><span class="small">Click one tagged link per product while signed in, then confirm the click appears in the tracking report before sending traffic.</span></td>
   <td>A tag that is not being recorded earns nothing, and you cannot tell from outside.</td>
@@ -147,12 +153,13 @@
   <td>Owner action</td>
   <td><span class="pill blocked">Blocked on the owner</span></td>
   <td class="small">Product pages still say PENDING TEST. Cannot be completed without account access.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-07" aria-label="Move SG-07 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-07" aria-label="Move SG-07 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-08">
+</tr><tr id="SG-08" data-sug="SG-08">
   <td class="nowrap"><strong>SG-08</strong></td>
   <td><strong>One indexable host with a sitemap, feed and structured data</strong><br><span class="small">Canonical tags, sitemap.xml, robots.txt, an RSS feed, JSON-LD on every page, and a working on-site search. The search was inert until T-17 (FLG-037); it now reads the query and renders matches.</span></td>
   <td>A crawler needs one canonical address per page and a reason to rank it. Duplicate hosts and dead search pages waste both.</td>
@@ -160,12 +167,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">sitemap.xml lists every page; three JSON-LD blocks on product pages; search.html matches the generated index in the browser.</td>
+  <td class="src"><a href="flagged.html#FLG-037">FLG-037</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-08" aria-label="Move SG-08 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-08" aria-label="Move SG-08 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-09">
+</tr><tr id="SG-09" data-sug="SG-09">
   <td class="nowrap"><strong>SG-09</strong></td>
   <td><strong>Make it read like a publication: authorship, brand, imagery, seasons</strong><br><span class="small">Named editorial standards page, consistent masthead and type, original illustration instead of stock or Amazon photography, and seasonal guides.</span></td>
   <td>A site that looks assembled reads as generated. Illustration also sidesteps the Amazon image licence entirely.</td>
@@ -173,12 +181,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">how-we-choose.html, about.html, two seasonal/occasion guides, inline SVG artwork throughout.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-09" aria-label="Move SG-09 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-09" aria-label="Move SG-09 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-10">
+</tr><tr id="SG-10" data-sug="SG-10">
   <td class="nowrap"><strong>SG-10</strong></td>
   <td><strong>Reader capture and Search Console verification</strong><br><span class="small">RSS feed is live. Email capture and Search Console verification both need owner accounts.</span></td>
   <td>Without Search Console you cannot see which queries arrive, so the next guide is chosen on instinct.</td>
@@ -186,12 +195,13 @@
   <td>Owner action</td>
   <td><span class="pill blocked">Blocked on the owner</span></td>
   <td class="small">feed.xml exists and validates; no Search Console property has been verified.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-10" aria-label="Move SG-10 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-10" aria-label="Move SG-10 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-11">
+</tr><tr id="SG-11" data-sug="SG-11">
   <td class="nowrap"><strong>SG-11</strong></td>
   <td><strong>Keep a campaign ledger that is empty until real data exists</strong><br><span class="small">A dated ledger schema with timestamp, source, channel, eligible sessions, clicks and reported orders. Empty until an authorised first-party report supplies a row.</span></td>
   <td>An empty ledger with a defined schema is honest. A filled one with invented numbers is not.</td>
@@ -199,12 +209,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped, intentionally empty</span></td>
   <td class="small">campaign-ledger.html renders zero rows and says why.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-11" aria-label="Move SG-11 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-11" aria-label="Move SG-11 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-12">
+</tr><tr id="SG-12" data-sug="SG-12">
   <td class="nowrap"><strong>SG-12</strong></td>
   <td><strong>Gate any automation behind a human compliance check</strong><br><span class="small">Automate research, drafting and link formatting. Never auto-publish. Every new page passes the build gate before it can ship.</span></td>
   <td>The request asked for automation and for compliance. The only way both are true is a gate.</td>
@@ -212,12 +223,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">scripts/check_site.py runs on every build and fails on disclosure, sponsorship, price and link errors.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-12" aria-label="Move SG-12 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-12" aria-label="Move SG-12 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-13">
+</tr><tr id="SG-13" data-sug="SG-13">
   <td class="nowrap"><strong>SG-13</strong></td>
   <td><strong>Add a price display through the Product Advertising API</strong><br><span class="small">If the owner obtains PA or Creators API credentials, prices and availability could be shown with the attribution Amazon requires.</span></td>
   <td>It is the single biggest missing piece for a shopping site, and the only compliant way to add it.</td>
@@ -225,12 +237,13 @@
   <td>Owner action, needs API approval</td>
   <td><span class="pill not">Not started — recommended for approval</span></td>
   <td class="small">Blocked: no API credentials. Program Policies 2(b) is the constraint.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-13" aria-label="Move SG-13 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-13" aria-label="Move SG-13 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-14">
+</tr><tr id="SG-14" data-sug="SG-14">
   <td class="nowrap"><strong>SG-14</strong></td>
   <td><strong>Add a custom domain</strong><br><span class="small">Move from the github.io subpath to a real domain and update canonicals, sitemap and feed together.</span></td>
   <td>A subpath on a shared host is indexable but weak for brand and trust.</td>
@@ -238,12 +251,13 @@
   <td>Small, owner decision</td>
   <td><span class="pill not">Not started — recommended for approval</span></td>
   <td class="small">Currently flagged as FLG-006.</td>
+  <td class="src"><a href="flagged.html#FLG-006">FLG-006</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-14" aria-label="Move SG-14 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-14" aria-label="Move SG-14 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-15">
+</tr><tr id="SG-15" data-sug="SG-15">
   <td class="nowrap"><strong>SG-15</strong></td>
   <td><strong>Get real product photography through the API</strong><br><span class="small">Use image URLs supplied via the PA or Creators API, which arrive with the licence.</span></td>
   <td>Illustration is safe but a shopper still wants to see the product.</td>
@@ -251,12 +265,13 @@
   <td>Owner action, needs API approval</td>
   <td><span class="pill not">Not started — recommended for approval</span></td>
   <td class="small">Currently flagged as FLG-007.</td>
+  <td class="src"><a href="flagged.html#FLG-007">FLG-007</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-15" aria-label="Move SG-15 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-15" aria-label="Move SG-15 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-16">
+</tr><tr id="SG-16" data-sug="SG-16">
   <td class="nowrap"><strong>SG-16</strong></td>
   <td><strong>Publish a weekly cadence and hold it</strong><br><span class="small">One guide per week, added to sitemap and feed, with the topic chosen from measured Search Console queries rather than instinct.</span></td>
   <td>Cadence compounds; sporadic bursts do not.</td>
@@ -264,12 +279,13 @@
   <td>Ongoing</td>
   <td><span class="pill blocked">Blocked on Search Console</span></td>
   <td class="small">Requires Search Console access (SG-10).</td>
+  <td class="src"><a href="suggestions.html#SG-10">SG-10</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-16" aria-label="Move SG-16 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-16" aria-label="Move SG-16 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-17">
+</tr><tr id="SG-17" data-sug="SG-17">
   <td class="nowrap"><strong>SG-17</strong></td>
   <td><strong>Design &amp; Traffic Brief and editorial standards prompt</strong><br><span class="small">A publication-grade storefront design prompt, 4-cluster topic plan, seasonal calendar, and 10 reader-visible editorial standards in design-brief.html.</span></td>
   <td>Gives the next design/content iteration an explicit, compliance-checked blueprint.</td>
@@ -277,12 +293,13 @@
   <td>Done (brief); implementation staged</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">design-brief.html published and linked from masthead Records menu and footer.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-17" aria-label="Move SG-17 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-17" aria-label="Move SG-17 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-18">
+</tr><tr id="SG-18" data-sug="SG-18">
   <td class="nowrap"><strong>SG-18</strong></td>
   <td><strong>Rotate the front-page picks on a dated editorial calendar</strong><br><span class="small">Treat the three featured cards as an issue, not a permanent ranking: refresh them at season boundaries (Thanksgiving, gifting, summer grilling) and print the issue date and the reason for the change on the page.</span></td>
   <td>A front page that never changes gives a returning reader no reason to come back, and search engines no signal that the page is maintained. A dated rotation does both without inventing new facts.</td>
@@ -290,12 +307,13 @@
   <td>Small, needs an editorial calendar decision</td>
   <td><span class="pill partially">Partially shipped — dated issue line, rotation still open</span></td>
   <td class="small">index.html prints the issue date above the hero. The three picks themselves are still static, so the rotation half of this proposal is open (Q-16).</td>
+  <td class="src"><a href="questions.html#Q-16">Q-16</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-18" aria-label="Move SG-18 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-18" aria-label="Move SG-18 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-19">
+</tr><tr id="SG-19" data-sug="SG-19">
   <td class="nowrap"><strong>SG-19</strong></td>
   <td><strong>Add intent landing pages generated from the same register</strong><br><span class="small">One page per real buying shape already covered by the five products: a dual-basket page, a small-kitchen page and a walk-away-thermometer page, each assembled from the existing verified fields rather than new claims.</span></td>
   <td>People search for the shape of the problem, not for a product they have not heard of. These pages give a crawler a reason to rank this site without adding a single unverified sentence.</td>
@@ -303,12 +321,13 @@
   <td>Medium, blocked on query data</td>
   <td><span class="pill blocked">Blocked on Search Console (SG-10)</span></td>
   <td class="small">Requires measured query evidence first; choosing topics by instinct is what this site is trying to stop doing.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-19" aria-label="Move SG-19 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-19" aria-label="Move SG-19 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-20">
+</tr><tr id="SG-20" data-sug="SG-20">
   <td class="nowrap"><strong>SG-20</strong></td>
   <td><strong>Publish a dated change log for readers</strong><br><span class="small">A dated list on the sources page of what changed: corrected values, withdrawn claims, new guides — each with the flag ID that records it.</span></td>
   <td>A correction a reader cannot see is indistinguishable from a quiet edit. A visible change log turns maintenance into evidence.</td>
@@ -316,12 +335,13 @@
   <td>Small</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">sources.html, "What changed, and when": every corrected flag, newest first, with its date.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-20" aria-label="Move SG-20 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-20" aria-label="Move SG-20 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-21">
+</tr><tr id="SG-21" data-sug="SG-21">
   <td class="nowrap"><strong>SG-21</strong></td>
   <td><strong>Add a two-product head-to-head view</strong><br><span class="small">Pick any two of the five on the compare page and see their verified rows side by side, built from the same register as the five-column table.</span></td>
   <td>Most real decisions are a choice between two, not five. A five-column table on a phone is hard to read; a pair view is the same data at the size people actually use.</td>
@@ -329,12 +349,13 @@
   <td>Small</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">compare.html, "Two at a time": two selectors, rows rendered from the embedded register view. No new facts, no new links.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-21" aria-label="Move SG-21 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-21" aria-label="Move SG-21 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-22">
+</tr><tr id="SG-22" data-sug="SG-22">
   <td class="nowrap"><strong>SG-22</strong></td>
   <td><strong>Name an editor and decide the hands-on policy</strong><br><span class="small">Either name a real person who owns the copy, or state permanently that this is a documentation site with no hands-on testing. Both are defensible; silence is not.</span></td>
   <td>FTC guidance treats an implied experience claim as a problem, and a byline needs a real person behind it. This is the one open item that touches compliance rather than polish.</td>
@@ -342,12 +363,13 @@
   <td>Owner decision</td>
   <td><span class="pill blocked">Blocked on the owner (FLG-032, FLG-033)</span></td>
   <td class="small">about.html currently states plainly that no author is named.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-22" aria-label="Move SG-22 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-22" aria-label="Move SG-22 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-23">
+</tr><tr id="SG-23" data-sug="SG-23">
   <td class="nowrap"><strong>SG-23</strong></td>
   <td><strong>Add cook-time and capacity proof content only after real testing</strong><br><span class="small">Defer any “how long do chips take” or “how much fits” content until the appliances can actually be cooked with, then publish it with the method written down.</span></td>
   <td>This is the content that would genuinely differentiate the site, and it is also the content that cannot be produced honestly right now.</td>
@@ -355,12 +377,13 @@
   <td>Needs product access</td>
   <td><span class="pill not">Not started — blocked on hands-on testing</span></td>
   <td class="small">No page on this site claims a cook time.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-23" aria-label="Move SG-23 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-23" aria-label="Move SG-23 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-24">
+</tr><tr id="SG-24" data-sug="SG-24">
   <td class="nowrap"><strong>SG-24</strong></td>
   <td><strong>Add an evergreen first-week guide for new owners</strong><br><span class="small">A getting-started guide answering onboarding questions (what to cook first, what to skip), added to the sitemap and feed like every other guide.</span></td>
   <td>New owners search what to cook first, not only what to buy first.</td>
@@ -368,12 +391,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">guides/first-week-air-fryer.html published and included in sitemap.xml and feed.xml; no cook-time claims inside.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-24" aria-label="Move SG-24 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-24" aria-label="Move SG-24 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-25">
+</tr><tr id="SG-25" data-sug="SG-25">
   <td class="nowrap"><strong>SG-25</strong></td>
   <td><strong>Deploy the self-hosted analytics collector</strong><br><span class="small">Ship zero-dependency Node.js (analytics/server.js) and Cloudflare Pages Function (functions/api/collect.js) collectors, canonical schema (data/events.json), and gated send() transport in assets/app.js.</span></td>
   <td>GitHub Pages cannot run a server function, so cross-visitor telemetry waits until the owner hosts the collector externally without cookies or third-party scripts.</td>
@@ -381,12 +405,13 @@
   <td>Code shipped; hosting is owner action</td>
   <td><span class="pill code">Code shipped — hosting pending</span></td>
   <td class="small">measurement.html, data/events.json, analytics/server.js, functions/api/collect.js, tests/test_collector.js (FLG-010, Q-08).</td>
+  <td class="src"><a href="flagged.html#FLG-010">FLG-010</a> <a href="questions.html#Q-08">Q-08</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-25" aria-label="Move SG-25 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-25" aria-label="Move SG-25 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-26">
+</tr><tr id="SG-26" data-sug="SG-26">
   <td class="nowrap"><strong>SG-26</strong></td>
   <td><strong>Feed the campaign ledger from first-party reports only</strong><br><span class="small">Monthly rows from authorised Associates reports with dated provenance. Clicks stay clicks; orders and revenue come only from reports, never from forecasts.</span></td>
   <td>The ledger is the evidence base for the next optimisation; invented rows would poison every later decision.</td>
@@ -394,12 +419,13 @@
   <td>Owner action</td>
   <td><span class="pill blocked">Blocked on owner</span></td>
   <td class="small">campaign-ledger.html renders zero rows and explains why (SG-11); no conversion score is computed anywhere on the site.</td>
+  <td class="src"><a href="suggestions.html#SG-11">SG-11</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-26" aria-label="Move SG-26 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-26" aria-label="Move SG-26 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-27">
+</tr><tr id="SG-27" data-sug="SG-27">
   <td class="nowrap"><strong>SG-27</strong></td>
   <td><strong>Nav labels: keep the navigation shopper-first</strong><br><span class="small">Primary nav reads the shopper's tasks (Air Fryers, Meat Thermometers, All products, Guides, Compare, How we choose); every dashboard surface lives in one records group.</span></td>
   <td>Shoppers navigate by task. Dashboards are for the desk, not the aisle.</td>
@@ -407,12 +433,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">Every generated page carries the same masthead; the build gate checks the labels.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-27" aria-label="Move SG-27 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-27" aria-label="Move SG-27 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-28">
+</tr><tr id="SG-28" data-sug="SG-28">
   <td class="nowrap"><strong>SG-28</strong></td>
   <td><strong>The shipped RSS feed</strong><br><span class="small">feed.xml carries every guide with dates and parses cleanly; robots.txt points at the canonical sitemap.</span></td>
   <td>One indexable site needs a feed that reflects what actually shipped, not an advertisement for more.</td>
@@ -420,12 +447,13 @@
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
   <td class="small">The build gate parses the feed and requires an item for every guide.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-28" aria-label="Move SG-28 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-28" aria-label="Move SG-28 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-29">
+</tr><tr id="SG-29" data-sug="SG-29">
   <td class="nowrap"><strong>SG-29</strong></td>
   <td><strong>Search Console property and sitemap submission</strong><br><span class="small">Verify the github.io property, submit sitemap.xml, and watch which queries bring readers.</span></td>
   <td>Without it the site cannot see its own audience, and topic choice returns to instinct (SG-19, SG-21).</td>
@@ -433,12 +461,13 @@
   <td>Owner action</td>
   <td><span class="pill blocked">Blocked on owner</span></td>
   <td class="small">No Search Console property is verified; needs the owner's Google account.</td>
+  <td class="src"><a href="suggestions.html#SG-19">SG-19</a> <a href="suggestions.html#SG-21">SG-21</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-29" aria-label="Move SG-29 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-29" aria-label="Move SG-29 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-30">
+</tr><tr id="SG-30" data-sug="SG-30">
   <td class="nowrap"><strong>SG-30</strong></td>
   <td><strong>Reader capture: RSS live, email pending</strong><br><span class="small">RSS works today. An email signup needs the owner's provider choice and the privacy wording that goes with it.</span></td>
   <td>Repeat readers are the only durable channel a small publication gets.</td>
@@ -446,12 +475,13 @@
   <td>Owner action</td>
   <td><span class="pill blocked">Blocked on owner</span></td>
   <td class="small">feed.xml is live and linked everywhere; no email form is published.</td>
+  <td class="src"><span class="unverified">internal proposal or definition &mdash; owner decision, no official source</span></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-30" aria-label="Move SG-30 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-30" aria-label="Move SG-30 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-31">
+</tr><tr id="SG-31" data-sug="SG-31">
   <td class="nowrap"><strong>SG-31</strong></td>
   <td><strong>AI-powered affiliate platform architecture and Creators API pipeline</strong><br><span class="small">Document all seven platform modules (research, pricing/commission bounds, SEO drafting, Special Links vs cloaking, telemetry, scaling, CI gate) alongside Creators API (S20/S21) and ML-training/Agent Terms limits (Program Policies §5, IP License §1/§2(e)/§4).</span></td>
   <td>Automating research or price ingestion without final Associates acceptance and policy-compliant API handling would violate program rules or hallucinate specs.</td>
@@ -459,12 +489,13 @@
   <td>Done (blueprint); API gated on owner</td>
   <td><span class="pill blocked">Blocked on Creators API</span></td>
   <td class="small">platform.html documents every module, what runs today, and hard gates (FLG-029, Q-19).</td>
+  <td class="src"><a href="flagged.html#FLG-029">FLG-029</a> <a href="questions.html#Q-19">Q-19</a> <a href="sources.html#S20">S20</a> <a href="sources.html#S21">S21</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-31" aria-label="Move SG-31 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-31" aria-label="Move SG-31 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
-</tr><tr data-sug="SG-32">
+</tr><tr id="SG-32" data-sug="SG-32">
   <td class="nowrap"><strong>SG-32</strong></td>
   <td><strong>Generate question-shaped article drafts from Search Console queries</strong><br><span class="small">Turn measured impressions and search queries from Search Console into structured, listing-cited guides that pass scripts/check_site.py before merging.</span></td>
   <td>Query-driven drafting grows organic search from evidence instead of guesswork.</td>
@@ -472,6 +503,7 @@
   <td>Owner action</td>
   <td><span class="pill blocked">Blocked on Search Console</span></td>
   <td class="small">Requires Search Console verification (SG-10, SG-29, Q-20).</td>
+  <td class="src"><a href="suggestions.html#SG-10">SG-10</a> <a href="suggestions.html#SG-29">SG-29</a> <a href="questions.html#Q-20">Q-20</a></td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-32" aria-label="Move SG-32 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-32" aria-label="Move SG-32 down">&darr;</button>
@@ -491,22 +523,22 @@
   <caption>Open decisions only.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Decision needed</th><th scope="col">Who can do it</th></tr></thead>
   <tbody>
-    <tr><td>SG-07</td><td>Test one Special Link per product in the enrolled account</td><td>Owner (account access)</td></tr>
-    <tr><td>SG-10</td><td>Verify Search Console and decide on email capture</td><td>Owner (account access)</td></tr>
-    <tr><td>SG-13</td><td>Apply for Product Advertising API access so prices can be shown legally</td><td>Owner (approval)</td></tr>
-    <tr><td>SG-14</td><td>Choose and attach a custom domain</td><td>Owner (decision)</td></tr>
-    <tr><td>SG-15</td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
-    <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
-    <tr><td>SG-18</td><td>Set an editorial calendar for the front-page picks</td><td>Owner (editorial decision)</td></tr>
-    <tr><td>SG-19</td><td>Approve intent landing pages generated from the register</td><td>Owner (needs SG-10)</td></tr>
-    <tr><td>SG-22</td><td>Name an editor or fix the no-testing policy in writing</td><td>Owner (decision)</td></tr>
-    <tr><td>SG-23</td><td>Defer cook-time content until hands-on testing exists</td><td>Owner (product access)</td></tr>
-    <tr><td>SG-25</td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
-    <tr><td>SG-26</td><td>Feed campaign ledger only from authorised first-party reports</td><td>Owner (account access)</td></tr>
-    <tr><td>SG-29</td><td>Verify Search Console property and submit sitemap.xml</td><td>Owner (Google account)</td></tr>
-    <tr><td>SG-30</td><td>Decide reader email capture provider alongside RSS</td><td>Owner (decision)</td></tr>
-    <tr><td>SG-31</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
-    <tr><td>SG-32</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td><a href="#SG-07">SG-07</a></td><td>Test one Special Link per product in the enrolled account</td><td>Owner (account access)</td></tr>
+    <tr><td><a href="#SG-10">SG-10</a></td><td>Verify Search Console and decide on email capture</td><td>Owner (account access)</td></tr>
+    <tr><td><a href="#SG-13">SG-13</a></td><td>Apply for Product Advertising API access so prices can be shown legally</td><td>Owner (approval)</td></tr>
+    <tr><td><a href="#SG-14">SG-14</a></td><td>Choose and attach a custom domain</td><td>Owner (decision)</td></tr>
+    <tr><td><a href="#SG-15">SG-15</a></td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
+    <tr><td><a href="#SG-16">SG-16</a></td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td><a href="#SG-18">SG-18</a></td><td>Set an editorial calendar for the front-page picks</td><td>Owner (editorial decision)</td></tr>
+    <tr><td><a href="#SG-19">SG-19</a></td><td>Approve intent landing pages generated from the register</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td><a href="#SG-22">SG-22</a></td><td>Name an editor or fix the no-testing policy in writing</td><td>Owner (decision)</td></tr>
+    <tr><td><a href="#SG-23">SG-23</a></td><td>Defer cook-time content until hands-on testing exists</td><td>Owner (product access)</td></tr>
+    <tr><td><a href="#SG-25">SG-25</a></td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
+    <tr><td><a href="#SG-26">SG-26</a></td><td>Feed campaign ledger only from authorised first-party reports</td><td>Owner (account access)</td></tr>
+    <tr><td><a href="#SG-29">SG-29</a></td><td>Verify Search Console property and submit sitemap.xml</td><td>Owner (Google account)</td></tr>
+    <tr><td><a href="#SG-30">SG-30</a></td><td>Decide reader email capture provider alongside RSS</td><td>Owner (decision)</td></tr>
+    <tr><td><a href="#SG-31">SG-31</a></td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
+    <tr><td><a href="#SG-32">SG-32</a></td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
   </tbody>
 </table>
 
