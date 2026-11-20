@@ -1,0 +1,547 @@
+{
+  "site": {
+    "name": "ShopNow Reviews",
+    "tagline": "Fewer, better kitchen machines.",
+    "trackingId": "shopnow047c-20",
+    "marketplace": "amazon.com",
+    "canonicalOrigin": "https://karagemop466-tech.github.io",
+    "basePath": "/Affil2",
+    "buildDate": "2026-11-20",
+    "author": "ShopNow Reviews editorial desk",
+    "contactEmail": null,
+    "locale": "en-US"
+  },
+  "verificationLog": [
+    {
+      "id": "V-01",
+      "checked": "2026-11-20",
+      "what": "link.amazon/B04G1MEwY resolution",
+      "method": "HTTP GET via page fetcher, followed redirects",
+      "result": "200 OK. Redirected to https://www.amazon.com/dp/B0CDY277D3 . Page title: 'Amazon.com: CHEFMAN 6 Quart Dual Basket Air Fryer Oven...'",
+      "status": "verified",
+      "evidence": "Observed redirect target recorded in products[0].observedRedirectUrl"
+    },
+    {
+      "id": "V-02",
+      "checked": "2026-11-20",
+      "what": "link.amazon/B02NbDxp3 resolution",
+      "method": "HTTP GET via page fetcher, followed redirects",
+      "result": "200 OK. Redirected to https://www.amazon.com/dp/B09B7SB46R . Page title: 'Amazon.com: Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven...'",
+      "status": "verified",
+      "evidence": "products[1].observedRedirectUrl"
+    },
+    {
+      "id": "V-03",
+      "checked": "2026-11-20",
+      "what": "link.amazon/B00hJ57DV resolution",
+      "method": "HTTP GET. First attempt returned Amazon bot checkpoint. Re-fetched with query string; resolved.",
+      "result": "200 OK. Redirected to https://www.amazon.com/dp/B08DKYBTPH . Page title: 'Amazon.com: Chefman Air Fryer 8 Qt | TurboFry 4-in-1...'",
+      "status": "verified",
+      "evidence": "products[2].observedRedirectUrl. Checkpoint on first attempt recorded as irregularity FLG-006."
+    },
+    {
+      "id": "V-04",
+      "checked": "2026-11-20",
+      "what": "link.amazon/B0c8moW59 resolution",
+      "method": "HTTP GET, twice, on separate attempts",
+      "result": "INCONSISTENT. Attempt 1 landed on https://www.amazon.com/dp/B0DHZTCNR5 ('ThermoMaven 1 Sec Professional Digital Meat Thermometer'). Attempt 2 landed on https://www.amazon.com/ (Amazon homepage, no product). Cannot be relied on.",
+      "status": "unverified",
+      "evidence": "Recorded as FLG-001. Both observations kept; neither treated as canonical."
+    },
+    {
+      "id": "V-05",
+      "checked": "2026-11-20",
+      "what": "link.amazon/B0f3GKalj resolution",
+      "method": "HTTP GET, twice, on separate attempts",
+      "result": "200 OK both times. Redirected to https://www.amazon.com/dp/B0DZFD6R9Z . Page title: 'Amazon.com: CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes...'",
+      "status": "verified",
+      "evidence": "products[4].observedRedirectUrl"
+    },
+    {
+      "id": "V-06",
+      "checked": "2026-11-20",
+      "what": "Short code character count vs ASIN format",
+      "method": "Programmatic count of the supplied codes; comparison against resolved product IDs",
+      "result": "All five supplied codes are 9 characters. All five resolved product IDs are 10 characters. link.amazon codes are therefore opaque short codes, not ASINs, and must not be read as ASINs.",
+      "status": "verified",
+      "evidence": "FLG-002. This is why intendedAsin is a separate, reviewer-supplied field."
+    },
+    {
+      "id": "V-07",
+      "checked": "2026-11-20",
+      "what": "Store ID suffix convention",
+      "method": "Amazon.com Associates help page, node 51812349011",
+      "result": "Amazon states: 'our software automatically adds \"-20\" to the end of all Store IDs' and gives the example 'amazon-20'. The supplied ID shopnow047c-20 matches the documented US format.",
+      "status": "verified",
+      "evidence": "https://www.amazon.com/b?node=51812349011"
+    },
+    {
+      "id": "V-08",
+      "checked": "2026-11-20",
+      "what": "Whether shopnow047c-20 is actually enrolled and whether it appears in the observed redirects",
+      "method": "No access to Associates Central; redirect targets inspected for a tag parameter",
+      "result": "NOT VERIFIED and NOT OBSERVED. None of the resolved destination URLs observed carried a visible tag= parameter. Enrollment cannot be checked from outside Associates Central.",
+      "status": "unverified",
+      "evidence": "FLG-004 and FLG-005."
+    },
+    {
+      "id": "V-09",
+      "checked": "2026-11-20",
+      "what": "PA-API 5 availability",
+      "method": "Amazon Creators API documentation",
+      "result": "PA-API 5 is deprecated. Calls receive HTTP 403 AccessDeniedException. Replacement is the Creators API. Prerequisite: Associates enrollment plus at least 10 qualifying sales in the past 30 days.",
+      "status": "verified",
+      "evidence": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation and https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction"
+    },
+    {
+      "id": "V-10",
+      "checked": "2026-11-20",
+      "what": "Required disclosure wording and placement",
+      "method": "Associates Program Operating Agreement Section 5",
+      "result": "'You must clearly and prominently state the following... \"As an Amazon Associate I earn from qualifying purchases.\"' A violation of Section 5 is a material breach.",
+      "status": "verified",
+      "evidence": "https://affiliate-program.amazon.com/help/operating/agreement"
+    },
+    {
+      "id": "V-11",
+      "checked": "2026-11-20",
+      "what": "Whether prices/ratings may be displayed on the site",
+      "method": "Associates Program Participation Requirements, Section 2(b)",
+      "result": "Prices and availability may be shown only if Amazon serves the link containing that data, or the data comes via Creators API / PA API under the License. Star ratings and customer reviews may only be used if obtained through Creators API / PA API (Section 3(t)).",
+      "status": "verified",
+      "evidence": "https://affiliate-program.amazon.com/help/operating/policies"
+    },
+    {
+      "id": "V-12",
+      "checked": "2026-11-20",
+      "what": "Link integrity rules relevant to redirects and shorteners",
+      "method": "Associates Program Participation Requirements, Sections 3(v) and 3(w)",
+      "result": "Associates may not cloak, hide, spoof or obscure the URL containing Special Links, including by use of Redirecting Links (3(v)), and may not use a link shortening service in a way that makes it unclear the link goes to an Amazon Site (3(w)).",
+      "status": "verified",
+      "evidence": "https://affiliate-program.amazon.com/help/operating/policies"
+    },
+    {
+      "id": "V-13",
+      "checked": "2026-11-20",
+      "what": "Disclosure timing standard under US federal guidance",
+      "method": "FTC Disclosures 101 for Social Media Influencers",
+      "result": "Disclosures must be hard to miss, placed with the endorsement itself, and are likely to be missed if they appear only on an about page, at the end of posts, or anywhere requiring a click.",
+      "status": "verified",
+      "evidence": "https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers"
+    },
+    {
+      "id": "V-14",
+      "checked": "2026-11-20",
+      "what": "That a sitemap guarantees indexing",
+      "method": "Google Search Central sitemap documentation and Search Essentials",
+      "result": "NOT GUARANTEED. Google states that meeting requirements does not mean Google will crawl, index or serve the content. A sitemap is a discovery aid, not a ranking or indexing guarantee.",
+      "status": "verified",
+      "evidence": "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview and https://developers.google.com/search/docs/essentials"
+    },
+    {
+      "id": "V-15",
+      "checked": "2026-11-20",
+      "what": "Food-safety temperatures used in the thermometer guides",
+      "method": "USDA FSIS Safe Minimum Internal Temperature Chart",
+      "result": "Poultry 165 F (73.9 C); ground meats 160 F (71.1 C); beef/pork/veal/lamb steaks, chops and roasts 145 F (62.8 C) with a 3-minute rest; fish and shellfish 145 F (62.8 C); leftovers and casseroles 165 F (73.9 C).",
+      "status": "verified",
+      "evidence": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart"
+    }
+  ],
+  "products": [
+    {
+      "slug": "chefman-6qt-dual-basket-air-fryer",
+      "name": "CHEFMAN 6 Quart Dual Basket Air Fryer Oven",
+      "shortName": "Chefman 6 Qt Dual Basket",
+      "brand": "Chefman",
+      "category": "air-fryers",
+      "suppliedShortLink": "https://link.amazon/B04G1MEwY",
+      "observedRedirectUrl": "https://www.amazon.com/dp/B0CDY277D3",
+      "observedRedirectNote": "Observed 2026-11-20 on a single fetch. Not a confirmed canonical listing.",
+      "observedAsin": "B0CDY277D3",
+      "intendedAsin": null,
+      "intendedAsinNote": "No intended ASIN recorded. The supplied code B04G1MEwY is a 9-character short code, not a 10-character ASIN. Awaiting reviewer confirmation.",
+      "officialListingUrl": null,
+      "officialListingNote": "The observed redirect is not an official listing URL supplied by the account holder. Recorded in a separate field only.",
+      "confirmationDate": null,
+      "confirmationSource": null,
+      "observedPrice": "$74.99",
+      "observedPriceScope": "Observed in fetched page on 2026-11-20. Displayed here for editorial context only, never in buyer-facing copy. See FLG-010.",
+      "observedRating": "4.4 out of 5",
+      "observedRatingNote": "Observed on page. Not displayed in buyer-facing copy because ratings may only be shown via Creators API/PA API (Participation Requirements 3(t)).",
+      "formFactor": "Dual-basket air fryer",
+      "capacity": "6 qt total (2 x 3 qt)",
+      "claim": "Two independent 3-quart baskets with a sync-finish function",
+      "whyItMatters": "Two baskets let you cook a protein and a side at different temperatures without a second appliance.",
+      "tradeoff": "Two baskets mean two things to wash and more counter footprint than a single 6-quart drawer.",
+      "bestFor": "Households of 2-4 that regularly cook two different components at once.",
+      "headlineTest": "Does the sync-finish feature actually line up both baskets, and how wide is the footprint on a standard 24-inch counter?",
+      "status": "warning",
+      "statusReason": "Supplied link resolved to a stable product page on 2026-11-20. The destination has not been confirmed against the account holder's intended listing, and no tracking tag was visible in the redirect. Both gaps are tracked as FLG-004 and FLG-005."
+    },
+    {
+      "slug": "emeril-lagasse-26qt-french-door-air-fryer-oven",
+      "name": "Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven",
+      "shortName": "Emeril Lagasse 26QT French Door",
+      "brand": "Emeril Lagasse",
+      "category": "air-fryers",
+      "suppliedShortLink": "https://link.amazon/B02NbDxp3",
+      "observedRedirectUrl": "https://www.amazon.com/dp/B09B7SB46R",
+      "observedRedirectNote": "Observed 2026-11-20 on a single fetch.",
+      "observedAsin": "B09B7SB46R",
+      "intendedAsin": null,
+      "intendedAsinNote": "No intended ASIN recorded. Awaiting reviewer confirmation.",
+      "officialListingUrl": null,
+      "officialListingNote": "Observed redirect is not a supplied official listing URL. Kept separate.",
+      "confirmationDate": null,
+      "confirmationSource": null,
+      "observedPrice": "$229.99",
+      "observedPriceScope": "Observed 2026-11-20. Editorial internal use only. See FLG-010.",
+      "observedRating": "4.4 out of 5",
+      "observedRatingNote": "Not used in buyer-facing copy. See Participation Requirements 3(t).",
+      "formFactor": "French-door oven-style air fryer",
+      "capacity": "26 qt",
+      "claim": "French-door access with 24 one-touch presets and six included accessories",
+      "whyItMatters": "Oven-style cooking with two doors is easier to load when the machine sits under a cabinet.",
+      "tradeoff": "Largest footprint of the set, highest observed price, and the most functions to learn.",
+      "bestFor": "Cooks who want to replace a toaster oven and an air fryer with one machine.",
+      "headlineTest": "With the doors open, does it clear a standard upper cabinet, and how even is the heat across a 26-quart cavity?",
+      "status": "warning",
+      "statusReason": "Supplied link resolved to a stable product page on 2026-11-20. Destination unconfirmed and no visible tag in the redirect; tracked as FLG-004 and FLG-005."
+    },
+    {
+      "slug": "chefman-8qt-turbofry-air-fryer",
+      "name": "Chefman Air Fryer 8 Qt TurboFry 4-in-1",
+      "shortName": "Chefman 8 Qt TurboFry",
+      "brand": "Chefman",
+      "category": "air-fryers",
+      "suppliedShortLink": "https://link.amazon/B00hJ57DV",
+      "observedRedirectUrl": "https://www.amazon.com/dp/B08DKYBTPH",
+      "observedRedirectNote": "Observed 2026-11-20 after one bot-checkpoint retry.",
+      "observedAsin": "B08DKYBTPH",
+      "intendedAsin": null,
+      "intendedAsinNote": "No intended ASIN recorded. Awaiting reviewer confirmation.",
+      "officialListingUrl": null,
+      "officialListingNote": "Observed redirect is not a supplied official listing URL. Kept separate.",
+      "confirmationDate": null,
+      "confirmationSource": null,
+      "observedPrice": "$59.99",
+      "observedPriceScope": "Observed 2026-11-20. Editorial internal use only. See FLG-010.",
+      "observedRating": "4.6 out of 5",
+      "observedRatingNote": "Not used in buyer-facing copy. See Participation Requirements 3(t).",
+      "formFactor": "Single-basket air fryer",
+      "capacity": "8 qt",
+      "claim": "Single 8-quart basket with a 450 F Hi-Fry finish setting",
+      "whyItMatters": "One big drawer is the cheapest route to a large batch and the simplest to clean.",
+      "tradeoff": "No zone separation, so a wet component and a dry one have to go in sequentially.",
+      "bestFor": "Families cooking one large batch at a time on a budget.",
+      "headlineTest": "Does an 8-quart drawer actually fit a whole chicken, and how evenly does the Hi-Fry element brown the top layer?",
+      "status": "warning",
+      "statusReason": "Supplied link resolved to a stable product page on 2026-11-20, after one bot-checkpoint retry. Destination unconfirmed and no visible tag in the redirect; tracked as FLG-004, FLG-005 and FLG-006."
+    },
+    {
+      "slug": "thermomaven-instant-read-thermometer",
+      "name": "ThermoMaven 1 Sec Professional Digital Meat Thermometer",
+      "shortName": "ThermoMaven instant-read",
+      "brand": "ThermoMaven",
+      "category": "thermometers",
+      "suppliedShortLink": "https://link.amazon/B0c8moW59",
+      "observedRedirectUrl": "https://www.amazon.com/dp/B0DHZTCNR5",
+      "observedRedirectNote": "INCONSISTENT: a repeat fetch landed on the Amazon homepage instead. See FLG-001.",
+      "observedAsin": "B0DHZTCNR5",
+      "intendedAsin": null,
+      "intendedAsinNote": "No intended ASIN recorded. Awaiting reviewer confirmation.",
+      "officialListingUrl": null,
+      "officialListingNote": "No stable listing to confirm. Kept separate.",
+      "confirmationDate": null,
+      "confirmationSource": null,
+      "observedPrice": "$16.99",
+      "observedPriceScope": "Observed on the first fetch only. Editorial internal use only. See FLG-010.",
+      "observedRating": "4.7 out of 5",
+      "observedRatingNote": "Not used in buyer-facing copy. See Participation Requirements 3(t).",
+      "formFactor": "Instant-read probe thermometer",
+      "capacity": null,
+      "claim": "One-second reading with a stated plus-or-minus 0.5 F accuracy and a rotating display",
+      "whyItMatters": "A fast probe is the difference between checking a chicken breast once and checking it six times.",
+      "tradeoff": "Manual readings mean you have to open the oven door every time.",
+      "bestFor": "Cooks who already know what they want and need a fast, cheap second opinion.",
+      "headlineTest": "Does the stated accuracy hold after repeat washes, and is the probe thin enough not to punch a visible hole?",
+      "status": "blocked",
+      "statusReason": "The supplied link resolved to a product page once and to the Amazon homepage once. An unstable destination is not published, so this card is held. Tracked as FLG-001."
+    },
+    {
+      "slug": "chef-iq-sense-wireless-thermometer",
+      "name": "CHEF iQ Sense Smart Wireless Meat Thermometer (Gen3)",
+      "shortName": "CHEF iQ Sense Gen3",
+      "brand": "CHEF iQ",
+      "category": "thermometers",
+      "suppliedShortLink": "https://link.amazon/B0f3GKalj",
+      "observedRedirectUrl": "https://www.amazon.com/dp/B0DZFD6R9Z",
+      "observedRedirectNote": "Resolved consistently on two separate fetches.",
+      "observedAsin": "B0DZFD6R9Z",
+      "intendedAsin": null,
+      "intendedAsinNote": "No intended ASIN recorded. Awaiting reviewer confirmation.",
+      "officialListingUrl": null,
+      "officialListingNote": "Observed redirect is not a supplied official listing URL. Kept separate.",
+      "confirmationDate": null,
+      "confirmationSource": null,
+      "observedPrice": "$139.99",
+      "observedPriceScope": "Observed 2026-11-20. Editorial internal use only. See FLG-010.",
+      "observedRating": "4.4 out of 5",
+      "observedRatingNote": "Not used in buyer-facing copy. See Participation Requirements 3(t).",
+      "formFactor": "Wireless probe thermometer with app",
+      "capacity": null,
+      "claim": "Three ultra-thin probes reporting over WiFi with no stated range limit",
+      "whyItMatters": "Leaving a probe in the meat means you get a temperature curve instead of a single reading.",
+      "tradeoff": "Highest observed price here, an app dependency, and charging to manage between cooks.",
+      "bestFor": "Long cooks on a grill or smoker where you do not want to hover.",
+      "headlineTest": "How long do the probes really run per charge, and does the app survive a WiFi drop mid-cook?",
+      "status": "warning",
+      "statusReason": "Supplied link resolved to the same product page on two separate checks. Destination unconfirmed and no visible tag in the redirect; tracked as FLG-004 and FLG-005."
+    }
+  ],
+  "sources": [
+    {
+      "id": "S-01",
+      "label": "Amazon Associates Program Operating Agreement",
+      "publisher": "Amazon.com",
+      "url": "https://affiliate-program.amazon.com/help/operating/agreement",
+      "supports": "Required Associate identification statement (Section 5); Special Link definition (Section 1); material-breach treatment of Section 5 violations (Section 6).",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-02",
+      "label": "Amazon Associates Program Policies (incl. Participation Requirements, Commission Income Statement, IP License)",
+      "publisher": "Amazon.com",
+      "url": "https://affiliate-program.amazon.com/help/operating/policies",
+      "supports": "Original-content requirement; price and rating display limits (2(b), 3(t)); no cloaking or redirecting (3(v)); shortener rule (3(w)); self-purchase prohibition (3(u)); no client-side software distribution (5); promo limits (4).",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-03",
+      "label": "Creators API Introduction",
+      "publisher": "Amazon.com",
+      "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction",
+      "supports": "Creators API is the supported product-data API; requires Associates enrollment plus at least 10 qualifying sales in the past 30 days.",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-04",
+      "label": "PA-API 5 Deprecation Notice",
+      "publisher": "Amazon.com",
+      "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation",
+      "supports": "PA-API 5 returns 403 AccessDeniedException; migrate to Creators API.",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-05",
+      "label": "Amazon Associates help: Store ID and tracking ID conventions",
+      "publisher": "Amazon.com",
+      "url": "https://www.amazon.com/b?node=51812349011",
+      "supports": "Store IDs ending in -20 for the US store; 'amazon-20' example; tracking IDs are managed separately from Store IDs.",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-06",
+      "label": "FTC Disclosures 101 for Social Media Influencers",
+      "publisher": "U.S. Federal Trade Commission",
+      "url": "https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers",
+      "supports": "Disclosures must be hard to miss and placed with the endorsement; disclosures at the end of a page or behind a click are likely to be missed.",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-07",
+      "label": "16 CFR Part 255, Guides Concerning Use of Endorsements and Testimonials in Advertising",
+      "publisher": "U.S. Federal Trade Commission / eCFR",
+      "url": "https://www.ecfr.gov/current/title-16/chapter-I/subchapter-B/part-255",
+      "supports": "Endorsement definition and the requirement to disclose material connections clearly and conspicuously.",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-08",
+      "label": "USDA FSIS Safe Minimum Internal Temperature Chart",
+      "publisher": "U.S. Department of Agriculture",
+      "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
+      "supports": "Poultry 165 F; ground meat 160 F; whole-muscle 145 F plus 3-minute rest; fish 145 F; leftovers 165 F.",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-09",
+      "label": "Google Search Essentials",
+      "publisher": "Google Search Central",
+      "url": "https://developers.google.com/search/docs/essentials",
+      "supports": "Technical requirements, spam policies, and the explicit statement that meeting them does not guarantee crawling, indexing or serving.",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-10",
+      "label": "Learn about sitemaps",
+      "publisher": "Google Search Central",
+      "url": "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview",
+      "supports": "Sitemaps help discovery on new or small sites; they are a discovery aid, not an indexing guarantee.",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-11",
+      "label": "Creating helpful, reliable, people-first content",
+      "publisher": "Google Search Central",
+      "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
+      "supports": "People-first content questions; avoid search-engine-first content; E-E-A-T framing.",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S-12",
+      "label": "Google Search Console product page",
+      "publisher": "Google",
+      "url": "https://search.google.com/search-console/about",
+      "supports": "Search Analytics reports queries and impressions; sitemap submission; URL Inspection.",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "irregularities": [
+    {
+      "id": "FLG-001",
+      "severity": "high",
+      "title": "One supplied link resolves inconsistently",
+      "detail": "link.amazon/B0c8moW59 returned the ThermoMaven thermometer product page on the first fetch and the Amazon homepage on a second, separate fetch. Because the destination is not stable, no buyer-facing button points at this product, and its card carries a 'link under review' state.",
+      "affects": "ThermoMaven instant-read thermometer",
+      "action": "Re-generate the link in SiteStripe while signed in to the Associates account and record the resulting URL in intendedAsin and officialListingUrl.",
+      "evidence": "https://link.amazon/B0c8moW59"
+    },
+    {
+      "id": "FLG-002",
+      "severity": "medium",
+      "title": "Supplied short codes are not ASINs",
+      "detail": "All five supplied link.amazon codes are 9 characters. Amazon ASINs are 10 characters. Read as ASINs they are malformed, so they are treated as opaque short codes throughout. The 10-character product IDs they resolved to are recorded in a separate observed field, never merged with the intended-ASIN field.",
+      "affects": "All five products",
+      "action": "None required for the site. This is why intendedAsin and observedAsin are separate columns in the register.",
+      "evidence": "Recorded in verificationLog V-06."
+    },
+    {
+      "id": "FLG-003",
+      "severity": "high",
+      "title": "Compliance status of link.amazon short links is unresolved",
+      "detail": "Whether these exact short links satisfy the Special Link formatting and no-cloaking rules cannot be determined without (a) inspecting them while signed in to the Associates account and (b) confirming the tag is present in the redirect. Neither was possible here. This was explicitly flagged as unresolved in the brief and remains unresolved. No claim is made that the links are invalid.",
+      "affects": "All five products",
+      "action": "Test one link per product inside the enrolled Associates workflow. Confirm destination and that the click appears in the tracking report before scaling to the other four.",
+      "evidence": "https://affiliate-program.amazon.com/help/operating/policies"
+    },
+    {
+      "id": "FLG-004",
+      "severity": "high",
+      "title": "No tracking tag was observed in any resolved destination",
+      "detail": "None of the destination URLs observed during verification carried a visible tag= parameter. The Store ID shopnow047c-20 matches the documented US format (S-05), but whether it is attached to these links, and whether the account is enrolled, cannot be checked from outside Associates Central.",
+      "affects": "All five products",
+      "action": "Confirm enrollment and confirm the click appears in the Associates tracking report. Until then the site must not imply that a click on this site earns a commission.",
+      "evidence": "https://www.amazon.com/b?node=51812349011"
+    },
+    {
+      "id": "FLG-005",
+      "severity": "medium",
+      "title": "Product identity is observed, not confirmed",
+      "detail": "Product names, form factors and capacities on this site come from the product pages the short links resolved to. They are strong evidence but they are not a confirmation record signed off by the account holder. The confirmation-date and source fields are therefore deliberately empty.",
+      "affects": "All five products",
+      "action": "For each product, record the intended ASIN, the official listing URL, the confirmation date and the source as four separate values.",
+      "evidence": "https://affiliate-program.amazon.com/help/operating/policies"
+    },
+    {
+      "id": "FLG-006",
+      "severity": "low",
+      "title": "Automated fetching triggered a bot checkpoint",
+      "detail": "The first attempt to resolve link.amazon/B00hJ57DV returned Amazon's 'Continue shopping' checkpoint instead of a product page. A second attempt succeeded. This is a property of automated fetching, not evidence that the link is broken, and it is recorded so the verification method stays honest.",
+      "affects": "Chefman 8 Qt TurboFry",
+      "action": "None. Manual browser verification is the better method for these links.",
+      "evidence": "https://www.amazon.com/"
+    },
+    {
+      "id": "FLG-007",
+      "severity": "high",
+      "title": "Certification and safety claims are unverified manufacturer claims",
+      "detail": "Product pages include manufacturer-stated certifications such as ETL and UL listings and stated accuracy figures. These are the brand's claims, not independently tested results. The site does not repeat them as verified facts and does not repeat them as endorsement.",
+      "affects": "All five products",
+      "action": "Either omit these claims from buyer-facing copy or attribute them plainly to the manufacturer.",
+      "evidence": "https://affiliate-program.amazon.com/help/operating/policies"
+    },
+    {
+      "id": "FLG-008",
+      "severity": "medium",
+      "title": "No product has been physically tested",
+      "detail": "The editorial desk has not handled, cooked with, or measured any of these appliances. Any first-person experience language would violate FTC guidance against describing experience with a product you have not tried.",
+      "affects": "All five products",
+      "action": "Keep all copy in second-person, spec-based language until a test protocol and at least one physical unit exist. This constraint is applied throughout the site.",
+      "evidence": "https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers"
+    },
+    {
+      "id": "FLG-009",
+      "severity": "high",
+      "title": "Product images are not cleared for use",
+      "detail": "No product imagery is used on this site. The brand assets on this build are drawn, not photographed, and product cards intentionally use typography instead of photography. Amazon product imagery may only be used through Program Content under the IP License.",
+      "affects": "All pages",
+      "action": "Either obtain images through the Creators API under the License, or keep the typographic treatment.",
+      "evidence": "https://affiliate-program.amazon.com/help/operating/policies"
+    },
+    {
+      "id": "FLG-010",
+      "severity": "high",
+      "title": "Prices observed during verification are not published to buyers",
+      "detail": "Prices were observed while checking the links. They are held in this register as internal editorial context and are deliberately not shown on any buyer-facing page, because Amazon's rules restrict showing price and availability (Participation Requirements 2(b)).",
+      "affects": "All five products",
+      "action": "Show price to buyers only if Amazon serves the link that contains it, or once Creators API access is in place and the data is presented under the License.",
+      "evidence": "https://affiliate-program.amazon.com/help/operating/policies"
+    },
+    {
+      "id": "FLG-011",
+      "severity": "medium",
+      "title": "The research automation has no data source yet",
+      "detail": "Creators API access requires Associates enrollment plus at least 10 qualifying sales in the past 30 days (S-03). With no verified sales history, the product-research pipeline cannot be switched on. Any screen describing automated trend detection is a specification, not a working feature.",
+      "affects": "Research pipeline",
+      "action": "Keep the ledger empty and clearly labelled until sales history exists. Do not present simulated data.",
+      "evidence": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction"
+    },
+    {
+      "id": "FLG-012",
+      "severity": "medium",
+      "title": "No analytics provider and no email provider are connected",
+      "detail": "The five defined events are wired into the page, but there is no server endpoint to receive them and no email provider to accept an address. The capture form is therefore visibly disabled rather than silently discarding submissions.",
+      "affects": "Measurement and capture",
+      "action": "Deploy a collector endpoint, then set analyticsEndpoint in assets/js/config.js. Connect an email provider before enabling the form.",
+      "evidence": "Not applicable. This is a statement of current configuration."
+    },
+    {
+      "id": "FLG-013",
+      "severity": "low",
+      "title": "Hosting constraint limits a custom domain and a server-side collector",
+      "detail": "GitHub Pages serves static files only. A self-hosted analytics endpoint and a server-rendered redirect handler cannot run on it. Both require separate hosting or a scheduled worker.",
+      "affects": "Architecture",
+      "action": "Decide between a static build with an external collector, or moving to a host that runs server code.",
+      "evidence": "https://docs.github.com/en/pages"
+    },
+    {
+      "id": "FLG-014",
+      "severity": "low",
+      "title": "Base path is repository-scoped",
+      "detail": "The site is published under /Affil2 because it is a project Pages site. Every internal link is generated from a single basePath setting so the site can move to a user site or a custom domain without editing pages by hand.",
+      "affects": "All pages",
+      "action": "Change basePath in content/data.json and rebuild.",
+      "evidence": "https://karagemop466-tech.github.io/Affil2/"
+    },
+    {
+      "id": "FLG-015",
+      "severity": "medium",
+      "title": "AI-assisted drafting is disclosed, not hidden",
+      "detail": "Copy on this site was drafted with an AI assistant from verified source material and a supplied product list. Amazon requires original content with significant commentary and analysis, and FTC guidance prohibits fabricated experience. The site therefore discloses the drafting method rather than presenting a fictional human byline.",
+      "affects": "All pages",
+      "action": "If a named human editor takes over, update the byline and this flag together.",
+      "evidence": "https://affiliate-program.amazon.com/help/operating/policies"
+    },
+    {
+      "id": "FLG-016",
+      "severity": "low",
+      "title": "Search Console is not connected, so performance is unknown",
+      "detail": "There is no verified property, no submitted sitemap and no query data. Statements about discoverability are statements about what the build is designed to allow, not measurements.",
+      "affects": "Search",
+      "action": "Verify the property, submit the sitemap, then publish a dated first report.",
+      "evidence": "https://search.google.com/search-console/about"
+    }
+  ]
+}

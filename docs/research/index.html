@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research · ShopNow Reviews</title>
+<meta name="description" content="What the product-research automation is designed to do, what actually runs today, and the API gates that block the rest.">
+
+<link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/research/">
+<link rel="alternate" type="application/rss+xml" title="ShopNow Reviews" href="/Affil2/feed.xml">
+<link rel="stylesheet" href="/Affil2/assets/css/site.css">
+<meta property="og:title" content="Research · ShopNow Reviews">
+<meta property="og:description" content="What the product-research automation is designed to do, what actually runs today, and the API gates that block the rest.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/research/">
+<meta property="og:site_name" content="ShopNow Reviews">
+<meta name="twitter:card" content="summary">
+
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="disclosure" data-disclosure="masthead">
+  <div class="wrap">
+    <strong>Paid links</strong>
+    <span>As an Amazon Associate I earn from qualifying purchases. Links to Amazon on this site are affiliate links and this site is compensated for qualifying purchases. <a href="/Affil2/disclosure/">How this works</a>.</span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="/Affil2/">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span class="brand-name">ShopNow Reviews<small>Fewer, better kitchen machines.</small></span>
+    </a>
+    <div class="hero-meta" style="margin:0">
+      <span><b>5</b> products tracked</span>
+      <span><b>6</b> guides</span>
+      <span><b>16</b> flagged items</span>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap"><a href="/Affil2/">Home</a><a href="/Affil2/air-fryers/">Air fryers</a><a href="/Affil2/thermometers/">Thermometers</a><a href="/Affil2/guides/">Guides</a><a href="/Affil2/research/" aria-current="page">Research</a><a href="/Affil2/suggestions/">Suggestions</a><a href="/Affil2/questions/">Open questions</a><a href="/Affil2/ledger/">Ledger</a><a href="/Affil2/sources/">Sources</a><a href="/Affil2/flagged/">Flagged for review</a></div>
+</nav>
+
+<main id="main">
+
+<div class="wrap"><div class="crumbs"><a href="/Affil2/">Home</a> / Research</div></div>
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">Automation, honestly described</p>
+    <h1>Product research</h1>
+    <p class="dek">What the research layer is designed to do, what it can do today, and the three gates standing between those two states.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow">Gates</p><h2>What stops the research layer</h2></div></div>
+    <div class="table-scroll">
+      <table>
+        <caption>Three gates, each traceable to a published rule.</caption>
+        <thead><tr><th>Gate</th><th>Requirement</th><th>Detail</th><th>Status</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Data source</strong></td>
+            <td style="font-size:13.5px">Creators API access. Requires Associates enrollment plus at least 10 qualifying sales in the trailing 30 days.</td>
+            <td style="font-size:13.5px">PA-API 5 is deprecated and returns HTTP 403. The replacement API is gated behind a sales threshold this account has not evidenced.</td>
+            <td><span class="pill bad">Closed</span></td>
+            <td><a href="https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction" rel="noopener" target="_blank">S-03</a></td>
+          </tr><tr>
+            <td><strong>Price data</strong></td>
+            <td style="font-size:13.5px">Price and availability may only be shown if Amazon serves the link containing them, or the data arrives via Creators API or PA API under the License.</td>
+            <td style="font-size:13.5px">Until API access exists, no price, discount or availability figure can be shown to a reader.</td>
+            <td><span class="pill bad">Closed</span></td>
+            <td><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="noopener" target="_blank">S-02</a></td>
+          </tr><tr>
+            <td><strong>Ratings and reviews</strong></td>
+            <td style="font-size:13.5px">Star ratings and customer reviews may only be used if obtained through Creators API or PA API.</td>
+            <td style="font-size:13.5px">Observed ratings are therefore held in the internal register only, never rendered on a buyer-facing page.</td>
+            <td><span class="pill bad">Closed</span></td>
+            <td><a href="https://affiliate-program.amazon.com/help/operating/policies" rel="noopener" target="_blank">S-02</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow">Capabilities</p><h2>Designed versus running</h2><p class="sub">The gap between the two columns is the honest state of the automation.</p></div></div>
+    <div class="table-scroll">
+      <table>
+        <caption>Nothing in the right-hand columns is simulated.</caption>
+        <thead><tr><th>Capability</th><th>Designed behaviour</th><th>Today</th><th>Automated</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Niche identification</strong></td>
+            <td style="font-size:13.5px">Rank candidate categories by the count of verifiable buying questions that can be answered without price data.</td>
+            <td style="font-size:13.5px">Done by hand for two categories: air fryers and thermometers.</td>
+            <td><span class="pill mute">Manual</span></td>
+          </tr><tr>
+            <td><strong>Trend detection</strong></td>
+            <td style="font-size:13.5px">Compare search interest across candidate categories on a rolling basis.</td>
+            <td style="font-size:13.5px">Not running. No data source connected.</td>
+            <td><span class="pill mute">Manual</span></td>
+          </tr><tr>
+            <td><strong>Price analysis</strong></td>
+            <td style="font-size:13.5px">Track observed price over time to spot unusual movement.</td>
+            <td style="font-size:13.5px">Not permissible. Blocked by the price-display rule absent API access.</td>
+            <td><span class="pill mute">Manual</span></td>
+          </tr><tr>
+            <td><strong>Competition review</strong></td>
+            <td style="font-size:13.5px">Survey which questions already have strong published answers.</td>
+            <td style="font-size:13.5px">Manual reading, recorded in the content plan.</td>
+            <td><span class="pill mute">Manual</span></td>
+          </tr><tr>
+            <td><strong>Commission estimation</strong></td>
+            <td style="font-size:13.5px">Estimate earnings per click from category rates.</td>
+            <td style="font-size:13.5px">Deliberately not built. Any figure would be a guess dressed as analysis.</td>
+            <td><span class="pill mute">Manual</span></td>
+          </tr><tr>
+            <td><strong>Content generation</strong></td>
+            <td style="font-size:13.5px">Draft question-shaped guides from verified source material.</td>
+            <td style="font-size:13.5px">In use, with every claim traced to a source in the register and every untested statement labelled.</td>
+            <td><span class="pill warn">AI-assisted</span></td>
+          </tr><tr>
+            <td><strong>Link management</strong></td>
+            <td style="font-size:13.5px">Store intended ASIN and official listing separately from observed redirects.</td>
+            <td style="font-size:13.5px">Built. The register keeps the two fields apart and refuses to merge them.</td>
+            <td><span class="pill ok">Automated</span></td>
+          </tr><tr>
+            <td><strong>Click and conversion tracking</strong></td>
+            <td style="font-size:13.5px">Count the five defined events without identifiers.</td>
+            <td style="font-size:13.5px">Client-side only. No collector is deployed, so counts are not yet retained.</td>
+            <td><span class="pill warn">Partial</span></td>
+          </tr><tr>
+            <td><strong>Publishing</strong></td>
+            <td style="font-size:13.5px">Build the static site, sitemap and feed from one data file.</td>
+            <td style="font-size:13.5px">Working. One command rebuilds every page.</td>
+            <td><span class="pill ok">Automated</span></td>
+          </tr><tr>
+            <td><strong>Compliance checks</strong></td>
+            <td style="font-size:13.5px">Fail the build if a required disclosure is missing from any generated page.</td>
+            <td style="font-size:13.5px">Working as a build-time assertion.</td>
+            <td><span class="pill ok">Automated</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <div class="callout alert">
+      <h3>On scores and forecasts</h3>
+      <p>No product score, opportunity score or revenue forecast is published. The inputs that would make such a score meaningful do not exist, and a number invented to look analytical is worse than no number.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <h4>Shop by category</h4>
+          <ul>
+            <li><a href="/Affil2/air-fryers/">Air fryers</a></li>
+            <li><a href="/Affil2/thermometers/">Thermometers</a></li>
+            <li><a href="/Affil2/guides/">All guides</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>How this site works</h4>
+          <ul>
+            <li><a href="/Affil2/research/">Research &amp; automation</a></li>
+            <li><a href="/Affil2/ledger/">Campaign ledger</a></li>
+            <li><a href="/Affil2/sources/">Source register</a></li>
+            <li><a href="/Affil2/flagged/">Flagged for review</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Editorial</h4>
+          <ul>
+            <li><a href="/Affil2/author/">Who writes this</a></li>
+            <li><a href="/Affil2/disclosure/">Disclosure &amp; editorial policy</a></li>
+            <li><a href="/Affil2/questions/">Open questions</a></li>
+            <li><a href="/Affil2/suggestions/">Suggestions</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Site</h4>
+          <ul>
+            <li><a href="/Affil2/sitemap.xml">Sitemap</a></li>
+            <li><a href="/Affil2/feed.xml">RSS feed</a></li>
+            <li><a href="/Affil2/COORDINATION/">Session board</a></li>
+            <li><a href="/Affil2/executive-summary/">Executive summary</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>ShopNow Reviews · Tracking ID <code>shopnow047c-20</code> · Built 2026-11-20</span>
+        <span>Prices and availability are never published here without API entitlements. Product names and specifications come from the linked Amazon listings.</span>
+      </div>
+    </div>
+    <div class="footer-disclosure">
+      <div class="wrap">
+        <strong>Disclosure</strong>
+        <span>As an Amazon Associate I earn from qualifying purchases. &mdash; <a href="/Affil2/disclosure/">Read the full editorial and disclosure policy</a>.</span>
+      </div>
+    </div>
+  </footer>
+<script src="/Affil2/assets/js/config.js"></script>
+<script src="/Affil2/assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+{
+  "intro": "Every change proposed for this site, with the evidence behind it, what it costs, and what it is waiting on. Nothing here is implemented until it is chosen. Read the open questions before choosing.",
+  "suggestions": [
+    {
+      "id": "SUG-01",
+      "title": "Publish one guide a week, chosen from Search Console queries rather than instinct",
+      "area": "Editorial cadence",
+      "priority": "now",
+      "why": "Six guides exist. A weekly cadence is sustainable for one writer and gives the sitemap new URLs to submit. Choosing the next question from measured queries is the only way to avoid writing into a void.",
+      "evidence": ["S-12", "S-11"],
+      "cost": "About 4 hours a week",
+      "dependsOn": "Search Console verified; at least four weeks of query data",
+      "risk": "Publishing ahead of measured demand wastes effort. Publishing too slowly gives Google too little to crawl.",
+      "status": "proposed"
+    },
+    {
+      "id": "SUG-02",
+      "title": "Add a real product-test protocol before any first-person language is used",
+      "area": "Trust",
+      "priority": "now",
+      "why": "The site currently cannot say anything about how these machines perform, because nobody has used them. A written protocol with published method turns that from a weakness into a differentiator.",
+      "evidence": ["S-06", "S-11"],
+      "cost": "One machine purchased per tested product, plus about 6 hours per test",
+      "dependsOn": "Budget for units, and a decision on whether to disclose purchases",
+      "risk": "Testing purchased units and then earning commission on them is allowed; the disclosure must be clear either way.",
+      "status": "proposed"
+    },
+    {
+      "id": "SUG-03",
+      "title": "Deploy a first-party analytics collector and publish a monthly measurement note",
+      "area": "Measurement",
+      "priority": "now",
+      "why": "Five events are wired into the page but nothing receives them. Without a collector, nothing on the research page can ever be filled in.",
+      "evidence": ["S-09"],
+      "cost": "A small hosted endpoint, or a scheduled worker that aggregates into a flat file",
+      "dependsOn": "A hosting decision, since GitHub Pages cannot run server code",
+      "risk": "Self-hosted analytics can drift into tracking. Keep it to aggregate counts and no identifiers.",
+      "status": "blocked"
+    },
+    {
+      "id": "SUG-04",
+      "title": "Confirm enrollment and tag presence in one link, then scale",
+      "area": "Compliance",
+      "priority": "now",
+      "why": "No tracking tag was observed in any resolved destination. Until a click is confirmed in the Associates report, the site cannot honestly imply that clicks earn commission.",
+      "evidence": ["S-01", "S-02", "S-05"],
+      "cost": "Under an hour",
+      "dependsOn": "Access to Associates Central",
+      "risk": "None. This is the gate that everything else in the commercial path sits behind.",
+      "status": "blocked"
+    },
+    {
+      "id": "SUG-05",
+      "title": "Keep the ThermoMaven link unpublished until a stable destination is regenerated",
+      "area": "Compliance",
+      "priority": "now",
+      "why": "The supplied link resolved to a product once and to the Amazon homepage once. A link that sometimes lands on a homepage is worse than no link.",
+      "evidence": ["S-02"],
+      "cost": "Minutes",
+      "dependsOn": "A regenerated link from SiteStripe while signed in",
+      "risk": "Publishing it now would send some readers to a homepage with no product.",
+      "status": "blocked"
+    },
+    {
+      "id": "SUG-06",
+      "title": "Add a comparison tool that compares only published specifications",
+      "area": "Product",
+      "priority": "next",
+      "why": "Readers comparing three air fryers want the specifications side by side. That is factual, verifiable, and needs no testing.",
+      "evidence": ["S-11"],
+      "cost": "About a day of build",
+      "dependsOn": "Nothing, once the intended ASINs are confirmed",
+      "risk": "A comparison tool invites price display. Do not add price without API entitlements.",
+      "status": "proposed"
+    },
+    {
+      "id": "SUG-07",
+      "title": "Publish a disclosure and endorsement-context checklist as an internal page",
+      "area": "Compliance",
+      "priority": "next",
+      "why": "Disclosure placement is the single highest-consequence detail on the site, and it is easy to regress during a redesign. A short checklist in the build pipeline prevents that.",
+      "evidence": ["S-01", "S-06", "S-07"],
+      "cost": "Two hours",
+      "dependsOn": "Nothing",
+      "risk": "None",
+      "status": "proposed"
+    },
+    {
+      "id": "SUG-08",
+      "title": "Add reader capture only after an email provider is chosen",
+      "area": "Growth",
+      "priority": "next",
+      "why": "A newsletter is the only owned audience channel that does not depend on search rankings. But a form with nowhere to send addresses is worse than no form.",
+      "evidence": [],
+      "cost": "Provider subscription",
+      "dependsOn": "Choosing a provider and writing a privacy notice that names it",
+      "risk": "Consent language and a privacy notice are required, and the privacy notice does not exist yet.",
+      "status": "blocked"
+    },
+    {
+      "id": "SUG-09",
+      "title": "Write a privacy notice before enabling any measurement or capture",
+      "area": "Compliance",
+      "priority": "now",
+      "why": "Amazon requires accurate disclosure of cookie and pixel use either through a privacy policy or otherwise. This site collects aggregate event counts and has no privacy page.",
+      "evidence": ["S-02"],
+      "cost": "Three hours",
+      "dependsOn": "The final analytics configuration",
+      "risk": "Shipping analytics before the notice inverts the order that keeps the site compliant.",
+      "status": "proposed"
+    },
+    {
+      "id": "SUG-10",
+      "title": "Seasonal front page rotation tied to a fixed calendar, not to live prices",
+      "area": "Editorial",
+      "priority": "later",
+      "why": "Seasonal framing gives returning readers a reason to come back. Rotating by calendar date is safe; rotating by observed discounts is not, because price display is restricted.",
+      "evidence": ["S-02"],
+      "cost": "One hour per season",
+      "dependsOn": "A calendar of themes per category",
+      "risk": "Seasonal pages must not imply a promotion that Amazon is not running.",
+      "status": "proposed"
+    },
+    {
+      "id": "SUG-11",
+      "title": "Cluster pages into topic hubs once there are three guides per cluster",
+      "area": "SEO",
+      "priority": "later",
+      "why": "A hub page that links related guides helps both readers and crawlers. It only helps once there is enough in the cluster to justify a hub.",
+      "evidence": ["S-09", "S-10"],
+      "cost": "Half a day per hub",
+      "dependsOn": "Three guides in a single cluster",
+      "risk": "Thin hub pages add crawl paths without adding value.",
+      "status": "proposed"
+    },
+    {
+      "id": "SUG-12",
+      "title": "Document the automation boundary explicitly on the site",
+      "area": "Trust",
+      "priority": "now",
+      "why": "The brief asks for automation, and the honest answer is that most of it is gated. A visible boundary page prevents the site from overclaiming and gives a reviewer a checklist.",
+      "evidence": ["S-01", "S-03"],
+      "cost": "One hour",
+      "dependsOn": "Nothing. It is built.",
+      "risk": "None",
+      "status": "done"
+    },
+    {
+      "id": "SUG-13",
+      "title": "Move off GitHub Pages if a server-side redirect handler is required",
+      "area": "Architecture",
+      "priority": "later",
+      "why": "A click-logging redirect requires server code. GitHub Pages cannot run it, and a client-side redirect would be both fragile and a cloaking risk.",
+      "evidence": ["S-02"],
+      "cost": "Migration effort",
+      "dependsOn": "Whether click logging is required at all, versus relying on Amazon's own reports",
+      "risk": "Client-side redirects are the wrong answer here. Do not build one.",
+      "status": "proposed"
+    }
+  ]
+}

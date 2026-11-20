@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flagged for review · ShopNow Reviews</title>
+<meta name="description" content="Irregularities, unverified items and open compliance questions, published rather than hidden.">
+
+<link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/flagged/">
+<link rel="alternate" type="application/rss+xml" title="ShopNow Reviews" href="/Affil2/feed.xml">
+<link rel="stylesheet" href="/Affil2/assets/css/site.css">
+<meta property="og:title" content="Flagged for review · ShopNow Reviews">
+<meta property="og:description" content="Irregularities, unverified items and open compliance questions, published rather than hidden.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/flagged/">
+<meta property="og:site_name" content="ShopNow Reviews">
+<meta name="twitter:card" content="summary">
+
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="disclosure" data-disclosure="masthead">
+  <div class="wrap">
+    <strong>Paid links</strong>
+    <span>As an Amazon Associate I earn from qualifying purchases. Links to Amazon on this site are affiliate links and this site is compensated for qualifying purchases. <a href="/Affil2/disclosure/">How this works</a>.</span>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="/Affil2/">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span class="brand-name">ShopNow Reviews<small>Fewer, better kitchen machines.</small></span>
+    </a>
+    <div class="hero-meta" style="margin:0">
+      <span><b>5</b> products tracked</span>
+      <span><b>6</b> guides</span>
+      <span><b>16</b> flagged items</span>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap"><a href="/Affil2/">Home</a><a href="/Affil2/air-fryers/">Air fryers</a><a href="/Affil2/thermometers/">Thermometers</a><a href="/Affil2/guides/">Guides</a><a href="/Affil2/research/">Research</a><a href="/Affil2/suggestions/">Suggestions</a><a href="/Affil2/questions/">Open questions</a><a href="/Affil2/ledger/">Ledger</a><a href="/Affil2/sources/">Sources</a><a href="/Affil2/flagged/" aria-current="page">Flagged for review</a></div>
+</nav>
+
+<main id="main">
+
+<div class="wrap"><div class="crumbs"><a href="/Affil2/">Home</a> / Flagged for review</div></div>
+<section class="hero">
+  <div class="wrap">
+    <p class="kicker">16 items · nothing hidden</p>
+    <h1>Flagged for review.</h1>
+    <p class="dek">Irregularities, unverified items and open compliance questions. These do not block publication, and they are not quietly resolved. Each one states what is known, what is not, and what would close it.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <div class="table-scroll">
+      <table>
+        <caption>Ordered by severity, then by ID. Severity reflects consequence if the item is left unaddressed.</caption>
+        <thead><tr><th>ID</th><th>Severity</th><th>Item</th><th>Action to close</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>FLG-001</code></td>
+            <td><span class="pill bad">High</span></td>
+            <td><strong>One supplied link resolves inconsistently</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">link.amazon/B0c8moW59 returned the ThermoMaven thermometer product page on the first fetch and the Amazon homepage on a second, separate fetch. Because the destination is not stable, no buyer-facing button points at this product, and its card carries a 'link under review' state.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: ThermoMaven instant-read thermometer</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <code>https://link.amazon/B0c8moW59</code> <span style="color:var(--ink-3)">(not linked: destination under review)</span></div></td>
+            <td style="font-size:13px">Re-generate the link in SiteStripe while signed in to the Associates account and record the resulting URL in intendedAsin and officialListingUrl.</td>
+          </tr><tr>
+            <td><code>FLG-003</code></td>
+            <td><span class="pill bad">High</span></td>
+            <td><strong>Compliance status of link.amazon short links is unresolved</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">Whether these exact short links satisfy the Special Link formatting and no-cloaking rules cannot be determined without (a) inspecting them while signed in to the Associates account and (b) confirming the tag is present in the redirect. Neither was possible here. This was explicitly flagged as unresolved in the brief and remains unresolved. No claim is made that the links are invalid.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All five products</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://affiliate-program.amazon.com/help/operating/policies" rel="noopener" target="_blank">https://affiliate-program.amazon.com/help/operating/policies</a></div></td>
+            <td style="font-size:13px">Test one link per product inside the enrolled Associates workflow. Confirm destination and that the click appears in the tracking report before scaling to the other four.</td>
+          </tr><tr>
+            <td><code>FLG-004</code></td>
+            <td><span class="pill bad">High</span></td>
+            <td><strong>No tracking tag was observed in any resolved destination</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">None of the destination URLs observed during verification carried a visible tag= parameter. The Store ID shopnow047c-20 matches the documented US format (S-05), but whether it is attached to these links, and whether the account is enrolled, cannot be checked from outside Associates Central.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All five products</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://www.amazon.com/b?node=51812349011" rel="noopener" target="_blank">https://www.amazon.com/b?node=51812349011</a></div></td>
+            <td style="font-size:13px">Confirm enrollment and confirm the click appears in the Associates tracking report. Until then the site must not imply that a click on this site earns a commission.</td>
+          </tr><tr>
+            <td><code>FLG-007</code></td>
+            <td><span class="pill bad">High</span></td>
+            <td><strong>Certification and safety claims are unverified manufacturer claims</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">Product pages include manufacturer-stated certifications such as ETL and UL listings and stated accuracy figures. These are the brand's claims, not independently tested results. The site does not repeat them as verified facts and does not repeat them as endorsement.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All five products</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://affiliate-program.amazon.com/help/operating/policies" rel="noopener" target="_blank">https://affiliate-program.amazon.com/help/operating/policies</a></div></td>
+            <td style="font-size:13px">Either omit these claims from buyer-facing copy or attribute them plainly to the manufacturer.</td>
+          </tr><tr>
+            <td><code>FLG-009</code></td>
+            <td><span class="pill bad">High</span></td>
+            <td><strong>Product images are not cleared for use</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">No product imagery is used on this site. The brand assets on this build are drawn, not photographed, and product cards intentionally use typography instead of photography. Amazon product imagery may only be used through Program Content under the IP License.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All pages</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://affiliate-program.amazon.com/help/operating/policies" rel="noopener" target="_blank">https://affiliate-program.amazon.com/help/operating/policies</a></div></td>
+            <td style="font-size:13px">Either obtain images through the Creators API under the License, or keep the typographic treatment.</td>
+          </tr><tr>
+            <td><code>FLG-010</code></td>
+            <td><span class="pill bad">High</span></td>
+            <td><strong>Prices observed during verification are not published to buyers</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">Prices were observed while checking the links. They are held in this register as internal editorial context and are deliberately not shown on any buyer-facing page, because Amazon's rules restrict showing price and availability (Participation Requirements 2(b)).</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All five products</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://affiliate-program.amazon.com/help/operating/policies" rel="noopener" target="_blank">https://affiliate-program.amazon.com/help/operating/policies</a></div></td>
+            <td style="font-size:13px">Show price to buyers only if Amazon serves the link that contains it, or once Creators API access is in place and the data is presented under the License.</td>
+          </tr><tr>
+            <td><code>FLG-002</code></td>
+            <td><span class="pill warn">Medium</span></td>
+            <td><strong>Supplied short codes are not ASINs</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">All five supplied link.amazon codes are 9 characters. Amazon ASINs are 10 characters. Read as ASINs they are malformed, so they are treated as opaque short codes throughout. The 10-character product IDs they resolved to are recorded in a separate observed field, never merged with the intended-ASIN field.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All five products</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <span>Recorded in verificationLog V-06.</span></div></td>
+            <td style="font-size:13px">None required for the site. This is why intendedAsin and observedAsin are separate columns in the register.</td>
+          </tr><tr>
+            <td><code>FLG-005</code></td>
+            <td><span class="pill warn">Medium</span></td>
+            <td><strong>Product identity is observed, not confirmed</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">Product names, form factors and capacities on this site come from the product pages the short links resolved to. They are strong evidence but they are not a confirmation record signed off by the account holder. The confirmation-date and source fields are therefore deliberately empty.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All five products</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://affiliate-program.amazon.com/help/operating/policies" rel="noopener" target="_blank">https://affiliate-program.amazon.com/help/operating/policies</a></div></td>
+            <td style="font-size:13px">For each product, record the intended ASIN, the official listing URL, the confirmation date and the source as four separate values.</td>
+          </tr><tr>
+            <td><code>FLG-008</code></td>
+            <td><span class="pill warn">Medium</span></td>
+            <td><strong>No product has been physically tested</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">The editorial desk has not handled, cooked with, or measured any of these appliances. Any first-person experience language would violate FTC guidance against describing experience with a product you have not tried.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All five products</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers" rel="noopener" target="_blank">https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers</a></div></td>
+            <td style="font-size:13px">Keep all copy in second-person, spec-based language until a test protocol and at least one physical unit exist. This constraint is applied throughout the site.</td>
+          </tr><tr>
+            <td><code>FLG-011</code></td>
+            <td><span class="pill warn">Medium</span></td>
+            <td><strong>The research automation has no data source yet</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">Creators API access requires Associates enrollment plus at least 10 qualifying sales in the past 30 days (S-03). With no verified sales history, the product-research pipeline cannot be switched on. Any screen describing automated trend detection is a specification, not a working feature.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: Research pipeline</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction" rel="noopener" target="_blank">https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction</a></div></td>
+            <td style="font-size:13px">Keep the ledger empty and clearly labelled until sales history exists. Do not present simulated data.</td>
+          </tr><tr>
+            <td><code>FLG-012</code></td>
+            <td><span class="pill warn">Medium</span></td>
+            <td><strong>No analytics provider and no email provider are connected</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">The five defined events are wired into the page, but there is no server endpoint to receive them and no email provider to accept an address. The capture form is therefore visibly disabled rather than silently discarding submissions.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: Measurement and capture</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <span>Not applicable. This is a statement of current configuration.</span></div></td>
+            <td style="font-size:13px">Deploy a collector endpoint, then set analyticsEndpoint in assets/js/config.js. Connect an email provider before enabling the form.</td>
+          </tr><tr>
+            <td><code>FLG-015</code></td>
+            <td><span class="pill warn">Medium</span></td>
+            <td><strong>AI-assisted drafting is disclosed, not hidden</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">Copy on this site was drafted with an AI assistant from verified source material and a supplied product list. Amazon requires original content with significant commentary and analysis, and FTC guidance prohibits fabricated experience. The site therefore discloses the drafting method rather than presenting a fictional human byline.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All pages</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://affiliate-program.amazon.com/help/operating/policies" rel="noopener" target="_blank">https://affiliate-program.amazon.com/help/operating/policies</a></div></td>
+            <td style="font-size:13px">If a named human editor takes over, update the byline and this flag together.</td>
+          </tr><tr>
+            <td><code>FLG-006</code></td>
+            <td><span class="pill mute">Low</span></td>
+            <td><strong>Automated fetching triggered a bot checkpoint</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">The first attempt to resolve link.amazon/B00hJ57DV returned Amazon's 'Continue shopping' checkpoint instead of a product page. A second attempt succeeded. This is a property of automated fetching, not evidence that the link is broken, and it is recorded so the verification method stays honest.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: Chefman 8 Qt TurboFry</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://www.amazon.com/" rel="noopener" target="_blank">https://www.amazon.com/</a></div></td>
+            <td style="font-size:13px">None. Manual browser verification is the better method for these links.</td>
+          </tr><tr>
+            <td><code>FLG-013</code></td>
+            <td><span class="pill mute">Low</span></td>
+            <td><strong>Hosting constraint limits a custom domain and a server-side collector</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">GitHub Pages serves static files only. A self-hosted analytics endpoint and a server-rendered redirect handler cannot run on it. Both require separate hosting or a scheduled worker.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: Architecture</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://docs.github.com/en/pages" rel="noopener" target="_blank">https://docs.github.com/en/pages</a></div></td>
+            <td style="font-size:13px">Decide between a static build with an external collector, or moving to a host that runs server code.</td>
+          </tr><tr>
+            <td><code>FLG-014</code></td>
+            <td><span class="pill mute">Low</span></td>
+            <td><strong>Base path is repository-scoped</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">The site is published under /Affil2 because it is a project Pages site. Every internal link is generated from a single basePath setting so the site can move to a user site or a custom domain without editing pages by hand.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: All pages</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://karagemop466-tech.github.io/Affil2/" rel="noopener" target="_blank">https://karagemop466-tech.github.io/Affil2/</a></div></td>
+            <td style="font-size:13px">Change basePath in content/data.json and rebuild.</td>
+          </tr><tr>
+            <td><code>FLG-016</code></td>
+            <td><span class="pill mute">Low</span></td>
+            <td><strong>Search Console is not connected, so performance is unknown</strong><div style="margin-top:4px;font-size:13px;color:var(--ink-2)">There is no verified property, no submitted sitemap and no query data. Statements about discoverability are statements about what the build is designed to allow, not measurements.</div>
+              <div style="margin-top:6px;font-size:12.5px;color:var(--ink-3)">Affects: Search</div>
+              <div style="margin-top:4px;font-size:12.5px">Evidence: <a href="https://search.google.com/search-console/about" rel="noopener" target="_blank">https://search.google.com/search-console/about</a></div></td>
+            <td style="font-size:13px">Verify the property, submit the sitemap, then publish a dated first report.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <div class="callout alert">
+      <h3>How to read this page</h3>
+      <p>High severity means the item affects money, compliance, or what a reader is told. Medium affects how the site is understood. Low is housekeeping. None of these are hidden from the buyer-facing pages: where a flag concerns a product, the product page says so at the top.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <h4>Shop by category</h4>
+          <ul>
+            <li><a href="/Affil2/air-fryers/">Air fryers</a></li>
+            <li><a href="/Affil2/thermometers/">Thermometers</a></li>
+            <li><a href="/Affil2/guides/">All guides</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>How this site works</h4>
+          <ul>
+            <li><a href="/Affil2/research/">Research &amp; automation</a></li>
+            <li><a href="/Affil2/ledger/">Campaign ledger</a></li>
+            <li><a href="/Affil2/sources/">Source register</a></li>
+            <li><a href="/Affil2/flagged/">Flagged for review</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Editorial</h4>
+          <ul>
+            <li><a href="/Affil2/author/">Who writes this</a></li>
+            <li><a href="/Affil2/disclosure/">Disclosure &amp; editorial policy</a></li>
+            <li><a href="/Affil2/questions/">Open questions</a></li>
+            <li><a href="/Affil2/suggestions/">Suggestions</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Site</h4>
+          <ul>
+            <li><a href="/Affil2/sitemap.xml">Sitemap</a></li>
+            <li><a href="/Affil2/feed.xml">RSS feed</a></li>
+            <li><a href="/Affil2/COORDINATION/">Session board</a></li>
+            <li><a href="/Affil2/executive-summary/">Executive summary</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>ShopNow Reviews · Tracking ID <code>shopnow047c-20</code> · Built 2026-11-20</span>
+        <span>Prices and availability are never published here without API entitlements. Product names and specifications come from the linked Amazon listings.</span>
+      </div>
+    </div>
+    <div class="footer-disclosure">
+      <div class="wrap">
+        <strong>Disclosure</strong>
+        <span>As an Amazon Associate I earn from qualifying purchases. &mdash; <a href="/Affil2/disclosure/">Read the full editorial and disclosure policy</a>.</span>
+      </div>
+    </div>
+  </footer>
+<script src="/Affil2/assets/js/config.js"></script>
+<script src="/Affil2/assets/js/site.js"></script>
+</body>
+</html>

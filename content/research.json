@@ -1,0 +1,90 @@
+{
+  "title": "Product research",
+  "standfirst": "What the research layer is designed to do, what it can do today, and the three gates standing between those two states.",
+  "gateSummary": [
+    {
+      "gate": "Data source",
+      "requirement": "Creators API access. Requires Associates enrollment plus at least 10 qualifying sales in the trailing 30 days.",
+      "status": "closed",
+      "detail": "PA-API 5 is deprecated and returns HTTP 403. The replacement API is gated behind a sales threshold this account has not evidenced.",
+      "source": "S-03"
+    },
+    {
+      "gate": "Price data",
+      "requirement": "Price and availability may only be shown if Amazon serves the link containing them, or the data arrives via Creators API or PA API under the License.",
+      "status": "closed",
+      "detail": "Until API access exists, no price, discount or availability figure can be shown to a reader.",
+      "source": "S-02"
+    },
+    {
+      "gate": "Ratings and reviews",
+      "requirement": "Star ratings and customer reviews may only be used if obtained through Creators API or PA API.",
+      "status": "closed",
+      "detail": "Observed ratings are therefore held in the internal register only, never rendered on a buyer-facing page.",
+      "source": "S-02"
+    }
+  ],
+  "designedCapabilities": [
+    {
+      "capability": "Niche identification",
+      "designed": "Rank candidate categories by the count of verifiable buying questions that can be answered without price data.",
+      "today": "Done by hand for two categories: air fryers and thermometers.",
+      "automated": false
+    },
+    {
+      "capability": "Trend detection",
+      "designed": "Compare search interest across candidate categories on a rolling basis.",
+      "today": "Not running. No data source connected.",
+      "automated": false
+    },
+    {
+      "capability": "Price analysis",
+      "designed": "Track observed price over time to spot unusual movement.",
+      "today": "Not permissible. Blocked by the price-display rule absent API access.",
+      "automated": false
+    },
+    {
+      "capability": "Competition review",
+      "designed": "Survey which questions already have strong published answers.",
+      "today": "Manual reading, recorded in the content plan.",
+      "automated": false
+    },
+    {
+      "capability": "Commission estimation",
+      "designed": "Estimate earnings per click from category rates.",
+      "today": "Deliberately not built. Any figure would be a guess dressed as analysis.",
+      "automated": false
+    },
+    {
+      "capability": "Content generation",
+      "designed": "Draft question-shaped guides from verified source material.",
+      "today": "In use, with every claim traced to a source in the register and every untested statement labelled.",
+      "automated": "assisted"
+    },
+    {
+      "capability": "Link management",
+      "designed": "Store intended ASIN and official listing separately from observed redirects.",
+      "today": "Built. The register keeps the two fields apart and refuses to merge them.",
+      "automated": true
+    },
+    {
+      "capability": "Click and conversion tracking",
+      "designed": "Count the five defined events without identifiers.",
+      "today": "Client-side only. No collector is deployed, so counts are not yet retained.",
+      "automated": "partial"
+    },
+    {
+      "capability": "Publishing",
+      "designed": "Build the static site, sitemap and feed from one data file.",
+      "today": "Working. One command rebuilds every page.",
+      "automated": true
+    },
+    {
+      "capability": "Compliance checks",
+      "designed": "Fail the build if a required disclosure is missing from any generated page.",
+      "today": "Working as a build-time assertion.",
+      "automated": true
+    }
+  ],
+  "scoringNote": "No product score, opportunity score or revenue forecast is published. The inputs that would make such a score meaningful do not exist, and a number invented to look analytical is worse than no number."
+}

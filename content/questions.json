@@ -1,0 +1,211 @@
+{
+  "intro": "A clear list of what is known, what is not known, and how each gap could be closed. Every row is written so it can be answered with a document instead of an opinion. Answers that do not exist yet are marked, not guessed.",
+  "groups": [
+    {
+      "id": "QG-1",
+      "title": "Account and link integrity",
+      "note": "These gate every commercial decision. Nothing else should be chosen before these are answered.",
+      "rows": [
+        {
+          "q": "Is the Associates account for shopnow047c-20 approved and in good standing?",
+          "known": "The ID matches Amazon's documented US format: Amazon states its software appends '-20' to all Store IDs.",
+          "unknown": "Whether the account is approved, and whether it is currently earning.",
+          "how": "Sign in to Associates Central and read the account status directly.",
+          "source": "S-05",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Does a click on any supplied link appear in the Associates tracking report?",
+          "known": "None of the destination URLs observed during verification carried a visible tag parameter.",
+          "unknown": "Whether tracking happens server-side without a visible tag, and whether the click registers.",
+          "how": "Open one link in a signed-in browser, complete a test click that does not involve buying, and check the tracking report after 24 hours.",
+          "source": "S-01",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Why does link.amazon/B0c8moW59 resolve to two different destinations?",
+          "known": "First fetch landed on a ThermoMaven product page. Second fetch landed on the Amazon homepage.",
+          "unknown": "Whether the code is retired, region-dependent, or rate-limited.",
+          "how": "Regenerate the link in SiteStripe and compare. Ask Amazon support if it persists.",
+          "source": "S-02",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "What are the five intended ASINs, as chosen by the account holder?",
+          "known": "Each short link resolves to an observed 10-character product ID, recorded separately.",
+          "unknown": "Whether those observed products are the ones the brief intended.",
+          "how": "Record the intended ASIN, the official listing URL, the confirmation date and the source as four separate fields per product.",
+          "source": "S-02",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Are the supplied short links compliant Special Links?",
+          "known": "Amazon requires the Associates ID as a parameter in each link (2(b)) and prohibits cloaking or obscuring the destination (3(v), 3(w)).",
+          "unknown": "Whether these exact links satisfy those rules. This is unresolved and no claim is made either way.",
+          "how": "Inspect one link while signed in to the Associates account, and confirm the destination and tracking.",
+          "source": "S-02",
+          "answer": null,
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "QG-2",
+      "title": "Data access and automation",
+      "note": "The automation in the brief depends on an API the account cannot yet use.",
+      "rows": [
+        {
+          "q": "Does the account qualify for product-data API access?",
+          "known": "Creators API requires Associates enrollment plus at least 10 qualifying sales in the past 30 days. PA-API 5 is deprecated and returns a 403.",
+          "unknown": "Whether the account meets the 10-sales threshold.",
+          "how": "Check the sales report for the trailing 30 days, then apply for Creators API access in Associates Central.",
+          "source": "S-03",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "What is the intended role of the research pipeline once data exists?",
+          "known": "The brief asks for trend detection, price analysis and commission estimation.",
+          "unknown": "Which of those are acceptable under the License, which restricts aggregating or repurposing product content.",
+          "how": "Read the IP License usage requirements before writing any scraper. Price history in particular may be restricted.",
+          "source": "S-02",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Can price be shown to readers at all right now?",
+          "known": "Price and availability may be shown only if Amazon serves the link containing them, or the data comes via Creators API or PA API under the License.",
+          "unknown": "Nothing. The rule is clear, and the answer today is no.",
+          "how": "Either wait for API access, or rely on Amazon-served link widgets that carry their own price display.",
+          "source": "S-02",
+          "answer": "Not currently permitted on this site.",
+          "status": "answered"
+        }
+      ]
+    },
+    {
+      "id": "QG-3",
+      "title": "Measurement and audience",
+      "note": "The brief asks for growth decisions made from data. There is no data yet.",
+      "rows": [
+        {
+          "q": "Where will analytics events be received?",
+          "known": "Five events are defined and wired client-side. GitHub Pages cannot run a receiving endpoint.",
+          "unknown": "The collector host, the retention period and who can read the data.",
+          "how": "Choose between a small hosted endpoint, a scheduled worker writing flat files, or a hosted privacy-focused analytics service.",
+          "source": "S-09",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "What is the baseline traffic level?",
+          "known": "Nothing. The site published on 2026-11-20 and Search Console is not connected.",
+          "unknown": "Impressions, click-through, query set, and whether the site is indexed at all.",
+          "how": "Verify the domain property in Search Console, submit the sitemap, and record the first report date.",
+          "source": "S-12",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Which question should the seventh guide answer?",
+          "known": "Six guides are published across two clusters.",
+          "unknown": "Which questions readers actually arrive with.",
+          "how": "Choose from Search Console query data after four weeks. Until then, write only what the product set clearly supports.",
+          "source": "S-12",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Is a newsletter part of the plan, and if so under what consent model?",
+          "known": "A capture form exists and is deliberately disabled because nothing can receive an address.",
+          "unknown": "Provider, consent language, privacy notice, and whether double opt-in is required.",
+          "how": "Write the privacy notice first, then choose a provider whose consent flow matches it.",
+          "source": "S-02",
+          "answer": null,
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "QG-4",
+      "title": "Editorial standards",
+      "note": "The most important unanswered question on the site is who is speaking.",
+      "rows": [
+        {
+          "q": "Who is the named author, and what qualifies them?",
+          "known": "Copy is AI-assisted from verified source material, and the site says so.",
+          "unknown": "Whether a human editor will take ownership of the byline.",
+          "how": "Decide the byline model before adding author schema. Do not invent credentials.",
+          "source": "S-11",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Will any product be physically tested?",
+          "known": "None has been. FTC guidance prohibits describing experience with a product you have not tried.",
+          "unknown": "Budget and appetite for buying test units.",
+          "how": "Approve a test protocol and a budget, or keep the site permanently spec-based and label it that way.",
+          "source": "S-06",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "May manufacturer certification claims be repeated?",
+          "known": "Product pages state certifications such as ETL and UL listings, and accuracy figures.",
+          "unknown": "Whether those are accurate, and whether repeating them is wise.",
+          "how": "Either verify against the certifying body's public listing, or attribute the claim to the manufacturer in the sentence itself.",
+          "source": "S-02",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Can product imagery be used?",
+          "known": "Product photography is not used on the site at all. Amazon images may only be used via Program Content under the IP License.",
+          "unknown": "Whether images will come from the Creators API, from manufacturer press kits, or not at all.",
+          "how": "Decide the imagery source, and record the license for each image if third-party.",
+          "source": "S-02",
+          "answer": null,
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "QG-5",
+      "title": "Brand and hosting",
+      "note": "Small decisions that are expensive to reverse later.",
+      "rows": [
+        {
+          "q": "Is the site name final?",
+          "known": "The build uses 'ShopNow Reviews', derived from the supplied tracking ID prefix.",
+          "unknown": "Whether a different brand name is intended.",
+          "how": "Confirm before the domain is registered. Renaming after indexing costs redirects.",
+          "source": "S-05",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Will the site stay on a project Pages path or move to a domain?",
+          "known": "It is published at /Affil2 on github.io. All internal links derive from one basePath setting.",
+          "unknown": "The intended permanent address.",
+          "how": "Choose before submitting the sitemap, because the sitemap URLs must match the canonical host.",
+          "source": "S-10",
+          "answer": null,
+          "status": "open"
+        },
+        {
+          "q": "Is a contact address required?",
+          "known": "No contact address is published. FTC and platform expectations generally favour a visible way to reach the publisher.",
+          "unknown": "Which address to publish, and who monitors it.",
+          "how": "Publish a monitored address and a short editorial policy page.",
+          "source": "S-06",
+          "answer": null,
+          "status": "open"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Campaign ledger",
+  "intro": "An empty ledger with defined columns. Rows are added only when a number arrives from an authorized first-party report, with the report date and the source recorded alongside it.",
+  "columns": [
+    "Date",
+    "Source",
+    "Channel",
+    "Eligible sessions",
+    "Clicks",
+    "Reported orders",
+    "Provenance"
+  ],
+  "rows": [],
+  "rules": [
+    "No row is created from an estimate, a model, a projection, or a third-party dashboard screenshot.",
+    "Every row carries the date the report was pulled and the name of the report it came from.",
+    "A conversion rate is calculated, never stored. If the inputs change, the calculated figure must change with them.",
+    "Empty is a valid and honest state. A ledger that starts empty and fills from real reports is worth more than one that starts full of guesses."
+  ]
+}
