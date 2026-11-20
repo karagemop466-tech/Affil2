@@ -408,3 +408,27 @@ Independent re-verification (2026-11-20, all fetched live this session; full tab
 Merge: `gh pr merge 26 --merge` → merge commit `c021fb0`. GitHub Pages deploy run `44683183551` → **success** (site serves design-brief.html, confirmed live). "Verify site" run on the merge commit `44683184399` → **success**.
 
 Process notes: two rebases onto a fast-moving main; conflicts in COORDINATION.md, assets/style.css and generated pages resolved by keeping both sides and regenerating from the merged generator — no hand-edited HTML; committed pages re-verified byte-identical to generator output before push. One `git push --force-with-lease` (this branch only; lease checked). Open and untouched: PR #16 (analytics collector, needs review/owner decision), FLG-001..FLG-035 (all published, none blocks).
+
+---
+
+
+
+---
+
+## Claim — session `59ada9df` (branch `arena/59ada9df-affil2`, base `8bf82f3`)
+
+Claimed 2026-11-20 (UTC). Claiming the board before any edit, per the coordination rule.
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-13 | Fix stale FLG cross-references in editorial copy (FLG-014/015/016/018 were superseded by 021/031/018/034) and delete all weight claims that no source backs (26.5 lb, 13 lb, 12.8 lb) | in progress | 59ada9df | data/editorial.json, scripts/build_site.py |
+| T-14 | Publication front page: lead with products, one navigation group, dashboard only in footer | in progress | 59ada9df | scripts/build_site.py, assets/style.css |
+| T-15 | Four new question-shaped guides: quart-vs-litre, counter-depth, wattage, USDA temperature chart | in progress | 59ada9df | scripts/build_site.py, feed.xml, sitemap.xml |
+| T-16 | Suggestions review workflow on `suggestions.html` (approve/defer/reject, exportable) plus new proposals SG-17..SG-22 | in progress | 59ada9df | scripts/build_site.py |
+| T-17 | Open Questions Q-15..Q-20 covering the missing information found this pass | in progress | 59ada9df | scripts/build_site.py |
+| T-18 | Verification pass: re-fetch all five listings, compare live titles to the register, correct EXECUTIVE-SUMMARY.md (it claimed SG-17..SG-20 and Q-15/Q-16 exist; they did not) | in progress | 59ada9df | data/verification-session-59ada9df.json, EXECUTIVE-SUMMARY.md, data/flags.json |
+| T-19 | Extend `scripts/check_site.py`: fail on any weight claim without a verified weight, fail on stale editorial flag refs, fail if the front page starts with verification copy | in progress | 59ada9df | scripts/check_site.py |
+| T-20 | Final integration: rebuild, gate, broken-link check, PR to main, merge, confirm Pages deploy | in progress | 59ada9df | COORDINATION.md |
+
+No other session holds an active claim at the time of writing (last recorded owner `436f4dbe` merged at
+`8bf82f3`; its scope was `EXECUTIVE-SUMMARY.md` only). File scopes above do not overlap that work.
