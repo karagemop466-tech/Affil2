@@ -21,6 +21,9 @@ Prior session: `530c2e6c` (branch `arena/530c2e6c-affil2`, merged into main at `
 | T-10 | Rebuild product data from verified listings; add scripts/build_content.py (generated tables); fix compare column shift; remove unverified 'Verified' labels; fix S01/S02 URLs; extend check_site.py to catch stale values; re-check P-03 specs; reconcile flags (new IDs FLG-017+) | done | 937876a6 | data/products.json, data/sources.json, data/flags.json (appends only), scripts/build_content.py, scripts/check_site.py, generated HTML (products/*, compare, index, category, guides, sources, flagged, executive-summary), EXECUTIVE-SUMMARY.md, feed.xml |
 | T-11 | Publication styling + decision-support improvements | done | 4bbf49bb | assets/style.css, assets/illustrations/*.svg, suggestions.html, questions.html, search.html, COORDINATION.md |
 | T-12 | Final integrate original illustrations in generated product cards | done | 4bbf49bb | scripts/build_content.py, generated product-card pages (index, categories, guides), compare.html, COORDINATION.md |
+| T-20 | Newsroom voice pass: remove internal audit tokens (chunk numbers, flag IDs, intent-record jargon) from buyer-facing pages while keeping every fact and source; add reader-native provenance blocks | in progress | 0acc86ad | scripts/build_site.py, scripts/check_site.py, data/editorial.json, generated pages |
+| T-21 | Findability file: machine-readable site profile at /findability.txt plus verification of robots/sitemap/feed | in progress | 0acc86ad | findability.txt, robots.txt, sitemap.xml, feed.xml, scripts/build_site.py |
+| T-22 | Live re-verification of the five listings' published specs + policy sources; dated record | in progress | 0acc86ad | data/verification-2026-11-20-live.json, data/sources.json, COORDINATION.md |
 
 Status key: unclaimed / in progress / done / needs review (= published on Flagged for Review, does not block).
 
@@ -835,3 +838,20 @@ GitHub reported `mergeable: UNKNOWN` for all four. Each belongs to another sessi
 ### Task status
 
 T-20 | Live re-verification of the five listings + status reconciliation | done | 58c6ca4a | COORDINATION.md
+
+---
+
+## Session `arena/0acc86ad-affil2` — claim (2026-11-20)
+
+Branch `arena/0acc86ad-affil2`, base `66ccda9` (main, after PR #39). Session ID `0acc86ad`.
+
+**Why.** The owner's brief for this session is a *voice* brief, not a data brief: "Make it read like a shop, not an audit." The site's factual spine is already verified and gated; what remains is that buyer-facing pages leak production artifacts into the copy — "chunk 7", inline `FLG-0xx` IDs, "Product-intent confirmation record", "Specifications, line by line". A shopper should never see the newsroom.
+
+**Claimed (non-overlapping).**
+- T-20 — voice pass inside `scripts/build_site.py` render functions + `assets/style.css` additions + `data/editorial.json` copy; regenerated HTML. Every published fact, source link, disclosure placement, sponsored marking and gate rule is preserved; only the reader-facing wording and layout change.
+- T-21 — `findability.txt` at the repo root and the generator/check rules that keep robots, sitemap and feed consistent with it.
+- T-22 — a dated live re-verification record of the five listings' *published* spec values and the policy sources, appended as new evidence; no existing flag is deleted or downgraded.
+
+**Not claimed / untouched.** `data/flags.json` numbering and existing entries, `data/products.json` field values (unless live verification contradicts them, in which case the conflict is logged as a new flag and the value is left as published with both figures), the open collector work in PR #16, and every owner-gated item (FLG-001/002/003/004/010/028/033). Anything another session claimed first is theirs; I will log a request instead of editing.
+
+**Test plan.** `python3 scripts/build_site.py` (idempotent), `python3 scripts/check_site.py`, `python3 -m unittest discover -s tests`, `node tests/test_collector.js`, plus a browser-level read of the three highest-traffic pages (home, a category page, a product page) to confirm no internal token reaches a reader.
