@@ -86,3 +86,6 @@ Branch: `arena/990af5de-affil2`. Work is PR #3 (https://github.com/karagemop466-
 **Not verified in this pass.** Prices, ratings, model numbers, preset counts, FTC FAQ text, Associates account / Special Link test, tracking-ID activity. These stay with the existing flags (FLG-002, FLG-004, FLG-005, FLG-008, FLG-009).
 
 **Merge.** PR #3 merges this addendum into `main`. Pages redeploys from `main` through `.github/workflows/pages.yml`. The merge result is recorded in the PR.
+
+**Merge result (990af5de).** PR #3 merged to `main` as merge commit `ff02cabc` (merged 2026-11-20 05:15 UTC). Deploy GitHub Pages succeeded, and the Pages build reports `built`. Live pages checked on 2026-11-20: `flagged.html` shows FLG-011..FLG-016, and `data/reverification-2026-11-20.json` is served.
+Note: this log line is on the branch only. Pushes to `main` from this session are not permitted, so it is not on `main`.
