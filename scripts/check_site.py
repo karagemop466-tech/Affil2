@@ -349,6 +349,19 @@ if "Sitemap: " + BASE + "sitemap.xml" not in robots:
 if "Disallow: /" in robots:
     err("robots.txt blocks the site")
 
+# ---------------------------------------------------------------- no invented weights
+# No listing we read states a product weight, so no page may quote one. The two pages that
+# document the withdrawal are the only place the old figures may appear.
+WEIGHT_RE = re.compile(r"\b\d+(?:\.\d+)?\s?(?:lb|lbs|pounds?)\b", re.I)
+WEIGHT_EXEMPT = {"flagged.html", "sources.html"}
+for f in pages:
+    rel = f.name if f.parent == ROOT else f"{f.parent.name}/{f.name}"
+    if rel in WEIGHT_EXEMPT:
+        continue
+    txt = re.sub(r"<[^>]+>", " ", f.read_text())
+    for m in WEIGHT_RE.finditer(txt):
+        err(f"{rel}: quotes a product weight ({m.group(0).strip()}) that no listing states (FLG-022/FLG-039)")
+
 # ---------------------------------------------------------------- compare pair view
 comp = (ROOT / "compare.html").read_text()
 pm = re.search(r'<script type="application/json" id="pairData">(.*?)</script>', comp, re.S)
