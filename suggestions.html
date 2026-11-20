@@ -57,7 +57,7 @@
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>22 proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>29 proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
     <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
@@ -345,6 +345,97 @@
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-23" aria-label="Move SG-23 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-23" aria-label="Move SG-23 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-24">
+  <td class="nowrap"><strong>SG-24</strong></td>
+  <td><strong>Add an evergreen first-week guide for new owners</strong><br><span class="small">A getting-started guide answering onboarding questions (what to cook first, what to skip), added to the sitemap and feed like every other guide.</span></td>
+  <td>New owners search what to cook first, not only what to buy first.</td>
+  <td>Medium — organic traffic</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">guides/first-week-air-fryer.html published and included in sitemap.xml and feed.xml; no cook-time claims inside.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-24" aria-label="Move SG-24 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-24" aria-label="Move SG-24 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-25">
+  <td class="nowrap"><strong>SG-25</strong></td>
+  <td><strong>Deploy the self-hosted analytics collector</strong><br><span class="small">The endpoint contract and collectors are specified; a host must run one before any server-side event is recorded.</span></td>
+  <td>GitHub Pages cannot run a server function, so server-side data stays blank by design rather than quietly wrong.</td>
+  <td>Medium — measurement</td>
+  <td>Owner action</td>
+  <td><span class="pill blocked">Blocked on hosting</span></td>
+  <td class="small">FLG-010 stays open; a parallel open PR proposes the collector. Nothing server-side is recorded until it is deployed.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-25" aria-label="Move SG-25 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-25" aria-label="Move SG-25 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-26">
+  <td class="nowrap"><strong>SG-26</strong></td>
+  <td><strong>Feed the campaign ledger from first-party reports only</strong><br><span class="small">Monthly rows from authorised Associates reports with dated provenance. Clicks stay clicks; orders and revenue come only from reports, never from forecasts.</span></td>
+  <td>The ledger is the evidence base for the next optimisation; invented rows would poison every later decision.</td>
+  <td>High — evidence-based iteration</td>
+  <td>Owner action</td>
+  <td><span class="pill blocked">Blocked on owner</span></td>
+  <td class="small">campaign-ledger.html renders zero rows and explains why (SG-11); no conversion score is computed anywhere on the site.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-26" aria-label="Move SG-26 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-26" aria-label="Move SG-26 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-27">
+  <td class="nowrap"><strong>SG-27</strong></td>
+  <td><strong>Nav labels: keep the navigation shopper-first</strong><br><span class="small">Primary nav reads the shopper's tasks (Air Fryers, Meat Thermometers, All products, Guides, Compare, How we choose); every dashboard surface lives in one records group.</span></td>
+  <td>Shoppers navigate by task. Dashboards are for the desk, not the aisle.</td>
+  <td>Medium — usability</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">Every generated page carries the same masthead; the build gate checks the labels.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-27" aria-label="Move SG-27 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-27" aria-label="Move SG-27 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-28">
+  <td class="nowrap"><strong>SG-28</strong></td>
+  <td><strong>The shipped RSS feed</strong><br><span class="small">feed.xml carries every guide with dates and parses cleanly; robots.txt points at the canonical sitemap.</span></td>
+  <td>One indexable site needs a feed that reflects what actually shipped, not an advertisement for more.</td>
+  <td>Medium — distribution</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">The build gate parses the feed and requires an item for every guide.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-28" aria-label="Move SG-28 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-28" aria-label="Move SG-28 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-29">
+  <td class="nowrap"><strong>SG-29</strong></td>
+  <td><strong>Search Console property and sitemap submission</strong><br><span class="small">Verify the github.io property, submit sitemap.xml, and watch which queries bring readers.</span></td>
+  <td>Without it the site cannot see its own audience, and topic choice returns to instinct (SG-19, SG-21).</td>
+  <td>High — findability</td>
+  <td>Owner action</td>
+  <td><span class="pill blocked">Blocked on owner</span></td>
+  <td class="small">No Search Console property is verified; needs the owner's Google account.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-29" aria-label="Move SG-29 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-29" aria-label="Move SG-29 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-30">
+  <td class="nowrap"><strong>SG-30</strong></td>
+  <td><strong>Reader capture: RSS live, email pending</strong><br><span class="small">RSS works today. An email signup needs the owner's provider choice and the privacy wording that goes with it.</span></td>
+  <td>Repeat readers are the only durable channel a small publication gets.</td>
+  <td>Medium — retention</td>
+  <td>Owner action</td>
+  <td><span class="pill blocked">Blocked on owner</span></td>
+  <td class="small">feed.xml is live and linked everywhere; no email form is published.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-30" aria-label="Move SG-30 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-30" aria-label="Move SG-30 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
 </tr></tbody>
