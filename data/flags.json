@@ -645,12 +645,12 @@
   {
     "id": "FLG-059",
     "title": "Unresolved git merge-conflict markers were committed to main inside the stylesheet",
-    "detail": "On 2026-11-20 session 19dbf5e2 found three conflict markers left in the file on main: '<<<<<<< HEAD' at line 684, '=======' at 753 and '>>>>>>> origin/main' at 834 of assets/style.css. Both sides' rule blocks were intact between the markers, so the markers were deleted and both sides kept (session 35973829 removed the same markers independently the same day; this branch carried its own copy of the repair through the merge, so the two fixes agree), which leaves the stylesheet parseable and the brace count balanced (479/479). A browser skips a stray marker line, so the damage was invisible rather than catastrophic - but CSS error recovery can swallow the rule after an unmatched token, which is how the November layer lost .hero earlier. Request to the owner of scripts/check_site.py (T-30, session 57fc3be0): fail the build when any tracked file contains a merge marker. This session did not edit that file, per its claim.",
+    "detail": "On 2026-11-20 session 19dbf5e2 found three conflict markers left in the file on main: '<<<<<<< HEAD' at line 684, '=======' at 753 and '>>>>>>> origin/main' at 834 of assets/style.css. Both sides' rule blocks were intact between the markers, so the markers were deleted and both sides kept (session 35973829 removed the same markers independently the same day; this branch carried its own copy of the repair through the merge, so the two fixes agree), which leaves the stylesheet parseable and the brace count balanced (479/479). A browser skips a stray marker line, so the damage was invisible rather than catastrophic - but CSS error recovery can swallow the rule after an unmatched token, which is how the November layer lost .hero earlier. Request to the owner of scripts/check_site.py (T-30, session 57fc3be0): fail the build when any tracked file contains a merge marker. This session did not edit that file, per its claim. Follow-up the same day: a stray '=======' separator survived in the merged file, which is why the request became a rule instead of staying a note.",
     "links": [
       "S01"
     ],
     "severity": "corrected",
-    "owner_status": "Repaired on 2026-11-20 and published here so the fix is auditable. The gate rule is a request, not an edit, because another session owns that file."
+    "owner_status": "Repaired on 2026-11-20, and the requested gate rule now exists: scripts/check_site.py fails any tracked source file containing a conflict-marker line. A second instance (a stray '=======' line left in the same file by a later merge) was found by that rule's first run, removed, and recorded here so the class stays closed."
   },
   {
     "id": "FLG-060",

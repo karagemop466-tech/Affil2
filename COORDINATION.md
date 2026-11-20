@@ -2156,3 +2156,29 @@ two how-to guides, the entity-decoding mechanism, the stylesheet markers, the re
 page-count test), this branch **took upstream's version and removed its own duplicate**, recording the
 differences as FLG-059…066. Flag IDs were renumbered twice as main advanced; task IDs `T-31`/`T-32`
 are shared with other sessions and the collisions are logged above.
+
+### Session `arena/19dbf5e2-affil2` — the two gate defects found after deploying, and what they mean
+
+Both of these are about the **checker**, not the content, and both were invisible until someone read a
+live page after the deploy.
+
+**1. Half the gate ran after the verdict.** `scripts/check_site.py` reached its `report` block — print,
+`sys.exit(1)` if errors, `print("ALL CHECKS PASS")` — at line 813 of 866. Everything appended below it
+by three earlier sessions (the reader-voice rules, the five provenance fields on product pages, the
+`findability.txt` coverage check, the verification-page row check) still *executed*, but only after the
+exit point, so a violation could never fail a build and never printed. `ALL CHECKS PASS` meant "the
+first 800 lines agree". The report block is now the last thing in the file; every rule can fail the
+build. The reader-voice set passes under the corrected order, so nothing published was wrong — but
+FLG-055/056/057 were each written as "enforced by the gate", and for those three sessions that claim
+was only half true. Any future session adding a rule at the bottom of that file must assume it is dead
+until it checks.
+
+**2. The stylesheet had a second marker.** Repairing FLG-059 removed three markers from
+`assets/style.css`; a later merge in the same day left a bare `=======` separator at line 875 in the
+same file, which a browser skips and a reviewer does not see. Removed, and the *rule* FLG-059 only
+requested now exists: the gate fails any tracked `.html/.css/.js/.py/.json/.md/.xml/.txt` file
+containing `<<<<<<< `, a lone `=======`, or `>>>>>>> `. Verified by planting a marker in a scratch file
+under `assets/` — the build fails on it, passes once removed. FLG-059 updated to record both.
+
+Counts after this pass: 43 pages, 5 product records, 66 flags, 22 sources — **ALL CHECKS PASS**;
+22 Python tests OK; JS collector suite PASS.

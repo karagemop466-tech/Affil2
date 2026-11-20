@@ -810,6 +810,30 @@ for tm in re.finditer(r"<tbody>(.*?)</tbody>", vt, re.S):
             err("verification.html: register row without source link")
 
 
+# ---------------------------------------------------------------- merge markers (FLG-059, closed here)
+# Twice in one day a session's merge left conflict debris in a file that the browser still renders:
+# three markers inside assets/style.css, and later a stray `=======` line. A CSS parser skips a bare
+# marker line, so the damage is invisible in a screenshot and visible in the rules it swallows.
+# Nobody hand-edits generated HTML, so this only ever fires on hand-merged source.
+MARKER_SCAN = ["assets", "scripts", "data", "tests", "analytics", "functions"]
+MARKER_FILES = sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("*.xml")) + sorted(ROOT.glob("*.txt")) \
+    + sorted(ROOT.glob("*.md")) + sorted(ROOT.glob("*.js"))
+for sub in MARKER_SCAN:
+    MARKER_FILES += sorted((ROOT / sub).rglob("*"))
+seen = set()
+for f in MARKER_FILES:
+    if not f.is_file() or f in seen or f.suffix not in {".html", ".css", ".js", ".py", ".json",
+                                                         ".md", ".xml", ".txt"}:
+        continue
+    seen.add(f)
+    txt = f.read_text(encoding="utf-8", errors="ignore")
+    bad = [ln for ln in txt.split("\n")
+           if ln.startswith("<<<<<<< ") or ln.rstrip() == "=======" or ln.startswith(">>>>>>> ")]
+    if bad:
+        err(f"{f.relative_to(ROOT)}: {len(bad)} unresolved merge-conflict marker line(s) "
+            f"(first: {bad[0][:40]!r}) — resolve the hunk, do not ship the debris")
+
+
 # ---------------------------------------------------------------- report
 print(f"checked {len(pages)} pages, {len(prod_pages)} product records, "
       f"{len(flags)} flags, {len(sources)} sources")
