@@ -381,7 +381,8 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
 
 def buybox(p, up, variant="full"):
     checks = "".join(f"<li>{esc(q)}</li>" for q, _ in p["questions"][:3])
-    photo_key = "thermo" if p["cat"] == "Meat Thermometers" else "air"
+    # Same rule as the cards: a product box shows its own rendering, never a neighbour's.
+    photo_key = PHOTO_BY_ID.get(p["id"], "thermo" if p["cat"] == "Meat Thermometers" else "air")
     return f"""<div class="buybox">
   <div class="buybox-art">{photo(photo_key, up, caption=True, short=True)}</div>
   <div class="buybox-body">
