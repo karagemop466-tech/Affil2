@@ -77,10 +77,33 @@ for p in pages:
         if "nofollow" not in tag:
             err(f"{rel}: amazon link without rel=nofollow — {m.group(1)[:70]}")
 
-    # --- tagged links must carry the Associate ID
-    for m in re.finditer(r'href="(https://www\.amazon\.com/dp/[^"]*)"[^>]*data-outbound', html):
-        if "tag=shopnow047c-20" not in m.group(1):
-            err(f"{rel}: outbound product link missing the Associates tag — {m.group(1)[:70]}")
+    # --- tagged links must carry the Associate ID (buy CTAs only; labelled
+    # --- verification links may stay untagged on purpose — see how-we-choose.html)
+    for m in re.finditer(r'<a\b[^>]*href="(https://www\.amazon\.com/(?:dp|gp/product)/[A-Z0-9]{10}[^"]*)"[^>]*>',
+                         html):
+        if "data-outbound" in m.group(0) and "tag=shopnow047c-20" not in m.group(1):
+            err(f"{rel}: product buy link missing the Associates tag — {m.group(1)[:70]}")
+
+    # --- the supplied short links are Amazon product links, so they are marked sponsored
+    for m in re.finditer(r'<a\b[^>]*href="(https://link\.amazon/[^"]*)"[^>]*>', html):
+        if "sponsored" not in m.group(0):
+            err(f"{rel}: link.amazon link without rel=sponsored — {m.group(1)[:70]}")
+
+    # --- no Amazon-hosted imagery (Program Policies: use your own or licensed art)
+    for img_host in ("m.media-amazon.com", "images-na.ssl-images-amazon.com",
+                     "ssl-images-amazon.com"):
+        if img_host in html:
+            err(f"{rel}: references Amazon-hosted imagery ({img_host})")
+
+    # --- brand fonts present (SG-22)
+    if "fonts.googleapis.com" not in html:
+        err(f"{rel}: missing brand font stylesheet link")
+
+    # --- every buy button sits near a visible (paid link) label (FTC)
+    for m in re.finditer(r"data-outbound=", html):
+        seg = html[max(0, m.start() - 400): m.start() + 400]
+        if "(paid link)" not in seg:
+            err(f"{rel}: buy link without a nearby (paid link) label")
 
     # --- no reproduced prices or ratings
     for m in re.finditer(r"\$\s?\d", html):
@@ -315,8 +338,12 @@ except ET.ParseError as e:
     feed = None
 if feed is not None:
     items = feed.findall("./channel/item")
-    if len(items) < 8:
-        err(f"feed.xml has {len(items)} items, expected at least 8 guides")
+    guide_files = sorted(x.name for x in (ROOT / "guides").glob("*.html"))
+    if len(items) != len(guide_files):
+        err(f"feed.xml has {len(items)} items, expected {len(guide_files)} guides")
+    for gname in guide_files:
+        if gname not in feed_text:
+            err(f"feed.xml missing guides/{gname}")
     for it in items:
         link = it.find("link").text
         if not link.startswith(BASE):
@@ -327,6 +354,12 @@ if feed is not None:
     lang = feed.find("./channel/language")
     if lang is None or not lang.text or not lang.text.startswith("en"):
         err("feed.xml: missing or malformed <language>")
+
+# ---------------------------------------------------------------- analytics layer
+appjs_text = (ROOT / "assets" / "app.js").read_text()
+for ev_name in ("page_view", "outbound_click", "guide_read", "search", "suggestion_rank"):
+    if f"'{ev_name}'" not in appjs_text and f'"{ev_name}"' not in appjs_text:
+        err(f"app.js: event {ev_name} not instrumented")
 
 robots = (ROOT / "robots.txt").read_text()
 if "Sitemap: " + BASE + "sitemap.xml" not in robots:

@@ -207,7 +207,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
 <meta property="og:type" content="website">
 <meta property="og:url" content="{canon}">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="{up}assets/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="{up}assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="{SITE} — Feed" href="{up}feed.xml">
 {ld}{extra_head}</head>
 <body>
@@ -233,7 +233,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
   <div class="wrap">
     <p class="disc-foot">{DISCLOSURE}</p>
     <nav aria-label="Footer">{footnav}</nav>
-    <p class="dash">Records and dashboards: {dash} ·
+    <p class="dash">Studio &amp; records: {dash} ·
       <a href="{up}sitemap.xml">Sitemap</a> · <a href="{up}feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
@@ -454,6 +454,27 @@ def build_home():
   </aside>
 </section>
 
+<section>
+  <div class="sec-head"><h2>The Holiday Edit</h2><a class="more-link" href="guides.html">All guides &rarr;</a></div>
+  <p class="sec-sub">Thanksgiving week: what the countertop can carry, the number that decides the
+    turkey, and the first week with a new fryer.</p>
+  <img class="edit-art" src="assets/img/holiday-table.jpg" alt="A festive holiday dinner table with a roast centerpiece and candles. Editorial illustration — not a product photograph." width="700" height="420">
+  <div class="grid">
+    <article class="card"><p class="kicker">Seasonal · 6 min</p>
+      <h3><a href="guides/holiday-hosting.html">Holiday hosting 2026: can an air fryer carry the big meal?</a></h3>
+      <p>Oven scheduling is the real bottleneck. What to hand off to the countertop — and which of the three fits the job.</p>
+      <p class="small"><a href="guides/holiday-hosting.html">Read the edit &rarr;</a></p></article>
+    <article class="card"><p class="kicker">Seasonal · 5 min</p>
+      <h3><a href="guides/turkey-thermometer-plan.html">The turkey thermometer game plan: instant-read, wireless, or both?</a></h3>
+      <p>USDA says 165 °F for all poultry. Here is where each thermometer wins on the big day — with the sources to prove the number.</p>
+      <p class="small"><a href="guides/turkey-thermometer-plan.html">Read the plan &rarr;</a></p></article>
+    <article class="card"><p class="kicker">Evergreen · 5 min</p>
+      <h3><a href="guides/first-week-air-fryer.html">Your air fryer's first week: what to cook, what to skip</a></h3>
+      <p>Three deliberate experiments, two things to skip, and the habit that earns the counter space.</p>
+      <p class="small"><a href="guides/first-week-air-fryer.html">Read the plan &rarr;</a></p></article>
+  </div>
+</section>
+
 <section class="panel scallop">
   <h2>Every product at a glance</h2>
   <p class="muted">The table a buyer needs: what it is, who it suits, and the one caveat that matters.
@@ -525,6 +546,7 @@ def build_shop():
 <h1>All five products</h1>
 <p class="lede">Everything this site covers, in one place. Same five links you gave us, sorted by
   what they are good at rather than by which one pays more.</p>
+<img class="cat-hero" src="assets/img/hero-kitchen.jpg" alt="A dual-basket air fryer and a digital meat thermometer on a sunlit kitchen counter with fresh vegetables. Editorial illustration — not a product photograph." width="900" height="640">
 <div class="grid">{"".join(card(p, "") for p in PRODUCTS)}</div>
 <h2>Side by side</h2>
 {overview_table()}
@@ -539,7 +561,7 @@ def build_shop():
 
 
 # ---- category pages
-def build_category(catfile, cat, headline, intro, guides_, picks):
+def build_category(catfile, cat, headline, intro, guides_, picks, image=None, image_alt=""):
     items = [p for p in PRODUCTS if p["cat"] == cat]
     verdict_items = "".join(
         '<li><strong>' + esc(p["brand"]) + '</strong> &mdash; ' + esc(p["best_for"]) +
@@ -553,6 +575,7 @@ def build_category(catfile, cat, headline, intro, guides_, picks):
 {breadcrumb([("Home", "index.html"), (cat, None)])}
 <h1>{esc(headline)}</h1>
 <p class="lede">{intro}</p>
+{f'<img class="cat-hero" src="{image}" alt="{esc(image_alt)}" width="800" height="520">' if image else ''}
 {box_items}
 <h2>Which one, in one line each</h2>
 <ul class="verdicts">
@@ -968,6 +991,222 @@ GUIDES = [
          ],
          verdict="""Measure depth, measure the space in front, and weigh whether it will go in a
          cupboard. Pick the unit that survives all three; then look at features."""),
+    dict(slug="holiday-hosting", title="Holiday hosting 2026: can an air fryer carry the big meal?",
+         sub="Oven time is the bottleneck on the big day. What an air fryer can realistically "
+             "carry at a holiday gathering — sides, appetizers, reheating — and which of our three "
+             "fryers fits the job.",
+         kicker="Seasonal · The Holiday Edit · 6 min read", products=["P-01", "P-02", "P-03"],
+         intro="""Nobody loses the holidays over the turkey. They lose it to oven scheduling —
+         three sides, one oven, and guests who arrived early. Here is what an air fryer can
+         honestly take off your plate this season, and which of the three we cover fits the job.
+         Cooking method notes below are editorial kitchen practice — not lab results, and not
+         claims about any product's performance; product details come from the official listings.""",
+         sections=[
+            ("Three jobs worth handing off", """<div class="grid">
+<article class="card"><p class="kicker">Job 1</p><h3>Sides that need crispness</h3><p>Roasted
+potatoes, Brussels sprouts, dinner rolls for the second batch — anything you want browned while
+the oven is committed to the bird. Two independent baskets mean two sides at once, timed
+together.</p></article>
+<article class="card"><p class="kicker">Job 2</p><h3>Appetizers while guests arrive</h3><p>Wings,
+fries, spring rolls, reheated bites from the freezer. This is the hour when a second cooking
+station is worth more than anything else in the kitchen.</p></article>
+<article class="card"><p class="kicker">Job 3</p><h3>The second-wave reheat</h3><p>Leftovers and
+late plates. USDA guidance is to reheat leftovers to <strong>165&nbsp;°F (73.9&nbsp;°C)</strong>
+internal temperature — measure, don't guess (<a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="nofollow">USDA FSIS
+temperature chart</a>).</p></article>
+</div>"""),
+            ("Which of the three fits the day", """<div class="grid">
+<article class="card">
+<p class="kicker">Air Fryers · P-01 · Two sides at once</p>
+<h3><a href="../products/p01-chefman-6qt-dual-basket.html">CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff</a></h3>
+<p>Two 3-quart baskets with viewing windows and a finish-together sync. The listing is the only
+place we take specs from — and it matches the job: two sides, one appliance.</p>
+<ul><li><strong>Capacity:</strong> 6 quarts total — two independent 3-quart baskets</li>
+<li><strong>Temperature range:</strong> 200–450 °F (listing)</li></ul>
+<p class="cta"><a class="btn" href="https://www.amazon.com/dp/B0CDY277D3?tag=shopnow047c-20" rel="sponsored nofollow" data-outbound="P-01" data-event="outbound_click">Check on Amazon (paid link)</a>
+<a href="../products/p01-chefman-6qt-dual-basket.html">Read the breakdown →</a></p>
+<p class="small">Special Link pending Associates test (FLG-004). <a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">Official listing</a></p>
+</article>
+<article class="card">
+<p class="kicker">Air Fryers · P-02 · The tray workhorse</p>
+<h3><a href="../products/p02-emeril-26qt-french-door.html">Emeril Lagasse 26 QT Extra Large Air Fryer, Convection Toaster Oven with French Doors, Stainless Steel</a></h3>
+<p>A 26-quart countertop oven with French doors and listed accessories — the closest thing here to
+a second oven. It is also 26.5 pounds and 16.9 inches deep; measure the counter before you plan
+around it.</p>
+<ul><li><strong>Capacity:</strong> 26 quarts (24.6 litres, listing)</li>
+<li><strong>Temperature range:</strong> Up to 500 °F (listing)</li></ul>
+<p class="cta"><a class="btn" href="https://www.amazon.com/dp/B09B7SB46R?tag=shopnow047c-20" rel="sponsored nofollow" data-outbound="P-02" data-event="outbound_click">Check on Amazon (paid link)</a>
+<a href="../products/p02-emeril-26qt-french-door.html">Read the breakdown →</a></p>
+<p class="small">Special Link pending Associates test (FLG-004). <a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">Official listing</a></p>
+</article>
+<article class="card">
+<p class="kicker">Air Fryers · P-03 · One big batch</p>
+<h3><a href="../products/p03-chefman-8qt-turbrofry.html">Chefman TurboFry Touch Air Fryer, XL 8-Qt Family Size, One-Touch Digital Control Presets, Stainless Steel</a></h3>
+<p>One 8-quart basket for the side that feeds everyone. Simpler to run mid-chaos: one dial, one
+drawer, one batch.</p>
+<ul><li><strong>Capacity:</strong> 8 quarts</li>
+<li><strong>Temperature range:</strong> 200–400 °F (listing)</li></ul>
+<p class="cta"><a class="btn" href="https://www.amazon.com/dp/B08DKYBTPH?tag=shopnow047c-20" rel="sponsored nofollow" data-outbound="P-03" data-event="outbound_click">Check on Amazon (paid link)</a>
+<a href="../products/p03-chefman-8qt-turbrofry.html">Read the breakdown →</a></p>
+<p class="small">Special Link pending Associates test (FLG-004). <a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">Official listing</a></p>
+</article>
+</div>"""),
+            ("What not to expect", """<ul>
+<li>A basket air fryer is not a turkey oven. Even 8 quarts is a side-dish machine at a holiday
+table.</li>
+<li>"Up to 500 °F" on the P-02 listing is a ceiling, not a promise about every mode — check the
+live listing for what each function does.</li>
+<li>We show no prices, star ratings, or "best of" rankings here. Details change; the listing is
+the truth at the moment you buy.</li>
+</ul>"""),
+            ("The one-page game plan", """<ol>
+<li>Write the menu and mark which dishes need the big oven. Those stay.</li>
+<li>Everything that needs crispness or fast heat goes to the countertop appliance.</li>
+<li>Decide parallel (two baskets) vs volume (one big basket) vs tray-style (countertop oven).</li>
+<li>Measure the counter — including door swing and clearance — before ordering.</li>
+<li>Plan the reheat window; leftovers go to 165 °F per USDA.</li>
+</ol>
+<p><a href="../guides.html">← All guides</a> · <a href="../compare.html">Compare the five</a> ·
+<a href="turkey-thermometer-plan.html">Next: the turkey thermometer game plan →</a></p>"""),
+         ],
+         verdict="""Keep the centerpiece in your main oven. Hand off the sides, the appetizers, and
+         the reheat to an air fryer: two baskets for parallel sides (P-01), one big batch for
+         volume (P-03), or a countertop oven for trays and browning (P-02)."""),
+    dict(slug="turkey-thermometer-plan", title="The turkey thermometer game plan: instant-read, wireless, or both?",
+         sub="The only reliable answer to whether a bird is done is a number, not a timer. The "
+             "temperature target that actually matters, and how the two thermometers we cover fit "
+             "into the plan.",
+         kicker="Seasonal · The Holiday Edit · 5 min read", products=["P-04", "P-05"],
+         intro="""The only reliable answer to "is it done?" is a number, not a timer. Here is the
+         temperature target that actually matters, and how the two thermometers we cover — one
+         instant-read, one wireless — fit into the plan. Product claims below are quoted from the
+         official Amazon listings and dated 2026-11-20; we have not lab-tested any thermometer.""",
+         sections=[
+            ("The number to know", """<p>USDA's published guidance: cook <strong>all poultry</strong>
+— whole birds, breasts, thighs, wings, ground poultry, giblets and stuffing — to
+<strong>165 °F (73.9 °C)</strong> internal temperature, as measured with a food thermometer.
+Leftovers and casseroles go back to 165 °F on reheat. Beef/pork/veal/lamb steaks and roasts:
+145 °F with a 3-minute rest. Ground meats: 160 °F. These are USDA's numbers, not ours — read the
+full chart at <a href="https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart" rel="nofollow">fsis.usda.gov</a> (chart last
+updated 2025-04-14).</p>"""),
+            ("Instant-read: the spot check", """<p>An instant-read is the one you reach for at the
+critical moment: pull it from the drawer, probe the thickest part of the thigh away from bone,
+read, done. The listing for the ThermoMaven states a 1-second response and ±0.5 °F accuracy, with
+NIST and NSF certification claimed on the page.</p>
+<div class="grid"><article class="card">
+<p class="kicker">Meat Thermometers · P-04 · Instant-read</p>
+<h3><a href="../products/p04-thermomaven-1sec.html">ThermoMaven Professional Digital Meat Thermometer, 1 Sec Instant Read, ±0.5 °F Accuracy, NIST &amp; NSF Certified</a></h3>
+<ul><li><strong>Response time:</strong> 1 second (listing)</li>
+<li><strong>Accuracy:</strong> ±0.5 °F (listing)</li>
+<li><strong>Certification stated:</strong> NIST &amp; NSF (listing)</li></ul>
+<p class="cta"><a class="btn" href="https://www.amazon.com/dp/B0DHZTCNR5?tag=shopnow047c-20" rel="sponsored nofollow" data-outbound="P-04" data-event="outbound_click">Check on Amazon (paid link)</a>
+<a href="../products/p04-thermomaven-1sec.html">Read the breakdown →</a></p>
+<p class="small">Special Link pending Associates test (FLG-004). <a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">Official listing</a></p>
+</article></div>"""),
+            ("Wireless: the watch that keeps cooking while you don't", """<p>A leave-in wireless
+probe is the upgrade when the bird is in for hours and you would rather not open the door to
+check. The CHEF iQ Sense listing states three ultra-thin probes, WiFi monitoring, five sensors,
+and a 1000 °F heat-safe rating. It also states two different battery figures on the same page
+(50 h and 70 h) — we publish both and neither wins until the seller resolves it
+(<a href="../flagged.html">FLG-008</a>).</p>
+<div class="grid"><article class="card">
+<p class="kicker">Meat Thermometers · P-05 · Wireless smart</p>
+<h3><a href="../products/p05-chefiq-sense-gen3.html">CHEF iQ Sense [2025 Model] Smart Wireless Meat Thermometer, 3 Ultra-Thin Probes, WiFi Unlimited Range, 1000 °F Heat Safe, 5 Sensors, Gen3</a></h3>
+<ul><li><strong>Probes:</strong> 3 ultra-thin probes + hub</li>
+<li><strong>Connectivity:</strong> WiFi / Bluetooth via CHEF iQ app</li>
+<li><strong>Heat rating:</strong> 1000 °F heat safe (listing)</li></ul>
+<p class="cta"><a class="btn" href="https://www.amazon.com/dp/B0DZFD6R9Z?tag=shopnow047c-20" rel="sponsored nofollow" data-outbound="P-05" data-event="outbound_click">Check on Amazon (paid link)</a>
+<a href="../products/p05-chefiq-sense-gen3.html">Read the breakdown →</a></p>
+<p class="small">Special Link pending Associates test (FLG-004). <a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">Official listing</a></p>
+</article></div>"""),
+            ("Instant-read, wireless, or both?", """<table><caption>How the two jobs differ —
+decision aid, not a ranking.</caption>
+<thead><tr><th>Question</th><th>Instant-read (P-04)</th><th>Wireless (P-05)</th></tr></thead>
+<tbody>
+<tr><td>What is it for?</td><td>Fast spot checks at the end</td><td>Continuous monitoring during the cook</td></tr>
+<tr><td>Do you open the oven/grill?</td><td>Yes, briefly, at check time</td><td>No — reads from the hub/app</td></tr>
+<tr><td>How many things at once?</td><td>One, in sequence</td><td>Up to 3 probes (listing)</td></tr>
+<tr><td>What is the honest downside?</td><td>You must remember to check</td><td>App, hub, charging, and a listing with conflicting battery figures (FLG-008)</td></tr>
+<tr><td>Official listing</td><td><a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">amazon.com/dp/B0DHZTCNR5</a></td><td><a href="https://www.amazon.com/dp/B0DZFD6R9Z" rel="sponsored nofollow">amazon.com/dp/B0DZFD6R9Z</a></td></tr>
+</tbody></table>"""),
+            ("Game plan for the big day", """<ol>
+<li>Decide your target from USDA's chart (poultry: 165 °F) before the cooking starts.</li>
+<li>If you only buy one: the instant-read covers the safety check for every dish.</li>
+<li>If the bird is in for hours: a wireless probe earns its hub; keep the instant-read for sides
+and the final check.</li>
+<li>Probe the thickest part of the thigh, away from bone, and measure leftovers at 165 °F on
+reheat.</li>
+</ol>
+<p><a href="../guides.html">← All guides</a> ·
+<a href="thermometer-accuracy.html">How to assess accuracy claims</a> ·
+<a href="instant-vs-wireless.html">Instant-read vs wireless, in depth</a></p>"""),
+         ],
+         verdict="""USDA's published guidance: cook all poultry to 165 °F internal temperature,
+         leftovers reheat to 165 °F, steaks 145 °F plus a 3-minute rest. If you only buy one
+         thermometer, the instant-read covers the safety check for every dish; a wireless probe
+         earns its place when the bird is in for hours."""),
+    dict(slug="first-week-air-fryer", title="Your air fryer's first week: what to cook, what to skip",
+         sub="A practical first-week plan for a new air fryer: what to cook first to learn the "
+             "machine, what to skip, and how the basket layout you chose (one big or two small) "
+             "changes the routine.",
+         kicker="Evergreen · Getting started · 5 min read", products=["P-01", "P-02", "P-03"],
+         intro="""The fastest way to regret a new appliance is to feed it only frozen fries. The
+         fastest way to love it is a week of deliberate experiments — three things to cook, two
+         things to skip, and one habit that makes every weeknight easier after that. The cooking
+         practice below is editorial kitchen experience, not product testing; product details come
+         from the official Amazon listings as of 2026-11-20.""",
+         sections=[
+            ("Day 1–2: learn the heat", """<p>Start with something cheap and forgiving: potato
+wedges or chicken wings. The point is not dinner — it is calibration. Preheat the way the manual
+says (most listings call for a short preheat), keep the food in a single layer, and shake or flip
+halfway. You are learning where this machine's hot spots are and how done looks at 400 °F versus
+375 °F. Note what you would change next time.</p>"""),
+            ("Day 3–4: cook the meal you actually repeat", """<p>Now cook the thing you make on
+busy nights — a protein and a vegetable. This is where basket layout decides your rhythm:</p>
+<div class="grid">
+<article class="card"><p class="kicker">Two baskets (P-01)</p><h3>Parallel is the whole point</h3><p>Protein
+in one basket, vegetable in the other, finish together. The listing states sync finish and viewing
+windows — useful exactly here, while you are still learning timing.
+<a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">Official listing</a></p></article>
+<article class="card"><p class="kicker">One big basket (P-03)</p><h3>Batch is the whole point</h3><p>One
+8-quart drawer for the full family portion. The listing states an LED shake reminder — the habit
+worth building anyway.
+<a href="https://www.amazon.com/dp/B08DKYBTPH" rel="sponsored nofollow">Official listing</a></p></article>
+<article class="card"><p class="kicker">Oven-style (P-02)</p><h3>Trays are the whole point</h3><p>Rack
+and pan cooking with doors that swing — check clearance the first time, not the tenth.
+<a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">Official listing</a></p></article>
+</div>"""),
+            ("What to skip (for now)", """<ul>
+<li><strong>Wet batters.</strong> Anything drippy needs a coating or a pan; the fan will strip
+batter off food before it sets.</li>
+<li><strong>Overcrowded "just one more" loads.</strong> Stacked food steams instead of crisping.
+Two smaller batches beat one large one — this is the most common first-week disappointment.</li>
+<li><strong>Untested high-sugar glazes.</strong> Sugar burns fast in moving air; add glaze late in
+the cook and watch it.</li>
+</ul>"""),
+            ("The habit that pays for the counter space", """<p>Once a week, make the appliance the
+default for one thing you used the big oven for: reheating pizza, roasting a tray of vegetables,
+finishing a weeknight protein. If it never wins a job from the oven, it becomes cupboard
+inventory. If it wins one job permanently, it earned the counter.</p>
+<p>Cleanup is half the ownership experience — see
+<a href="cleanup-counter-space.html">How to assess cleanup and counter-space trade-offs</a> for
+the honest version.</p>"""),
+            ("Before you buy one", """<ol>
+<li>Measure the counter and the cabinet clearance (see
+<a href="capacity-checklist.html">the capacity checklist</a>).</li>
+<li>Answer one question: do I cook main-and-side together (two baskets) or one big thing (one
+basket)?</li>
+<li>Compare the three fryers we cover: <a href="../compare.html">side-by-side table</a>.</li>
+<li>Check the live listing before ordering — specs and details change.</li>
+</ol>
+<p class="cta"><a class="btn" href="https://www.amazon.com/dp/B0CDY277D3?tag=shopnow047c-20" rel="sponsored nofollow" data-outbound="P-01" data-event="outbound_click">Check P-01 on Amazon (paid link)</a>
+<a class="btn" href="https://www.amazon.com/dp/B08DKYBTPH?tag=shopnow047c-20" rel="sponsored nofollow" data-outbound="P-03" data-event="outbound_click">Check P-03 on Amazon (paid link)</a></p>
+<p><a href="../guides.html">← All guides</a> · <a href="basket-vs-oven.html">Basket or oven-style?</a>
+· <a href="holiday-hosting.html">The Holiday Edit</a></p>"""),
+         ],
+         verdict="""A week of deliberate experiments: potato wedges or wings first, then the meal
+         you actually repeat; skip wet batters and overcrowded loads for now; and make the fryer
+         win one real job from the big oven — that habit is what earns the counter space."""),
 ]
 
 
@@ -1005,7 +1244,7 @@ def build_guides_index():
 
 def build_guide(g):
     rel = [BY_ID[x] for x in g["products"]]
-    secs = "".join(f"<h2>{esc(h)}</h2><p>{t}</p>" for h, t in g["sections"])
+    secs = "".join(f"<h2>{esc(h)}</h2>" + (t if "<" in t else f"<p>{t}</p>") for h, t in g["sections"])
     items = "".join(
         f'<li><a href="../{slug_of(p)}">{esc(p["brand"])} — {esc(p["headline"])}</a>'
         f'<span>{esc(p["best_for"])}</span></li>' for p in rel)
@@ -1117,12 +1356,13 @@ SUGGESTIONS = [
          impact="High — reader trust and time on page", effort="Done",
          status="Shipped", verify="Visible on index.html: hero, three featured products, one nav group."),
     dict(id="SG-02", title="Publish question-shaped guides, then measure arrivals",
-         what="Eight guides built from real buying decisions, each added to the sitemap and the RSS "
+         what="Eleven guides built from real buying decisions — the original eight plus the "
+              "Holiday Edit cluster from session 42617e35 — each added to the sitemap and the RSS "
               "feed, each ending in a verdict.",
          why="Long-tail question queries are how a small site earns its first organic traffic. A "
              "guide that answers one question beats a listicle.",
          impact="High — organic traffic", effort="Done",
-         status="Shipped", verify="guides.html lists eight; sitemap.xml and feed.xml include all eight."),
+         status="Shipped", verify="guides.html lists eleven; sitemap.xml and feed.xml include all eleven."),
     dict(id="SG-03", title="Measure clicks before optimising anything",
          what="Five defined events, counted locally with no cookies and no third party, exportable "
               "to CSV by the reader or the owner.",
@@ -1223,6 +1463,111 @@ SUGGESTIONS = [
          impact="High — perceived quality and conversion", effort="Medium, one design pass",
          status="Not started — recommended for approval",
          verify="design-brief.html is on this site now. Nothing changes until the owner picks this row."),
+    dict(id="SG-18", title="Search-term aggregation for topic choice",
+         what="Aggregate site-search terms to pick the next guide topic instead of instinct.",
+         why="Topic choice should follow measured demand; the search event already records what "
+             "readers look for, so the next guide can be chosen from evidence rather than taste.",
+         impact="High — editorial data", effort="Medium — needs a deployed endpoint (Q-08)",
+         status="Proposed — needs endpoint",
+         verify="Nothing to check yet: no collector is deployed, so no terms are recorded "
+                "(FLG-010)."),
+    dict(id="SG-19", title="Compliance gate checklist in publishing flow",
+         what="Disclosure placement + endorsement context checked against the Operating Agreement "
+              "and FTC guidance (S01 · S03 · S04).",
+         why="Compliance is checked but not owned; a named gatekeeper makes the human half of the "
+             "check repeatable instead of implicit.",
+         impact="Required — compliance", effort="Low — the machine half already runs in the gate",
+         status="Partial — checklist exists; named gatekeeper pending (Q-06)",
+         verify="scripts/check_site.py enforces the mechanical half on every push; the human half "
+                "has no name on it yet."),
+    dict(id="SG-20", title="Named editor of record",
+         what="A human byline and review record on every article; no anonymous content.",
+         why="Readers and regulators both treat anonymous content as weaker, and a byline is how "
+             "corrections get an owner.",
+         impact="Required — trust", effort="Owner decision",
+         status="Pending (Q-06)",
+         verify="No byline appears anywhere on the site yet; Q-06 stays open until a name exists."),
+    dict(id="SG-21", title="Compare page as decision tool",
+         what="Side-by-side table with blank-for-unverified columns and source links.",
+         why="The comparison is where a reader converts, and the blanks in it are the honesty "
+             "signal that makes the rest of the table believable.",
+         impact="High — conversions", effort="Done",
+         status="Done",
+         verify="compare.html: every field row links its source; price and rating columns are "
+                "absent by policy."),
+    dict(id="SG-22", title="Brand + type refresh (shop feel)",
+         what="Fraunces/Inter, warm editorial palette, original imagery, cards and tiles.",
+         why="The site must read as a publication a person made, not an audit dump or a template.",
+         impact="Medium — polish", effort="Done",
+         status="Done (2026-11-20)",
+         verify="Fraunces + Inter load on every page (stylesheet links in any page head); "
+                "original editorial art in assets/img/ carries the category and holiday pages."),
+    dict(id="SG-23", title="Publishing calendar (weekly)",
+         what="One question-shaped guide per week; add each to sitemap + feed at publish.",
+         why="Cadence compounds. This row restates SG-16 from session 42617e35's numbering — the "
+             "decision is the same and sits in one place: Q-07.",
+         impact="High — organic traffic", effort="Ongoing",
+         status="Proposed — needs owner sign-off (Q-07)",
+         verify="No calendar exists yet; SG-16 holds the same open decision."),
+    dict(id="SG-24", title="First-party reports feeding the ledger",
+         what="Pull clicks/sessions/orders monthly from Associates reports with dated provenance "
+              "into campaign-ledger.",
+         why="Only first-party reports turn measured clicks into evidence; nothing else may fill "
+             "the ledger.",
+         impact="High — evidence-based iteration", effort="Owner — enrolled account required",
+         status="Proposed — needs enrolled account",
+         verify="campaign-ledger.html is still empty (0 rows); it gains a row only when an "
+                "authorised report is transcribed."),
+    dict(id="SG-25", title="Flagged-for-review workflow",
+         what="Conflicts and gaps published in plain language with source links; never blocking.",
+         why="Publishing what we could not verify is what keeps the verified parts trustworthy.",
+         impact="High — honesty", effort="Done",
+         status="Done",
+         verify="flagged.html lists every flag with severity, owner status and source links; the "
+                "gate runs regardless of how many flags exist."),
+    dict(id="SG-26", title="Internal linking clusters",
+         what="Guide ↔ product ↔ compare cross-links so readers and crawlers find everything.",
+         why="Clusters spread authority inside the site and give a reader the next useful click "
+             "instead of a dead end.",
+         impact="Medium — SEO", effort="Done",
+         status="Done",
+         verify="Every page carries nav + footer links; guides link their products; the gate "
+                "fails on any broken internal link."),
+    dict(id="SG-27", title="Nav labels: reader-first navigation",
+         what="Top nav leads with the reader's path (Air Fryers, Meat Thermometers, All products, "
+              "Guides, Compare); every dashboard surface lives in one footer group "
+              "(Studio & records).",
+         why="A reader should never hunt through audit machinery to find a product, and the "
+             "machinery should live in one labelled drawer.",
+         impact="Medium — usability", effort="Done",
+         status="Done (2026-11-20)",
+         verify="Any page footer: one group labelled 'Studio &amp; records' holds every dashboard "
+                "surface; the primary nav is product-first."),
+    dict(id="SG-28", title="Shipped RSS feed",
+         what="feed.xml carries every guide with dates; it is linked from every page head and the "
+              "footer.",
+         why="RSS gives readers a way to follow the publication without any third party owning "
+             "the relationship.",
+         impact="Medium — distribution", effort="Done",
+         status="Done (2026-11-20)",
+         verify="feed.xml lists every guide with pubDate; every page links it; the gate fails if a "
+                "guide is missing from the feed."),
+    dict(id="SG-29", title="Search Console property + sitemap submission",
+         what="Verify karagemop466-tech.github.io/Affil2 in Search Console; submit sitemap.xml; "
+              "watch queries.",
+         why="Query data decides what to write next; without it, topic choice stays instinct "
+             "(pairs with SG-10).",
+         impact="High — findability", effort="Owner — needs a Google account",
+         status="Pending — needs owner Google account",
+         verify="No Search Console proof exists; SG-10 holds the same open credential."),
+    dict(id="SG-30", title="Reader capture: RSS + email",
+         what="RSS live; email newsletter signup requires the owner's provider choice and privacy "
+              "wording.",
+         why="An owned audience is the only audience a small publication keeps without paying "
+             "for reach each time.",
+         impact="Medium — retention", effort="Owner — provider + privacy wording",
+         status="Partial — RSS live, email pending (Q-09)",
+         verify="feed.xml is live and linked from every page; no email signup form exists yet."),
 ]
 
 
@@ -1264,7 +1609,7 @@ def build_suggestions():
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>Seventeen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>Thirty proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
     <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
@@ -1289,6 +1634,9 @@ def build_suggestions():
     <tr><td>SG-15</td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
     <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
     <tr><td>SG-17</td><td>Approve the Design &amp; Traffic Brief as the next build</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-19</td><td>Name the compliance gatekeeper for the publishing flow</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-20</td><td>Name the editor of record and put a byline on the site</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-24</td><td>Enrol an account so first-party reports can fill the ledger</td><td>Owner (account access)</td></tr>
   </tbody>
 </table>
 
@@ -1319,7 +1667,7 @@ def build_suggestions():
 </ul>
 """
     BUILT.append(page("suggestions.html", f"Decision Center — {SITE}",
-                      "Seventeen proposals for this site, with honest status, ranked before anything "
+                      "Thirty proposals for this site, with honest status, ranked before anything "
                       "is built. Review the shortlist and choose a path.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Decision Center", "url": BASE + "suggestions.html"}))
@@ -1533,6 +1881,9 @@ phrase that reads like it was produced by filling in a template."""
         ("D · Multi-function appliances", "Questions to ask before buying a multi-function appliance", "guides/multi-function-questions.html", "Live", "Umbrella guide for the oven category"),
         ("D · Multi-function appliances", "Emeril 26QT: 24 or 25 presets, and why it matters less than fit", "Not written", "Proposed", "Turns FLG-021 into the article"),
         ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "Not written", "Proposed", "Compares P-01 and P-03 without crowning a winner"),
+        ("B · Holiday and seasonal", "Holiday hosting 2026: can an air fryer carry the big meal?", "guides/holiday-hosting.html", "Live", "Seasonal anchor of the Holiday Edit cluster (session 42617e35)"),
+        ("B · Holiday and seasonal", "The turkey thermometer game plan: instant-read, wireless, or both?", "guides/turkey-thermometer-plan.html", "Live", "Pairs the USDA minimums (S22) with P-04 and P-05"),
+        ("A · Air fryer buying", "Your air fryer's first week: what to cook, what to skip", "guides/first-week-air-fryer.html", "Live", "Evergreen onboarding; cross-links the three fryers"),
     ])
 
     standards_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td></tr>" for a, b in [
@@ -2095,7 +2446,8 @@ def build_search():
         })
     for g in GUIDES:
         index.append({"t": g["title"], "u": f"guides/{g['slug']}.html",
-                      "d": g["intro"] + " " + " ".join(h + " " + t for h, t in g["sections"]),
+                      "d": g["intro"] + " " + " ".join(h + " " + re.sub(r"<[^>]+>", " ", t)
+                                              for h, t in g["sections"]),
                       "k": "guide"})
     for extra in [("Compare all five products", "compare.html",
                    "Side by side table of capacity, temperature, power, dimensions, weight and "
@@ -2203,8 +2555,14 @@ def main():
          ("guides/small-kitchen-air-fryer.html", "Air fryer for a small kitchen",
           "Three measurements that decide it."),
          ("guides/air-fryer-thanksgiving.html", "Air fryer at Thanksgiving",
-          "What actually fits, and what does not.")],
-        ["P-01", "P-03", "P-02"])
+          "What actually fits, and what does not."),
+         ("guides/holiday-hosting.html", "Holiday hosting 2026: can an air fryer carry it?",
+          "Oven scheduling is the bottleneck."),
+         ("guides/first-week-air-fryer.html", "Your air fryer's first week",
+          "What to cook first, what to skip.")],
+        ["P-01", "P-03", "P-02"],
+        image="assets/img/cat-air-fryers.jpg",
+        image_alt="Golden potato wedges in an air fryer basket on cream linen. Editorial illustration — not a product photograph.")
     build_category(
         "meat-thermometers.html", "Meat Thermometers",
         "Meat thermometers: instant-read or walk-away",
@@ -2213,8 +2571,12 @@ def main():
         [("guides/instant-vs-wireless.html", "Instant-read or wireless: which do you need?",
           "Speed in your hand versus freedom to walk away."),
          ("guides/thermometer-accuracy.html", "How to read accuracy claims",
-          "What ±0.5 °F and NIST actually mean.")],
-        ["P-04", "P-05"])
+          "What ±0.5 °F and NIST actually mean."),
+         ("guides/turkey-thermometer-plan.html", "The turkey thermometer game plan",
+          "165 °F, and where each thermometer wins.")],
+        ["P-04", "P-05"],
+        image="assets/img/cat-thermometers.jpg",
+        image_alt="A digital thermometer probe in a golden roast chicken. Editorial illustration — not a product photograph.")
     for p in PRODUCTS:
         build_product(p)
     build_compare()

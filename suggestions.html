@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Decision Center — ShopNow Kitchen</title>
-<meta name="description" content="Seventeen proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<meta name="description" content="Thirty proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
 <link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta property="og:site_name" content="ShopNow Kitchen">
 <meta property="og:title" content="Decision Center — ShopNow Kitchen">
-<meta property="og:description" content="Seventeen proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<meta property="og:description" content="Thirty proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Decision Center", "url": "https://karagemop466-tech.github.io/Affil2/suggestions.html"}</script>
 </head>
@@ -54,7 +54,7 @@
 
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>Seventeen proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>Thirty proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
     <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
@@ -73,12 +73,12 @@
   </td>
 </tr><tr data-sug="SG-02">
   <td class="nowrap"><strong>SG-02</strong></td>
-  <td><strong>Publish question-shaped guides, then measure arrivals</strong><br><span class="small">Eight guides built from real buying decisions, each added to the sitemap and the RSS feed, each ending in a verdict.</span></td>
+  <td><strong>Publish question-shaped guides, then measure arrivals</strong><br><span class="small">Eleven guides built from real buying decisions — the original eight plus the Holiday Edit cluster from session 42617e35 — each added to the sitemap and the RSS feed, each ending in a verdict.</span></td>
   <td>Long-tail question queries are how a small site earns its first organic traffic. A guide that answers one question beats a listicle.</td>
   <td>High — organic traffic</td>
   <td>Done</td>
   <td><span class="pill shipped">Shipped</span></td>
-  <td class="small">guides.html lists eight; sitemap.xml and feed.xml include all eight.</td>
+  <td class="small">guides.html lists eleven; sitemap.xml and feed.xml include all eleven.</td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-02" aria-label="Move SG-02 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-02" aria-label="Move SG-02 down">&darr;</button>
@@ -279,6 +279,175 @@
     <button type="button" class="rankbtn" data-down="SG-17" aria-label="Move SG-17 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
+</tr><tr data-sug="SG-18">
+  <td class="nowrap"><strong>SG-18</strong></td>
+  <td><strong>Search-term aggregation for topic choice</strong><br><span class="small">Aggregate site-search terms to pick the next guide topic instead of instinct.</span></td>
+  <td>Topic choice should follow measured demand; the search event already records what readers look for, so the next guide can be chosen from evidence rather than taste.</td>
+  <td>High — editorial data</td>
+  <td>Medium — needs a deployed endpoint (Q-08)</td>
+  <td><span class="pill proposed">Proposed — needs endpoint</span></td>
+  <td class="small">Nothing to check yet: no collector is deployed, so no terms are recorded (FLG-010).</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-18" aria-label="Move SG-18 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-18" aria-label="Move SG-18 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-19">
+  <td class="nowrap"><strong>SG-19</strong></td>
+  <td><strong>Compliance gate checklist in publishing flow</strong><br><span class="small">Disclosure placement + endorsement context checked against the Operating Agreement and FTC guidance (S01 · S03 · S04).</span></td>
+  <td>Compliance is checked but not owned; a named gatekeeper makes the human half of the check repeatable instead of implicit.</td>
+  <td>Required — compliance</td>
+  <td>Low — the machine half already runs in the gate</td>
+  <td><span class="pill partial">Partial — checklist exists; named gatekeeper pending (Q-06)</span></td>
+  <td class="small">scripts/check_site.py enforces the mechanical half on every push; the human half has no name on it yet.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-19" aria-label="Move SG-19 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-19" aria-label="Move SG-19 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-20">
+  <td class="nowrap"><strong>SG-20</strong></td>
+  <td><strong>Named editor of record</strong><br><span class="small">A human byline and review record on every article; no anonymous content.</span></td>
+  <td>Readers and regulators both treat anonymous content as weaker, and a byline is how corrections get an owner.</td>
+  <td>Required — trust</td>
+  <td>Owner decision</td>
+  <td><span class="pill pending">Pending (Q-06)</span></td>
+  <td class="small">No byline appears anywhere on the site yet; Q-06 stays open until a name exists.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-20" aria-label="Move SG-20 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-20" aria-label="Move SG-20 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-21">
+  <td class="nowrap"><strong>SG-21</strong></td>
+  <td><strong>Compare page as decision tool</strong><br><span class="small">Side-by-side table with blank-for-unverified columns and source links.</span></td>
+  <td>The comparison is where a reader converts, and the blanks in it are the honesty signal that makes the rest of the table believable.</td>
+  <td>High — conversions</td>
+  <td>Done</td>
+  <td><span class="pill done">Done</span></td>
+  <td class="small">compare.html: every field row links its source; price and rating columns are absent by policy.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-21" aria-label="Move SG-21 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-21" aria-label="Move SG-21 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-22">
+  <td class="nowrap"><strong>SG-22</strong></td>
+  <td><strong>Brand + type refresh (shop feel)</strong><br><span class="small">Fraunces/Inter, warm editorial palette, original imagery, cards and tiles.</span></td>
+  <td>The site must read as a publication a person made, not an audit dump or a template.</td>
+  <td>Medium — polish</td>
+  <td>Done</td>
+  <td><span class="pill done">Done (2026-11-20)</span></td>
+  <td class="small">Fraunces + Inter load on every page (stylesheet links in any page head); original editorial art in assets/img/ carries the category and holiday pages.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-22" aria-label="Move SG-22 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-22" aria-label="Move SG-22 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-23">
+  <td class="nowrap"><strong>SG-23</strong></td>
+  <td><strong>Publishing calendar (weekly)</strong><br><span class="small">One question-shaped guide per week; add each to sitemap + feed at publish.</span></td>
+  <td>Cadence compounds. This row restates SG-16 from session 42617e35's numbering — the decision is the same and sits in one place: Q-07.</td>
+  <td>High — organic traffic</td>
+  <td>Ongoing</td>
+  <td><span class="pill proposed">Proposed — needs owner sign-off (Q-07)</span></td>
+  <td class="small">No calendar exists yet; SG-16 holds the same open decision.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-23" aria-label="Move SG-23 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-23" aria-label="Move SG-23 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-24">
+  <td class="nowrap"><strong>SG-24</strong></td>
+  <td><strong>First-party reports feeding the ledger</strong><br><span class="small">Pull clicks/sessions/orders monthly from Associates reports with dated provenance into campaign-ledger.</span></td>
+  <td>Only first-party reports turn measured clicks into evidence; nothing else may fill the ledger.</td>
+  <td>High — evidence-based iteration</td>
+  <td>Owner — enrolled account required</td>
+  <td><span class="pill proposed">Proposed — needs enrolled account</span></td>
+  <td class="small">campaign-ledger.html is still empty (0 rows); it gains a row only when an authorised report is transcribed.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-24" aria-label="Move SG-24 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-24" aria-label="Move SG-24 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-25">
+  <td class="nowrap"><strong>SG-25</strong></td>
+  <td><strong>Flagged-for-review workflow</strong><br><span class="small">Conflicts and gaps published in plain language with source links; never blocking.</span></td>
+  <td>Publishing what we could not verify is what keeps the verified parts trustworthy.</td>
+  <td>High — honesty</td>
+  <td>Done</td>
+  <td><span class="pill done">Done</span></td>
+  <td class="small">flagged.html lists every flag with severity, owner status and source links; the gate runs regardless of how many flags exist.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-25" aria-label="Move SG-25 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-25" aria-label="Move SG-25 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-26">
+  <td class="nowrap"><strong>SG-26</strong></td>
+  <td><strong>Internal linking clusters</strong><br><span class="small">Guide ↔ product ↔ compare cross-links so readers and crawlers find everything.</span></td>
+  <td>Clusters spread authority inside the site and give a reader the next useful click instead of a dead end.</td>
+  <td>Medium — SEO</td>
+  <td>Done</td>
+  <td><span class="pill done">Done</span></td>
+  <td class="small">Every page carries nav + footer links; guides link their products; the gate fails on any broken internal link.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-26" aria-label="Move SG-26 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-26" aria-label="Move SG-26 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-27">
+  <td class="nowrap"><strong>SG-27</strong></td>
+  <td><strong>Nav labels: reader-first navigation</strong><br><span class="small">Top nav leads with the reader's path (Air Fryers, Meat Thermometers, All products, Guides, Compare); every dashboard surface lives in one footer group (Studio &amp; records).</span></td>
+  <td>A reader should never hunt through audit machinery to find a product, and the machinery should live in one labelled drawer.</td>
+  <td>Medium — usability</td>
+  <td>Done</td>
+  <td><span class="pill done">Done (2026-11-20)</span></td>
+  <td class="small">Any page footer: one group labelled 'Studio &amp;amp; records' holds every dashboard surface; the primary nav is product-first.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-27" aria-label="Move SG-27 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-27" aria-label="Move SG-27 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-28">
+  <td class="nowrap"><strong>SG-28</strong></td>
+  <td><strong>Shipped RSS feed</strong><br><span class="small">feed.xml carries every guide with dates; it is linked from every page head and the footer.</span></td>
+  <td>RSS gives readers a way to follow the publication without any third party owning the relationship.</td>
+  <td>Medium — distribution</td>
+  <td>Done</td>
+  <td><span class="pill done">Done (2026-11-20)</span></td>
+  <td class="small">feed.xml lists every guide with pubDate; every page links it; the gate fails if a guide is missing from the feed.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-28" aria-label="Move SG-28 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-28" aria-label="Move SG-28 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-29">
+  <td class="nowrap"><strong>SG-29</strong></td>
+  <td><strong>Search Console property + sitemap submission</strong><br><span class="small">Verify karagemop466-tech.github.io/Affil2 in Search Console; submit sitemap.xml; watch queries.</span></td>
+  <td>Query data decides what to write next; without it, topic choice stays instinct (pairs with SG-10).</td>
+  <td>High — findability</td>
+  <td>Owner — needs a Google account</td>
+  <td><span class="pill pending">Pending — needs owner Google account</span></td>
+  <td class="small">No Search Console proof exists; SG-10 holds the same open credential.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-29" aria-label="Move SG-29 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-29" aria-label="Move SG-29 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-30">
+  <td class="nowrap"><strong>SG-30</strong></td>
+  <td><strong>Reader capture: RSS + email</strong><br><span class="small">RSS live; email newsletter signup requires the owner's provider choice and privacy wording.</span></td>
+  <td>An owned audience is the only audience a small publication keeps without paying for reach each time.</td>
+  <td>Medium — retention</td>
+  <td>Owner — provider + privacy wording</td>
+  <td><span class="pill partial">Partial — RSS live, email pending (Q-09)</span></td>
+  <td class="small">feed.xml is live and linked from every page; no email signup form exists yet.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-30" aria-label="Move SG-30 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-30" aria-label="Move SG-30 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
 </tr></tbody>
 </table>
 <p class="cta">
@@ -300,6 +469,9 @@
     <tr><td>SG-15</td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
     <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
     <tr><td>SG-17</td><td>Approve the Design &amp; Traffic Brief as the next build</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-19</td><td>Name the compliance gatekeeper for the publishing flow</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-20</td><td>Name the editor of record and put a byline on the site</td><td>Owner (decision)</td></tr>
+    <tr><td>SG-24</td><td>Enrol an account so first-party reports can fill the ledger</td><td>Owner (account access)</td></tr>
   </tbody>
 </table>
 
@@ -334,7 +506,7 @@
   <div class="wrap">
     <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
-    <p class="dash">Records and dashboards: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+    <p class="dash">Studio &amp; records: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,

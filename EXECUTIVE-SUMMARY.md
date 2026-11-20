@@ -88,3 +88,11 @@ Zero, and no forecast. No commission rate, click, session or order figure is pre
 - FTC Endorsement Guides FAQ re-fetched; disclosure-above-the-fold requirement reaffirmed.
 - No register corrections were required. 30 pages build; `check_site.py` passes ALL CHECKS.
 - New: `design-brief.html` — the Design & Traffic Brief (SG-17).
+
+## Added by the PR #22 merge (2026-11-20, integration session arena/de608df7, task T-19)
+- The Decision Center now carries SG-01..SG-30. Rows SG-18..SG-30 came from session 42617e35: search-term aggregation, the compliance-gate checklist, a named editor of record, the compare tool, the brand/type refresh, the publishing calendar, first-party reports into the ledger, the flagged-for-review workflow, internal linking clusters, reader-first nav labels with the "Studio & records" footer group, the shipped RSS feed, a Search Console property, and reader capture. Open owner decisions (including SG-19, SG-20, SG-24) sit in the shortlist.
+- The Holiday Edit cluster is published: "Holiday hosting 2026: can an air fryer carry the big meal?", "The turkey thermometer game plan: instant-read, wireless, or both?" (USDA 165 °F with the FSIS chart cited) and the evergreen "Your air fryer's first week". All three are in guides.html, sitemap.xml and feed.xml — 11 feed items, 33 sitemap URLs — with original editorial art (assets/img/) on the front page, both category pages and the shop page.
+- Brand type is Fraunces/Inter (SG-22), the footer dashboard group is named "Studio & records" (SG-27), and feed.xml is linked from every page head (SG-28).
+- `analytics-endpoint/` (reference worker + contract README) ships alongside the measurement layer; deploying any collector remains owner-gated (Q-08, FLG-010).
+- Integration verification: `scripts/check_site.py` ALL CHECKS PASS on 33 regenerated pages; feed.xml and sitemap.xml parse as valid XML; every guide file is present in the feed.
+
