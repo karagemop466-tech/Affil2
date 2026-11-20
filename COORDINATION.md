@@ -1393,3 +1393,13 @@ because parallel sessions read the same stale prompt. Flag IDs are safe (monoton
 - **Not re-verified this session:** Associates agreement wording, tracking-ID issuance, the one-per-product Special Link test (requires the owner's Associates account; FLG-004), analytics endpoint, Search Console.
 - **Conflict log:** none. Branch `arena/614b9fe7-affil2` at `main` 4ddede5 when claimed; no other session's claims touched.
 
+
+### Session `arena/614b9fe7-affil2` (T-26) — PR, merge and deploy result
+
+| Field | Value |
+|-------|-------|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/55 |
+| Merge | merged into `main` as `cac85d126bb920b3ebb48fbab7791ffb21f0c2a0` |
+| CI before merge | "Regenerate and gate" — pass; "Verify site" — success |
+| Pages | latest build `built` at `b1362ba4…`, https://karagemop466-tech.github.io/Affil2/ |
+| Gate at merge | 36 pages, 5 product records, 51 flags, 19 sources — ALL CHECKS PASS |
