@@ -592,7 +592,7 @@
  {
   "id": "FLG-054",
   "title": "Verification log weight rows are stale for P-01 and P-03",
-  "detail": "The published Verification Log (data/verification.json, rendered on verification.html) still records the P-01 and P-03 item-weight rows as 'unverified — blank', with the method note 'No weight appears in the fetched listing text'. The register (data/products.json) and both product pages publish these weights as verified from the official Product information Measurements tables: P-01 13.3 pounds and P-03 12.8 pounds (see FLG-022 deep-table pass). The two documents contradict each other on the same field. The verification-log rows reflect an earlier, shallower fetch and were preserved untouched by later passes (additive-only rule). No product value is changed by this flag; the register stays authoritative and the stale rows need a correction pass over data/verification.json.",
+  "detail": "The published Verification Log (data/verification.json, rendered on verification.html) still records the P-01 and P-03 item-weight rows as 'unverified — blank', with the method note 'No weight appears in the fetched listing text'. The register (data/products.json) and both product pages publish these weights as verified from the official Product information Measurements tables: P-01 13.3 pounds and P-03 12.8 pounds (deep-table pass recorded on this page as an earlier flag). The two documents contradict each other on the same field. The verification-log rows reflect an earlier, shallower fetch and were preserved untouched by later passes (additive-only rule). No product value is changed by this flag; the register stays authoritative and the stale rows need a correction pass over data/verification.json.",
   "links": [
    "S10",
    "S12"
