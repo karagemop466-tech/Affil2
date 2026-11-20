@@ -308,19 +308,38 @@ unused = flag_ids - flag_refs
 if unused:
     err(f"flags defined but never published on a page: {sorted(unused)}")
 
+# ---------------------------------------------------------------- every cross-reference resolves
+_src_ids = {s["id"] for s in json.loads((ROOT / "data" / "sources.json").read_text())}
+_sg_ids = {m for m in re.findall(r'dict\(id="(SG-\d\d)"', (ROOT / "scripts" / "build_site.py").read_text())}
+_q_ids = {m for m in re.findall(r'\("(Q-\d\d)"', (ROOT / "scripts" / "build_site.py").read_text())}
+for p in pages:
+    txt = p.read_text()
+    for ref in set(re.findall(r"\bS\d\d\b|\bFLG-\d{3}\b|\bSG-\d\d\b|\bQ-\d\d\b", txt)):
+        if ref.startswith("FLG") and ref not in flag_ids:
+            err(f"{p.relative_to(ROOT)}: cites {ref}, which is not a defined flag")
+        elif ref.startswith("SG") and ref not in _sg_ids:
+            err(f"{p.relative_to(ROOT)}: cites {ref}, which is not a defined suggestion")
+        elif ref.startswith("Q-") and ref not in _q_ids:
+            err(f"{p.relative_to(ROOT)}: cites {ref}, which is not a defined question")
+        elif re.fullmatch(r"S\d\d", ref) and ref not in _src_ids:
+            # flagged.html is the register of gaps, so it has to be able to name a missing source
+            if p.name != "flagged.html":
+                err(f"{p.relative_to(ROOT)}: cites source {ref}, which is not in sources.json")
+
 # ---------------------------------------------------------------- front page leads with products
 home = (ROOT / "index.html").read_text()
-above_products = home.split("<h2>The three we would start with</h2>")[0]
+_body = home[home.index("<main"):home.index("</main>")]
+# The cover, the shop directory and the first product section must all come before the page starts
+# explaining itself; the dashboards live in the footer and nowhere in the page body.
 for bad in ("Flagged for Review", "Decision Center", "Open Questions", "Source register"):
-    if bad in above_products:
-        err(f"index.html: '{bad}' appears above the product section; the front page must lead with products")
-card_total = home.count('class="card"')
-if card_total < 3:
+    if bad in _body:
+        err(f"index.html: '{bad}' appears in the page body; dashboards belong in the footer")
+if _body.index("Three places to start") > _body.index("Start with your question"):
+    err("index.html: the guide list appears before the product picks")
+if _body.count('class="card"') < 3:
     err("index.html: fewer than three product cards")
-if 'rel="sponsored nofollow"' not in home.split("<h2>Also worth a look</h2>")[0]:
-    err("index.html: no sponsored product link appears before the second product section")
-if "/suggestions.html" in re.sub(r"<footer>.*?</footer>", "", home, flags=re.S):
-    err("index.html: dashboard links belong in the footer, not the body")
+if 'rel="sponsored nofollow"' not in _body.split("Also worth a look")[0]:
+    err("index.html: no sponsored product link before the second product section")
 
 # ---------------------------------------------------------------- sitemap + feed
 sm_text = (ROOT / "sitemap.xml").read_text()

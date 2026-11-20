@@ -78,10 +78,11 @@ that were not in the fetched listing text (FLG-022, FLG-040).
 
 ## Honest position on revenue
 
-Zero, and no forecast. The published Standard Commission Income Statement lists Kitchen at a 4.50%
-fixed rate (S23); the Onsite Associates table lists Kitchen at 1.25% (S24), and that is a different
-program from a website's standard commission. Neither is a forecast, and the rate that applies to this
-specific account has not been read in Associates Central (Q-17). No click, session or order figure is
+Zero, and no forecast. The Standard Commission Income Statement publishes a 4.50% band that Kitchen
+falls into (S23). A separate Onsite Associates table publishes 1.25% for content that Amazon places on
+its own pages (S24) — a different arrangement from a website link, included here only so the two
+numbers are not confused. Neither is a forecast, and the rate attached to this specific account has
+not been read in Associates Central (Q-17). No click, session or order figure is
 presented because nothing from an authorised first-party report exists yet. `campaign-ledger.html` is
 intentionally empty, with its schema and provenance rule written down so the first real row can be
 added without redesigning the page.

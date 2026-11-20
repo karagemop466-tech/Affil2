@@ -127,9 +127,9 @@
   },
   {
     "id": "S24",
-    "name": "Amazon Associates — Onsite Associates Program Commission Income (Table A)",
+    "name": "Amazon Associates — Onsite Associates Program Commission Income Statement (Table A non-Creators, Table B Creators Ads)",
     "url": "https://affiliate-program.amazon.com/help/node/topic/G4ARBJC7Z2NK48CA",
-    "used_for": "Table A lists Kitchen at 1.25% for Onsite Associates (Amazon-native placements), which is a different program from a website's Standard Commission Income. Recorded so the two tables are not confused.",
+    "used_for": "Read verbatim this pass. Table A lists Kitchen at 1.25% for Direct Qualifying Purchases of Onsite content (content Amazon places on its own pages, not a website Special Link). Table B lists Kitchen at 2.25% for Creators Ads. Recorded so the Onsite table is not mistaken for the website commission table.",
     "checked": "2026-11-20"
   }
 ]

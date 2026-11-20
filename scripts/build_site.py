@@ -1185,12 +1185,13 @@ def build_how():
   <li><strong>We have not cooked with any of these.</strong> There is no hands-on test, no
     side-by-side taste trial, and no measured performance. Nothing on this site implies otherwise
     (FLG-032).</li>
-  <li><strong>What we earn.</strong> Amazon publishes its rates. The Standard Commission Income
-    Statement lists Kitchen inside the 4.50% band; the Onsite Associates table lists Kitchen at 1.25%,
-    which applies to Amazon-native placements rather than to a website. This site is a website, so the
-    4.50% line is the relevant published figure. It is a table, not a forecast, and the rate that
-    applies to this specific account has not been read in Associates Central (Q-17). See sources
-    S23 and S24.</li>
+  <li><strong>What we earn.</strong> Amazon publishes its rates, and there are two tables. The
+    Standard Commission Income Statement puts Kitchen in its 4.50% band, which is the rate a website
+    link earns. The Onsite Associates Program is a different arrangement in which Amazon places the
+    publisher's content on Amazon itself; its Table A lists Kitchen at 1.25%. This site is not Onsite
+    content, so 4.50% is the published figure that would apply here. Neither is a forecast, and the
+    rate that applies to this specific account has not been read in Associates Central (Q-17).
+    Sources S23 and S24.</li>
   <li><strong>We have not seen the certificates.</strong> NIST and NSF appear on the listings. We have
     not been given the documents or an independent test report (FLG-035).</li>
   <li><strong>We have not confirmed the submitted short links.</strong> Their compliance status is
@@ -1374,7 +1375,8 @@ SUGGESTIONS = [
          impact="High — organic traffic", effort="Done", status="Shipped",
          verify="guides.html lists twelve; sitemap.xml and feed.xml include all twelve."),
     dict(id="SG-21", title="Say what the commission rate is, from the published table",
-         what="The Standard Commission Income Statement lists Kitchen at 4.50% for website Associates. "
+         what="The Standard Commission Income Statement lists Kitchen at 4.50% for website Associates, "
+          "and the separate Onsite Associates table lists 1.25% for Amazon-placed content. "
               "The site now states that, names the source, and separates it from the Onsite rate.",
          why="A buyer-facing site that earns commission should be able to say what the published rate is. "
              "It is a table, not a forecast, and it is checkable.",
@@ -1598,8 +1600,9 @@ QUESTIONS = [
      "and no matching page.",
      "The publishing cadence (SG-16, SG-10)", "Owner", "No query data"),
     ("Q-17", "Is the 4.50% Kitchen rate the one that applies to this account?",
-     "The published Standard Commission Income Statement lists Kitchen at 4.50%. The rate that applies "
-     "to a specific account is confirmed in Associates Central, and it can differ by program.",
+     "The Standard Commission Income Statement lists Kitchen at 4.50% for website Associates. The "
+     "Onsite Associates Program is a separate arrangement where Amazon places the content, and its "
+     "table lists Kitchen at 1.25%. Only Associates Central shows the rate attached to this account.",
      "Read the Commission Income Statement inside the account and compare it with S23. Record the "
      "answer with a date.",
      "Any statement about earnings (SG-21)", "Owner", "Published table only"),
@@ -2084,12 +2087,13 @@ def build_exec():
     report has been seen (FLG-035).</li>
   <li><strong>Hands-on experience.</strong> None. Nothing on this site implies it was tested
     (FLG-032).</li>
-  <li><strong>What we earn.</strong> Amazon publishes its rates. The Standard Commission Income
-    Statement lists Kitchen inside the 4.50% band; the Onsite Associates table lists Kitchen at 1.25%,
-    which applies to Amazon-native placements rather than to a website. This site is a website, so the
-    4.50% line is the relevant published figure. It is a table, not a forecast, and the rate that
-    applies to this specific account has not been read in Associates Central (Q-17). See sources
-    S23 and S24.</li>
+  <li><strong>What we earn.</strong> Amazon publishes its rates, and there are two tables. The
+    Standard Commission Income Statement puts Kitchen in its 4.50% band, which is the rate a website
+    link earns. The Onsite Associates Program is a different arrangement in which Amazon places the
+    publisher's content on Amazon itself; its Table A lists Kitchen at 1.25%. This site is not Onsite
+    content, so 4.50% is the published figure that would apply here. Neither is a forecast, and the
+    rate that applies to this specific account has not been read in Associates Central (Q-17).
+    Sources S23 and S24.</li>
 </ul>
 
 <h2>5. The six listing conflicts a buyer should know about</h2>
@@ -2222,7 +2226,7 @@ def build_disclosure():
     <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td></tr>
     <tr><td><code>search</code></td><td>A search query returns results</td>
       <td>What readers look for and do not find</td></tr>
-    <tr><td><code>suggestion_rank</code></td><td>A proposal is reordered on the Decision Center</td>
+    <tr><td><code>suggestion_rank</code></td><td>A proposal is reordered on the Suggestions page</td>
       <td>Which direction is actually preferred</td></tr>
   </tbody>
 </table>
@@ -2357,7 +2361,7 @@ def build_search():
   <input id="sq" name="q" type="search" placeholder="Try: two baskets, 450, wireless, capacity">
   <button type="submit">Search</button>
 </form>
-<p class="small" id="searchMeta">Searching across {len(index)} pages on this site. Nothing is sent to
+<p class="small" id="searchMeta">Searching across {len(BUILT) + 1} pages on this site. Nothing is sent to
   a server &mdash; the index is embedded below and matched in your browser.</p>
 <div id="results" class="results" aria-live="polite"></div>
 <script type="application/json" id="searchIndex">{idx}</script>

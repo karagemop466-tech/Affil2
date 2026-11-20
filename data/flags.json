@@ -305,10 +305,12 @@
   },
   {
     "id": "FLG-028",
-    "title": "Requested sources S07 and S24 not in this repo",
-    "detail": "The task brief references S07 and S24. They are not in data/sources.json and were not found in the repository, so they are not cited.",
+    "title": "Requested source S07 is not in this repo",
+    "detail": "The task brief references S07. It is not in data/sources.json and was not found in the repository, so it is not cited. S24 was missing at the time this flag was opened and has since been added — it is the Onsite Associates commission table, kept separate from S23 so the two rate tables are not confused.",
     "links": [
-      "S01"
+      "S01",
+      "S23",
+      "S24"
     ],
     "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
