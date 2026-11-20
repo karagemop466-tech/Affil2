@@ -1,71 +1,121 @@
 [
- {
-  "id": "S01",
-  "name": "Amazon Associates Operating Agreement",
-  "url": "https://affiliate-program.amazon.com/help/node/topic/202093820",
-  "used_for": "Disclosure statement wording (Section 5)",
-  "verify_note": "Re-fetch 2026-11-20 failed (login-gated/blocked to automated fetch). URL provided for manual review; wording basis carried from 2026-11-20 verification log (session 530c2e6c). Marked MANUAL REVIEW."
- },
- {
-  "id": "S02",
-  "name": "Amazon Associates Program Policies",
-  "url": "https://affiliate-program.amazon.com/help/node/topic/202131110",
-  "used_for": "Price-display rule §2(b); no hardcoded prices",
-  "verify_note": "Re-fetch 2026-11-20 failed (login-gated/blocked to automated fetch). URL provided for manual review; wording basis carried from 2026-11-20 verification log (session 530c2e6c). Marked MANUAL REVIEW."
- },
- {
-  "id": "S03",
-  "name": "FTC Endorsement Guides — What People Are Asking",
-  "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
-  "used_for": "Affiliate disclosure: clear and conspicuous, near the link",
-  "verify_note": "Re-verified live 2026-11-20 (session 42617e35)."
- },
- {
-  "id": "S04",
-  "name": "Google — Qualify outbound links",
-  "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
-  "used_for": "rel=sponsored for paid/affiliate links",
-  "verify_note": "Re-verified live 2026-11-20 (session 42617e35)."
- },
- {
-  "id": "S10",
-  "name": "Amazon listing B0CDY277D3 (P-01)",
-  "url": "https://www.amazon.com/dp/B0CDY277D3",
-  "used_for": "P-01 title, model, specs",
-  "verify_note": "Identity + live title re-verified 2026-11-20 (session 42617e35)."
- },
- {
-  "id": "S11",
-  "name": "Amazon listing B09B7SB46R (P-02)",
-  "url": "https://www.amazon.com/dp/B09B7SB46R",
-  "used_for": "P-02 title, model, specs",
-  "verify_note": "Identity + live title re-verified 2026-11-20 (session 42617e35)."
- },
- {
-  "id": "S12",
-  "name": "Amazon listing B08DKYBTPH (P-03)",
-  "url": "https://www.amazon.com/dp/B08DKYBTPH",
-  "used_for": "P-03 title, model, specs",
-  "verify_note": "Identity + live title re-verified 2026-11-20 (session 42617e35)."
- },
- {
-  "id": "S13",
-  "name": "Amazon listing B0DHZTCNR5 (P-04)",
-  "url": "https://www.amazon.com/dp/B0DHZTCNR5",
-  "used_for": "P-04 title, model, specs",
-  "verify_note": "Identity + live title re-verified 2026-11-20 (session 42617e35)."
- },
- {
-  "id": "S14",
-  "name": "Amazon listing B0DZFD6R9Z (P-05)",
-  "url": "https://www.amazon.com/dp/B0DZFD6R9Z",
-  "used_for": "P-05 title, model, specs",
-  "verify_note": "Identity + live title re-verified 2026-11-20 (session 42617e35)."
- },
- {
-  "id": "S15",
-  "name": "USDA FSIS — Safe Minimum Internal Temperature Chart",
-  "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
-  "used_for": "Poultry 165°F, leftovers 165°F, steaks 145°F + 3-min rest (turkey guide, verified 2026-11-20)"
- }
+  {
+    "id": "S01",
+    "name": "Amazon Associates Program Operating Agreement (Section 5: disclosure wording)",
+    "url": "https://affiliate-program.amazon.com/help/operating/agreement",
+    "used_for": "Disclosure statement “As an Amazon Associate I earn from qualifying purchases.” (§5). Verified text matches site wording.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S02",
+    "name": "Amazon Associates Program Policies (Participation Requirements §2(b), §6(t), §6(w), §6(y))",
+    "url": "https://affiliate-program.amazon.com/help/operating/policies",
+    "used_for": "§2(b): prices/availability only if Amazon serves the link or via API. §6(t): no star ratings unless via API. §6(w): link shorteners must not make the Amazon destination unclear. §6(y): no price-tracking functionality.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S03",
+    "name": "FTC — Endorsement Guides: What People Are Asking",
+    "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
+    "used_for": "Material connections (paid/affiliate) should be disclosed clearly and conspicuously.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S04",
+    "name": "Google Search Central — Qualify your outbound links",
+    "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
+    "used_for": "rel=\"sponsored\" for paid/affiliate links (verified text).",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S10",
+    "name": "Amazon listing B0CDY277D3 (P-01) — checked directly",
+    "url": "https://www.amazon.com/dp/B0CDY277D3",
+    "used_for": "P-01 title, model, dimensions, power, temperature, warranty",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S11",
+    "name": "Amazon listing B09B7SB46R (P-02) — checked directly",
+    "url": "https://www.amazon.com/dp/B09B7SB46R",
+    "used_for": "P-02 title, capacity, dimensions, preset conflict",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S12",
+    "name": "Amazon listing B08DKYBTPH (P-03) — checked directly",
+    "url": "https://www.amazon.com/dp/B08DKYBTPH",
+    "used_for": "P-03 title, model, capacity, dimensions, power, presets, warranty",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S13",
+    "name": "Amazon listing B0DHZTCNR5 (P-04) — checked directly",
+    "url": "https://www.amazon.com/dp/B0DHZTCNR5",
+    "used_for": "P-04 title, response time, accuracy, certification, included components",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S14",
+    "name": "Amazon listing B0DZFD6R9Z (P-05) — checked directly",
+    "url": "https://www.amazon.com/dp/B0DZFD6R9Z",
+    "used_for": "P-05 title, probes, sensors, connectivity, battery, warranty",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S15",
+    "name": "Short link link.amazon/B04G1MEwY (P-01) — followed redirect",
+    "url": "https://link.amazon/B04G1MEwY",
+    "used_for": "Observed redirect target B0CDY277D3",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S16",
+    "name": "Short link link.amazon/B02NbDxp3 (P-02) — followed redirect",
+    "url": "https://link.amazon/B02NbDxp3",
+    "used_for": "Observed redirect target B09B7SB46R",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S17",
+    "name": "Short link link.amazon/B00hJ57DV (P-03) — followed redirect",
+    "url": "https://link.amazon/B00hJ57DV",
+    "used_for": "Observed redirect target B08DKYBTPH",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S18",
+    "name": "Short link link.amazon/B0c8moW59 (P-04) — redirect NOT resolved (checkpoint page)",
+    "url": "https://link.amazon/B0c8moW59",
+    "used_for": "Shows the short link did not reach a product page on 2026-11-20 (FLG-012)",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S19",
+    "name": "Short link link.amazon/B0f3GKalj (P-05) — followed redirect",
+    "url": "https://link.amazon/B0f3GKalj",
+    "used_for": "Observed redirect target B0DZFD6R9Z",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S20",
+    "name": "Amazon Creators API — Register for Creators API (onboarding requirements)",
+    "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api",
+    "used_for": "Access is limited to Associates whose account has been reviewed and received final acceptance into the program, and who have referred qualified sales. Only the primary account owner can register. This is the gate on any automated product-data pipeline. Checked verbatim against the page on 2026-11-20.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S21",
+    "name": "Amazon Creators API — PA-API 5 deprecation notice",
+    "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation",
+    "used_for": "States that Amazon Product Advertising API 5.0 is deprecated and that existing calls receive HTTP 403 Forbidden with AccessDeniedException; the supported successor is the Creators API.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S22",
+    "name": "USDA FSIS — Safe Minimum Internal Temperature Chart",
+    "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
+    "used_for": "Official minimum internal cooking temperatures: poultry 165 F (73.9 C); ground meats 160 F (71.1 C); beef, pork, veal and lamb steaks, chops and roasts 145 F (62.8 C) with a 3-minute rest; fish and shellfish 145 F (62.8 C); leftovers and casseroles 165 F (73.9 C). Any doneness figure on this site must defer to this chart.",
+    "checked": "2026-11-20"
+  }
 ]
