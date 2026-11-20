@@ -113,10 +113,10 @@ GUIDES = [
             the same page claims IP67 waterproof, and the CHEF iQ Sense page states waterproof,
             dishwasher-safe probes. Read the care field on your unit before you dunk anything.""",),
          ],
-         verdict="""Run the ice-water test before the first cook that matters: 32&nbsp;&deg;F after
-         30&nbsp;seconds in a properly stirred slurry means the cold end of your thermometer is honest,
+         verdict="""Run the ice-water test before the first cook that matters: 32 °F after
+         30 seconds in a properly stirred slurry means the cold end of your thermometer is honest,
          and if the unit cannot be adjusted, USDA's advice is to replace it. Anything tighter than that
-         &mdash; a &plusmn;0.5&nbsp;&deg;F claim, a certificate mentioned in the box list &mdash; is a
+         — a ±0.5 °F claim, a certificate mentioned in the box list — is a
          statement on a listing until your own glass says otherwise.""",
          extra=ICE_STEPS + "\n" + USDA_SPEED_TABLE + "\n" + CLUSTER_LINKS % (
              'The claim this test checks is written up in '
@@ -127,7 +127,7 @@ GUIDES = [
              '<a href="../products/p05-chefiq-sense-gen3.html">CHEF iQ Sense</a>.')),
 
     dict(slug="read-an-air-fryer-listing",
-         title="How to read an air fryer listing: what &ldquo;Hi-Fry&rdquo; and 24 presets actually tell you",
+         title="How to read an air fryer listing: what “Hi-Fry” and 24 presets actually tell you",
          sub="The title, the bullets and the specification table are three different sources stapled "
              "onto one page. Here is which one to trust for which number.",
          kicker="Explainer · how we read listings", products=["P-01", "P-02", "P-03"],
@@ -183,7 +183,7 @@ GUIDES = [
             its link rather than our memory.""",),
          ],
          verdict="""Trust the structured field over the bullet and the title. Where two fields disagree,
-         the number is unsettled &mdash; ask the seller instead of choosing the flattering one. And
+         the number is unsettled — ask the seller instead of choosing the flattering one. And
          measure depth before you compare quarts: the counter decides the purchase, and a single layer
          decides the cooking.""",
          extra=CLUSTER_LINKS % (

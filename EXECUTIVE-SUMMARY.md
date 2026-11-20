@@ -5,7 +5,7 @@ Live site https://karagemop466-tech.github.io/Affil2/ · Full version with sourc
 
 ## What this is
 A static publication-style Amazon affiliate site covering five submitted products in two categories:
-three air fryers and two meat thermometers across 33 generated HTML pages (including 9 buying guides). Every specification is read
+three air fryers and two meat thermometers across 38 generated HTML pages (including 13 buying guides). Every specification is read
 from the official Amazon listing (including deep `Product information` tables), dated and linked.
 Where two parts of one listing disagree, both figures are printed and the disagreement is flagged.
 No price, star rating, review count or best-seller rank is reproduced, because Amazon's Program
@@ -27,7 +27,7 @@ Amazon checkpoint/HTTP 500 pages four times (FLG-012). On follow-up re-test (`ar
 `B0c8moW59 -> B0DHZTCNR5`. Redirects can still behave inconsistently between visits (FLG-011), so each
 observed ASIN remains a dated snapshot rather than owner-confirmed intent (FLG-001).
 
-## Sources (19 official sources in `data/sources.json`)
+## Sources (20 official sources in `data/sources.json`)
 - S01 Operating Agreement §5 — https://affiliate-program.amazon.com/help/operating/agreement
 - S02 Program Policies (Commission Income §2(d)/(e)/(g), Participation §2(a)/(b), §5 ML restriction, §6(t)/(v)/(w)/(y), IP License §1, §2(e)/(h)/(i)/(k), §4 Agent Terms) — https://affiliate-program.amazon.com/help/operating/policies
 - S03 FTC Endorsement Guides FAQ — https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking
@@ -107,7 +107,47 @@ or unpublished flag exists. CI runs regeneration, drift detection, `check_site.p
 ## Verification log (2026-11-20, session arena/9f19fe6b-affil2)
 - Synced cleanly with `origin/main` (`21424ae`, preserving PRs #17–#36 including `design-brief.html`, storefront photos, `pairCompare`, `guides/first-week-air-fryer.html`, and dated `sources.html` changelog).
 - Verified all 5 `link.amazon/*` short links, deep chunks across all 5 `/dp/` product pages, and official docs (`S01`–`S04`, `S20`–`S24`) live on 2026-11-20.
-- `python3 -B scripts/build_site.py` built all 33 pages idempotently.
-- `python3 -B scripts/check_site.py` passed (`checked 33 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`).
+- `python3 -B scripts/build_site.py` built all 38 pages idempotently.
+- `python3 -B scripts/check_site.py` passed (`checked 38 pages, 5 product records, 43 flags, 20 sources — ALL CHECKS PASS`).
 - `python3 -B -m unittest discover -s tests -p "test_*.py" -v` passed (3 tests OK).
 - `node tests/test_collector.js` passed (collector server, Cloudflare Pages Function, and client JS DOM/search/nav/CSV/telemetry tests).
+
+
+## Shop-first polish pass (2026-11-20, session arena/93894704-affil2 · T-21)
+
+What changed for a reader, and what the gate now refuses to publish:
+
+- **Buyer-facing copy is no longer an audit.** Internal `FLG-` register codes were printed inside product
+  card trade-offs, comparison cells, image captions, guide prose and the footer. The substance stays; the
+  ticket number does not. Codes remain on `flagged.html`, `sources.html`, `verification.html`, the
+  questions/suggestions registers and the product-intent record at the foot of each product page, which
+  every card now links to ("why we say that"). `check_site.py` fails if a code reappears in the visible
+  copy of the front page, shop, category, compare or guide pages.
+- **Read times are measured, not asserted.** Guides previously claimed 4–7 minute reads over copy that
+  runs 281–450 words. `guide_minutes()` now derives the figure from the guide's own word count (225 wpm,
+  rounded up) at build time, and the gate re-derives it from each rendered page. Logged as FLG-041.
+- **Pages are signed.** Every guide and product page carries a dated byline (The Kitchen Desk · verified
+  against the official listing on 2026-11-20 · links to the authorship note). The byline is a role, not a
+  person: Google's people-first guidance (new source **S25**) encourages accurate authorship and calls
+  fabricated names, headshots and credentials deceptive, so a named editor of record stays an open item
+  (FLG-033, Q-06) rather than a fiction.
+- **Two new sourced guides.** `guides/thermometer-ice-test.html` walks USDA FSIS's own ice-water
+  calibration test (stem ≥2 in, ≥30 s, should read 32 °F; "most food thermometers will give an accurate
+  reading within 2 to 4 degrees F") and reads that baseline against the P-04 listing's ±0.5 °F and
+  "calibration certificate" claims — recorded as FLG-043, still unverified, not restated as measured.
+  `guides/read-an-air-fryer-listing.html` teaches title vs bullets vs the structured spec table using
+  only contradictions already in the dated register. Both are in the sitemap, the feed and the on-site
+  search index; neither makes a performance, popularity or volume claim.
+- **The Decision Center now hands over the work.** Ticking proposals in `suggestions.html` assembles a
+  copy-paste build prompt (chosen IDs, each one's what/why/cost/definition of done, the repo's standing
+  constraints, and the unresolved owner questions). It is rendered server-side from the same JSON the
+  browser uses, so `tests/test_collector.js` can and does assert the two agree. Five new proposals
+  (SG-33…SG-38) record this pass with how to verify each one.
+- **A markup leak found by reading the built pages, not the source.** Three guides escaped copy that had
+  been authored with entities, so readers were shown the literal markup (`&mdash;`, a plusmn entity) where
+  the sentence meant an em dash and ±0.5 °F. The generator now decodes named and numeric entities before
+  escaping, every page rebuilt clean, and the gate fails on any visible entity sequence. Logged FLG-044.
+- **Register state:** 44 flags (FLG-041/042/044 corrected, FLG-043 open), 20 sources (+S25), 13 guides,
+  38 pages. Prices, ratings, review counts, sales ranks and commission figures remain absent by design
+  (Program Policies §2(b), §6(t)); the analytics endpoint, Search Console verification, the one-per-product
+  Special Link test, a custom domain and a named editor remain owner-gated and are published as such.

@@ -13,18 +13,18 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | If you want | Read |
 |---|---|
 | The short version | `EXECUTIVE-SUMMARY.md` |
-| What to decide next | `suggestions.html` — Decision Center, 32 proposals, rankable |
+| What to decide next | `suggestions.html` — Decision Center, 37 proposals, rankable, and it assembles the next build prompt |
 | The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
-| What is still unanswered | `questions.html` — Open Questions, 20 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 40 flags, every one sourced |
-| Where every fact came from | `sources.html` — Source Register, 19 official sources + dated changelog |
+| What is still unanswered | `questions.html` — Open Questions, 20 rows, each with how to go and get the answer |
+| What could not be verified | `flagged.html` — Flagged for Review, 44 flags, every one sourced |
+| Where every fact came from | `sources.html` — Source Register, 20 official sources + dated changelog |
 | AI platform blueprint & gates | `platform.html` — 7-module architecture & Creators API / ML policy limits (SG-31) |
 | Telemetry & collector guide | `measurement.html` — 5-event privacy schema & Search Console checklist (SG-25) |
 | How the site is built | `scripts/build_site.py` |
 
 ## Rebuild and check
 
-    python3 scripts/build_site.py                          # writes 33 pages, sitemap.xml, feed.xml, robots.txt
+    python3 scripts/build_site.py                          # writes 38 pages, sitemap.xml, feed.xml, robots.txt
     python3 scripts/check_site.py                          # compliance and integrity gate; exits 1 on any problem
     python3 -m unittest discover -s tests -p "test_*.py" -v
     node tests/test_collector.js                           # collector server, Cloudflare function & client DOM tests
@@ -39,8 +39,8 @@ generator output, if the gate fails, or if the unit/collector tests fail.
 |---|---|
 | `data/products.json` | the shared product register: titles, field values, provenance, status |
 | `data/editorial.json` | this site's voice: headlines, best-for, trade-offs, FAQ |
-| `data/sources.json` | 19 official sources (`S01`–`S04`, `S10`–`S24`) with what each supports and date checked |
-| `data/flags.json` | 40 flags (`FLG-001`–`FLG-040`): severity, detail, owner status, source links |
+| `data/sources.json` | 20 official sources (`S01`–`S04`, `S10`–`S25`) with what each supports and date checked |
+| `data/flags.json` | 44 flags (`FLG-001`–`FLG-044`): severity, detail, owner status, source links |
 | `data/events.json` | canonical 5-event privacy-preserving measurement schema and forbidden fields |
 | `data/reverification-2026-11-20.json` | attempt-by-attempt record of the short-link and deep-table tests |
 | `assets/style.css` | storefront stylesheet, including photo-card and diagram styles |
@@ -49,7 +49,7 @@ generator output, if the gate fails, or if the unit/collector tests fail.
 | `assets/app.js` | five measured events, client search (`search.html`), pair compare (`compare.html`), mobile nav toggle, ranking, CSV export, gated `send()` |
 | `analytics/server.js` | zero-dependency Node.js self-hosted collector (`GET`/`POST /api/collect`) |
 | `functions/api/collect.js` | drop-in Cloudflare Pages Function collector matching `data/events.json` |
-| `scripts/` | single-source generator (`build_site.py`) and compliance gate (`check_site.py`) |
+| `scripts/` | single-source generator (`build_site.py`, guide copy in `seasonal_guides.py` and `howto_guides.py`) and compliance gate (`check_site.py`) |
 | `tests/` | Python integration tests (`test_site.py`) and Node.js collector/client tests (`test_collector.js`) |
 
 Cross-session rule: `data/products.json`, `data/sources.json` and `data/flags.json` are shared
@@ -68,6 +68,11 @@ verification shows an inaccuracy or newly confirmed value.
 - Every page has one `<h1>`, canonical & `og:url` matching its path, valid JSON-LD, and an entry in
   `sitemap.xml`; `feed.xml` parses and its items exist.
 - A blank field must be marked `unverified`; a value must name where it was stated.
+- Buyer-facing copy (front page, shop, categories, compare, guides) carries no internal `FLG-` code;
+  the codes live on the audit surfaces, and every guide and product page carries the dated desk byline.
+- No page may print its own markup: entity sequences are decoded before escaping, and the gate
+  fails on any visible `&entity;` left in the text. A guide's stated read time must be consistent with the words on the page — it is computed at build
+  time by `guide_minutes()`, never typed into the kicker.
 - Every flag referenced in HTML or `editorial.json` is defined, and every defined flag is published.
 
 ## Measurement & Collector

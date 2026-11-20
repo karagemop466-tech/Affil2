@@ -478,5 +478,15 @@
   ],
   "severity": "unverified",
   "owner_status": "Published on the Flagged for Review page and disclosed on the product page. Does not block."
+ },
+ {
+  "id": "FLG-044",
+  "title": "Reader copy printed its own markup: double-escaped entities in three guides",
+  "detail": "Guide fields that the renderer escapes (title, standfirst, intro, verdict) were authored with HTML entity markup, so the escaping pass double-encoded them and readers were shown the markup itself: thermometer-accuracy.html displayed a visible plusmn entity where the text means plus-or-minus half a degree, and the first-week and Thanksgiving guides each showed a stray mdash entity. Found by reading the built pages rather than the source. Fixed in the generator: escaped reader fields now decode named and numeric entities to characters before esc() runs, all 38 pages were rebuilt clean, and check_site.py fails if any page's visible text still contains an entity sequence after the browser has decoded it.",
+  "links": [
+   "S25"
+  ],
+  "severity": "corrected",
+  "owner_status": "Corrected in the generator and enforced by a new gate rule. Recorded because the markup was visible to readers on published pages."
  }
 ]

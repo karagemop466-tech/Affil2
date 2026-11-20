@@ -9,6 +9,7 @@ the product pages still carrying their separate intended/observed fields.
 Run: python3 scripts/check_site.py
 Exit 0 = pass, exit 1 = fail with a list of problems.
 """
+import html as htmlmod
 import json
 import pathlib
 import re
@@ -526,6 +527,15 @@ def visible_text(html):
     t = re.sub(r"<head\b.*?</head>", " ", t, flags=re.S | re.I)
     t = re.sub(r"<[^>]+>", " ", t)
     return re.sub(r"\s+", " ", t)
+
+# 0. No page may print its own markup: escaped copy used to leak literal &amp;entity; text.
+for p in pages:
+    rel = str(p.relative_to(ROOT))
+    seen = htmlmod.unescape(visible_text(p.read_text(encoding="utf-8")))
+    leak = sorted(set(re.findall(r"&(?:[a-z]{2,8}|#\d{2,4});", seen)))
+    if leak:
+        err(f"{rel}: visible text prints its own markup {leak} — decode entities before esc() "
+            "(FLG-044)")
 
 # 1. Internal register codes belong on audit surfaces, not inside a buying sentence.
 for rel in SHOP_SURFACES:

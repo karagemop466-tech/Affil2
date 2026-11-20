@@ -122,11 +122,42 @@ FLAG_CODE = re.compile(r"\s*\(\s*(?:see\s+)?FLG-\d{3}\s*\)", re.I)
 FLAG_AS_FLAGGED = re.compile(r"\s*(?:,|;)?\s*(?:are|is|been)?\s*flagged as\s+FLG-\d{3}", re.I)
 
 
+NAMED_ENTITIES = {
+    "&nbsp;": "\u00a0", "&mdash;": "\u2014", "&ndash;": "\u2013", "&deg;": "\u00b0",
+    "&plusmn;": "\u00b1", "&times;": "\u00d7", "&frac12;": "\u00bd", "&frac34;": "\u00be",
+    "&hellip;": "\u2026", "&middot;": "\u00b7", "&ldquo;": "\u201c", "&rdquo;": "\u201d",
+    "&lsquo;": "\u2018", "&rsquo;": "\u2019", "&rarr;": "\u2192", "&larr;": "\u2190",
+    "&amp;": "&", "&lt;": "<", "&gt;": ">",
+}
+
+
+NUMERIC = re.compile(r"&(?:#(\d{1,5})|#x([0-9a-fA-F]{1,4}));")
+
+
+def decode_named(t):
+    """Turn typed entities back into characters before the renderer escapes the text.
+
+    Copy in the registers and the guide records was written with entities; some of it is passed
+    through esc(), which used to print the markup itself (FLG-044). Named and numeric forms are
+    both handled, and it loops until stable so a double-escaped &amp;plusmn; resolves too.
+    """
+    t = str(t)
+    for _ in range(4):
+        prev = t
+        t = NUMERIC.sub(lambda m: chr(int(m.group(1), 10) if m.group(1)
+                                     else int(m.group(2), 16)), t)
+        for k, v in NAMED_ENTITIES.items():
+            t = t.replace(k, v)
+        if t == prev:
+            break
+    return t
+
+
 def buyer(s):
-    """Reader-facing copy: same sentence, no internal ticket number in it."""
+    """Reader-facing copy: same sentence, no internal ticket number and no raw entity in it."""
     s = FLAG_AS_FLAGGED.sub("is flagged for review", str(s))
     s = FLAG_CODE.sub("", s)
-    return re.sub(r"[ \t]+", " ", s).strip()
+    return re.sub(r"[ \t]+", " ", decode_named(s)).strip()
 
 
 # ---- byline -----------------------------------------------------------------
@@ -573,6 +604,10 @@ def build_home():
         <span>Speed at the grill versus leaving the room.</span></li>
       <li><a href="guides/thermometer-accuracy.html">How to read accuracy claims</a>
         <span>What &plusmn;0.5&nbsp;&deg;F and NIST actually mean.</span></li>
+      <li><a href="guides/thermometer-ice-test.html">Is your thermometer telling the truth?</a>
+        <span>USDA&rsquo;s two-minute ice-water test.</span></li>
+      <li><a href="guides/read-an-air-fryer-listing.html">How to read an air fryer listing</a>
+        <span>Title, bullets and spec table are three different sources.</span></li>
     </ul>
   </div>
   <aside class="panel">
@@ -1223,8 +1258,8 @@ def build_guides_index():
     items = "".join(
         f"""<article class="guidecard">
   <p class="kicker">{esc(guide_kicker(g))}</p>
-  <h3><a href="guides/{g['slug']}.html">{esc(g['title'])}</a></h3>
-  <p>{esc(g['sub'])}</p>
+  <h3><a href="guides/{g['slug']}.html">{esc(decode_named(g['title']))}</a></h3>
+  <p>{esc(decode_named(g['sub']))}</p>
   <p class="small">Covers {", ".join(BY_ID[x]['brand'] for x in g['products'])}</p>
 </article>""" for g in GUIDES)
     body = f"""
@@ -1258,14 +1293,14 @@ def build_guide(g):
         f'<li><a href="../{slug_of(p)}">{esc(p["brand"])} — {esc(p["headline"])}</a>'
         f'<span>{esc(buyer(p["best_for"]))}</span></li>' for p in rel)
     body = f"""
-{breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (g['title'][:40] + "…", None)], "../")}
+{breadcrumb([("Home", "index.html"), ("Guides", "guides.html"), (decode_named(g['title'])[:40] + "…", None)], "../")}
 <p class="kicker">{esc(guide_kicker(g))} · verified {TODAY}</p>
-<h1>{esc(g['title'])}</h1>
-<p class="lede">{esc(g['intro'])}</p>
+<h1>{esc(decode_named(g['title']))}</h1>
+<p class="lede">{esc(decode_named(g['intro']))}</p>
 {byline("../")}
 <div class="verdict-box">
   <p class="kicker">The short answer</p>
-  <p>{esc(g['verdict'])}</p>
+  <p>{esc(decode_named(g['verdict']))}</p>
 </div>
 {secs}
 {g.get("extra", "")}
@@ -1281,16 +1316,17 @@ def build_guide(g):
 </div>
 """
     ld = [{"@context": "https://schema.org", "@type": "Article",
-           "headline": g["title"], "description": g["sub"], "datePublished": TODAY,
+           "headline": decode_named(g["title"]), "description": decode_named(g["sub"]),
+           "datePublished": TODAY,
            "dateModified": TODAY, "author": dict(publisher_ld(), **{"@context": "https://schema.org"}),
            "publisher": dict(publisher_ld(), **{"@context": "https://schema.org"}),
            "mainEntityOfPage": BASE + "guides/" + g["slug"] + ".html",
            "image": BASE + "assets/photos/hero-kitchen.jpg"},
           dict(crumbs_ld([("Home", "index.html"), ("Guides", "guides.html"),
-                          (g["title"], "guides/" + g["slug"] + ".html")]),
+                          (decode_named(g["title"]), "guides/" + g["slug"] + ".html")]),
                **{"@context": "https://schema.org"})]
-    BUILT.append(page(f"guides/{g['slug']}.html", f"{g['title']} — {SITE}",
-                      g["sub"], body, jsonld=ld))
+    BUILT.append(page(f"guides/{g['slug']}.html", f"{decode_named(g['title'])} — {SITE}",
+                      decode_named(g["sub"]), body, jsonld=ld))
 
 
 
@@ -2382,8 +2418,8 @@ def changelog_rows():
 def build_sources():
     rows = "".join(
         f"""<tr><td class="nowrap"><strong>{s['id']}</strong></td>
-  <td>{esc(s['name'])}<br><a href="{esc(s['url'])}" rel="sponsored nofollow" class="small">{esc(s['url'])}</a></td>
-  <td class="quote">{esc(s['used_for'])}</td>
+  <td>{esc(decode_named(s['name']))}<br><a href="{esc(s['url'])}" rel="sponsored nofollow" class="small">{esc(s['url'])}</a></td>
+  <td class="quote">{esc(decode_named(s['used_for']))}</td>
   <td class="nowrap">{esc(s['checked'])}</td></tr>""" for s in SOURCES)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Sources", None)])}
@@ -3101,10 +3137,10 @@ def build_feed():
     items = ""
     for g in GUIDES:
         items += f"""<item>
-  <title>{esc(g['title'])}</title>
+  <title>{esc(decode_named(g['title']))}</title>
   <link>{BASE}guides/{g['slug']}.html</link>
   <guid isPermaLink="true">{BASE}guides/{g['slug']}.html</guid>
-  <description>{esc(g['sub'])}</description>
+  <description>{esc(decode_named(g['sub']))}</description>
   <pubDate>Fri, 20 Nov 2026 00:00:00 GMT</pubDate>
 </item>
 """
