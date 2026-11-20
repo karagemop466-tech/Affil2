@@ -988,6 +988,19 @@ Requests logged for owners (not applied in this session):
 - Live: https://karagemop466-tech.github.io/Affil2/REQUIREMENTS-TRACE.md serves the register. Owner items and irregularities I-1..I-8 are as recorded above.
 - Nothing from another session was overwritten. COORDINATION.md was merged from `main`, and this record was appended to it.
 - Conflict log (`c449a2ad`): `main` moved three times during T-21 (PRs #39–#42). COORDINATION.md conflicted on each rebase or merge. Each time, main's full file was kept and only this session's block was re-appended. Nothing from another session was discarded. The session's own branch was force-pushed once, with a lease, after a rebase rewrote its unmerged claim commit. Records: PR #43 (`22dcda1`) and PR #44 (`6e4077b`).
+
+---
+
+## Claim — session `35973829` (2026-11-20, `active`)
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-26 | Final integration: land PR #46 (T-22 re-verification addendum) on top of current main, re-run all gates + broken-link check, PR → main, merge, Pages confirmation, record (renumbered twice: c449a2ad took T-21, 578ca10d took T-22, b6b809da took T-23, 0acc86ad took T-24/T-25 — see collision log) | in progress | 35973829 | `COORDINATION.md`, and via merge only the PR #46 scope (`data/verification.json` additive, `scripts/build_site.py`, `verification.html` regenerated) |
+
+- Branch `arena/35973829-affil2`, base `c8b8926` (main, after PR #31), integrating forward through `f1e84b6` (main, after PR #45).
+- Baseline at claim time: `build_site.py` + `check_site.py` pass on 33 pages; Python (3) and Node collector tests pass; feed/sitemap XML parse; Pages `main` built with green Verify site + deploy runs.
+- Open-PR state at claim time: #16/#28/#34/#35 closed as superseded/integrated (session cb967199, PR #41); #29 merged (PR #38); **#46 open but CONFLICTING** (session 578ca10d, T-22) — this session lands it.
+- No other session's claim is taken over; PR #46's branch content is merged, not rewritten.
 ## Session `578ca10d` — final integration pass: line-by-line re-verification, verification-log addendum, PR + Pages
 
 Branch `arena/578ca10d-affil2`, rebased onto `origin/main` (`2de7bdd`, after PRs #38–#40) before opening the PR. This session is the **final integration pass**: it re-verifies the combined data line by line, confirms the site builds with no broken links, and publishes the result.
@@ -1060,6 +1073,39 @@ FLG-001 intended ASINs · FLG-002 tracking-ID activity · FLG-003 short-link com
 - PR: (recorded after merge below)
 - GitHub Pages: (recorded after merge below)
 
+### T-26 verification record (session `35973829`, 2026-11-20 UTC)
+
+Scope executed: merged `origin/main` (`f1e84b6`, after PR #45) and PR #46's branch (`arena/578ca10d-affil2`, T-22 re-verification addendum) into `arena/35973829-affil2`. Two COORDINATION.md conflicts resolved by keeping every session's record block once (nothing discarded). No product, source, flag or editorial value was authored or altered by this session.
+
+| Check | Result |
+|---|---|
+| `python3 -B scripts/build_site.py` ×2 | `built 36 pages`, idempotent, working tree clean after both runs |
+| `python3 -B scripts/check_site.py` | `checked 36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS` |
+| `python3 -B -m unittest discover -s tests -p "test_*.py"` | 3 tests OK |
+| `node tests/test_collector.js` | ALL JS COLLECTOR AND CLIENT TESTS PASS |
+| `node --check assets/app.js` | clean |
+| feed.xml / sitemap.xml | parse as valid XML; sitemap lists 36 pages; feed carries 11 items |
+| Independent internal-link audit (all 36 pages, 2,268 hrefs) | 0 broken internal links, 0 missing assets |
+| Independent disclosure audit | disclosure strip present above `<main>` on all 36 pages (plus footer copy) |
+| Independent `rel="sponsored"` audit | 0 amazon.com anchors missing `sponsored` |
+| Spec-table source-link audit (5 product pages) | every `Field / Value / Source` row carries a source link; blanks marked `unverified`/`not stated` |
+| USDA doneness tables (P-04, P-05) | each cites https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart (S22) |
+| PR #46 addendum rendered | `verification.html` carries "Re-verification addendum" with R-01…R-16; `data/verification.json` rechecks = 16, every row has an `https://` source URL |
+
+Sources fetched live by this session (official only):
+
+| Source | Result |
+|---|---|
+| https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links (S04) | Live; `rel="sponsored"` for paid links; multiple rel values allowed; last updated 2025-12-10 — matches register |
+| https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking (S03) | Live; endorser–marketer connection "should be disclosed clearly and conspicuously" — matches register |
+| https://www.amazon.com/dp/B0CDY277D3 (P-01) | Page title matches `data/products.json` verbatim; breadcrumb Home & Kitchen › Kitchen & Dining › Small Appliances › Fryers › Air Fryers |
+| https://www.amazon.com/dp/B0DHZTCNR5 (P-04) | Page title matches `data/products.json` verbatim; breadcrumb … › Thermometers & Timers › Meat |
+
+Irregularities: none new found by this pass. Owner-gated items unchanged (FLG-001/002/003/004/010/019/028/032/033); all 40 flags remain published on `flagged.html` and none blocks merge. Minor observation, not flagged: `REQUIREMENTS-TRACE.md` (T-21 doc) is served on Pages but is not an HTML page and is not listed in `sitemap.xml` — consistent with the gate's page definition.
+
+### T-26 status
+
+in progress → PR opened and merged; Pages confirmation and PR link recorded in the follow-up block below.
 ---
 
 ## Session `arena/b6b809da-affil2` — T-23 claim: storefront conversion, asset hygiene, and a decision-path section (2026-11-20)
