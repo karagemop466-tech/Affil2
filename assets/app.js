@@ -292,12 +292,14 @@
           }
           var rows = A.rows.map(function (r, i) {
             var other = B.rows[i] ? B.rows[i][1] : '';
-            return '<tr><th scope="row">' + r[0] + '</th><td>' + r[1] + '</td><td>' + other + '</td></tr>';
+            var src = B.rows[i] && B.rows[i][2] ? B.rows[i][2] : (r[2] || '');
+            return '<tr><th scope="row">' + r[0] + '</th><td>' + r[1] + '</td><td>' + other + '</td><td class="src">' + src + '</td></tr>';
           }).join('');
           pairOut.innerHTML = '<table class="compare pair"><caption>Same rows, same sources, two columns. ' +
             'Blank-looking cells say why they are blank.</caption><thead><tr><th scope="col">Field</th>' +
             '<th scope="col"><a href="' + A.url + '">' + A.name + '</a></th>' +
-            '<th scope="col"><a href="' + B.url + '">' + B.name + '</a></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+            '<th scope="col"><a href="' + B.url + '">' + B.name + '</a></th>' +
+            '<th scope="col">Source</th></tr></thead><tbody>' + rows + '</tbody></table>' +
             '<p class="cta"><a class="btn" rel="sponsored nofollow" href="' + A.buy + '" data-outbound="' + idA + '">' +
             'Check the first on Amazon<span class="btn-sub">paid link</span></a>' +
             '<a class="btn ghost" rel="sponsored nofollow" href="' + B.buy + '" data-outbound="' + idB + '">' +

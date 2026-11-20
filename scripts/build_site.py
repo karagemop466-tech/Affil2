@@ -119,9 +119,53 @@ def aff(p):
     return f"https://www.amazon.com/dp/{target}?tag={TRACKING_ID}"
 
 def plain(p):
-    """Untagged official listing, for verification."""
+    """Untagged official listing URL — the canonical citation text, kept unmodified in records."""
     target = p.get("observed") or p["asin"]
     return f"https://www.amazon.com/dp/{target}"
+
+def tag_amazon(url):
+    """Attach the Associates tag to amazon.com retail URLs so every clickable Amazon link on
+    this site is a Special Link. link.amazon evidence links and non-retail hosts are returned
+    unchanged (FLG-003: no validity claim is made about the supplied short links)."""
+    if url.startswith("https://www.amazon.com/") and "tag=" not in url:
+        return url + ("&" if "?" in url else "?") + f"tag={TRACKING_ID}"
+    return url
+
+def citation(url, label=None):
+    """Citation anchor: the href is always a tagged paid link for amazon.com; the visible text
+    keeps the plain official URL unless a label is given, and the paid-link nature is stated
+    next to the link so the citation cannot read as an ordinary reference."""
+    href = tag_amazon(url)
+    text = label if label else url
+    paid = '<span class="small">(tagged paid link)</span>' if href != url else ""
+    inner = f'<a href="{esc(href)}" rel="sponsored nofollow">{esc(text)}</a>'
+    return f"{inner} {paid}" if paid else inner
+
+
+# Register-token patterns shared by the Decision Center, Design Brief and measurement pages:
+# a bare FLG-xxx / SG-xx / Q-xx / Sxx token becomes a link to its register row.
+REF_PATTERNS = [
+    (r"FLG-(\d{3})", "flagged.html#FLG-{0}", "FLG-{0}"),
+    (r"SG-(\d{2})\b", "suggestions.html#SG-{0}", "SG-{0}"),
+    (r"Q-(\d{2})\b", "questions.html#Q-{0}", "Q-{0}"),
+    (r"\bS(\d{2})\b", "sources.html#S{0}", "S{0}"),
+]
+REF_FALLBACK = ('<span class="unverified">internal proposal or definition &mdash; '
+                'owner decision, no official source</span>')
+
+def ref_links(*texts):
+    """One provenance cell: every register id named in the row text, linked to its row.
+    Rows that name no register id fall back to an explicit internal-proposal marker."""
+    blob = " ".join(str(t) for t in texts)
+    out, seen = [], set()
+    for pat, href_t, label_t in REF_PATTERNS:
+        for m in re.findall(pat, blob):
+            label = label_t.format(m)
+            if label not in seen:
+                seen.add(label)
+                out.append(f'<a href="{href_t.format(m)}">{label}</a>')
+    return " ".join(out) if out else REF_FALLBACK
+
 
 def slug_of(p):
     return f"products/{p['slug']}.html"
@@ -301,8 +345,8 @@ def buybox(p, up, variant="full"):
       <a class="btn ghost" href="{up}{slug_of(p)}">Full breakdown</a>
     </p>
     <p class="small">Prices, ratings and availability live on Amazon and change; we never print them
-      here. Tagged link, opens amazon.com. <a href="{plain(p)}" rel="sponsored nofollow">Untagged
-      listing</a> for verification.</p>
+      here. Every Amazon link on this site is a tagged paid link; the official listing is
+      also cited line by line in the <a href="{up}sources.html">source register</a>.</p>
   </div>
 </div>"""
 
@@ -336,7 +380,9 @@ def usda_block(p):
     if p["cat"] != "Meat Thermometers":
         return ""
     rows = "".join(
-        f'<tr><td>{esc(food)}</td><td>{esc(temp)}</td></tr>' for food, temp in USDA["rows"])
+        f'<tr><td>{esc(food)}</td><td>{esc(temp)}</td>'
+        f'<td class="src"><a href="{USDA["source_url"]}" rel="sponsored nofollow">USDA chart '
+        f'({USDA["source_id"]})</a></td></tr>' for food, temp in USDA["rows"])
     return f"""<h2>Doneness targets come from the USDA, not from us</h2>
 <p>This is a thermometer, so the numbers that matter are food-safety numbers. We do not restate them
   from memory. The USDA FSIS <a href="{USDA["source_url"]}">Safe Minimum Internal Temperature
@@ -345,7 +391,7 @@ def usda_block(p):
 <table class="usda">
   <caption><a href="{USDA["source_url"]}">USDA FSIS &mdash; Safe Minimum Internal Temperature
     Chart</a> ({USDA["source_id"]})</caption>
-  <thead><tr><th scope="col">Food</th><th scope="col">Minimum internal temperature</th></tr></thead>
+  <thead><tr><th scope="col">Food</th><th scope="col">Minimum internal temperature</th><th scope="col">Source</th></tr></thead>
   <tbody>{rows}</tbody>
 </table>
 <p class="small">Read the chart itself before relying on any number here:
@@ -367,7 +413,7 @@ def spec_table(p):
         out.append(
             f'<tr><th scope="row">{esc(r["label"])}</th><td>{value}'
             f'<div class="srcline">Stated in: {esc(r["from"])}</div></td>'
-            f'<td class="src"><a href="{r["url"]}" rel="sponsored nofollow">listing</a></td></tr>')
+            f'<td class="src">{citation(r["url"], label="listing")}</td></tr>')
     return f"""<table class="specs-table">
   <caption>Every value below was read from the official listing on {TODAY}. A blank cell means the
     value was not in the text we fetched &mdash; nothing here is inferred.</caption>
@@ -383,21 +429,41 @@ def intent_table(p):
   <caption>Product-intent confirmation record. Intended and observed are separate fields and are
     never merged.</caption>
   <tbody>
-    <tr><th scope="row">Submitted link (as supplied)</th><td>{esc(p['submitted'])}</td></tr>
-    <tr><th scope="row">Short-link token</th><td>{esc(p['token'])} (not an ASIN)</td></tr>
-    <tr><th scope="row">Intended ASIN</th><td>{esc(intended)}</td></tr>
-    <tr><th scope="row">Observed redirect target</th><td>{esc(p['observed'] or '— not observed yet')}</td></tr>
-    <tr><th scope="row">What the submitted link actually opened</th><td>{esc(p['observed_note'])}</td></tr>
+    <tr><th scope="row">Submitted link (as supplied)</th>
+      <td><a href="{esc(p['submitted'])}" rel="sponsored nofollow">{esc(p['submitted'])}</a><br>
+        <span class="small">Supplied short link, recorded exactly as submitted; its compliance
+        status is unresolved and is tracked as
+        <a href="../flagged.html#FLG-003">FLG-003</a> on the <a href="../flagged.html">flag
+        register</a>. No validity claim is made about it.</span></td></tr>
+    <tr><th scope="row">Short-link token</th>
+      <td>{esc(p['token'])} (not an ASIN) &mdash;
+        <a href="{esc(p['submitted'])}" rel="sponsored nofollow">open the submitted short link</a></td></tr>
+    <tr><th scope="row">Intended ASIN</th>
+      <td>{esc(intended)} &mdash; <a href="../flagged.html#FLG-001">FLG-001</a>, kept in a separate
+        field from the observed target below; the two are never merged.</td></tr>
+    <tr><th scope="row">Observed redirect target</th>
+      <td>{esc(p['observed'] or '— not observed yet')} &mdash; {citation(plain(p), label='official listing')},
+        observed separately from intent (dated snapshot; short-link redirects are not stable, see
+        <a href="../flagged.html#FLG-011">FLG-011</a>).</td></tr>
+    <tr><th scope="row">What the submitted link actually opened</th>
+      <td>{esc(p['observed_note'])} &mdash;
+        <a href="{esc(p['submitted'])}" rel="sponsored nofollow">re-test the short link yourself</a></td></tr>
     <tr><th scope="row">Official listing URL</th>
-      <td><a href="{plain(p)}" rel="sponsored nofollow">{plain(p)}</a></td></tr>
+      <td>{citation(plain(p))}<br><span class="small">The URL above is the canonical official
+        listing, kept unmodified for citation; the clickable link carries our Associates tag
+        ({TRACKING_ID}).</span></td></tr>
     <tr><th scope="row">Special Link we publish</th>
-      <td><a href="{aff(p)}" rel="sponsored nofollow">{aff(p)}</a></td></tr>
+      <td><a href="{aff(p)}" rel="sponsored nofollow">{aff(p)}</a>
+        <span class="small">(tagged paid link)</span></td></tr>
     <tr><th scope="row">Model (as published)</th>
-      <td>{esc(p['model'] or '— blank, see FLG-022')}<br><span class="small">{esc(p['model_source'])}</span></td></tr>
-    <tr><th scope="row">Confirmation date</th><td>{TODAY}</td></tr>
+      <td>{esc(p['model'] or '— blank, see FLG-022')}<br><span class="small">{esc(p['model_source'])}
+        &mdash; {citation(plain(p), label='listing')}</span></td></tr>
+    <tr><th scope="row">Confirmation date</th>
+      <td>{TODAY} &mdash; <a href="../sources.html">the source-register row for this listing</a></td></tr>
     <tr><th scope="row">Associates test status</th>
       <td>PENDING &mdash; one link per product must be clicked inside the enrolled account and
-        confirmed in the tracking report before traffic is scaled (FLG-004).</td></tr>
+        confirmed in the tracking report before traffic is scaled
+        (<a href="../flagged.html#FLG-004">FLG-004</a>).</td></tr>
   </tbody>
 </table>"""
 
@@ -749,6 +815,14 @@ NA_CAP = "— <span class=\"unverified\">n/a, measures temperature</span>"
 NA_POWER = "— <span class=\"unverified\">n/a, battery powered</span>"
 NOWEIGHT = "— <span class='unverified'>not stated on this listing (FLG-022)</span>"
 
+# Row-level sources, shared by the five-column table and the pair view. Every row cites the
+# register rows that carry its values (S10–S14), the editorial method for opinion rows, or the
+# policy flag that withholds the value.
+SRC_LISTINGS = ('<a href="sources.html">S10&ndash;S14</a> <span class="small">'
+                '(register rows for the five official listings)</span>')
+SRC_METHOD = '<a href="how-we-choose.html">how we choose</a> <span class="small">(editorial, not a listing fact)</span>'
+SRC_POLICY = '<a href="flagged.html#FLG-005">FLG-005</a> <span class="small">(withheld by policy)</span>'
+
 
 def spec(p, key, other=NOT_STATED):
     f = p["fields"].get(key)
@@ -776,31 +850,31 @@ def by_category(p, key, fallbacks, other=NOT_STATED):
 
 # the rows a head-to-head view compares, in order: label -> how to render
 PAIR_ROWS = [
-    ("Best for", lambda p: esc(p["best_for"])),
-    ("The catch", lambda p: esc(p["tradeoff"])),
-    ("Capacity", lambda p: spec(p, "capacity", NA_CAP)),
-    ("Temperature range", lambda p: by_category(p, "temperature", ["upper_temp", "heat"])),
-    ("Power / battery", lambda p: by_category(p, "power", ["battery"], NA_POWER)),
-    ("Presets", lambda p: spec(p, "presets", "— <span class='unverified'>no preset count on the listing</span>")),
-    ("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOT_STATED)),
-    ("Weight", lambda p: spec(p, "weight", NOWEIGHT)),
-    ("Probes", lambda p: spec(p, "probes", "— n/a, not a probe appliance")),
-    ("Response time", lambda p: spec(p, "response", "— n/a, not an instant-read")),
-    ("Stated accuracy", lambda p: spec(p, "accuracy", "— n/a")),
-    ("Heat rating", lambda p: spec(p, "heat", "— n/a")),
-    ("Connectivity", lambda p: spec(p, "connectivity", "— n/a, no app")),
-    ("Model on listing", lambda p: spec(p, "model", "— not on the fetched text")),
-    ("Warranty", lambda p: spec(p, "warranty", NOT_STATED)),
-    ("Price", lambda p: "— not shown, by policy"),
-    ("Star rating", lambda p: "— not shown, by policy"),
+    ("Best for", lambda p: esc(p["best_for"]), SRC_METHOD),
+    ("The catch", lambda p: esc(p["tradeoff"]), SRC_METHOD),
+    ("Capacity", lambda p: spec(p, "capacity", NA_CAP), SRC_LISTINGS),
+    ("Temperature range", lambda p: by_category(p, "temperature", ["upper_temp", "heat"]), SRC_LISTINGS),
+    ("Power / battery", lambda p: by_category(p, "power", ["battery"], NA_POWER), SRC_LISTINGS),
+    ("Presets", lambda p: spec(p, "presets", "— <span class='unverified'>no preset count on the listing</span>"), SRC_LISTINGS),
+    ("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOT_STATED), SRC_LISTINGS),
+    ("Weight", lambda p: spec(p, "weight", NOWEIGHT), SRC_LISTINGS),
+    ("Probes", lambda p: spec(p, "probes", "— n/a, not a probe appliance"), SRC_LISTINGS),
+    ("Response time", lambda p: spec(p, "response", "— n/a, not an instant-read"), SRC_LISTINGS),
+    ("Stated accuracy", lambda p: spec(p, "accuracy", "— n/a"), SRC_LISTINGS),
+    ("Heat rating", lambda p: spec(p, "heat", "— n/a"), SRC_LISTINGS),
+    ("Connectivity", lambda p: spec(p, "connectivity", "— n/a, no app"), SRC_LISTINGS),
+    ("Model on listing", lambda p: spec(p, "model", "— not on the fetched text"), SRC_LISTINGS),
+    ("Warranty", lambda p: spec(p, "warranty", NOT_STATED), SRC_LISTINGS),
+    ("Price", lambda p: "— not shown, by policy", SRC_POLICY),
+    ("Star rating", lambda p: "— not shown, by policy", SRC_POLICY),
 ]
 
 
 def build_compare():
     cols = PRODUCTS
-    def row(label, fn):
+    def row(label, fn, src):
         cells = "".join(f"<td>{fn(p)}</td>" for p in cols)
-        return f'<tr><th scope="row">{label}</th>{cells}</tr>'
+        return f'<tr><th scope="row">{label}</th>{cells}<td class="src">{src}</td></tr>'
 
     head = "".join(f'<th scope="col"><a href="{slug_of(p)}">{esc(p["brand"])}</a>'
                    f'<br><span class="th-sub">{p["id"]} · {esc(p["headline"])}</span></th>' for p in cols)
@@ -812,22 +886,23 @@ def build_compare():
   rows, so you can decide. Blank means the listing does not say.</p>
 <table class="compare">
   <caption>Aligned by field, so a value is always compared against the same value. Read from the
-    official listings on {TODAY}.</caption>
-  <thead><tr><th scope="col">Field</th>{head}</tr></thead>
+    official listings on {TODAY}. The Source column cites the register rows that carry the row's
+    values.</caption>
+  <thead><tr><th scope="col">Field</th>{head}<th scope="col">Source</th></tr></thead>
   <tbody>
-    {row("Category", lambda p: esc(p["cat"]))}
-    {row("Best for", lambda p: esc(p["best_for"]))}
-    {row("The catch", lambda p: esc(p["tradeoff"]))}
-    {row("Capacity", lambda p: spec(p, "capacity", NA_CAP))}
-    {row("Temperature range", lambda p: by_category(p, "temperature", ["upper_temp", "heat"]))}
-    {row("Power / battery", lambda p: by_category(p, "power", ["battery"], NA_POWER))}
-    {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOT_STATED))}
-    {row("Weight", lambda p: spec(p, "weight", NOWEIGHT))}
-    {row("Model on listing", lambda p: spec(p, "model", "— not on the fetched text"))}
-    {row("Price", lambda p: "— not shown, by policy")}
-    {row("Star rating", lambda p: "— not shown, by policy")}
-    {row("Official listing", lambda p: f'<a href="{plain(p)}" rel="sponsored nofollow">untagged</a>')}
-    {row("Buy link", lambda p: f'<a href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p["id"]}" data-event="outbound_click">Amazon (paid link)</a>')}
+    {row("Category", lambda p: esc(p["cat"]), SRC_LISTINGS)}
+    {row("Best for", lambda p: esc(p["best_for"]), SRC_METHOD)}
+    {row("The catch", lambda p: esc(p["tradeoff"]), SRC_METHOD)}
+    {row("Capacity", lambda p: spec(p, "capacity", NA_CAP), SRC_LISTINGS)}
+    {row("Temperature range", lambda p: by_category(p, "temperature", ["upper_temp", "heat"]), SRC_LISTINGS)}
+    {row("Power / battery", lambda p: by_category(p, "power", ["battery"], NA_POWER), SRC_LISTINGS)}
+    {row("Dimensions D×W×H", lambda p: spec(p, "dimensions", NOT_STATED), SRC_LISTINGS)}
+    {row("Weight", lambda p: spec(p, "weight", NOWEIGHT), SRC_LISTINGS)}
+    {row("Model on listing", lambda p: spec(p, "model", "— not on the fetched text"), SRC_LISTINGS)}
+    {row("Price", lambda p: "— not shown, by policy", SRC_POLICY)}
+    {row("Star rating", lambda p: "— not shown, by policy", SRC_POLICY)}
+    {row("Official listing", lambda p: citation(plain(p), label='official listing'), SRC_LISTINGS)}
+    {row("Buy link", lambda p: f'<a href="{aff(p)}" rel="sponsored nofollow" data-outbound="{p["id"]}" data-event="outbound_click">Amazon (paid link)</a>', SRC_LISTINGS)}
   </tbody>
 </table>
 <h2>Two at a time</h2>
@@ -865,7 +940,7 @@ def build_compare():
             "name": esc(p["brand"]) + " — " + esc(p["headline"]),
             "url": slug_of(p),
             "buy": aff(p),
-            "rows": [[label, fn(p)] for label, fn in PAIR_ROWS],
+            "rows": [[label, fn(p), src] for label, fn, src in PAIR_ROWS],
         }
     pair_json = json.dumps(pair_data, ensure_ascii=False).replace("</", "<\\/")
     extra = (f'<script type="application/json" id="pairData">{pair_json}</script>')
@@ -1522,7 +1597,7 @@ SUGGESTIONS = [
 def build_suggestions():
     rows = ""
     for s in SUGGESTIONS:
-        rows += f"""<tr data-sug="{s['id']}">
+        rows += f"""<tr id="{s['id']}" data-sug="{s['id']}">
   <td class="nowrap"><strong>{s['id']}</strong></td>
   <td><strong>{esc(s['title'])}</strong><br><span class="small">{esc(s['what'])}</span></td>
   <td>{esc(s['why'])}</td>
@@ -1530,6 +1605,7 @@ def build_suggestions():
   <td>{esc(s['effort'])}</td>
   <td><span class="pill {s['status'].split()[0].lower().strip(',.')}">{esc(s['status'])}</span></td>
   <td class="small">{esc(s['verify'])}</td>
+  <td class="src">{ref_links(s['title'], s['what'], s['why'], s['impact'], s['verify'])}</td>
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="{s['id']}" aria-label="Move {s['id']} up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="{s['id']}" aria-label="Move {s['id']} down">&darr;</button>
@@ -1560,7 +1636,7 @@ def build_suggestions():
   <caption>{len(SUGGESTIONS)} proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
-    <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
+    <th scope="col">How to check it</th><th scope="col">Provenance</th><th scope="col">Your rank</th></tr></thead>
   <tbody>{rows}</tbody>
 </table>
 <p class="cta">
@@ -1575,22 +1651,22 @@ def build_suggestions():
   <caption>Open decisions only.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Decision needed</th><th scope="col">Who can do it</th></tr></thead>
   <tbody>
-    <tr><td>SG-07</td><td>Test one Special Link per product in the enrolled account</td><td>Owner (account access)</td></tr>
-    <tr><td>SG-10</td><td>Verify Search Console and decide on email capture</td><td>Owner (account access)</td></tr>
-    <tr><td>SG-13</td><td>Apply for Product Advertising API access so prices can be shown legally</td><td>Owner (approval)</td></tr>
-    <tr><td>SG-14</td><td>Choose and attach a custom domain</td><td>Owner (decision)</td></tr>
-    <tr><td>SG-15</td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
-    <tr><td>SG-16</td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
-    <tr><td>SG-18</td><td>Set an editorial calendar for the front-page picks</td><td>Owner (editorial decision)</td></tr>
-    <tr><td>SG-19</td><td>Approve intent landing pages generated from the register</td><td>Owner (needs SG-10)</td></tr>
-    <tr><td>SG-22</td><td>Name an editor or fix the no-testing policy in writing</td><td>Owner (decision)</td></tr>
-    <tr><td>SG-23</td><td>Defer cook-time content until hands-on testing exists</td><td>Owner (product access)</td></tr>
-    <tr><td>SG-25</td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
-    <tr><td>SG-26</td><td>Feed campaign ledger only from authorised first-party reports</td><td>Owner (account access)</td></tr>
-    <tr><td>SG-29</td><td>Verify Search Console property and submit sitemap.xml</td><td>Owner (Google account)</td></tr>
-    <tr><td>SG-30</td><td>Decide reader email capture provider alongside RSS</td><td>Owner (decision)</td></tr>
-    <tr><td>SG-31</td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
-    <tr><td>SG-32</td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td><a href="#SG-07">SG-07</a></td><td>Test one Special Link per product in the enrolled account</td><td>Owner (account access)</td></tr>
+    <tr><td><a href="#SG-10">SG-10</a></td><td>Verify Search Console and decide on email capture</td><td>Owner (account access)</td></tr>
+    <tr><td><a href="#SG-13">SG-13</a></td><td>Apply for Product Advertising API access so prices can be shown legally</td><td>Owner (approval)</td></tr>
+    <tr><td><a href="#SG-14">SG-14</a></td><td>Choose and attach a custom domain</td><td>Owner (decision)</td></tr>
+    <tr><td><a href="#SG-15">SG-15</a></td><td>Use API-supplied product photography</td><td>Owner (needs SG-13)</td></tr>
+    <tr><td><a href="#SG-16">SG-16</a></td><td>Adopt a weekly cadence once queries are measurable</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td><a href="#SG-18">SG-18</a></td><td>Set an editorial calendar for the front-page picks</td><td>Owner (editorial decision)</td></tr>
+    <tr><td><a href="#SG-19">SG-19</a></td><td>Approve intent landing pages generated from the register</td><td>Owner (needs SG-10)</td></tr>
+    <tr><td><a href="#SG-22">SG-22</a></td><td>Name an editor or fix the no-testing policy in writing</td><td>Owner (decision)</td></tr>
+    <tr><td><a href="#SG-23">SG-23</a></td><td>Defer cook-time content until hands-on testing exists</td><td>Owner (product access)</td></tr>
+    <tr><td><a href="#SG-25">SG-25</a></td><td>Deploy analytics/server.js or Cloudflare Pages Function and set sn-collect-endpoint</td><td>Owner (hosting, FLG-010)</td></tr>
+    <tr><td><a href="#SG-26">SG-26</a></td><td>Feed campaign ledger only from authorised first-party reports</td><td>Owner (account access)</td></tr>
+    <tr><td><a href="#SG-29">SG-29</a></td><td>Verify Search Console property and submit sitemap.xml</td><td>Owner (Google account)</td></tr>
+    <tr><td><a href="#SG-30">SG-30</a></td><td>Decide reader email capture provider alongside RSS</td><td>Owner (decision)</td></tr>
+    <tr><td><a href="#SG-31">SG-31</a></td><td>Apply for Creators API access once account has qualified sales for automated research</td><td>Owner (S20, FLG-029)</td></tr>
+    <tr><td><a href="#SG-32">SG-32</a></td><td>Feed Search Console query exports into new buying guides</td><td>Owner (needs SG-10)</td></tr>
   </tbody>
 </table>
 
@@ -1860,7 +1936,9 @@ FORBIDDEN. Fake countdowns, invented scarcity, fabricated expert quotes, fabrica
 testing claims, fabricated search-volume numbers, placeholder filler text, emoji bullets, and any
 phrase that reads like it was produced by filling in a template."""
 
-    cluster_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td><td>{esc(c)}</td><td>{esc(d)}</td><td>{esc(e)}</td></tr>" for a, b, c, d, e in [
+    def _target(c):
+        return (f'<a href="{esc(c)}">{esc(c)}</a>' if c.startswith("guides/") else esc(c))
+    cluster_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td><td>{_target(c)}</td><td>{esc(d)}</td><td>{esc(e)}<br>{ref_links(e)}</td></tr>" for a, b, c, d, e in [
         ("A · Air fryer buying", "Basket or oven-style: what to compare first", "guides/basket-vs-oven.html", "Live", "Anchor guide, links to all three air fryer pages"),
         ("A · Air fryer buying", "A no-hype checklist for comparing air fryer capacity", "guides/capacity-checklist.html", "Live", "Feeds compare.html"),
         ("A · Air fryer buying", "How to assess cleanup and counter-space trade-offs", "guides/cleanup-counter-space.html", "Live", "Cross-links air fryer pages"),
@@ -1878,18 +1956,47 @@ phrase that reads like it was produced by filling in a template."""
         ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "Not written", "Proposed", "Compares P-01 and P-03 without crowning a winner"),
     ])
 
-    standards_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td></tr>" for a, b in [
-        ("Every claim traceable to a dated source", "The spec table links its source on every row; conflicts are printed verbatim."),
-        ("A named position or an honest blank", "No hands-on test is claimed anywhere; the review process is described on how-we-choose.html."),
-        ("Contradictions shown, not smoothed over", "P-02 lists both 24 and 25 presets; P-05 lists both 50 and 70 hours (FLG-008, FLG-021)."),
-        ("No invented numbers", "No search volume, no conversion rates, no commission figures; the ledger is empty by design."),
-        ("Questions as headlines", "Guides answer one buyer question each; the question came before the keyword."),
-        ("Real dates on everything", "Every page carries a last-verified date; re-verification is a scheduled pass, not a vibes check."),
-        ("Specific beats general", "'16.9 inches of depth plus door swing' beats 'spacious interior'."),
-        ("Trade-offs stated next to recommendations", "Every pick on the front page names what you give up."),
-        ("Disclosure as furniture, not fine print", "Associates statement above the fold on every page, repeated in the footer."),
-        ("One human editorial decision at the gate", "Automation drafts; the build gate and a human decide what ships (SG-12)."),
-    ])
+    standards = [
+        ("Every claim traceable to a dated source", "The spec table links its source on every row; conflicts are printed verbatim.",
+         '<a href="sources.html">source register</a>, <a href="flagged.html#FLG-005">FLG-005</a>'),
+        ("A named position or an honest blank", "No hands-on test is claimed anywhere; the review process is described on the method page.",
+         '<a href="how-we-choose.html">how-we-choose.html</a>'),
+        ("Contradictions shown, not smoothed over", "P-02 lists both 24 and 25 presets; P-05 lists both 50 and 70 hours.",
+         ref_links("FLG-008 FLG-021")),
+        ("No invented numbers", "No search volume, no conversion rates, no commission figures; the ledger is empty by design.",
+         '<a href="campaign-ledger.html">campaign ledger</a>, <a href="flagged.html#FLG-005">FLG-005</a>'),
+        ("Questions as headlines", "Guides answer one buyer question each; the question came before the keyword.",
+         '<a href="guides.html">guides.html</a>'),
+        ("Real dates on everything", "Every page carries a last-verified date; re-verification is a scheduled pass, not a vibes check.",
+         '<a href="sources.html">source register</a>'),
+        ("Specific beats general", "'16.9 inches of depth plus door swing' beats 'spacious interior'.",
+         '<a href="compare.html">compare table</a>'),
+        ("Trade-offs stated next to recommendations", "Every pick on the front page names what you give up.",
+         '<a href="index.html">front page</a>'),
+        ("Disclosure as furniture, not fine print", "Associates statement above the fold on every page, repeated in the footer.",
+         '<a href="disclosure.html">disclosure page</a>, <a href="sources.html#S01">S01</a>'),
+        ("One human editorial decision at the gate", "Automation drafts; the build gate and a human decide what ships.",
+         ref_links("SG-12")),
+    ]
+    standards_rows = "".join(
+        f"<tr><td>{esc(a)}</td><td>{esc(b)}</td><td class='src'>{c}</td></tr>"
+        for a, b, c in standards)
+
+    mapping = [
+            ("Disclosure above the fold, repeated in footer", "Live on every page; gate enforced", "SG-04, S01, S03"),
+            ("Sponsored + nofollow on every outbound Amazon link", "Live; gate enforced", "SG-05, S04"),
+            ("Sitemap, RSS, canonical, JSON-LD", "Live and gated", "SG-08"),
+            ("Original illustration, no Amazon photography", "Live; licence-safe", "SG-09, FLG-007"),
+            ("Question-shaped guides with verdicts", "8 live, 8 proposed above", "SG-02"),
+            ("Weekly cadence chosen from queries", "Blocked on Search Console", "SG-16, SG-10, Q-09"),
+            ("Prices shown legally", "Impossible until API access", "SG-13, FLG-005"),
+            ("Parallel-session coordination", "COORDINATION.md task board, active",
+             '<a href="COORDINATION.md">COORDINATION.md</a> in the repository root'),
+    ]
+    mapping_rows = "".join(
+        f'<tr><td>{esc(a)}</td><td>{esc(b)}</td><td class="src">'
+        f'{c if c.startswith("<a ") else ref_links(c)}</td></tr>'
+        for a, b, c in mapping)
 
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Design & Traffic Brief", None)])}
@@ -1969,20 +2076,20 @@ phrase that reads like it was produced by filling in a template."""
   <caption>Dates are calendar facts. No event on this page licenses a price, a sale claim or a countdown.</caption>
   <thead><tr><th scope="col">Date</th><th scope="col">Moment</th><th scope="col">Lead time</th><th scope="col">What to do</th></tr></thead>
   <tbody>
-    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist</td></tr>
-    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides</td></tr>
-    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13)</td></tr>
-    <tr><td>2026-12-02</td><td>First week of Advent</td><td>First week of December</td><td>Gifting by cook type: fryer-vs-thermometer decision guide</td></tr>
-    <tr><td>2026-12-25</td><td>Christmas</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one"</td></tr>
-    <tr><td>2027-01-02</td><td>New Year</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims</td></tr>
-    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times</td></tr>
+    <tr><td>2026-11-26</td><td>Thanksgiving (US)</td><td>Now — publish this week</td><td>Turkey thermometer USDA table guide; air fryer side-dish capacity checklist (<a href="sources.html#S22">S22</a>; <a href="guides/capacity-checklist.html">live guide</a>, <a href="guides/air-fryer-thanksgiving.html">live guide</a>)</td></tr>
+    <tr><td>2026-11-27</td><td>Black Friday</td><td>Now</td><td>Gift shortlist without prices; link to the two thermometer gift guides (<a href="flagged.html#FLG-005">FLG-005</a>, <a href="suggestions.html#SG-13">SG-13</a>)</td></tr>
+    <tr><td>2026-11-30</td><td>Cyber Monday</td><td>Same fortnight as Black Friday</td><td>One reminder post, no fake urgency, no prices (SG-13) (<a href="suggestions.html#SG-13">SG-13</a>)</td></tr>
+    <tr><td>2026-12-02</td><td>First week of Advent</td><td>First week of December</td><td>Gifting by cook type: fryer-vs-thermometer decision guide (<a href="suggestions.html#SG-02">SG-02</a>, proposed topic)</td></tr>
+    <tr><td>2026-12-25</td><td>Christmas</td><td>Mid-December</td><td>"What to cook in the new air fryer on day one" (<a href="guides/first-week-air-fryer.html">live guide</a>)</td></tr>
+    <tr><td>2027-01-02</td><td>New Year</td><td>First week of January</td><td>"Air fryer for the January reset" — health angle, zero medical claims (<a href="suggestions.html#SG-18">SG-18</a>, proposed topic)</td></tr>
+    <tr><td>2027-02-14</td><td>Valentine's / date night</td><td>Early February</td><td>Thermometer-led: reverse-sear steak doneness with USDA rest times (<a href="sources.html#S24">S24</a>, <a href="guides/instant-vs-wireless.html">live guide</a>)</td></tr>
   </tbody>
 </table>
 
 <h2>4. The standards that keep this from reading as generated</h2>
 <table>
   <caption>Ten reader-visible signals, agreed before any redesign.</caption>
-  <thead><tr><th scope="col">Standard</th><th scope="col">What it looks like on this site</th></tr></thead>
+  <thead><tr><th scope="col">Standard</th><th scope="col">What it looks like on this site</th><th scope="col">Provenance</th></tr></thead>
   <tbody>{standards_rows}</tbody>
 </table>
 
@@ -2000,14 +2107,7 @@ phrase that reads like it was produced by filling in a template."""
   <caption>Where each part of this brief is already true, and where the gaps are.</caption>
   <thead><tr><th scope="col">Brief element</th><th scope="col">State today</th><th scope="col">Reference</th></tr></thead>
   <tbody>
-    <tr><td>Disclosure above the fold, repeated in footer</td><td>Live on every page; gate enforced</td><td>SG-04</td></tr>
-    <tr><td>Sponsored + nofollow on every outbound Amazon link</td><td>Live; gate enforced</td><td>SG-05, S04</td></tr>
-    <tr><td>Sitemap, RSS, canonical, JSON-LD</td><td>Live and gated</td><td>SG-08</td></tr>
-    <tr><td>Original illustration, no Amazon photography</td><td>Live; licence-safe</td><td>SG-09, FLG-007</td></tr>
-    <tr><td>Question-shaped guides with verdicts</td><td>8 live, 8 proposed above</td><td>SG-02</td></tr>
-    <tr><td>Weekly cadence chosen from queries</td><td>Blocked on Search Console</td><td>SG-16, SG-10, Q-09</td></tr>
-    <tr><td>Prices shown legally</td><td>Impossible until API access</td><td>SG-13, FLG-005</td></tr>
-    <tr><td>Parallel-session coordination</td><td>COORDINATION.md task board, active</td><td>Repo root</td></tr>
+{mapping_rows}
   </tbody>
 </table>
 
@@ -2029,7 +2129,7 @@ def build_flagged():
         for sid in f.get("links", []):
             url = source_url(sid)
             if url:
-                links.append(f'<a href="{url}" rel="sponsored nofollow">{esc(sid)}</a>')
+                links.append(f'<a href="{tag_amazon(url)}" rel="sponsored nofollow">{esc(sid)}</a>')
         return " ".join(links) or "&mdash;"
 
     order = {"conflict": 0, "policy": 1, "open": 2, "pending-test": 3, "unverified": 4,
@@ -2037,7 +2137,7 @@ def build_flagged():
     conflict_count = len([f for f in FLAGS if f.get("severity") == "conflict"])
     rows = ""
     for f in sorted(FLAGS, key=lambda x: (order.get(x["severity"], 9), x["id"])):
-        rows += f"""<tr><td class="nowrap"><strong>{f['id']}</strong></td>
+        rows += f"""<tr id="{f['id']}"><td class="nowrap"><strong>{f['id']}</strong></td>
   <td>{esc(f['title'])}<br><span class="small pill-sev {esc(f['severity'])}">{esc(f['severity'])}</span></td>
   <td>{esc(f['detail'])}</td>
   <td>{esc(f['owner_status'])}</td>
@@ -2092,7 +2192,7 @@ def changelog_rows():
         if f.get("severity") != "corrected":
             continue
         links = " ".join(
-            f'<a href="{source_url(sid)}" rel="sponsored nofollow">{esc(sid)}</a>'
+            f'<a href="{tag_amazon(source_url(sid))}" rel="sponsored nofollow">{esc(sid)}</a>'
             for sid in f.get("links", []) if source_url(sid))
         rows += (f'<tr><td class="nowrap">{TODAY}</td><td class="nowrap"><strong>{f["id"]}</strong></td>'
                  f'<td>{esc(f["title"])}<br><span class="small">{esc(f["detail"])}</span></td>'
@@ -2102,9 +2202,19 @@ def changelog_rows():
 
 # ---- sources
 def build_sources():
+    def source_link(s):
+        url = s["url"]
+        href = tag_amazon(url)
+        paid = ' <span class="small">(tagged paid link)</span>' if href != url else ""
+        anchor = (f'<a href="{esc(href)}" rel="sponsored nofollow" class="small">{esc(url)}</a>'
+                  f'{paid}')
+        rev = (f'<br><span class="small">Revision read: {esc(s["revision"])}</span>'
+               if s.get("revision") else "")
+        return anchor + rev
+
     rows = "".join(
-        f"""<tr><td class="nowrap"><strong>{s['id']}</strong></td>
-  <td>{esc(s['name'])}<br><a href="{esc(s['url'])}" rel="sponsored nofollow" class="small">{esc(s['url'])}</a></td>
+        f"""<tr id="{s['id']}"><td class="nowrap"><strong>{s['id']}</strong></td>
+  <td>{esc(s['name'])}<br>{source_link(s)}</td>
   <td class="quote">{esc(s['used_for'])}</td>
   <td class="nowrap">{esc(s['checked'])}</td></tr>""" for s in SOURCES)
     body = f"""
@@ -2132,6 +2242,15 @@ def build_sources():
   <tbody>{rows}</tbody>
 </table>
 
+<p class="small">Link policy: every clickable <code>amazon.com</code> link on this site &mdash;
+  including the register rows above &mdash; carries the Associates tag <code>{TRACKING_ID}</code>
+  and <code>rel="sponsored nofollow"</code>, so it is a paid Special Link by the Operating
+  Agreement's definition. The plain, untagged official URLs are kept unmodified in the visible text
+  above, in each product's intent record, and in <code>data/products.json</code>, so nothing about
+  the evidence changes. The <code>link.amazon</code> short links are published exactly as supplied
+  (S15&ndash;S19) and are deliberately not re-tagged or re-written; their compliance status stays
+  under <a href="flagged.html#FLG-003">FLG-003</a>.</p>
+
 <h2>What changed, and when</h2>
 <p>The corrections below are the ones a reader can see on this site. Each links to the flag that records
 it in full, including what the earlier version said.</p>
@@ -2152,6 +2271,10 @@ it in full, including what the earlier version said.</p>
     flattering one.</li>
   <li>If nothing on the page carries the value, leave it blank and say so.</li>
 </ol>
+<p class="small">Commission rates: the Program Policies Appendix (read in full on {TODAY}) links
+  Standard and Special Commission Income to the Associates <em>schedule</em> page, which is behind
+  the Associates login and cannot be read without the owner's account. No commission rate,
+  percentage, or payment schedule is therefore reproduced anywhere on this site.</p>
 <p class="small">A note on the listings: an Amazon product page is not a stable document. Titles,
   bullet copy and the structured information table can change without notice. That is why every row
   here is dated and why the <a href="flagged.html">flag register</a> keeps corrections rather than
@@ -2170,7 +2293,21 @@ def build_exec():
         f"<tr><td class=\"nowrap\">{p['id']}</td><td><strong>{esc(p['brand'])}</strong></td>"
         f"<td>{esc(p['cat'])}</td><td>{esc(p['observed'])}</td>"
         f"<td>{esc(p['model'] or '—')}</td>"
-        f"<td><a href=\"{plain(p)}\" rel=\"sponsored nofollow\">listing</a></td></tr>" for p in PRODUCTS)
+        f"<td>{citation(plain(p), label='listing')}</td></tr>" for p in PRODUCTS)
+    conflict_rows = [
+        ("FLG-021", "Emeril 26 QT", "24 presets in title/Configuration/Description, 25 in About this item", "S11"),
+        ("FLG-031", "Emeril 26 QT", "Six accessories in title &amp; Included Components, seven in Configuration &amp; Description", "S11"),
+        ("FLG-009", "Emeril 26 QT", "4-00675-02X-VN in live Item details vs 4-00675-02 in earlier listing capture", "S11"),
+        ("FLG-018", "Chefman 8 Qt", "400 &deg;F max in spec field &amp; About this item, 450 &deg;F Hi-Fry in title", "S12"),
+        ("FLG-017", "Chefman 8 Qt", "1700 W in Features &amp; Specs, 1000 W in About this item", "S12"),
+        ("FLG-034", "Chefman 6 Qt", "6 quarts in title/bullets, 6 liters in Measurements field", "S10"),
+        ("FLG-008", "CHEF iQ Sense", "50 hours battery in About this item, 70 hours in earlier Product Description capture", "S14"),
+        ("FLG-038", "CHEF iQ Sense", "Two-year assurance in About this item vs 3 Year in Item details (prior register FLG-019)", "S14"),
+    ]
+    crows = "".join(
+        f'<tr><td><a href="flagged.html#{fid}">{fid}</a></td><td>{prod}</td><td>{what}</td>'
+        f'<td class="src">{citation(source_url(sid), label=sid)}</td></tr>'
+        for fid, prod, what, sid in conflict_rows)
     body = f"""
 {breadcrumb([("Home", "index.html"), ("Executive Summary", None)])}
 <h1>Executive summary</h1>
@@ -2245,17 +2382,9 @@ def build_exec():
 
 <h2>5. The listing conflicts a buyer should know about</h2>
 <table class="exec">
-  <thead><tr><th scope="col">Flag</th><th scope="col">Product</th><th scope="col">Contradiction</th></tr></thead>
-  <tbody>
-    <tr><td>FLG-021</td><td>Emeril 26 QT</td><td>24 presets in title/Configuration/Description, 25 in About this item</td></tr>
-    <tr><td>FLG-031</td><td>Emeril 26 QT</td><td>Six accessories in title &amp; Included Components, seven in Configuration &amp; Description</td></tr>
-    <tr><td>FLG-009</td><td>Emeril 26 QT</td><td>4-00675-02X-VN in live Item details vs 4-00675-02 in earlier listing capture</td></tr>
-    <tr><td>FLG-018</td><td>Chefman 8 Qt</td><td>400 &deg;F max in spec field &amp; About this item, 450 &deg;F Hi-Fry in title</td></tr>
-    <tr><td>FLG-017</td><td>Chefman 8 Qt</td><td>1700 W in Features &amp; Specs, 1000 W in About this item</td></tr>
-    <tr><td>FLG-034</td><td>Chefman 6 Qt</td><td>6 quarts in title/bullets, 6 liters in Measurements field</td></tr>
-    <tr><td>FLG-008</td><td>CHEF iQ Sense</td><td>50 hours battery in About this item, 70 hours in earlier Product Description capture</td></tr>
-    <tr><td>FLG-038</td><td>CHEF iQ Sense</td><td>Two-year assurance in About this item vs 3 Year in Item details (prior register FLG-019)</td></tr>
-  </tbody>
+  <thead><tr><th scope="col">Flag</th><th scope="col">Product</th><th scope="col">Contradiction</th>
+    <th scope="col">Source</th></tr></thead>
+  <tbody>{crows}</tbody>
 </table>
 
 <h2>6. What would change the numbers</h2>
@@ -2310,7 +2439,9 @@ def build_ledger():
     <th scope="col">Outbound clicks</th><th scope="col">Reported orders</th>
     <th scope="col">Provenance note</th></tr></thead>
   <tbody><tr class="empty"><td colspan="7">No rows. No authorised first-party report has been
-    supplied.</td></tr></tbody>
+    supplied (<a href="questions.html">Q-04</a>); the five browser-local events that could feed it
+    are defined on the <a href="measurement.html">measurement schema</a>. Empty by design — nothing
+    is inferred.</td></tr></tbody>
 </table>
 
 <h2>What is measured today, and where</h2>
@@ -2369,16 +2500,22 @@ def build_disclosure():
 <h2>What we measure</h2>
 <p>Five events, defined once and used consistently:</p>
 <table class="events">
-  <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th></tr></thead>
+  <thead><tr><th scope="col">Event</th><th scope="col">Fires when</th><th scope="col">Used for</th>
+    <th scope="col">Documented at</th></tr></thead>
   <tbody>
-    <tr><td><code>page_view</code></td><td>Any page loads</td><td>Which pages are reached at all</td></tr>
+    <tr><td><code>page_view</code></td><td>Any page loads</td><td>Which pages are reached at all</td>
+      <td class="src"><a href="measurement.html">measurement schema</a></td></tr>
     <tr><td><code>outbound_click</code></td><td>A tagged Amazon link is clicked</td>
-      <td>Which product a reader actually leaves for</td></tr>
-    <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td></tr>
+      <td>Which product a reader actually leaves for</td>
+      <td class="src"><a href="measurement.html">measurement schema</a>, <a href="flagged.html#FLG-010">FLG-010</a></td></tr>
+    <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td>
+      <td class="src"><a href="measurement.html">measurement schema</a></td></tr>
     <tr><td><code>search</code></td><td>A built-in search runs</td>
-      <td>Result count only &mdash; the words typed are not recorded</td></tr>
+      <td>Result count only &mdash; the words typed are not recorded</td>
+      <td class="src"><a href="measurement.html">measurement schema</a></td></tr>
     <tr><td><code>suggestion_rank</code></td><td>A proposal is reordered on the Decision Center</td>
-      <td>Which direction is actually preferred</td></tr>
+      <td>Which direction is actually preferred</td>
+      <td class="src"><a href="measurement.html">measurement schema</a>, <a href="suggestions.html">Decision Center</a></td></tr>
   </tbody>
 </table>
 <p>All five are counted in your browser's local storage by default. Search words are held in
@@ -2643,11 +2780,14 @@ def build_measurement():
     ev_rows = ""
     for name, spec in EVENTS["events"].items():
         fields = ", ".join(f"<code>{esc(k)}</code>" for k in spec["allowed_fields"])
+        doc_cell = ('<a href="disclosure.html">disclosure &mdash; what we measure</a>, '
+                    '<a href="campaign-ledger.html">campaign ledger</a>')
         ev_rows += (
             f"<tr><td><code>{esc(name)}</code></td>"
             f"<td>{esc(spec['fires_when'])}</td>"
             f"<td>{fields}</td>"
-            f"<td>{esc(spec['used_for'])}</td></tr>"
+            f"<td>{esc(spec['used_for'])}</td>"
+            f'<td class="src">{doc_cell}</td></tr>'
         )
     forbidden = ", ".join(f"<code>{esc(f)}</code>" for f in EVENTS["forbidden_fields"])
     body = f"""
@@ -2662,7 +2802,8 @@ def build_measurement():
   <caption>Privacy contract v{esc(EVENTS['schema_version'])}. Disallowed fields ({forbidden}) are
     stripped client-side and rejected with HTTP 400 by the collector.</caption>
   <thead><tr><th scope="col">Event</th><th scope="col">Trigger</th>
-    <th scope="col">Allowed fields</th><th scope="col">Purpose</th></tr></thead>
+    <th scope="col">Allowed fields</th><th scope="col">Purpose</th>
+    <th scope="col">Documented at</th></tr></thead>
   <tbody>{ev_rows}</tbody>
 </table>
 
