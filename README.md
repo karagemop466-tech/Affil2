@@ -12,9 +12,10 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | If you want | Read |
 |---|---|
 | The short version | `EXECUTIVE-SUMMARY.md` |
-| What to decide next | `suggestions.html` — Decision Center, 16 proposals, rankable |
+| What to decide next | `suggestions.html` — Decision Center, 17 proposals, rankable |
+| The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
 | What is still unanswered | `questions.html` — Open Questions, 14 rows |
-| What could not be verified | `flagged.html` — Flagged for Review, 33 items |
+| What could not be verified | `flagged.html` — Flagged for Review, 35 flags |
 | Where every fact came from | `sources.html` — source register |
 | How the site is built | `scripts/build_site.py` |
 
