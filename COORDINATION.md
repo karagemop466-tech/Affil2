@@ -1641,3 +1641,48 @@ Associates account activity and the Special Link test (FLG-002, FLG-003, FLG-004
 hosting (FLG-010, Q-08) · Search Console property (SG-29) · a named author (FLG-033) · first-party
 reports for the campaign ledger (SG-26). None of these block publication and none is claimed as
 done anywhere on the site.
+
+## Session `c6fa1006` — rebase onto `main` (85ee0ce) and ID reconciliation
+
+`main` moved while this session worked: PRs #56–#61 merged, taking `main` from `4ddede5` to
+`85ee0ce`. Those sessions had already used the task IDs, flag IDs and source IDs this session had
+claimed, so the rebase renumbered this session's work rather than overwriting theirs.
+
+**Nothing of another session's work was discarded.** Both sides were kept wherever both said
+something true.
+
+### ID collisions found on rebase, and how each was resolved
+
+| Collision | Their use | This session's use now |
+|---|---|---|
+| Task IDs T-27, T-30, T-31 | `a150712` (PR dispositions), `57fc3be0` (final integration), `7481731c` (T-31 live re-check, PR #59) | This session's six tasks are **T-32..T-37** |
+| Flag IDs FLG-051, FLG-052, FLG-053 | Short-link re-check, seasonal dates, ASIN-definition search | This session's findings are **FLG-054** (9-char tokens), **FLG-055** (P-05 variations), **FLG-056** (chunk citations), **FLG-057** (second warranty sentence), **FLG-058** (policy revision dates) |
+| Source ID S25 | Seller Central help G1471 (lists ASIN as an identifier, does not define it) | This session's ASIN definition is **S27**. S25 is kept as-is. |
+| Source ID S26 | OPM federal holidays | Kept theirs; this session only added `page_date` to it, because the seasonal table it added needed the citation to already exist. |
+
+Their FLG-053 ("ASIN definition not yet located") is set to **corrected**, pointing at S27, rather than
+left open alongside the page that answers it. Their FLG-050 (five values not re-confirmed) is likewise
+**corrected**, because this session re-read all five. Their FLG-052 (seasonal dates) stays as they left
+it; this session added a `kind` column so a reader can see which rows are published holidays and which
+are planning markers.
+
+### Conflict resolutions
+
+| File | Resolution |
+|---|---|
+| `COORDINATION.md` | Both sides kept: their board rows and session notes are intact, this session's rows follow as T-32..T-37 with a note explaining the renumbering. |
+| `REQUIREMENTS-TRACE.md` | Rebuilt on their base. Their sections 4 and 5 are preserved verbatim; this session's pass is section 6 and the closing caveats are section 7. |
+| `data/sources.json` | Theirs kept; this session's rows appended with new IDs; `page_date` added to S01, S02, S04 and S26. |
+| `data/flags.json` | Theirs kept; two of their flags resolved with evidence; five appended from FLG-054. |
+| `scripts/build_site.py` | Topic clusters: their corrected wording for the Black Friday row, plus this session's per-row source column. Seasonal calendar: **their corrected dates** (including the Advent correction to 2026-11-29 and New Year to 2027-01-01) with this session's `kind` column added. |
+| Generated `*.html` | Regenerated from the merged data and generator; no hand-merging. |
+| `scripts/check_site.py` | Both rule sets present; `sell.amazon.com` added to the official-host allowlist with its reason, since S27 lives there. |
+
+### Post-rebase verification
+
+| Check | Result |
+|---|---|
+| `python3 scripts/build_site.py` | 36 pages, idempotent |
+| `python3 scripts/check_site.py` | `checked 36 pages, 5 product records, 58 flags, 22 sources — ALL CHECKS PASS` |
+| `python3 -m unittest discover -s tests -p "test_*.py"` | 7 tests, OK |
+| `node tests/test_collector.js` | ALL JS COLLECTOR AND CLIENT TESTS PASS |
