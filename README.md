@@ -15,6 +15,9 @@ Live: https://karagemop466-tech.github.io/Affil2/
 | The short version | `EXECUTIVE-SUMMARY.md` |
 | What to decide next | `suggestions.html` — Decision Center, 32 proposals, rankable |
 | The next build prompt | `design-brief.html` — design prompt, traffic plan, editorial standards (SG-17) |
+| What is still unanswered | `questions.html` — Open Questions, current count on the page |
+| What could not be verified | `flagged.html` — Flagged for Review, 50 flags, every one sourced |
+| Why crawlers should rank this | `findability.txt` — canonical home, editorial policy, indexable pages, citation form |
 | What is still unanswered | `questions.html` — Open Questions, 20 rows |
 | What could not be verified | `flagged.html` — Flagged for Review, 46 flags, every one sourced |
 | Where every fact came from | `sources.html` — Source Register, 19 official sources + dated changelog |
@@ -24,6 +27,7 @@ Live: https://karagemop466-tech.github.io/Affil2/
 
 ## Rebuild and check
 
+    python3 scripts/build_site.py                          # writes 36 pages, sitemap.xml, feed.xml, robots.txt, findability.txt
     python3 scripts/build_site.py                          # writes every page, sitemap.xml, feed.xml, robots.txt
     python3 scripts/check_site.py                          # compliance and integrity gate; exits 1 on any problem
     python3 -m unittest discover -s tests -p "test_*.py" -v
@@ -46,7 +50,9 @@ generator output, if the gate fails, or if the unit/collector tests fail.
 | `assets/style.css` | storefront stylesheet, including photo-card and diagram styles |
 | `assets/photos/` | generated illustrative storefront scenes, captioned on every page that uses them (FLG-036) |
 | `assets/illustrations/` | 3 original editorial SVG schematics (`air-fryer.svg`, `air-fryer-oven.svg`, `thermometer.svg`) |
-| `assets/app.js` | five measured events, client search (`search.html`), pair compare (`compare.html`), mobile nav toggle, ranking, CSV export, gated `send()` |
+| `assets/app.js` | five measured events, client search (`search.html`), pair compare and the three-question shortlist (`compare.html`), mobile nav toggle, ranking, CSV export, gated `send()` |
+| `findability.txt` | generated site profile: canonical home, editorial policy, reader pages vs records, sitemap, feed, citation form, known limits |
+| `data/verification-2026-11-20-live.json` | the independent live re-read of all five listings: 33 field rows, each marked verified / conflict / unverified for that pass |
 | `analytics/server.js` | zero-dependency Node.js self-hosted collector (`GET`/`POST /api/collect`) |
 | `functions/api/collect.js` | drop-in Cloudflare Pages Function collector matching `data/events.json` |
 | `scripts/` | single-source generator (`build_site.py`) and compliance gate (`check_site.py`) |
@@ -85,6 +91,13 @@ anywhere on the strength of this pass.
   `sitemap.xml`; `feed.xml` parses and its items exist.
 - A blank field must be marked `unverified`; a value must name where it was stated.
 - Every flag referenced in HTML or `editorial.json` is defined, and every defined flag is published.
+- **Reader voice.** No crawl-chunk citation (`chunk 7`) and no bare flag ID (`FLG-0xx`) may appear on
+  any reader-facing page — product pages, category pages, guides, `index`, `shop`, `compare`,
+  `how-we-choose`, `about`, `disclosure`, `search`. Flags belong on `flagged.html`, where they are
+  published in full with their sources. A contradiction a shopper should know about is stated in
+  words on the page instead.
+- **Findability.** `findability.txt` exists, names the canonical home, and lists every page in
+  `sitemap.xml`.
 - `assets/style.css` parses (balanced braces, closed `@media` blocks) and every class the generator
   emits has a rule, so a page cannot ship unstyled.
 - No image file under `assets/` ships without a page or a generator script referencing it.
