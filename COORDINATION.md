@@ -1070,3 +1070,53 @@ Branch `arena/d95938bb-affil2`, base `66ccda9` (main, after PR #39). Session sta
 **Verification method.** Official Amazon listing pages are read through the page tool (not scripted scraping) down to the chunk that carries each `Product information` table; every claim printed on a page carries the listing URL and the fetch date. Policy claims quote the official URLs already in `data/sources.json` and are re-fetched where reachable. Nothing is inferred: anything not confirmed stays blank and is flagged.
 
 **Known limitation, stated up front.** `link.amazon` is not reachable from this sandbox (TLS handshake fails; the outbound allow-list is github.com / api.github.com / codeload / npm / PyPI plus the page-fetch tool). Short-link resolution is re-read through the page tool only and instability stays under FLG-011/FLG-012. Live Pages status is confirmed through the GitHub API, not by fetching the Pages host.
+
+### T-21 completion record (2026-11-20, session `d95938bb`)
+
+**Scope delivered.** Storefront polish on generated output only; no product fact, source or
+verification value was overwritten. Additive changes: `data/products.json` gained one field per
+product (`short`), `data/flags.json` gained FLG-041..FLG-049 (append only), and one new evidence file
+`data/reverification-2026-11-20-session-d95938bb.json` records this pass's listing reads.
+
+**Defects found and fixed** (each published on `flagged.html` with its source link):
+
+| Flag | Defect | Fix |
+|---|---|---|
+| FLG-041 | Cards named a product by brand only, so both Chefman units printed as "Chefman" | Distinguishing name per product, printed on cards, compare header, byline, breadcrumb, `<title>`; gated |
+| FLG-042 | Double-escaped entities printed literally on `guides.html` and both Holiday guides | Decode before escape; gated |
+| FLG-043 | Guide images injected as raw `<img>`: no dimensions, no loading attr, no caption, wrong folder | Moved to `assets/photos/`, rendered as captioned figures; gate requires alt/width/height/loading on every image |
+| FLG-044 | Nine classes emitted with no CSS rule (`.usda`, `.badge`, `.chips`, `.chip`, `.partially`, `.clusters`, `.hero-facts`, `table.ledger`, `.micro`) | Rules added; no copy changed; audit reports zero unstyled classes |
+| FLG-045 | Six committed images referenced by nothing | Deleted |
+| FLG-046 | Design brief stated "8 live guides" / "8 items" while 11 are live | Counts computed at build time |
+| FLG-047 | Compare implied prices/ratings were absent from the listings | Wording corrected: values exist, are excluded by policy; still no values printed |
+| FLG-048 | Spec citations carry fetch chunk numbers that cannot be reproduced | Documented; table + field name is the evidence, not the chunk |
+| FLG-049 | `assets/config.js` documented the analytics switch but no page loaded it, so the switch did nothing | Shell loads `config.js` before `app.js`; `app.js` reads `window.SITE_CONFIG.analyticsEndpoint`; gated |
+
+Also removed one duplicated CSS block added earlier in this session after finding it contradicted the
+existing November-issue layer (`.badge`, `.chips`, `.chip`, `.hero-facts`, `.card-blurb`,
+`.bestfor/.catchline`).
+
+**Verification performed in this pass.**
+- All five `/dp/` listings opened; titles read and matched character-for-character to the register.
+- `Product information` block read row by row for P-01, P-03, P-05, and the P-02 title fields.
+  Confirmed: P-01 450 °F max / 93 °C min / 120 V / 1700 W / 13.38×11.81×10.63 in / 13.3 lb /
+  "6 liters" vs "6 Quart"; P-03 1700 W, Max 400 °F vs 450 °F Hi-Fry in title, 12.8 lb, 8 quarts,
+  RJ38-SQSS-8T, min 94 °C; P-05 1000 °F upper, 4.75 in immersion, 5 sensors, Bluetooth/Wi-Fi,
+  dishwasher safe; P-02 "24 One-Touch Preset Options" and "Six Cooking Accessories Included".
+- Not re-read this pass, and not claimed: P-02 temperature/power/dimensions/model, P-04 model /
+  572 °F / 6.5 in / Wipe Clean, P-05 battery and warranty wording. Recorded explicitly in
+  `data/reverification-2026-11-20-session-d95938bb.json` under `not_confirmed_this_pass`.
+- `link.amazon` short links: not reachable from this sandbox (TLS handshake fails). Not re-resolved;
+  the earlier dated resolution record stands and FLG-011/FLG-012 remain open.
+- Local HTTP smoke: 28 representative URLs (every page type, CSS, both JS files, a photo, sitemap,
+  feed, robots) all returned 200; a crawler across every page found zero broken asset or page
+  references.
+- HTML structure parsed for all 36 pages: zero unclosed or mismatched tags.
+- `python3 scripts/build_site.py` idempotent; `python3 scripts/check_site.py` → 36 pages, 5 product
+  records, 49 flags, 19 sources, ALL CHECKS PASS; `python3 -m unittest discover -s tests` → 3 OK;
+  `node tests/test_collector.js` → pass; `node --check assets/app.js` OK.
+
+**Irregularities for the owner (non-blocking, all published).**
+- FLG-048: chunk numbers in `products.json` provenance strings are not reproducible evidence.
+- FLG-003 remains unresolved: the short-link format is neither endorsed nor condemned here.
+- FLG-001/002/004/010/028/033/019/032 remain owner-gated; nothing in this pass claims them done.

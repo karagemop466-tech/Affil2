@@ -649,8 +649,9 @@ def build_shop():
     body = f"""
 {breadcrumb([("Home", "index.html"), ("All products", None)])}
 <h1>All five products</h1>
-<p class="lede">Everything this site covers, in one place. Same five links you gave us, sorted by
-  what they are good at rather than by which one pays more.</p>
+<p class="lede">All five appliances, in one place. Sorted by the job each one is best at, not by
+  which one pays more &mdash; and every spec below came off the official listing, not from a review
+  we have not run.</p>
 <div class="grid">{"".join(card(p, "") for p in PRODUCTS)}</div>
 <h2>Side by side</h2>
 {overview_table()}
