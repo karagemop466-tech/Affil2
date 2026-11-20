@@ -1,0 +1,54 @@
+{
+  "name": "Countertop Journal",
+  "name_status": "Working title (S-05). Not final.",
+  "tagline": "Buyer questions for air fryers and multi-function kitchen appliances.",
+  "base_url": "https://karagemop466-tech.github.io/Affil2/",
+  "repo_url": "https://github.com/karagemop466-tech/Affil2",
+  "tracking_id": "shopnow047c-20",
+  "tracking_id_status": "Supplied by owner; not validated against the Associates account (F-05).",
+  "updated": "2026-11-20",
+  "associates_statement": "As an Amazon Associate I earn from qualifying purchases.",
+  "disclosure_short": "Links marked Sponsored are affiliate links. We may earn a commission from qualifying purchases at no extra cost to you.",
+  "analytics": {
+    "endpoint": "",
+    "status": "Disabled. No endpoint configured (F-09, S-01).",
+    "proposed_events": ["page_view", "product_view", "outbound_click", "guide_view", "feed_open"]
+  },
+  "executive_summary": {
+    "headline": "The site is built, but it cannot yet send buyers to confirmed products or measure clicks.",
+    "points": [
+      "Five product links were supplied. Only two resolve to a product page. Two resolve to the Amazon homepage and one to a checkpoint. The supplied tokens are 9 characters long, not the 10-character ASIN length cited by third-party sources (F-01, F-02, F-03).",
+      "Official Associates rules are confirmed: the identification statement is required and must be clear and prominent (Operating Agreement §5). The statement now appears on every page. Affiliate links carry rel=\"sponsored\" (Google guidance). Whether the short links fall under the redirecting or improperly-formatted exclusions is unresolved (F-04).",
+      "No prices or ratings are shown for the main products, because the values captured were from other items on the page (F-08).",
+      "Click and conversion measurement is built as a disabled hook. GitHub Pages cannot store events, so an endpoint decision is needed first (F-09, S-01).",
+      "The campaign ledger is empty by design. No commission, click, or revenue figures are presented, and none are forecast.",
+      "Before any decision, the owner must confirm the product links, test one Special Link per product in the Associates account, and choose the measurement path. The Questions and Suggestions pages list each step."
+    ]
+  },
+  "guides": [
+    {
+      "id": "G-01",
+      "working_title": "Basket or oven-style air fryer: what should you compare?",
+      "status": "Not published. Hypothesis (S-06).",
+      "note": "Working title only. Not a claim about popularity, search volume, or product quality."
+    },
+    {
+      "id": "G-02",
+      "working_title": "A no-hype checklist for comparing air fryer capacity",
+      "status": "Not published. Hypothesis (S-06).",
+      "note": "Working title only."
+    },
+    {
+      "id": "G-03",
+      "working_title": "How to assess cleanup and counter-space trade-offs",
+      "status": "Not published. Hypothesis (S-06).",
+      "note": "Working title only."
+    },
+    {
+      "id": "G-04",
+      "working_title": "Questions to ask before buying a multi-function kitchen appliance",
+      "status": "Not published. Hypothesis (S-06).",
+      "note": "Working title only."
+    }
+  ]
+}
