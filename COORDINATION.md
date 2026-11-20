@@ -2128,3 +2128,31 @@ byte-identical.
 
 **Hand-off note for whoever takes `check_site.py` next:** make the report a function called from the
 bottom of the file, so a rule cannot be appended into dead code again.
+
+### Session `arena/19dbf5e2-affil2` — PR, merge, deploy and live verification
+
+| Field | Value |
+|-------|-------|
+| PR (work) | https://github.com/karagemop466-tech/Affil2/pull/70 — MERGED 2026-11-20T07:18:53Z as `898652f` |
+| PR (gate repair follow-up) | https://github.com/karagemop466-tech/Affil2/pull/73 — MERGED 2026-11-20T07:24:09Z as `20e4069` |
+| CI before each merge | "Regenerate and gate" — pass (runs 44693674053 / 44694619859); "Verify site" on `main` — success |
+| Pages | `gh api …/pages/builds/latest` → `status = built`, commit `20e4069` (and `898652f` before it); deploy runs 44694051188 / 44694702024 both success |
+| Live verification | Fetched `https://karagemop466-tech.github.io/Affil2/guides/first-week-wireless-probe.html` and `products/p04-thermomaven-1sec.html` **after** the second deploy: disclosure above the fold, dated byline, per-product rendering with alt text and the "generated for this site" caption, `og:image` matching the product, USDA chart linked, every buy button tagged `?tag=shopnow047c-20` and marked "(paid link)". The audit copy of the intent record and the `FLG-0xx` codes are gone from the live product page — the difference between the first deploy (`898652f`) and the second (`20e4069`) is visible in the fetched output, which is how the fix was confirmed rather than assumed. |
+| Gate at each merge | 43 pages, 5 product records, 66 flags, 22 sources — ALL CHECKS PASS, **with every rule reachable** |
+| Tests at each merge | 22 Python tests OK; `node tests/test_collector.js` PASS; builds byte-identical |
+
+**Docs reconciled to the data (markdown only, not generated pages).** `README.md` and
+`EXECUTIVE-SUMMARY.md` carried counts from before these merges (58 flags / 13 guides / 38 pages / 7
+Python tests) and now read 66 / 18 / 43 / 22; README gained the "the report runs last" rule so the
+dead-code failure cannot be reintroduced quietly, and the executive summary gained a section covering
+the traffic wave, the imagery layer, the decision paths, the gated draft pipeline and the
+gate-reachability finding. No claim was added that is not supported by the files it cites.
+
+**Merge rounds needed:** four (main moved from `4ddede5` to `4f364ee` during the session: PRs #55–#72).
+Every conflict was resolved by keeping both sides in the source files and **re-running the merged
+generator** for HTML, `sitemap.xml`, `feed.xml` and `findability.txt` — no generated page was
+hand-merged. Upstream work was never discarded: where a parallel session solved the same problem (the
+two how-to guides, the entity-decoding mechanism, the stylesheet markers, the read-time measure, the
+page-count test), this branch **took upstream's version and removed its own duplicate**, recording the
+differences as FLG-059…066. Flag IDs were renumbered twice as main advanced; task IDs `T-31`/`T-32`
+are shared with other sessions and the collisions are logged above.
