@@ -169,6 +169,8 @@ DASH = [
     ("campaign-ledger.html", "Campaign Ledger"),
     ("about.html", "About &amp; Authorship"),
     ("disclosure.html", "Disclosure &amp; Privacy"),
+    ("measurement.html", "Measurement"),
+    ("platform.html", "Platform"),
 ]
 
 
@@ -245,6 +247,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
   </div>
 </footer>
 <script src="{up}assets/app.js" defer></script>
+<script src="{up}assets/js/collect.js" defer></script>
 </body>
 </html>
 """
@@ -1428,7 +1431,7 @@ SUGGESTIONS = [
          why="The request asked for automation and for compliance. The only way both are true is a "
              "gate.",
          impact="Medium — scale without risk", effort="Done", status="Shipped",
-         verify="scripts/check_site.py runs on every build and fails on disclosure, sponsorship, price and link errors."),
+         verify="scripts/check_site.py runs on every build and fails on disclosure, sponsorship, price and link errors. The design behind the roadmap is written down at platform.html."),
     dict(id="SG-13", title="Add a price display through the Product Advertising API",
          what="If the owner obtains PA or Creators API credentials, prices and availability could be "
               "shown with the attribution Amazon requires.",
@@ -1767,6 +1770,8 @@ def build_questions():
   <p>Fourteen questions, grouped by who can answer them. Six need the owner's account access or a
     yes/no decision. Four need a seller to clarify a listing that contradicts itself. Two need Amazon
     support. Two are editorial choices that only the owner can make.</p>
+  <p class="small">The machinery these questions would unblock is specified, gate by gate, in the
+    <a href="platform.html">Platform concept</a>.</p>
   <p class="small">If you only answer one thing, answer <strong>Q-04</strong> &mdash; whether the
     tagged links are being recorded. Everything about revenue depends on it, and nothing else
     does.</p>
@@ -2346,9 +2351,12 @@ def build_disclosure():
 </table>
 <p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
   carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
-  pixel and no tag manager on this site. A self-hosted endpoint could replace local storage later,
-  and the event names are fixed so that swap would not require editing any page &mdash; but until
-  that endpoint exists, nothing leaves your device.</p>
+  pixel and no tag manager on this site. This repository also ships a <strong>self-hosted
+  collector</strong> that could record the same five events server-side &mdash; a Cloudflare Pages
+  Function, a dependency-free Node server and an aggregate-only Worker (see
+  <a href="measurement.html">Measurement</a>). The browser probes that endpoint once per page and
+  stays inert while none answers, so until one is deployed and the site is pointed at it, nothing
+  leaves your device (FLG-036).</p>
 <p>You can clear everything we store by clearing site data for this domain, and you can export it
   first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
 
@@ -2361,8 +2369,8 @@ def build_disclosure():
 <h2>Cookies, and what we do not use</h2>
 <ul>
   <li>No advertising cookies, no retargeting, no social pixels.</li>
-  <li>No fonts or scripts loaded from a third-party CDN &mdash; the page loads from this domain
-    only.</li>
+  <li>The only third-party request is the font stylesheet (Google Fonts, Fraunces + Inter) &mdash;
+    type only: no cookies, no identifiers, no analytics. Everything else loads from this domain.</li>
   <li>No account, no login, no email capture on this site.</li>
   <li>Clicking a product link takes you to Amazon, where Amazon's own privacy policy applies and
     Amazon's own cookies are set.</li>
@@ -2465,7 +2473,13 @@ def build_search():
                    "Every conflict and unverified value with its source", "page"),
                   ("Sources", "sources.html", "The ten official sources behind every claim", "page"),
                   ("Disclosure and privacy", "disclosure.html",
-                   "Affiliate disclosure, price policy, and the five measured events", "page")]:
+                   "Affiliate disclosure, price policy, and the five measured events", "page"),
+                  ("Measurement", "measurement.html",
+                   "The five first-party events, the self-hosted collector contract, and what is "
+                   "never collected", "page"),
+                  ("Platform concept", "platform.html",
+                   "The automation behind the publication, stage by stage, with the gate at the "
+                   "end of each stage", "page")]:
         index.append({"t": extra[0], "u": extra[1], "d": extra[2], "k": extra[3]})
     idx = json.dumps(index, ensure_ascii=False)
     body = f"""
@@ -2538,6 +2552,189 @@ def build_sitemap(pages):
 
 
 # --------------------------------------------------------------------------- main
+
+def build_measurement():
+    body = breadcrumb([("Home", "index.html"), ("Measurement", None)]) + """
+<h1>Measurement</h1><p class="lede">Five first-party events, one self-hosted collector, and a ledger that stays empty until an authorised report fills it. Nothing here is inferred, and nothing is estimated.</p>
+
+<section><h2>What this site records</h2><p>Five events are defined and only these five are accepted. The collector rejects anything else with a <code>400</code>, so a stray or hostile payload cannot be stored.</p>
+<table><caption>Event schema. The authoritative copy lives in <code>data/events.json</code>; the collector enforces it in code.</caption>
+<thead><tr><th>Event</th><th>Fires when</th><th>Payload</th><th>Why it exists</th></tr></thead><tbody>
+<tr><td><code>page_view</code></td><td>Every full page load.</td><td>path, referrer host, session id</td><td>The denominator. Every other number is meaningless without it.</td></tr>
+<tr><td><code>outbound_click</code></td><td>A reader clicks a sponsored Amazon link.</td><td>path, product id, link position, session id</td><td>The only first-party number that measures intent to buy.</td></tr>
+<tr><td><code>guide_read</code></td><td>The footer of a guide scrolls into view — the reader reached the end.</td><td>path, guide id, session id</td><td>Separates a guide that was opened from a guide that was read.</td></tr>
+<tr><td><code>search</code></td><td>A search results page has a query.</td><td>path, query length, result count, session id</td><td>Shows what readers cannot find by browsing. It records the <em>shape</em> of a search, never the words typed.</td></tr>
+<tr><td><code>suggestion_rank</code></td><td>A reader moves a suggestion up or down the register.</td><td>path, suggestion id, position, session id</td><td>Shows which directions readers think should be built first, without a form.</td></tr>
+</tbody></table></section>
+
+<section><h2>What is never collected</h2><ul>
+<li>No cookies, no local storage, no advertising identifiers, no cross-site tracking.</li>
+<li>No IP address, no user agent, no device fingerprint or any derived identifier.</li>
+<li>No query strings, no hash fragments, no referrer URL — only the bare hostname of a different site, and only when one exists.</li>
+<li>The text of a search query is never sent or stored. Its length and the number of results returned are.</li>
+<li>Any payload key outside the documented schema is dropped rather than stored.</li>
+<li>The session id is random per page load, 18 characters, and dies with the tab. Sessions can be counted; people cannot be profiled.</li>
+</ul>
+<p>The reader-visible counter in the <a href="campaign-ledger.html">Campaign Ledger</a> is separate and stays in the reader's own browser. It is a local convenience, not a measurement system.</p></section>
+
+<section><h2>The self-hosted collector</h2><p>GitHub Pages serves static files and cannot run a server-side function, so the collector ships in this repository in three deployable forms. All three answer the same contract.</p>
+<table><caption>Three implementations of one contract. All share the same sanitisation rules, so they cannot drift.</caption>
+<thead><tr><th>Implementation</th><th>File</th><th>Storage</th><th>How to run it</th></tr></thead><tbody>
+<tr><td>Cloudflare Pages Function</td><td><code>functions/api/collect.js</code></td><td>Workers KV binding named <code>EVENT_LOG</code> (optional)</td><td>Deploy the repository as a Cloudflare Pages project and bind the KV namespace. The route <code>/api/collect</code> then answers both the health probe and the event sink.</td></tr>
+<tr><td>Standalone Node server</td><td><code>analytics/server.js</code></td><td>Newline-delimited JSON appended to a local file</td><td><code>PORT=8787 LOG=./analytics/events.ndjson node analytics/server.js</code> — no npm install, no build step.</td></tr>
+<tr><td>Cloudflare Worker (aggregate-only)</td><td><code>analytics-endpoint/worker.js</code></td><td>Workers KV binding named <code>SN_AGG</code>: daily aggregate counters only, never raw events, expired after 90 days</td><td><code>wrangler deploy</code> with the <code>SN_AGG</code> binding. Same <code>/api/collect</code> contract as the other two.</td></tr>
+</tbody></table>
+<p><strong>Pointing the site at a collector.</strong> The collector is same-origin by default. To use one on a different host, add this to the <code>&lt;head&gt;</code> of every page:</p>
+<pre><code>&lt;meta name="x-collect-endpoint" content="https://collector.example/collect"&gt;</code></pre>
+<p><strong>While no collector answers, nothing happens.</strong> The browser client sends one <code>GET</code> to the endpoint on each page load. If it does not return <code>200</code>, the whole module stays inert: no event is sent, no storage is touched, and the reader sees nothing. That is the state of the live site today, and it is deliberate — see <a href="flagged.html">Flagged for Review</a>, FLG-036.</p>
+<p><strong>Contract.</strong> <code>POST /api/collect</code> with a JSON body returns <code>204</code> for an accepted event and <code>400</code> for anything outside the schema. <code>GET /api/collect</code> returns <code>200 {"status":"ok"}</code> and stores nothing. Bodies over 4&nbsp;KB are refused with <code>413</code>.</p></section>
+
+<section><h2>What the collector does not measure</h2><table><caption>Server-side numbers come from Amazon, not from us. They are transcribed by hand, with provenance.</caption>
+<thead><tr><th>Number</th><th>Where it comes from</th></tr></thead><tbody>
+<tr><td>Orders</td><td>The Associates Central orders report, transcribed into the campaign ledger by hand with the report date and a link to the report.</td></tr>
+<tr><td>Commission</td><td>The same first-party report. Never estimated.</td></tr>
+<tr><td>Conversion rate</td><td>Orders divided by clicks, and only once both sides are real. No proxy conversion rate is published.</td></tr>
+</tbody></table>
+<p>Until a real report exists, the <a href="campaign-ledger.html">campaign ledger</a> stays empty. An empty ledger is the honest starting point; a filled one with invented numbers would not be.</p></section>
+
+<section><h2>How a number gets used</h2><ol>
+<li><strong>page_view</strong> gives the denominator for every rate on the site.</li>
+<li><strong>outbound_click</strong> gives intent to buy, per product and per placement — the number that decides which guide to write next.</li>
+<li><strong>guide_read</strong> separates a guide that was opened from a guide that was finished, and therefore says which topics deserve more coverage.</li>
+<li><strong>search</strong> shows what readers are looking for and not finding, which is the cheapest editorial signal available.</li>
+<li><strong>suggestion_rank</strong> shows which directions readers think should be built first.</li>
+</ol>
+<p>None of these are used to claim a revenue figure, a popularity ranking or a conversion rate. They are used to decide what to write and what to fix.</p></section>
+
+<section class="panel"><h2>How this site earns trust</h2><ol>
+<li><strong>Disclosure above the fold</strong> on every page, repeated in the footer.</li>
+<li><strong>Every buy link</strong> is marked <em>(paid link)</em>, carries <code>rel="sponsored nofollow"</code>, and carries the Associates tracking tag. Links kept only for verification are labelled as such and stay <code>rel="sponsored nofollow"</code>.</li>
+<li><strong>Intended vs observed</strong> ASINs are stored in separate fields — never merged.</li>
+<li><strong>Blank means unverified.</strong> We do not infer prices, ratings or popularity.</li>
+<li><strong>Measurement is first-party</strong>, cookie-free, and self-hosted. If no collector is deployed, nothing is collected.</li>
+</ol>
+<p><a href="flagged.html">Flagged for Review</a> · <a href="questions.html">Open questions</a> · <a href="campaign-ledger.html">Campaign ledger</a> · <a href="disclosure.html">Privacy &amp; analytics</a> · <a href="executive-summary.html">Executive summary</a></p></section>
+"""
+    BUILT.append(page("measurement.html", f"Measurement — {SITE}",
+                      "The five first-party events, the self-hosted collector contract, what is never collected, and how a real number reaches the campaign ledger.",
+                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                                    "name": "Measurement", "url": BASE + "measurement.html"}))
+
+
+
+def build_platform():
+    body = breadcrumb([("Home", "index.html"), ("Platform concept", None)]) + """
+<h1>The platform behind the publication, written down before it is built</h1><p class="lede">A design for the machinery that would run this site at ten times the volume without turning it into a list of scraped product links. Nothing on this page is a claim that the machinery exists. It is the specification, the boundaries, and the gates — so that when any part of it gets built, it gets built the way it was described here.</p>
+
+<div class="panel"><p class="kicker">Read this first</p><p><strong>This is a concept, not a product.</strong> The columns below separate what runs in this repository today from what is designed but not built. A reader will never see the difference, because everything a reader sees is published by a person. The split is here for the operator: it is the honest way to write down an automation plan without implying that automation already exists.</p></div>
+
+<section><h2>The pipeline</h2><p>Every stage has a machine doing the mechanical work and a person doing the judgement. The rule that makes it safe is that a stage may never advance on its own: each one ends in a gate that a human clears.</p>
+<table><caption>Seven stages. No stage is skipped, and no stage publishes itself.</caption>
+<thead><tr><th>Stage</th><th>What the machine does</th><th>What the human does</th><th>The gate</th></tr></thead><tbody>
+<tr><td>1 · Discover</td><td>Watch a category for products worth covering; pull candidate listings.</td><td>Decide what the publication is for and what it will not cover.</td><td>A topic brief, in writing, before a single listing is read.</td></tr>
+<tr><td>2 · Verify</td><td>Fetch each official listing; capture the specification fields and the exact wording; diff against the last capture.</td><td>Confirm the identity of the product and record what could not be confirmed.</td><td>Every field carries a source id. Anything unconfirmed stays blank and is flagged.</td></tr>
+<tr><td>3 · Analyse</td><td>Group the captured fields; surface conflicts, gaps and missing fields across a category.</td><td>Decide what the conflict means and whether it is worth publishing both readings.</td><td>No value is published without a source link in the same row.</td></tr>
+<tr><td>4 · Draft</td><td>Assemble question-shaped outlines from the topic brief and the captured fields; draft tables.</td><td>Write, cut, and reorder. Every sentence that makes a claim must trace to a captured field.</td><td>A human reads the draft. Nothing is published by a model.</td></tr>
+<tr><td>5 · Gate</td><td>Run the publishing checks: disclosure, sponsored marking, tracking tag, no prices, no ratings, link resolution, schema agreement.</td><td>Read the flagged register and decide what to publish anyway.</td><td><strong>A failing check stops the publish.</strong> Nothing overrides the gate automatically.</td></tr>
+<tr><td>6 · Publish</td><td>Generate the pages, sitemap, feed and robots file from the data; deploy.</td><td>Approve the deployment.</td><td>The same checks run again in the publish workflow, on every push.</td></tr>
+<tr><td>7 · Learn</td><td>Count the five first-party events; compare a topic's arrivals with its outbound clicks.</td><td>Decide what to write next, and what to stop writing.</td><td>No number becomes a claim until it comes from a first-party report.</td></tr>
+</tbody></table></section>
+
+<section><h2>The six modules</h2>
+<table><caption>Each module lists what it would do, what it is allowed to touch, and the blocker that stops it. “Blocked” means the design is complete but the input is not available yet.</caption>
+<thead><tr><th>Module</th><th>What it does</th><th>Allowed to touch</th><th>Status</th><th>Blocked by</th></tr></thead><tbody>
+<tr>
+<td><strong>Research</strong></td>
+<td>Fetches official listings, captures specification fields, exact titles and bullet wording, and keeps a dated snapshot per product. Diffs each capture against the previous one so a listing change is noticed rather than inherited.</td>
+<td>Public listing pages only. No scraping of reviews, no price history, no rank trackers.</td>
+<td><strong>Partly built.</strong> The register, the source list and the field-level provenance model exist and are used by hand. The automated capture-and-diff is designed, not written.</td>
+<td>Nothing blocks the design. It is simply not built.</td>
+</tr>
+<tr>
+<td><strong>Market and commission analysis</strong></td>
+<td>Compares competing listings on identical fields; tracks which questions readers arrive with; reads the commission category for each product.</td>
+<td>Product pages, this site's own first-party counts, and the enrolled Associates account.</td>
+<td><strong>Blocked.</strong> Competitive comparison tables are built by hand today. Commission categories require an enrolled account (Q-11). Prices and ratings require the Creators API and cannot be read from a page (FLG-005).</td>
+<td>Q-11 (commission categories), Creators API enrolment, and the owner decision in SG-12.</td>
+</tr>
+<tr>
+<td><strong>Content generation</strong></td>
+<td>Turns a topic brief and captured fields into a question-shaped outline and a set of sourced tables. Proposes headline variants for a human to choose between.</td>
+<td>Its own draft buffer. Never the live site.</td>
+<td><strong>Designed, gated.</strong> The outline shape, the table rules and the “no auto-publish” boundary are specified. A model may propose; a person publishes.</td>
+<td>The owner decision in SG-12, and the standing rule that no AI content is published without human review.</td>
+</tr>
+<tr>
+<td><strong>Link management</strong></td>
+<td>Keeps one Special Link per product, checks that every buy link carries the tag and every Amazon link carries <code>rel="sponsored"</code>, watches for broken redirects, and re-records the observed destination with a date.</td>
+<td>The product register and the outbound links on the site.</td>
+<td><strong>Partly built.</strong> The link checks and the tag enforcement are live in the publishing gate and the generator. Special Link validation is still a manual test (FLG-004), and the supplied short links' compliance is unresolved (FLG-003).</td>
+<td>FLG-003 and FLG-004. Neither may be assumed away by a script.</td>
+</tr>
+<tr>
+<td><strong>Click and conversion tracking</strong></td>
+<td>Records five first-party events against a self-hosted collector, and hands the click counts to the campaign ledger.</td>
+<td>Its own collector and the ledger. Nothing else.</td>
+<td><strong>Built, not deployed.</strong> The collector, the schema and the client ship in this repository; GitHub Pages cannot run a server-side function, so nothing is being collected yet (FLG-036).</td>
+<td>FLG-036: deploy a collector and choose its retention policy.</td>
+</tr>
+<tr>
+<td><strong>Optimization</strong></td>
+<td>Compares which topics earn arrivals and which earn outbound clicks, proposes headline and guide-cadence changes, and flags pages that have stopped earning anything.</td>
+<td>Proposals. It may change nothing on its own.</td>
+<td><strong>Designed, blocked.</strong> The decision it would make needs a denominator, and there is no denominator while no collector is running and no report exists.</td>
+<td>FLG-036, Q-08, Q-09, and an authorised first-party report for conversion.</td>
+</tr>
+</tbody></table></section>
+
+<section><h2>The automation boundary</h2><div class="grid">
+<div class="card"><p class="kicker">Machines may</p><ul class="specs">
+<li>Fetch a public page and record the text that was on it, with a date.</li>
+<li>Re-render pages, tables, the sitemap and the feed from the data.</li>
+<li>Run the publishing checks and stop a deploy that fails one.</li>
+<li>Count the five events at a first-party endpoint we run.</li>
+<li>Diff two captures of the same listing and report the difference.</li>
+<li>Propose an outline, a headline or a topic, for a person to accept or reject.</li>
+</ul></div>
+<div class="card"><p class="kicker">Machines may never</p><ul class="specs">
+<li>Publish a page without a person reading it first.</li>
+<li>Write a price, a star rating, a review count or a commission rate that was not read from an approved source.</li>
+<li>Fill an intended ASIN, or merge it with an observed redirect target.</li>
+<li>Claim a supplied short link is valid or invalid. That question belongs to the owner and to Associates support.</li>
+<li>Estimate a conversion rate, a revenue figure or a popularity rank.</li>
+<li>Override a failing compliance check to make a deploy go through.</li>
+</ul></div>
+</div></section>
+
+<section><h2>Where the data comes from</h2>
+<table><caption>Every input has a named source and a named owner. Anything not on this list is not collected.</caption>
+<thead><tr><th>Input</th><th>Source</th><th>Who can reach it</th><th>Used for</th></tr></thead><tbody>
+<tr><td>Product specifications, titles, bullet wording</td><td>The official Amazon listing page</td><td>Public, anyone</td><td>Every table cell on the site.</td></tr>
+<tr><td>Price, star rating, review count</td><td>Creators API or PA API only — never a page</td><td>Enrolled Associates account with eligible sales</td><td>Currently nothing. The site publishes no price or rating at all (FLG-005).</td></tr>
+<tr><td>Commission category and rate</td><td>The Associates commission table</td><td>Owner, enrolled account</td><td>Nothing published. Not shown, not estimated (Q-11).</td></tr>
+<tr><td>Orders and commission income</td><td>The Associates Central orders report</td><td>Owner, enrolled account</td><td>The campaign ledger, transcribed by hand with the report date.</td></tr>
+<tr><td>Arrivals, outbound clicks, guide reads, searches, rankings</td><td>This site's own collector</td><td>Us</td><td>Editorial decisions. Never a claim about money.</td></tr>
+<tr><td>Search impressions and queries</td><td>Search Console</td><td>Owner, verified property</td><td>Which topics deserve coverage (SG-10).</td></tr>
+</tbody></table></section>
+
+<section><h2>Why it is written down at all</h2><p>A design that only exists in the operator's head cannot be reviewed, and a review that cannot be repeated is not a review. This page exists so that the next person — human or machine — can see exactly what the automation is supposed to do, what it is forbidden to do, and which single unresolved item is standing between the design and reality for each module.</p><p>Almost every row above is waiting on the same small number of things: an enrolled Associates account (FLG-004, Q-02, Q-11), a deployed collector (FLG-036), and an owner decision about whether the automation roadmap should be authorised at all (SG-12). Those are in <a href="questions.html">Open questions</a> and <a href="suggestions.html">Suggestions</a>, and they are deliberately not resolved by anything on this page.</p></section>
+
+<section class="panel"><h2>What we will NOT do</h2><ul>
+<li>Show hardcoded prices or star ratings.</li>
+<li>Claim “best”, popularity, or search volume without evidence.</li>
+<li>Auto-publish AI content without human review.</li>
+<li>Merge intended and observed ASIN fields.</li>
+<li>Scale Special Links before the one-per-product test passes.</li>
+<li>Let an automated job publish without passing the same gate a person would.</li>
+</ul>
+<p><a href="suggestions.html">Suggestions &amp; direction</a> · <a href="questions.html">Open questions</a> · <a href="measurement.html">Measurement</a> · <a href="flagged.html">Flagged for Review</a> · <a href="executive-summary.html">Executive summary</a></p></section>
+"""
+    BUILT.append(page("platform.html", f"Platform concept — {SITE}",
+                      "The automation behind the publication, stage by stage and module by module: what runs today, what is designed, and the gate that stops each unverified claim.",
+                      body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
+                                    "name": "Platform concept", "url": BASE + "platform.html"}))
+
+
 def main():
     build_home()
     build_shop()
@@ -2585,6 +2782,8 @@ def main():
         build_guide(g)
     build_how()
     build_design_brief()
+    build_measurement()
+    build_platform()
     build_suggestions()
     build_questions()
     build_flagged()

@@ -456,3 +456,139 @@ Started: 2026-11-20 (UTC). Scope: reader-facing polish pass ("reads like a shop,
 Checks: `scripts/check_site.py` ALL CHECKS PASS (28 pages) — includes disclosure-before-`<main>`, sponsored marking on every Amazon link, (paid link) near every data-outbound, no price/star values, internal links + assets, sitemap coverage, feed coverage of all 9 guides, separate intended/observed fields in data registers, five instrumented events.
 
 New flags this session: FLG-011 (P-03 title vs body wording), FLG-012 (Associates pages not re-fetchable). FLG-007/FLG-010 updated (AI-generated editorial imagery; measurement layer shipped, endpoint deploy pending).
+
+
+---
+
+## Session bdedd85e — integration note (T-19, 2026-11-20 UTC)
+
+Their T-13/T-14 record is preserved verbatim below. Integration deltas, recorded rather
+than silently rewritten:
+
+- **FLG-033 renumbered → FLG-036.** `main` already uses FLG-033 for "no named author or
+  editorial owner"; their collector flag is published as FLG-036 (detail expanded with the
+  aggregate-only Worker as the third implementation) and their amended FLG-010 points at it.
+  Their test assertion and `platform.html` were remapped in the same pass.
+- **The collector now has a third deployable form:** `analytics-endpoint/worker.js` was
+  adapted from PR #22's `/api/analytics` shape to this stack's `/api/collect` contract
+  (GET probe → 200, POST → 204/400/413, aggregate-only KV, 90-day expiry, never stores
+  search text). One contract, three implementations, one schema (`data/events.json`).
+- **`analytics-endpoint/README.md` rewritten** to the `/api/collect` contract; PR #22's
+  term-storage plan for search aggregation is recorded as gated behind SG-18/Q-08.
+- **`scripts/build_content.py` supersession stands:** `main` builds with
+  `scripts/build_site.py`; their generator edits were not carried over (their prose
+  deltas were ported into the generator instead — disclosure, questions, SG-12, search,
+  Measurement and Platform pages).
+- **The workflow stays verify-only** (no deploy job): `main`'s CI runs rebuild → drift →
+  gate → `node tests/collector.test.js` → `python3 -m unittest discover -s tests -p "test_*.py"`.
+  Publication remains GitHub Pages' branch builder.
+- **Tag rule scoped, not dropped:** the gate requires the tracking tag on every Amazon
+  **buy link** (CTA) and `rel=sponsored` everywhere; labelled verification links may stay
+  untagged per `how-we-choose.html`. Their blanket-tag test was adapted accordingly.
+- **`assets/app.js` stays local-only.** Their client `assets/js/collect.js` is now the
+  sole network half (probe → inert); app.js's duplicate beacon was never ported. Zero-result
+  searches are counted (SG-18's signal) and guide events carry the slug.
+- Branch-local T-13/T-14 numbering collided with `main`'s T-13/T-14 (already published);
+  this record keeps their IDs as historical, per the same convention as their Session-2 block.
+
+## Session bdedd85e — T-13 / T-14 claim (2026-11-20 UTC)
+
+**Session ID:** `bdedd85e`  **Branch:** `arena/bdedd85e-affil2`
+**Base when started:** `12d49cd` (the original `Initial commit`) — **stale**; `main` had already moved to `1c52f8a`.
+
+### Conflict log — the parallel site was NOT merged
+
+This session was started from a stale base and built a complete parallel site
+(`tools/`, `content/`, `assets/`, `docs/`, `functions/`, `analytics/`, `tests/`,
+plus its own `data/*.json` registers). That work is **not** merged.
+
+Reason, recorded rather than quietly resolved:
+
+- `main` already contains a complete, deployed publication from sessions
+  `530c2e6c`, `6e40cecc`, `990af5de`, `937876a6`, `4bbf49bb` and `e9516a41`
+  (PRs #1–#13). Merging a second site would discard all of it, including the
+  re-verification records, FLG-017..030, the USDA and Creators API citations,
+  the original illustrations and the decision tools.
+- Two earlier sessions (`990af5de`, `e9516a41`) built parallel sites the same
+  way; both were withdrawn for the same reason and logged above.
+- The standing instruction for this repository is that a session must never
+  overwrite another session's work, and that shared outputs belong to the
+  final integration session. This session **is** the integration session, so it
+  keeps `main`'s site and data and merges only what adds to them.
+
+The parallel build is preserved out of tree at `/tmp/affil2-parallel/` for this
+session's reference only. Nothing from it replaces a `main` file.
+
+### What this session claims
+
+| ID | Task | Status | Files (exclusive scope) |
+|----|------|--------|-------------------------|
+| T-13 | Self-hosted analytics endpoint + five-event privacy-preserving collector | in progress | `functions/api/collect.js`, `analytics/server.js`, `assets/js/collect.js`, `data/events.json`, `tests/collector.test.js` |
+| T-14 | Measurement surface, gate hardening, tracking-tag compliance, CI in the publish workflow | in progress | `measurement.html`, `scripts/check_site.py`, `scripts/build_content.py`, `.github/workflows/pages.yml`, `sitemap.xml`, `feed.xml`, `disclosure.html`, `questions.html`, `data/flags.json` (append only), `tests/test_site.py`, `README.md`, `EXECUTIVE-SUMMARY.md` |
+
+**Not claimed, not touched:** `data/products.json`, `data/sources.json`,
+`data/reverification-2026-11-20.json`, `data/campaign-ledger.json`,
+`scripts/build_content.py` product/spec rendering, `assets/style.css`,
+`assets/illustrations/*`, and every existing page's editorial copy. Those stay
+exactly as `main` has them.
+
+### The gap this session is closing
+
+`main`'s own records name the gap twice:
+
+- `FLG-010` — "Analytics local-only: click counter runs in-browser until a
+  self-hosted endpoint is deployed. See Q-08."
+- `disclosure.html` — "A self-hosted endpoint (Q-08) will replace local storage
+  when deployed; until then, server-side conversion data is blank by design."
+
+GitHub Pages cannot host a server-side function, so the endpoint is shipped in
+this repository in two deployable forms (a Cloudflare Pages Function and a
+dependency-free Node server) and is **inert** until someone points the site at
+one. The site keeps working, and keeps collecting nothing, until then.
+
+### T-13 / T-14 completion (2026-11-20, session bdedd85e)
+
+**What shipped**
+
+| Area | File(s) | State |
+|---|---|---|
+| Collector, Cloudflare Pages Function | `functions/api/collect.js` | shipped, not deployed |
+| Collector, standalone Node server | `analytics/server.js` | shipped, not deployed |
+| Browser client | `assets/js/collect.js` | shipped, inert until a collector answers |
+| Event schema | `data/events.json` | shipped, enforced in code by the collector |
+| Measurement surface | `measurement.html` | published, linked from every page |
+| Platform concept | `platform.html` | published, linked from every page |
+| Gate hardening | `scripts/check_site.py` | 8 new rules |
+| Generator changes | `scripts/build_content.py` | tracking tag on every Amazon product link, `rel="sponsored"` on every `link.amazon` link, collector script and dashboard links on every page |
+| Publish workflow | `.github/workflows/pages.yml` | `verify` job: rebuild → drift check → gate → collector tests → site tests; `deploy` needs `verify` |
+| Tests | `tests/collector.test.js`, `tests/test_site.py` | 13 + 22 checks |
+| Registers | `data/flags.json` | FLG-033 appended, FLG-010 amended to point at it |
+
+**Verification**
+
+- `python3 scripts/build_content.py` — runs clean and is idempotent: a second run produces byte-identical pages.
+- `python3 scripts/check_site.py` — **checked 27 pages, ALL CHECKS PASS**.
+- `node tests/collector.test.js` — **13 checks passed**.
+- `python3 -m unittest discover -s tests -p "test_*.py"` — **22 tests, OK**.
+- Collector exercised end to end against a local server: `GET` → `200 {"status":"ok"}`, beacon-style `POST` → `204`, and a payload carrying `email`/`ip` stored neither. Against the static site `/api/collect` → `404`, so the client stays inert exactly as designed.
+- HTML structure check over all 27 pages: 0 unclosed tags, 0 template artifacts.
+- Local HTTP smoke test: every page and asset returns `200`.
+
+**Rules added to the publishing gate**
+
+1. Every Amazon **product** link carries the Associates tracking tag.
+2. Every `link.amazon` short link carries `rel="sponsored"`.
+3. No Amazon-hosted imagery.
+4. Canonical link and meta description on every page.
+5. Broader star-rating and review-count patterns.
+6. The collector client is loaded on every page.
+7. `data/events.json` and the collector agree on the event list.
+8. `measurement.html` exists and is in the sitemap.
+
+**Left open, on the board, not blocking**
+
+- FLG-033 — the collector ships but is not deployed, because GitHub Pages cannot run a server-side function. Owner action: deploy one implementation, point the site at it, and choose a retention period.
+- FLG-003 / FLG-004 — short-link compliance and the one-per-product Special Link test remain unresolved and are not claimed either way.
+- FLG-001 / FLG-002 — intended ASINs and tracking-ID activity remain unconfirmed; the campaign ledger stays empty.
+
+**Nothing from `main` was discarded.** `data/products.json`, `data/sources.json`, `data/reverification-2026-11-20.json`, `data/campaign-ledger.json`, `assets/style.css`, `assets/illustrations/*`, `scripts/build_content.py`'s product and spec rendering, and every page's editorial copy are as `main` had them. The only shared files this session changed are the ones listed in the claim: the workflow, the gate, the generator, the sitemap, the robots file, `data/flags.json` (append only), `disclosure.html`, `questions.html`, `suggestions.html`, `executive-summary.html`, `README.md` and `EXECUTIVE-SUMMARY.md` — all edited surgically, never rewritten.

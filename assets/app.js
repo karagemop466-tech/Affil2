@@ -3,7 +3,7 @@
  var ev=JSON.parse(localStorage.getItem('sn_events')||'[]');
  function log(e,d){ev.push(Object.assign({e:e,t:Date.now(),page:location.pathname},d||{}));localStorage.setItem('sn_events',JSON.stringify(ev.slice(-500)));}
  log('page_view');
- if(/guides\//.test(location.pathname)) log('guide_read');
+ if(/guides\//.test(location.pathname)) log('guide_read',{guide:location.pathname.split('/').pop()});
  document.querySelectorAll('[data-outbound]').forEach(function(a){a.addEventListener('click',function(){log('outbound_click',{product:a.getAttribute('data-outbound')});var c=JSON.parse(localStorage.getItem('sn_clicks')||'{}');c[a.getAttribute('data-outbound')]=(c[a.getAttribute('data-outbound')]||0)+1;localStorage.setItem('sn_clicks',JSON.stringify(c));var el=document.getElementById('localClicks');if(el)el.textContent=Object.values(c).reduce(function(x,y){return x+y},0);});});
  var ex=document.getElementById('exportClicks');if(ex)ex.addEventListener('click',function(){var c=localStorage.getItem('sn_clicks')||'{}';download('clicks.csv','product,clicks\n'+Object.entries(JSON.parse(c)).map(function(x){return x[0]+','+x[1]}).join('\n'));});
  // Suggestions ranking
@@ -32,5 +32,5 @@
  const tokens=q.toLowerCase().split(/\s+/), hits=JSON.parse(index.textContent).filter(x=>tokens.every(t=>(x.t+' '+x.d+' '+x.k).toLowerCase().includes(t)));
  document.querySelector('#searchMeta').textContent=hits.length?`${hits.length} matching pages`:'No matches. Try “basket”, “wireless” or “capacity”.';
  for(const hit of hits){const p=document.createElement('p'),a=document.createElement('a');a.href=hit.u;a.textContent=hit.t;p.append(a);document.querySelector('#results').append(p)}
- if(hits.length)try{const events=JSON.parse(localStorage.getItem('sn_events')||'[]');events.push({e:'search',t:Date.now(),results:hits.length});localStorage.setItem('sn_events',JSON.stringify(events.slice(-500)))}catch{}
+ if(q)try{const events=JSON.parse(localStorage.getItem('sn_events')||'[]');events.push({e:'search',t:Date.now(),results:hits.length});localStorage.setItem('sn_events',JSON.stringify(events.slice(-500)))}catch{}
 })();

@@ -1,56 +1,53 @@
-# Self-hosted analytics endpoint — contract & deployable reference
+# Self-hosted analytics endpoint — contract & deployable references
 
-Status: **spec + reference implementation shipped; deployment is owner-gated** (Q-08, FLG-010).
-Until an endpoint is live at `https://<your-host>/api/analytics`, the site's measurement layer
-works entirely in the visitor's browser (localStorage) and every beacon fails silently.
+Status: **spec + three reference implementations shipped; deployment is owner-gated**
+(Q-08, FLG-010, FLG-036). GitHub Pages serves static files only, so nothing here runs
+until the owner deploys one implementation and points the site at it. Until then the
+browser client (`assets/js/collect.js`) probes once per page, gets no answer, and stays
+inert: the live site collects nothing server-side.
+
+The single source of truth for the schema is `data/events.json`; the reader-facing
+description is `measurement.html`.
+
+## The contract (identical for all three implementations)
+
+- `GET /api/collect` → `200 {"status":"ok"}` — health probe, stores nothing. The client
+  sends it once per page load and only enables measurement when it succeeds.
+- `POST /api/collect` → `204` accepted, `400` for anything outside the schema,
+  `413` for bodies over 4 KB.
+- Same-origin by default. A deployment that separates site and collector points the
+  site at it with `<meta name="x-collect-endpoint" content="https://collector.example/collect">`.
+
+| Implementation | File | Storage | How to run it |
+|---|---|---|---|
+| Cloudflare Pages Function | `functions/api/collect.js` | Workers KV binding `EVENT_LOG` (optional) | Deploy the repo as a Cloudflare Pages project and bind the namespace; the route answers probe and sink. |
+| Standalone Node server | `analytics/server.js` | newline-delimited JSON in a local file | `PORT=8787 LOG=./analytics/events.ndjson node analytics/server.js` — no npm install, no build step. |
+| Cloudflare Worker, aggregate-only | `analytics-endpoint/worker.js` | daily counters in KV binding `SN_AGG`, 90-day expiry | `wrangler kv namespace create SN_AGG`, put the id into the binding, then `wrangler deploy analytics-endpoint/worker.js --name shopnow-analytics --compatibility-date 2026-11-20`. |
 
 ## The five defined events
 
-| Event | Fired when | Payload fields |
+| Event | Fired when | Payload fields (besides `event`, `path`, `session_id`, `ts`) |
 |---|---|---|
-| `page_view` | any page load | `p` (path) |
-| `guide_read` | a `guides/*.html` page load | `p`, `guide` (slug) |
-| `outbound_click` | a marked Amazon link click | `p`, `product` (P-01…P-05) |
-| `search` | search page load with `?q=` or search submit | `p`, `q` (query, truncated to 80 chars) |
-| `suggestion_rank` | a suggestions ranking change | `p`, `top` (top-5 suggestion ids) |
-
-Every beacon also carries: `s` (random session token, regenerated per tab, never persisted
-client-side), `d` (UTC date, YYYY-MM-DD).
+| `page_view` | any page load | `referrer_host` (bare hostname of a different site, or empty) |
+| `outbound_click` | a marked Amazon buy link is clicked | `product_id` (P-01…P-05), `link_position` |
+| `guide_read` | the footer of a guide scrolls into view | — |
+| `search` | a search results page has a query | `query_length`, `result_count` — never the words typed |
+| `suggestion_rank` | a suggestion is moved up or down | `suggestion_id`, `position` |
 
 ## Privacy rules (hard requirements for any deployment)
 
-1. **No cookies, no localStorage/IDB identifiers sent to the server.** The session token is
-   random, memory-only, and rotated per tab session. It supports counting sessions per day —
-   it cannot identify a person.
-2. **No IP logging.** The reference worker below does not read or store IP addresses or
-   user-agent strings. If your host logs IPs by default, disable it for this route.
-3. **No third parties.** The endpoint is first-party only; no analytics vendors, no ad tags.
-4. **Retention 90 days** for raw events; daily aggregates may be kept indefinitely
-   (counts only — no strings beyond `guide` slugs and `product` ids).
-5. **Search queries** are kept only as daily aggregate terms (no session binding) so editorial
-   topics can be chosen from measured queries. Purge terms on request.
-
-## Request contract
-
-`POST /api/analytics` — `Content-Type: application/json`, body = one event object (above).
-Respond `204` on success, `400` on malformed body, `413` over 4 KB. CORS: same-origin only.
-
-## Reference implementation (`worker.js`)
-
-A dependency-free Cloudflare Worker that stores **daily aggregate counts** in KV
-(`sn_agg` key per day). It deliberately does not store raw events. Deploying it is one
-candidate path for Q-08 — any host that can expose `POST /api/analytics` under the same
-rules is equally valid.
-
-```bash
-# Cloudflare wrangler example (owner-run; requires a Cloudflare account)
-wrangler kv namespace create SN_AGG
-# put the id into worker.js bindings, then:
-wrangler deploy analytics-endpoint/worker.js --name shopnow-analytics --compatibility-date 2026-11-20
-```
-
-Then point the site at it: the client posts to the **relative** path `api/analytics`, so a
-reverse-proxy route from the site host to the worker keeps everything first-party.
+1. **No cookies, no identifiers sent to the server.** The session id is random per page
+   load and dies with the tab; it lets a server count sessions, not people.
+2. **No IP logging, no user agent.** The references never read them; if your host logs
+   IPs by default, disable it for this route.
+3. **No third parties.** First-party only; no analytics vendors, no ad tags.
+4. **Search text is never stored.** The reader-visible local counter may log a query in
+   the reader's own browser (they can clear or export it), but no server in this
+   repository accepts or keeps query text. Search-term aggregation stays ungathered
+   until SG-18 is approved behind Q-08.
+5. **Retention before collection.** The Worker's daily aggregates expire after 90 days;
+   the Node file grows until rotated. Choose the retention period (FLG-036) before
+   pointing the site at anything.
 
 ## Measurement-to-decision loop (what the data is for)
 
@@ -58,5 +55,12 @@ reverse-proxy route from the site host to the worker keeps everything first-part
 2. `outbound_click` per product → which picks earn interest (NOT revenue — see below).
 3. `suggestion_rank` + decision form exports → the change log for the next build.
 4. **Orders/revenue come only from authorized first-party Associates reports** and go into
-   `data/campaign-ledger.json` with dated provenance. No conversion score or revenue
+   the campaign ledger with dated provenance. No conversion score or revenue
    forecast is computed on this site, and none should be inferred from click counts.
+
+## Tests
+
+```bash
+node tests/collector.test.js      # 13 checks: schema agreement and sanitisation
+python3 -m unittest discover -s tests -p "test_*.py" -v
+```

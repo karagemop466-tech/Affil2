@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Platform concept — ShopNow Kitchen</title>
+<meta name="description" content="The automation behind the publication, stage by stage and module by module: what runs today, what is designed, and the gate that stops each unverified claim.">
+<link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/platform.html">
+<meta property="og:site_name" content="ShopNow Kitchen">
+<meta property="og:title" content="Platform concept — ShopNow Kitchen">
+<meta property="og:description" content="The automation behind the publication, stage by stage and module by module: what runs today, what is designed, and the gate that stops each unverified claim.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/platform.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="assets/style.css">
+<link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Platform concept", "url": "https://karagemop466-tech.github.io/Affil2/platform.html"}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="masthead">
+  <div class="wrap mast">
+    <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
+    <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> · <a href="measurement.html">Measurement</a> · <a href="platform.html">Platform</a></div></details></nav>
+    <form class="search" action="search.html" method="get" role="search">
+      <label class="sr" for="q">Search products and guides</label>
+      <input id="q" name="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+</header>
+<div class="disclosure" role="note"><div class="wrap">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.
+  <a href="disclosure.html">How we disclose</a></div></div>
+<main id="main" class="wrap">
+<p class="crumbs"><a href="index.html">Home</a> &rsaquo; <span>Platform concept</span></p>
+<h1>The platform behind the publication, written down before it is built</h1><p class="lede">A design for the machinery that would run this site at ten times the volume without turning it into a list of scraped product links. Nothing on this page is a claim that the machinery exists. It is the specification, the boundaries, and the gates — so that when any part of it gets built, it gets built the way it was described here.</p>
+
+<div class="panel"><p class="kicker">Read this first</p><p><strong>This is a concept, not a product.</strong> The columns below separate what runs in this repository today from what is designed but not built. A reader will never see the difference, because everything a reader sees is published by a person. The split is here for the operator: it is the honest way to write down an automation plan without implying that automation already exists.</p></div>
+
+<section><h2>The pipeline</h2><p>Every stage has a machine doing the mechanical work and a person doing the judgement. The rule that makes it safe is that a stage may never advance on its own: each one ends in a gate that a human clears.</p>
+<table><caption>Seven stages. No stage is skipped, and no stage publishes itself.</caption>
+<thead><tr><th>Stage</th><th>What the machine does</th><th>What the human does</th><th>The gate</th></tr></thead><tbody>
+<tr><td>1 · Discover</td><td>Watch a category for products worth covering; pull candidate listings.</td><td>Decide what the publication is for and what it will not cover.</td><td>A topic brief, in writing, before a single listing is read.</td></tr>
+<tr><td>2 · Verify</td><td>Fetch each official listing; capture the specification fields and the exact wording; diff against the last capture.</td><td>Confirm the identity of the product and record what could not be confirmed.</td><td>Every field carries a source id. Anything unconfirmed stays blank and is flagged.</td></tr>
+<tr><td>3 · Analyse</td><td>Group the captured fields; surface conflicts, gaps and missing fields across a category.</td><td>Decide what the conflict means and whether it is worth publishing both readings.</td><td>No value is published without a source link in the same row.</td></tr>
+<tr><td>4 · Draft</td><td>Assemble question-shaped outlines from the topic brief and the captured fields; draft tables.</td><td>Write, cut, and reorder. Every sentence that makes a claim must trace to a captured field.</td><td>A human reads the draft. Nothing is published by a model.</td></tr>
+<tr><td>5 · Gate</td><td>Run the publishing checks: disclosure, sponsored marking, tracking tag, no prices, no ratings, link resolution, schema agreement.</td><td>Read the flagged register and decide what to publish anyway.</td><td><strong>A failing check stops the publish.</strong> Nothing overrides the gate automatically.</td></tr>
+<tr><td>6 · Publish</td><td>Generate the pages, sitemap, feed and robots file from the data; deploy.</td><td>Approve the deployment.</td><td>The same checks run again in the publish workflow, on every push.</td></tr>
+<tr><td>7 · Learn</td><td>Count the five first-party events; compare a topic's arrivals with its outbound clicks.</td><td>Decide what to write next, and what to stop writing.</td><td>No number becomes a claim until it comes from a first-party report.</td></tr>
+</tbody></table></section>
+
+<section><h2>The six modules</h2>
+<table><caption>Each module lists what it would do, what it is allowed to touch, and the blocker that stops it. “Blocked” means the design is complete but the input is not available yet.</caption>
+<thead><tr><th>Module</th><th>What it does</th><th>Allowed to touch</th><th>Status</th><th>Blocked by</th></tr></thead><tbody>
+<tr>
+<td><strong>Research</strong></td>
+<td>Fetches official listings, captures specification fields, exact titles and bullet wording, and keeps a dated snapshot per product. Diffs each capture against the previous one so a listing change is noticed rather than inherited.</td>
+<td>Public listing pages only. No scraping of reviews, no price history, no rank trackers.</td>
+<td><strong>Partly built.</strong> The register, the source list and the field-level provenance model exist and are used by hand. The automated capture-and-diff is designed, not written.</td>
+<td>Nothing blocks the design. It is simply not built.</td>
+</tr>
+<tr>
+<td><strong>Market and commission analysis</strong></td>
+<td>Compares competing listings on identical fields; tracks which questions readers arrive with; reads the commission category for each product.</td>
+<td>Product pages, this site's own first-party counts, and the enrolled Associates account.</td>
+<td><strong>Blocked.</strong> Competitive comparison tables are built by hand today. Commission categories require an enrolled account (Q-11). Prices and ratings require the Creators API and cannot be read from a page (FLG-005).</td>
+<td>Q-11 (commission categories), Creators API enrolment, and the owner decision in SG-12.</td>
+</tr>
+<tr>
+<td><strong>Content generation</strong></td>
+<td>Turns a topic brief and captured fields into a question-shaped outline and a set of sourced tables. Proposes headline variants for a human to choose between.</td>
+<td>Its own draft buffer. Never the live site.</td>
+<td><strong>Designed, gated.</strong> The outline shape, the table rules and the “no auto-publish” boundary are specified. A model may propose; a person publishes.</td>
+<td>The owner decision in SG-12, and the standing rule that no AI content is published without human review.</td>
+</tr>
+<tr>
+<td><strong>Link management</strong></td>
+<td>Keeps one Special Link per product, checks that every buy link carries the tag and every Amazon link carries <code>rel="sponsored"</code>, watches for broken redirects, and re-records the observed destination with a date.</td>
+<td>The product register and the outbound links on the site.</td>
+<td><strong>Partly built.</strong> The link checks and the tag enforcement are live in the publishing gate and the generator. Special Link validation is still a manual test (FLG-004), and the supplied short links' compliance is unresolved (FLG-003).</td>
+<td>FLG-003 and FLG-004. Neither may be assumed away by a script.</td>
+</tr>
+<tr>
+<td><strong>Click and conversion tracking</strong></td>
+<td>Records five first-party events against a self-hosted collector, and hands the click counts to the campaign ledger.</td>
+<td>Its own collector and the ledger. Nothing else.</td>
+<td><strong>Built, not deployed.</strong> The collector, the schema and the client ship in this repository; GitHub Pages cannot run a server-side function, so nothing is being collected yet (FLG-036).</td>
+<td>FLG-036: deploy a collector and choose its retention policy.</td>
+</tr>
+<tr>
+<td><strong>Optimization</strong></td>
+<td>Compares which topics earn arrivals and which earn outbound clicks, proposes headline and guide-cadence changes, and flags pages that have stopped earning anything.</td>
+<td>Proposals. It may change nothing on its own.</td>
+<td><strong>Designed, blocked.</strong> The decision it would make needs a denominator, and there is no denominator while no collector is running and no report exists.</td>
+<td>FLG-036, Q-08, Q-09, and an authorised first-party report for conversion.</td>
+</tr>
+</tbody></table></section>
+
+<section><h2>The automation boundary</h2><div class="grid">
+<div class="card"><p class="kicker">Machines may</p><ul class="specs">
+<li>Fetch a public page and record the text that was on it, with a date.</li>
+<li>Re-render pages, tables, the sitemap and the feed from the data.</li>
+<li>Run the publishing checks and stop a deploy that fails one.</li>
+<li>Count the five events at a first-party endpoint we run.</li>
+<li>Diff two captures of the same listing and report the difference.</li>
+<li>Propose an outline, a headline or a topic, for a person to accept or reject.</li>
+</ul></div>
+<div class="card"><p class="kicker">Machines may never</p><ul class="specs">
+<li>Publish a page without a person reading it first.</li>
+<li>Write a price, a star rating, a review count or a commission rate that was not read from an approved source.</li>
+<li>Fill an intended ASIN, or merge it with an observed redirect target.</li>
+<li>Claim a supplied short link is valid or invalid. That question belongs to the owner and to Associates support.</li>
+<li>Estimate a conversion rate, a revenue figure or a popularity rank.</li>
+<li>Override a failing compliance check to make a deploy go through.</li>
+</ul></div>
+</div></section>
+
+<section><h2>Where the data comes from</h2>
+<table><caption>Every input has a named source and a named owner. Anything not on this list is not collected.</caption>
+<thead><tr><th>Input</th><th>Source</th><th>Who can reach it</th><th>Used for</th></tr></thead><tbody>
+<tr><td>Product specifications, titles, bullet wording</td><td>The official Amazon listing page</td><td>Public, anyone</td><td>Every table cell on the site.</td></tr>
+<tr><td>Price, star rating, review count</td><td>Creators API or PA API only — never a page</td><td>Enrolled Associates account with eligible sales</td><td>Currently nothing. The site publishes no price or rating at all (FLG-005).</td></tr>
+<tr><td>Commission category and rate</td><td>The Associates commission table</td><td>Owner, enrolled account</td><td>Nothing published. Not shown, not estimated (Q-11).</td></tr>
+<tr><td>Orders and commission income</td><td>The Associates Central orders report</td><td>Owner, enrolled account</td><td>The campaign ledger, transcribed by hand with the report date.</td></tr>
+<tr><td>Arrivals, outbound clicks, guide reads, searches, rankings</td><td>This site's own collector</td><td>Us</td><td>Editorial decisions. Never a claim about money.</td></tr>
+<tr><td>Search impressions and queries</td><td>Search Console</td><td>Owner, verified property</td><td>Which topics deserve coverage (SG-10).</td></tr>
+</tbody></table></section>
+
+<section><h2>Why it is written down at all</h2><p>A design that only exists in the operator's head cannot be reviewed, and a review that cannot be repeated is not a review. This page exists so that the next person — human or machine — can see exactly what the automation is supposed to do, what it is forbidden to do, and which single unresolved item is standing between the design and reality for each module.</p><p>Almost every row above is waiting on the same small number of things: an enrolled Associates account (FLG-004, Q-02, Q-11), a deployed collector (FLG-036), and an owner decision about whether the automation roadmap should be authorised at all (SG-12). Those are in <a href="questions.html">Open questions</a> and <a href="suggestions.html">Suggestions</a>, and they are deliberately not resolved by anything on this page.</p></section>
+
+<section class="panel"><h2>What we will NOT do</h2><ul>
+<li>Show hardcoded prices or star ratings.</li>
+<li>Claim “best”, popularity, or search volume without evidence.</li>
+<li>Auto-publish AI content without human review.</li>
+<li>Merge intended and observed ASIN fields.</li>
+<li>Scale Special Links before the one-per-product test passes.</li>
+<li>Let an automated job publish without passing the same gate a person would.</li>
+</ul>
+<p><a href="suggestions.html">Suggestions &amp; direction</a> · <a href="questions.html">Open questions</a> · <a href="measurement.html">Measurement</a> · <a href="flagged.html">Flagged for Review</a> · <a href="executive-summary.html">Executive summary</a></p></section>
+
+</main>
+<footer>
+  <div class="wrap">
+    <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
+    <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
+    <p class="dash">Studio &amp; records: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> · <a href="measurement.html">Measurement</a> · <a href="platform.html">Platform</a> ·
+      <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
+    <p class="small">Prices and availability are not shown on this site; check the live listing for
+      current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
+      Inc. or its affiliates. This site is not endorsed by Amazon. Scenes and diagrams are illustrations,
+      not product photography. Nothing here is a hands-on product test — every specification is read
+      from the official listing and dated. Last verified 2026-11-20.</p>
+    <p class="small">© 2026 ShopNow Kitchen. <a href="flagged.html">Flagged for Review</a> lists everything
+      we could not verify.</p>
+  </div>
+</footer>
+<script src="assets/app.js" defer></script>
+<script src="assets/js/collect.js" defer></script>
+</body>
+</html>

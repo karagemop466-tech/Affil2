@@ -22,7 +22,7 @@
   <div class="wrap mast">
     <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
     <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a></div></details></nav>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> · <a href="measurement.html">Measurement</a> · <a href="platform.html">Platform</a></div></details></nav>
     <form class="search" action="search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
       <input id="q" name="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
@@ -75,9 +75,12 @@
 </table>
 <p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
   carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
-  pixel and no tag manager on this site. A self-hosted endpoint could replace local storage later,
-  and the event names are fixed so that swap would not require editing any page &mdash; but until
-  that endpoint exists, nothing leaves your device.</p>
+  pixel and no tag manager on this site. This repository also ships a <strong>self-hosted
+  collector</strong> that could record the same five events server-side &mdash; a Cloudflare Pages
+  Function, a dependency-free Node server and an aggregate-only Worker (see
+  <a href="measurement.html">Measurement</a>). The browser probes that endpoint once per page and
+  stays inert while none answers, so until one is deployed and the site is pointed at it, nothing
+  leaves your device (FLG-036).</p>
 <p>You can clear everything we store by clearing site data for this domain, and you can export it
   first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
 
@@ -90,8 +93,8 @@
 <h2>Cookies, and what we do not use</h2>
 <ul>
   <li>No advertising cookies, no retargeting, no social pixels.</li>
-  <li>No fonts or scripts loaded from a third-party CDN &mdash; the page loads from this domain
-    only.</li>
+  <li>The only third-party request is the font stylesheet (Google Fonts, Fraunces + Inter) &mdash;
+    type only: no cookies, no identifiers, no analytics. Everything else loads from this domain.</li>
   <li>No account, no login, no email capture on this site.</li>
   <li>Clicking a product link takes you to Amazon, where Amazon's own privacy policy applies and
     Amazon's own cookies are set.</li>
@@ -102,7 +105,7 @@
   <div class="wrap">
     <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
-    <p class="dash">Studio &amp; records: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+    <p class="dash">Studio &amp; records: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> · <a href="measurement.html">Measurement</a> · <a href="platform.html">Platform</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
@@ -114,5 +117,6 @@
   </div>
 </footer>
 <script src="assets/app.js" defer></script>
+<script src="assets/js/collect.js" defer></script>
 </body>
 </html>

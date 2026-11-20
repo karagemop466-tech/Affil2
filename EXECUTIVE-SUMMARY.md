@@ -96,3 +96,31 @@ Zero, and no forecast. No commission rate, click, session or order figure is pre
 - `analytics-endpoint/` (reference worker + contract README) ships alongside the measurement layer; deploying any collector remains owner-gated (Q-08, FLG-010).
 - Integration verification: `scripts/check_site.py` ALL CHECKS PASS on 33 regenerated pages; feed.xml and sitemap.xml parse as valid XML; every guide file is present in the feed.
 
+
+---
+
+## Added by the PR #16 integration (collector + platform surfaces)
+
+## Measurement
+- Five first-party events: `page_view`, `outbound_click`, `guide_read`, `search`, `suggestion_rank`.
+- The reader-visible click counter stays in the reader's own browser (localStorage) and never leaves the device.
+- A self-hosted collector now ships in the repository: `functions/api/collect.js` (Cloudflare Pages Function), `analytics/server.js` (dependency-free Node server) and `analytics-endpoint/worker.js` (aggregate-only Worker, counters only). No cookies, no IP address, no user agent, no fingerprint; a search is recorded as a length and a result count, never as the words typed.
+- GitHub Pages cannot run a server-side function, so no collector is deployed and the live site records nothing server-side. The browser client probes the endpoint once per page and stays inert when nothing answers (FLG-036, Q-08).
+- The campaign ledger stays empty until an authorised Associates report fills it. No conversion score and no revenue forecast are published.
+
+## The platform concept
+- `platform.html` specifies the machinery behind the publication, stage by stage: Discover → Verify → Analyse → Draft → Gate → Publish → Learn, with a human gate at the end of every stage.
+- Six modules, each with its scope and its blocker: **Research** (capture and diff official listings — partly built, done by hand), **Market and commission analysis** (blocked on Creators API enrolment and the owner decision SG-12), **Content generation** (designed and gated; a model may propose, a person publishes), **Link management** (tag and sponsored enforcement live; Special Link validation still manual, FLG-003 / FLG-004), **Click and conversion tracking** (built, not deployed, FLG-036), **Optimization** (designed, blocked until there is a denominator).
+- The page separates what runs today from what is designed, so it is a specification and never a claim that automation exists.
+
+## Compliance in the publish path
+- `scripts/check_site.py` is the publishing gate: disclosure on every page above the fold, `(paid link)` label, `rel="sponsored"` on every Amazon link, the Associates tracking tag on every Amazon **buy link** (labelled verification links may be untagged), no prices, no star ratings, no review counts, no Amazon-hosted imagery, canonical and description on every page, internal links resolve, sitemap covers every page, intent and observation fields stay separate.
+- `.github/workflows/pages.yml` runs the generator, fails if the committed pages differ from the generator, runs the gate, runs the collector tests and runs the site tests. It does not deploy: GitHub Pages publishes `main` through its own branch builder.
+
+## Not verified (blank, flagged)
+- Intended ASINs (FLG-001); tracking-ID activity (FLG-002); short-link compliance (FLG-003); Special Link test (FLG-004).
+- Prices, ratings, sales ranks, commissions (FLG-005).
+- Conflicts: P-02 24 vs 25 presets (FLG-021); P-03 temperature (FLG-018); P-05 battery 50 h (FLG-008); P-02 model (FLG-009).
+
+## Next
+Owner decisions in questions.html; one Special Link test per product before scaling; deploy a collector and choose its retention policy (FLG-036, Q-08); see flagged.html for all irregularities.

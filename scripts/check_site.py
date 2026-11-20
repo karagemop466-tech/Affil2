@@ -99,6 +99,10 @@ for p in pages:
     if "fonts.googleapis.com" not in html:
         err(f"{rel}: missing brand font stylesheet link")
 
+    # --- the collector client is loaded on every page (PR16)
+    if "assets/js/collect.js" not in html:
+        err(f"{rel}: collector client not loaded")
+
     # --- every buy button sits near a visible (paid link) label (FTC)
     for m in re.finditer(r"data-outbound=", html):
         seg = html[max(0, m.start() - 400): m.start() + 400]
@@ -108,9 +112,9 @@ for p in pages:
     # --- no reproduced prices or ratings
     for m in re.finditer(r"\$\s?\d", html):
         err(f"{rel}: contains a price-like amount near ...{html[max(0, m.start()-40):m.start()+12]!r}")
-    if re.search(r"\d\.\d\s*(out of\s*)?5\s*stars", html, re.I):
+    if re.search(r"\b\d(?:\.\d)?\s*(?:out of 5|/5|stars)\b", html, re.I):
         err(f"{rel}: contains a star rating")
-    if re.search(r"\b(1[0-9]|[1-9]),(?:[0-9]{3})\s*(ratings|reviews|global ratings)", html, re.I):
+    if re.search(r"\b\d{1,3},\d{3}\s+(?:ratings|reviews|global ratings)\b", html, re.I):
         err(f"{rel}: contains a review count")
 
     # --- internal links resolve
@@ -137,7 +141,7 @@ for p in pages:
     # --- every page reachable dashboard link group in the footer
     for target in ("suggestions.html", "questions.html", "flagged.html", "sources.html",
                    "executive-summary.html", "campaign-ledger.html", "disclosure.html",
-                   "about.html", "sitemap.xml", "feed.xml"):
+                   "about.html", "measurement.html", "platform.html", "sitemap.xml", "feed.xml"):
         if (up + target) not in html:
             err(f"{rel}: footer missing link to {target}")
 
@@ -354,6 +358,21 @@ if feed is not None:
     lang = feed.find("./channel/language")
     if lang is None or not lang.text or not lang.text.startswith("en"):
         err("feed.xml: missing or malformed <language>")
+
+# ---------------------------------------------------------------- measurement layer
+for req_path in ("functions/api/collect.js", "analytics/server.js", "assets/js/collect.js",
+                 "data/events.json", "measurement.html", "platform.html"):
+    if not (ROOT / req_path).exists():
+        err(f"missing measurement file: {req_path}")
+if (ROOT / "data/events.json").exists() and (ROOT / "functions/api/collect.js").exists():
+    schema = json.loads((ROOT / "data/events.json").read_text())
+    declared = [e["name"] for e in schema["events"]]
+    if declared != ["page_view", "outbound_click", "guide_read", "search", "suggestion_rank"]:
+        err(f"events.json declares {declared}, expected the five defined events in order")
+    collector_src = (ROOT / "functions/api/collect.js").read_text()
+    for ev_name in declared:
+        if f'"{ev_name}"' not in collector_src:
+            err(f"event {ev_name} is declared in events.json but not accepted by the collector")
 
 # ---------------------------------------------------------------- analytics layer
 appjs_text = (ROOT / "assets" / "app.js").read_text()

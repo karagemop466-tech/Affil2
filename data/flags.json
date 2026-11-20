@@ -102,7 +102,7 @@
   {
     "id": "FLG-010",
     "title": "Analytics local-only",
-    "detail": "Click counter runs in-browser until a self-hosted endpoint is deployed. See Q-08.",
+    "detail": "Click counter runs in-browser. The self-hosted endpoint that was missing has since shipped in the repository (functions/api/collect.js, analytics/server.js, analytics-endpoint/worker.js); it is still not deployed to a public host, so server-side measurement is off. The browser client probes the endpoint once per page and stays inert while none answers. See FLG-036 and Q-08.",
     "links": [
       "S03"
     ],
@@ -384,6 +384,14 @@
       "S13"
     ],
     "severity": "unverified",
+    "owner_status": "Published on the Flagged for Review page. Does not block publication."
+  },
+  {
+    "id": "FLG-036",
+    "title": "Self-hosted collector shipped but not deployed",
+    "detail": "A privacy-preserving collector for the five events ships in this repository in three deployable forms: a Cloudflare Pages Function (functions/api/collect.js), a dependency-free Node server (analytics/server.js), and an aggregate-only Cloudflare Worker (analytics-endpoint/worker.js). GitHub Pages serves static files only and cannot run any of them, so no collector is deployed and the live site records nothing server-side: the browser client probes the endpoint once and stays inert when it does not answer. Owner action: deploy one implementation, point the site at it with <meta name=\"x-collect-endpoint\" content=\"...\">, and decide the retention period before any event is collected. The campaign ledger stays empty until an authorised Associates report fills it. See Q-08 and the Measurement page.",
+    "links": ["S23"],
+    "severity": "open",
     "owner_status": "Published on the Flagged for Review page. Does not block publication."
   }
 ]

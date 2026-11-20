@@ -22,7 +22,7 @@
   <div class="wrap mast">
     <a class="brand" href="index.html">ShopNow<span>Kitchen</span></a>
     <button class="navtoggle" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a></div></details></nav>
+    <nav id="primary-nav" aria-label="Primary"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a><details class="records"><summary>Records</summary><div><a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> · <a href="measurement.html">Measurement</a> · <a href="platform.html">Platform</a></div></details></nav>
     <form class="search" action="search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
       <input id="q" name="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
@@ -107,7 +107,7 @@
   <td>Published on the Flagged for Review page. Does not block publication.</td>
   <td class="src"><a href="https://www.amazon.com/dp/B09B7SB46R" rel="sponsored nofollow">S11</a></td></tr><tr><td class="nowrap"><strong>FLG-010</strong></td>
   <td>Analytics local-only<br><span class="small pill-sev open">open</span></td>
-  <td>Click counter runs in-browser until a self-hosted endpoint is deployed. See Q-08.</td>
+  <td>Click counter runs in-browser. The self-hosted endpoint that was missing has since shipped in the repository (functions/api/collect.js, analytics/server.js, analytics-endpoint/worker.js); it is still not deployed to a public host, so server-side measurement is off. The browser client probes the endpoint once per page and stays inert while none answers. See FLG-036 and Q-08.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
   <td class="src"><a href="https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking" rel="sponsored nofollow">S03</a></td></tr><tr><td class="nowrap"><strong>FLG-011</strong></td>
   <td>Short-link redirects are not stable across attempts<br><span class="small pill-sev open">open</span></td>
@@ -193,7 +193,11 @@
   <td>No named author or editorial owner<br><span class="small pill-sev open">open</span></td>
   <td>The site has no named byline, no editor of record and no organisation behind it that a reader could check. Search engines and readers both treat that as a trust signal. An author page with a real name and a stated method is recommended before traffic is scaled.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
-  <td class="src"><a href="https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking" rel="sponsored nofollow">S03</a></td></tr><tr><td class="nowrap"><strong>FLG-035</strong></td>
+  <td class="src"><a href="https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking" rel="sponsored nofollow">S03</a></td></tr><tr><td class="nowrap"><strong>FLG-036</strong></td>
+  <td>Self-hosted collector shipped but not deployed<br><span class="small pill-sev open">open</span></td>
+  <td>A privacy-preserving collector for the five events ships in this repository in three deployable forms: a Cloudflare Pages Function (functions/api/collect.js), a dependency-free Node server (analytics/server.js), and an aggregate-only Cloudflare Worker (analytics-endpoint/worker.js). GitHub Pages serves static files only and cannot run any of them, so no collector is deployed and the live site records nothing server-side: the browser client probes the endpoint once and stays inert when it does not answer. Owner action: deploy one implementation, point the site at it with &lt;meta name="x-collect-endpoint" content="..."&gt;, and decide the retention period before any event is collected. The campaign ledger stays empty until an authorised Associates report fills it. See Q-08 and the Measurement page.</td>
+  <td>Published on the Flagged for Review page. Does not block publication.</td>
+  <td class="src"><a href="https://github.com/karagemop466-tech/Affil2" rel="sponsored nofollow">S23</a></td></tr><tr><td class="nowrap"><strong>FLG-035</strong></td>
   <td>cETL, NIST and NSF are seller statements, not documents we saw<br><span class="small pill-sev unverified">unverified</span></td>
   <td>P-01 states cETL approved and P-04 states NIST and NSF under Specification Met. These are words on a listing, not certificates or test reports. Nothing on this site should be read as independent confirmation of a safety or accuracy mark.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
@@ -211,7 +215,7 @@
   <div class="wrap">
     <p class="disc-foot">As an Amazon Associate I earn from qualifying purchases. Links marked <strong>(paid link)</strong> are Amazon affiliate links &mdash; if you buy through them, we may earn a commission at no extra cost to you.</p>
     <nav aria-label="Footer"><a href="air-fryers.html">Air Fryers</a><a href="meat-thermometers.html">Meat Thermometers</a><a href="shop.html">All products</a><a href="guides.html">Guides</a><a href="compare.html">Compare</a><a href="how-we-choose.html">How we choose</a></nav>
-    <p class="dash">Studio &amp; records: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> ·
+    <p class="dash">Studio &amp; records: <a href="suggestions.html">Decision Center</a> · <a href="design-brief.html">Design &amp; Traffic Brief</a> · <a href="questions.html">Open Questions</a> · <a href="flagged.html">Flagged for Review</a> · <a href="sources.html">Sources</a> · <a href="executive-summary.html">Executive Summary</a> · <a href="campaign-ledger.html">Campaign Ledger</a> · <a href="about.html">About &amp; Authorship</a> · <a href="disclosure.html">Disclosure &amp; Privacy</a> · <a href="measurement.html">Measurement</a> · <a href="platform.html">Platform</a> ·
       <a href="sitemap.xml">Sitemap</a> · <a href="feed.xml">RSS</a></p>
     <p class="small">Prices and availability are not shown on this site; check the live listing for
       current details. Product names, Amazon and Amazon Associates are trademarks of Amazon.com,
@@ -223,5 +227,6 @@
   </div>
 </footer>
 <script src="assets/app.js" defer></script>
+<script src="assets/js/collect.js" defer></script>
 </body>
 </html>
