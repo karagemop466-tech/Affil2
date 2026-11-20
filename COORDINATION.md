@@ -221,6 +221,22 @@ Both observations were reached separately, which raises confidence in them.
 - `sitemap.xml` and `feed.xml` — parse as valid XML
 - No new pages added, so the sitemap requires no new entry
 
+### PR and merge record — session `arena/9397cc0c-affil2`
+
+| Field | Value |
+|-------|-------|
+| PR opened | https://github.com/karagemop466-tech/Affil2/pull/13 |
+| PR #10 (duplicate site) | **Closed unmerged** — https://github.com/karagemop466-tech/Affil2/pull/10 |
+| Merge | `gh pr merge 13 --merge` — state **MERGED** |
+| Merge commit | `1c52f8a985b83816bd02a1691adc4bde6b38fa45` |
+| Pages deploy | `pages build and deployment` for `1c52f8a` — **completed / success** |
+| Live URL | https://karagemop466-tech.github.io/Affil2/ |
+| Post-deploy verification | `sources.html` serves S20, S21, S22. `products/p04-thermomaven-1sec.html` and `products/p05-chefiq-sense-gen3.html` serve the USDA doneness table. `flagged.html` and `data/flags.json` on `main` carry 30 flags through FLG-030. |
+
+**Conflicts encountered and how they were resolved.** Rebasing onto current `main` conflicted in `compare.html` and `COORDINATION.md`. Neither side's work was discarded. `compare.html` is generated output, so it was restored from `main` and reproduced byte-identical by re-running the generator (this PR contributes no change to it). `COORDINATION.md` was resolved by keeping both session records, `main`'s first and this session's appended.
+
+**Mistake recorded.** This session hand-edited the generated product pages to add the USDA block on its first attempt. `scripts/build_content.py` regenerated those files and silently wiped the edit. The block was then moved into the generator itself, scoped to the thermometer category, and verified idempotent over three consecutive runs. Generated files must never be hand-edited.
+
 ### Still not done, and why
 
 - **Analytics endpoint.** Unchanged. `assets/app.js` still logs the five events to `localStorage` only. Deploying a self-hosted endpoint needs hosting that GitHub Pages cannot provide (existing FLG-010 / Q-08).
