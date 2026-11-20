@@ -711,3 +711,15 @@ table.ledger code{font-size:12.5px;background:var(--cream-2);padding:2px 6px;bor
 .picker-result ol{margin:8px 0 6px;padding-left:20px}
 .picker-result li{margin:0 0 6px}
 .picker-result a{font-weight:600}
+
+/* Records dropdown: readable, keyboard-friendly, single nav group */
+.records div{color:inherit}
+.records div a{color:#f0eee4;padding:5px 8px;border-radius:6px}
+.records div a:hover{background:rgba(255,255,255,.12);color:#fff}
+.records div a[aria-current="page"]{background:var(--accent);color:#fff}
+.records[open] summary{background:rgba(255,255,255,.12)}
+.records summary{list-style:none}
+.records summary::-webkit-details-marker{display:none}
+.records summary::after{content:" \25BE";font-size:10px;opacity:.8}
+.records[open] summary::after{content:" \25B4"}
+@media(max-width:760px){.records div{width:100%}}

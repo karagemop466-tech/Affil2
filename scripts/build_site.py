@@ -201,13 +201,28 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
     up = "../" * depth
     canon = BASE + path
 
+    # A page can be current either directly or through the section it belongs to, so a product
+    # page marks "Air Fryers" current and a guide marks "Guides" current. Without this the nav
+    # looks inert on every page except the homepage.
+    def section_of(rel):
+        if rel.startswith("products/"):
+            slug = rel.split("/")[-1]
+            rec = next((x for x in PRODUCTS if slug.startswith(x["slug"])), None)
+            return rec["catfile"] if rec else ""
+        if rel.startswith("guides/"):
+            return "guides.html"
+        return rel
+
+    current = section_of(path)
     nav_parts = []
     for h, t in NAV:
-        cur = ' aria-current="page"' if h == path else ""
+        cur = ' aria-current="page"' if h == current else ""
         nav_parts.append(f'<a href="{up}{h}"{cur}>{t}</a>')
     nav = "".join(nav_parts)
     footnav = "".join(f'<a href="{up}{h}">{t}</a>' for h, t in NAV)
-    dash = " · ".join(f'<a href="{up}{h}">{t}</a>' for h, t in DASH)
+    ACP = ' aria-current="page"'
+    dash = " · ".join(
+        f'<a href="{up}{h}"{ACP if h == path else ""}>{t}</a>' for h, t in DASH)
 
     ld = ""
     if jsonld:
