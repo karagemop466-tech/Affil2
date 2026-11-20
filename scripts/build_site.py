@@ -425,7 +425,7 @@ def build_home():
 
 <section>
   <h2>The three that earn a recommendation</h2>
-  <p class="muted">Not the whole market &mdash; just the five links we were asked to cover. These are
+  <p class="muted">Not the whole market &mdash; these five are the ones we cover. These are
     the three we would start with, and the reason is written on each card.</p>
   <div class="grid">
     {"".join(card(p, "") for p in featured)}
@@ -1811,7 +1811,7 @@ def build_about():
   them, or seen a certification document. No page on this site claims otherwise.</p>
 
 <h2>Why only five products</h2>
-<p>Because those are the five links this site was asked to cover. There is no pretence of covering the
+<p>Because those five are the ones this site covers. There is no pretence of covering the
   market, no "top ten" list, and no ranking against products that were never examined. Where a guide
   would normally say "consider alternatives", it says instead that the site only covers these
   five.</p>
