@@ -840,3 +840,11 @@ T-20 | Live re-verification of the five listings + status reconciliation | done 
 
 - PR: https://github.com/karagemop466-tech/Affil2/pull/39 — merged via `gh pr merge --merge`, merge commit `66ccda9`, state MERGED.
 - `Verify site` run on `66ccda9` → success. Pages deploy for `66ccda9` ran as `pages build and deployment`; see the Actions run list for its final conclusion.
+
+---
+
+## Session `cb967199` — open-PR reconciliation and independent publication review
+
+### Claim (2026-11-20, active)
+
+- Claiming a documentation-only integration review: reconcile open PRs against the current `main`, record whether each contains unique work or is superseded, and log a concrete line-by-line publication finding if one is found. Scope: `COORDINATION.md` only. Do not edit generator/data/site outputs in this pass unless the review identifies a release-blocking defect; if so, record the request and keep scope isolated until safely claimed. Existing account-gated items remain unresolved and are not to be guessed.
