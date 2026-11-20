@@ -66,7 +66,7 @@ FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
 
 ## Handoff / conflict log
 
-- 2026-11-20 505e685a (current session, branch arena/505e685a-affil2, base 4ddede54 = main): claimed T-28 and T-29. Added scripts/research_engine.py (product research from first-party events) and scripts/campaign_optimizer.py (campaign optimization from first-party clicks). Verified: python3 scripts/build_site.py builds 36 pages, python3 scripts/check_site.py ALL CHECKS PASS (36 pages, 5 product records, 50 flags, 19 sources), Python and JS test suites pass. GitHub Pages already live at https://karagemop466-tech.github.io/Affil2/ (status: built, source=main, https enforced). No conflicts — edits are limited to new files in own scope; no shared records modified.
+- 2026-11-20 505e685a (current session, branch arena/505e685a-affil2, base 4ddede54 = main): claimed T-28 and T-29. Added scripts/research_engine.py (product research from first-party events) and scripts/campaign_optimizer.py (campaign optimization from first-party clicks). Verified: python3 scripts/build_site.py builds 36 pages, python3 scripts/check_site.py ALL CHECKS PASS (36 pages, 5 product records, 50 flags, 19 sources), Python and JS test suites pass. PR #56 https://github.com/karagemop466-tech/Affil2/pull/56 merged via `gh pr merge 56 --merge` into main. GitHub Pages deploy for main build status `built`, live at https://karagemop466-tech.github.io/Affil2/ (source=main, https enforced). No conflicts — edits are limited to new files in own scope; no shared records modified.
 
 ## Handoff / conflict log (original)
 - 2026-11-20 530c2e6c: claimed all tasks, repo empty, no conflicts; all tasks merged to main at e1b6750e.
