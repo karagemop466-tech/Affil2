@@ -396,5 +396,15 @@
     ],
     "severity": "policy",
     "owner_status": "Published on the Flagged for Review page with a visible caption on every image that uses it. Does not block publication."
+  },
+  {
+    "id": "FLG-037",
+    "title": "On-site search was inert: the index existed but nothing queried it",
+    "detail": "On main, search.html carried a generated index and assets/app.js referenced 'search', but no code read the query string or rendered results, so the search box returned nothing on every term. The page and the event were real; the search was not. Fixed in this pass: assets/app.js now parses ?q=, scores title, keyword and description, renders the top matches, and records the 'search' event with the query and hit count, locally only.",
+    "links": [
+      "S04"
+    ],
+    "severity": "corrected",
+    "owner_status": "Fixed on this branch and checked by the build gate. Published here because the earlier claim that the search worked was inaccurate."
   }
 ]

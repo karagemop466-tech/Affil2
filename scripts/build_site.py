@@ -235,6 +235,9 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
 <meta property="og:type" content="website">
 <meta property="og:url" content="{canon}">
 <meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="{BASE}assets/photos/hero-kitchen.jpg">
+<meta property="og:image:alt" content="Illustrative kitchen image, generated for this site">
+<meta name="twitter:image" content="{BASE}assets/photos/hero-kitchen.jpg">
 <link rel="stylesheet" href="{up}assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="{SITE} — Feed" href="{up}feed.xml">
 {ld}{extra_head}</head>
@@ -1101,7 +1104,8 @@ def build_guide(g):
            "headline": g["title"], "description": g["sub"], "datePublished": TODAY,
            "dateModified": TODAY, "author": dict(publisher_ld(), **{"@context": "https://schema.org"}),
            "publisher": dict(publisher_ld(), **{"@context": "https://schema.org"}),
-           "mainEntityOfPage": BASE + "guides/" + g["slug"] + ".html"},
+           "mainEntityOfPage": BASE + "guides/" + g["slug"] + ".html",
+           "image": BASE + "assets/photos/hero-kitchen.jpg"},
           dict(crumbs_ld([("Home", "index.html"), ("Guides", "guides.html"),
                           (g["title"], "guides/" + g["slug"] + ".html")]),
                **{"@context": "https://schema.org"})]
@@ -1223,11 +1227,12 @@ SUGGESTIONS = [
          verify="Product pages still say PENDING TEST. Cannot be completed without account access."),
     dict(id="SG-08", title="One indexable host with a sitemap, feed and structured data",
          what="Canonical tags, sitemap.xml, robots.txt, an RSS feed, JSON-LD on every page, and a "
-              "working on-site search.",
+              "working on-site search. The search was inert until T-17 (FLG-037); it now reads the "
+              "query and renders matches.",
          why="A crawler needs one canonical address per page and a reason to rank it. Duplicate "
              "hosts and dead search pages waste both.",
          impact="High — findability", effort="Done", status="Shipped",
-         verify="sitemap.xml lists every page; three JSON-LD blocks on product pages; search.html reads a generated index."),
+         verify="sitemap.xml lists every page; three JSON-LD blocks on product pages; search.html matches the generated index in the browser."),
     dict(id="SG-09", title="Make it read like a publication: authorship, brand, imagery, seasons",
          what="Named editorial standards page, consistent masthead and type, original illustration "
               "instead of stock or Amazon photography, and seasonal guides.",
@@ -1637,8 +1642,8 @@ def build_flagged():
 <div class="panel">
   <h2>Read this page in this order</h2>
   <ol class="tight">
-    <li><strong>Conflicts</strong> &mdash; places where a listing says two different things. Six of
-      them. These are the ones most likely to affect a buying decision.</li>
+    <li><strong>Conflicts</strong> &mdash; places where a listing says two different things. These are
+      the ones most likely to affect a buying decision.</li>
     <li><strong>Unverified</strong> &mdash; values we could not confirm, so they are blank rather than
       filled in.</li>
     <li><strong>Policy</strong> &mdash; things deliberately absent for compliance reasons: prices,
@@ -1715,7 +1720,7 @@ def build_sources():
   erasing them.</p>
 """
     BUILT.append(page("sources.html", f"Sources — {SITE}",
-                      "Ten sources, all official, all dated, with the exact wording each claim "
+                      f"{len(SOURCES)} sources, all official, all dated, with the exact wording each claim "
                       "relies on.",
                       body, jsonld={"@context": "https://schema.org", "@type": "WebPage",
                                     "name": "Sources", "url": BASE + "sources.html"}))
@@ -1788,7 +1793,7 @@ def build_exec():
     (FLG-032).</li>
 </ul>
 
-<h2>5. The six listing conflicts a buyer should know about</h2>
+<h2>5. The listing conflicts a buyer should know about</h2>
 <table class="exec">
   <thead><tr><th scope="col">Flag</th><th scope="col">Product</th><th scope="col">Contradiction</th></tr></thead>
   <tbody>
@@ -2041,7 +2046,7 @@ def build_search():
                    "What has to be answered before a decision can be made", "page"),
                   ("Flagged for Review", "flagged.html",
                    "Every conflict and unverified value with its source", "page"),
-                  ("Sources", "sources.html", "The ten official sources behind every claim", "page"),
+                  ("Sources", "sources.html", "Every official source behind every claim", "page"),
                   ("Disclosure and privacy", "disclosure.html",
                    "Affiliate disclosure, price policy, and the five measured events", "page")]:
         index.append({"t": extra[0], "u": extra[1], "d": extra[2], "k": extra[3]})

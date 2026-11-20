@@ -12,6 +12,9 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/flagged.html">
 <meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://karagemop466-tech.github.io/Affil2/assets/photos/hero-kitchen.jpg">
+<meta property="og:image:alt" content="Illustrative kitchen image, generated for this site">
+<meta name="twitter:image" content="https://karagemop466-tech.github.io/Affil2/assets/photos/hero-kitchen.jpg">
 <link rel="stylesheet" href="assets/style.css">
 <link rel="alternate" type="application/rss+xml" title="ShopNow Kitchen — Feed" href="feed.xml">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Flagged for Review", "url": "https://karagemop466-tech.github.io/Affil2/flagged.html"}</script>
@@ -43,8 +46,8 @@
 <div class="panel">
   <h2>Read this page in this order</h2>
   <ol class="tight">
-    <li><strong>Conflicts</strong> &mdash; places where a listing says two different things. Six of
-      them. These are the ones most likely to affect a buying decision.</li>
+    <li><strong>Conflicts</strong> &mdash; places where a listing says two different things. These are
+      the ones most likely to affect a buying decision.</li>
     <li><strong>Unverified</strong> &mdash; values we could not confirm, so they are blank rather than
       filled in.</li>
     <li><strong>Policy</strong> &mdash; things deliberately absent for compliance reasons: prices,
@@ -201,7 +204,11 @@
   <td>cETL, NIST and NSF are seller statements, not documents we saw<br><span class="small pill-sev unverified">unverified</span></td>
   <td>P-01 states cETL approved and P-04 states NIST and NSF under Specification Met. These are words on a listing, not certificates or test reports. Nothing on this site should be read as independent confirmation of a safety or accuracy mark.</td>
   <td>Published on the Flagged for Review page. Does not block publication.</td>
-  <td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">S10</a> <a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">S13</a></td></tr></tbody>
+  <td class="src"><a href="https://www.amazon.com/dp/B0CDY277D3" rel="sponsored nofollow">S10</a> <a href="https://www.amazon.com/dp/B0DHZTCNR5" rel="sponsored nofollow">S13</a></td></tr><tr><td class="nowrap"><strong>FLG-037</strong></td>
+  <td>On-site search was inert: the index existed but nothing queried it<br><span class="small pill-sev corrected">corrected</span></td>
+  <td>On main, search.html carried a generated index and assets/app.js referenced 'search', but no code read the query string or rendered results, so the search box returned nothing on every term. The page and the event were real; the search was not. Fixed in this pass: assets/app.js now parses ?q=, scores title, keyword and description, renders the top matches, and records the 'search' event with the query and hit count, locally only.</td>
+  <td>Fixed on this branch and checked by the build gate. Published here because the earlier claim that the search worked was inaccurate.</td>
+  <td class="src"><a href="https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links" rel="sponsored nofollow">S04</a></td></tr></tbody>
 </table>
 
 <h2>How to request a change</h2>

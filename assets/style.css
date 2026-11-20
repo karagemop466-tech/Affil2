@@ -581,3 +581,10 @@ figure.photo img{
   font-size:10.5px!important;border-top:1px solid var(--line)
 }
 .card-media figure.photo{line-height:0}
+
+/* ---------- screen-reader-only class on generated pages ---------- */
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* image failure without a picture: keep the band calm, not broken */
+.card-media img{background:var(--cream-2)}

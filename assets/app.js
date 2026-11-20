@@ -17,3 +17,41 @@
  var f=document.getElementById('decisionForm');if(f)f.addEventListener('submit',function(e){e.preventDefault();localStorage.setItem('sn_decision',JSON.stringify({chosen:f.chosen.value,why:f.why.value,measure:f.measure.value,t:Date.now()}));document.getElementById('decisionSaved').textContent='Saved locally at '+new Date().toISOString()+'. Export it with your ranking.';});}
  function download(n,c){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download=n;a.click();}
 }catch(e){}})();
+// nav toggle for small screens (was styled but never wired)
+(function(){var b=document.querySelector('.navtoggle'),n=document.getElementById('primary-nav');
+ if(!b||!n)return;
+ b.addEventListener('click',function(){var open=n.classList.toggle('open');
+ b.setAttribute('aria-expanded',open?'true':'false');});})();
+
+// search page: run the query, render results, record the 'search' event
+(function(){
+ var idxEl=document.getElementById('searchIndex');if(!idxEl)return;
+ var data=[];try{data=JSON.parse(idxEl.textContent||'[]');}catch(e){return;}
+ var box=document.getElementById('results'),meta=document.getElementById('searchMeta');
+ var input=document.getElementById('sq');
+ function norm(t){return (t||'').toLowerCase();}
+ function run(){
+  var q=norm(new URLSearchParams(location.search).get('q')||'').trim();
+  if(input&&q)input.value=q;
+  if(!q){box.innerHTML='';return;}
+  var terms=q.split(/\s+/).filter(Boolean);
+  var hits=data.map(function(d){
+    var hay=norm(d.t)+' '+norm(d.d)+' '+norm(d.k),score=0;
+    terms.forEach(function(t){
+      if(norm(d.t).indexOf(t)>=0)score+=6;
+      if(norm(d.k).indexOf(t)>=0)score+=2;
+      if(hay.indexOf(t)>=0)score+=1;
+    });
+    return {d:d,score:score};
+  }).filter(function(r){return r.score>0}).sort(function(a,b){return b.score-a.score}).slice(0,12);
+  if(!hits.length){box.innerHTML='<p class="small">No match for &ldquo;'+q.replace(/[<>&]/g,'')+'&rdquo;. Try a shorter word: capacity, wireless, baskets, 450.</p>';return;}
+  box.innerHTML=hits.map(function(r){
+    return '<div class="hit"><p class="where">'+r.d.k+'</p><h3><a href="'+r.d.u+'">'+r.d.t+'</a></h3><p>'+(r.d.d||'').slice(0,180)+'&hellip;</p></div>';
+  }).join('');
+  try{var ev=JSON.parse(localStorage.getItem('sn_events')||'[]');
+   ev.push({e:'search',t:Date.now(),page:location.pathname,q:q,hits:hits.length});
+   localStorage.setItem('sn_events',JSON.stringify(ev.slice(-500)));}catch(e){}
+ }
+ if(meta)meta.textContent=meta.textContent.replace('{n}',data.length);
+ run();
+})();
