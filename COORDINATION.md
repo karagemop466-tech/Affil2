@@ -782,3 +782,56 @@ Branch `arena/9f19fe6b-affil2`, merged cleanly with `origin/main` (`0b509ab`, pr
 - GitHub Pages: `pages-build-deployment` run 44687038495 for merge commit `1d2ed6e` — build 8s ✓, deploy 11s ✓, report ✓. Live: https://karagemop466-tech.github.io/Affil2/ (source = main).
 - Flagged items FLG-001..FLG-040 published on https://karagemop466-tech.github.io/Affil2/flagged.html — none block; short-link compliance (FLG-003) remains unresolved and is not claimed invalid.
 - Notes: `analytics/server.py` (session bba2deed, Python) and `analytics/server.js` (parallel collector stack with tests) both ship; the live site continues to use whichever the owner deploys, switched in `assets/config.js`. `analytics/data/` is git-ignored (event data must not enter git).
+
+---
+
+## Session `58c6ca4a` — live re-verification pass and status record (2026-11-20 UTC)
+
+**Branch:** `arena/58c6ca4a-affil2` · **Base:** `4025ecc` (main, after PR #38) · **Task:** T-20 (re-verify live listings, reconcile open items, record state). Scope: `COORDINATION.md` only. No product, source, flag or generated-page value was changed.
+
+### Live listing re-read (official Amazon.com pages, fetched 2026-11-20)
+
+| Record | Official listing URL | Title read this session | Matches register title? |
+|---|---|---|---|
+| P-01 | https://www.amazon.com/dp/B0CDY277D3 | "Amazon.com: CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black : Home & Kitchen" | Yes |
+| P-02 | https://www.amazon.com/dp/B09B7SB46R | "Amazon.com: Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven … 24 One-Touch Preset Options … : Home & Kitchen" | Yes (preset count 24 in title; see FLG-021) |
+| P-03 | https://www.amazon.com/dp/B08DKYBTPH | "Amazon.com: Chefman Air Fryer 8 Qt \| TurboFry® 4-in-1 with 450°F Hi-Fry Option … : Home & Kitchen" | Yes (450 °F Hi-Fry in title; see FLG-018) |
+| P-04 | https://www.amazon.com/dp/B0DHZTCNR5 | "Amazon.com: ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy … : Home & Kitchen" | Yes |
+| P-05 | https://www.amazon.com/dp/B0DZFD6R9Z | "Amazon.com: CHEF iQ Sense \| Smart Wireless Meat Thermometer \| 3 Ultra-Thin Probes … Gen3 : Home & Kitchen" | Yes |
+
+Observed on these pages in this read, not written into the register: the buy-box price on each page varies with the page state (for example the P-04 page showed $16.99 and the P-05 page showed a 3-year protection-plan add-on). Prices stay blank per Program Policies §2(b) and FLG-005. The P-01 page also showed a "Sponsored Ad" block for other products; no sponsored item was added to the site.
+
+### Short-link and status checks
+
+- Short links were not re-resolved from this sandbox in this pass; the earlier 2026-11-20 resolution record (above, "Live verification performed") stands unchanged. Intermittent redirect behavior remains under FLG-011 / FLG-012 / FLG-013 / FLG-014.
+- `python3 -B scripts/check_site.py` → ALL CHECKS PASS (36 pages, 5 product records, 40 flags, 19 sources).
+- `python3 -B -m unittest discover -s tests -p "test_*.py"` → 3 tests OK.
+- `node tests/test_collector.js` → ALL JS COLLECTOR AND CLIENT TESTS PASS.
+- The GitHub Pages URL is not reachable from this sandbox (outbound is limited to github.com, api.github.com, codeload, npm, PyPI). Live Pages status is therefore not re-confirmed here; the last recorded deploy is run 44687038495 for merge `1d2ed6e`.
+
+### Open PRs from other sessions (not touched by this session)
+
+| PR | Branch | Opened | Note |
+|---|---|---|---|
+| #16 | `arena/bdedd85e-affil2` | 2026-11-20 05:32Z | Self-hosted analytics endpoint and platform proposal; owner decision pending (FLG-010). |
+| #28 | `arena/59ada9df-affil2` | 2026-11-20 05:47Z | Overlapping T-13..T-20 scope. Not merged here. |
+| #34 | `arena/82c875a9-affil2` | 2026-11-20 06:00Z | Coordination record for storefront work. Not merged here. |
+| #35 | `arena/36170d15-affil2` | 2026-11-20 06:00Z | T-17 title overlaps the already-merged T-17 (PR #20). Not merged here. |
+
+GitHub reported `mergeable: UNKNOWN` for all four. Each belongs to another session; merging any of them would overwrite that session's claim, so this session leaves them for their owners or for the final integration session.
+
+### Still owner-gated (cannot be completed from this sandbox)
+
+- FLG-001 intended ASIN confirmation by the owner.
+- FLG-002 tracking-ID activity; FLG-003 short-link compliance status; FLG-004 one Special Link test in the enrolled Associates workflow. These require the owner's Associates account. No account-level access exists in this session.
+- FLG-010 / FLG-028 / FLG-033 analytics endpoint deployment and Search Console verification (requires owner accounts).
+- FLG-019 commission schedule and FLG-032 research data (require owner-supplied first-party reports).
+
+### Irregularities noted in this pass
+
+- No new listing contradictions beyond those already published (FLG-008, FLG-017, FLG-018, FLG-021, FLG-034).
+- The sandbox cannot reach amazon.com directly for scripted checks; the titles above were read through the page-fetch tool and should be re-checked by a human in a browser: https://www.amazon.com/dp/B0CDY277D3 · https://www.amazon.com/dp/B09B7SB46R · https://www.amazon.com/dp/B08DKYBTPH · https://www.amazon.com/dp/B0DHZTCNR5 · https://www.amazon.com/dp/B0DZFD6R9Z
+
+### Task status
+
+T-20 | Live re-verification of the five listings + status reconciliation | done | 58c6ca4a | COORDINATION.md
