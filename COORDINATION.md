@@ -350,6 +350,39 @@ Rebase integration: preserved concurrent buyer-facing copy from #19 under the ne
 
 Release: [PR #20](https://github.com/karagemop466-tech/Affil2/pull/20) merged to main as abc753d. GitHub Pages reported built for descendant 64a35e5; [deployment succeeded](https://github.com/karagemop466-tech/Affil2/actions/runs/44682594233). Confirmed the new cover is present in the deployed revision.
 
+### PRs opened and merged by this session
+
+| PR | Title | Result | Commit / deploy |
+|----|-------|--------|-----------------|
+| [#15](https://github.com/karagemop466-tech/Affil2/pull/15) | One generator over the merged register, plus a stricter compliance gate | merged | `eacaeca`, Pages built |
+| [#17](https://github.com/karagemop466-tech/Affil2/pull/17) | CI: a verify gate that regenerates and checks every page | merged, `Verify site` green | `1a19c24`, Pages built |
+| [#19](https://github.com/karagemop466-tech/Affil2/pull/19) | Copy: stop explaining the brief to shoppers | merged, green | `829398c`, Pages built |
+| [#21](https://github.com/karagemop466-tech/Affil2/pull/21) | Compare table: category-aware rows, and a gate rule against cross-row placeholders | merged, green | `64a35e5`, Pages built |
+| [#24](https://github.com/karagemop466-tech/Affil2/pull/24) | Fix a page that quoted 572 °F and called the same field unverified | merged, green | `2a4ffa8`, Pages built |
+
+Live: https://karagemop466-tech.github.io/Affil2/ — `pages build and deployment` reported
+`completed/success` for every one of these commits, and `Verify site` reported `completed/success`
+on the same SHA each time.
+
+### Three defects found by reading the live pages, not the local build
+
+Each of these passed the gate at the time it was published, which is why they are recorded here
+rather than quietly fixed.
+
+1. **A page contradicted itself.** `products/p04-thermomaven-1sec.html` left upper temperature blank
+   in the spec table and answered the same question in the FAQ with "572 °F". Fixed in PR #24, and
+   the gate now fails when a FAQ states a figure the register calls unverified or conflicting.
+2. **Placeholders leaked between categories.** The comparison table printed
+   "n/a, not a capacity appliance" in the weight and dimensions rows and "see battery row" in the
+   power row, pointing at a row that does not exist. Fixed in PR #21, with a gate rule against that
+   class of text.
+3. **The gate was not running in CI at all.** Recorded above, fixed in PR #17.
+
+Lesson for the next session: `python3 scripts/check_site.py` proves the markup is compliant, not that
+it reads correctly. Read at least one product page and `compare.html` on the live URL after deploying,
+with a cache-busting query string, because GitHub Pages will serve a cached older build for a while
+and it is easy to mistake that for your own bug.
+
 ## Session `3fb8f29e` — claim
 
 > NOTE (renumbered): another session used T-17 for its measurement/publication integration (merged in PR #20). This session's task is therefore T-18.
