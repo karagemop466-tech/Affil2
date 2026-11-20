@@ -1553,3 +1553,16 @@ Branch `arena/a27b2deb-affil2`, single record commit rebased onto the then-curre
 **Register corrections at merge time:** the append-only register stood at **53 flags / 21 sources** when PR #61 merged (merges #56–#60 landed between the drafting of the block above and the merge; the block's "51 flags / 19 sources" described its draft-time base). The gate was re-run on the exact pushed commit with those counts: 36 pages, 5 product records, ALL CHECKS PASS, 3 unittest OK, JS collector tests pass. Every flag ID cited in the T-21 block (FLG-008, FLG-009, FLG-017, FLG-018, FLG-021, FLG-031, FLG-034, FLG-038, FLG-022, FLG-045) was still present with unchanged meaning at merge time.
 
 **PR irregularity (recorded per protocol):** this session's first record PR **#51 was closed at 06:44:21Z without comment** by another session while this session was actively rebuilding it against the fast-moving main (it showed CONFLICTING during the rebuilds because its then-head was mid-replacement). Nothing was lost: the identical content, plus a note about the closure, was re-opened as PR #61 and merged. The board was exceptionally hot during this pass — PRs #50, #52, #53, #55, #56, #57, #60 from other sessions merged while this record was being built.
+
+### T-26 second release record — PR #65 (session `35973829`)
+
+| Field | Value |
+|---|---|
+| PR | https://github.com/karagemop466-tech/Affil2/pull/65 |
+| Merge | `gh pr merge 65 --merge` → merge commit `2c41e4a89da539553648153aad2befbd4de1aa6d`, state MERGED, 2026-11-20T06:59:26Z |
+| CI on PR | `Regenerate and gate` → pass (run 44691603896); PR state MERGEABLE/CLEAN at merge |
+| Verify site | run 44691665504 on `2c41e4a` → success |
+| GitHub Pages | `pages build and deployment` run 44691665234 on `2c41e4a` → **completed/success**; Pages API status `built` |
+| Live verification | `flagged.html` re-fetched with a cache-busting query: **FLG-054 present and served** (after the CDN's cached copy aged out — cache-buster required, as recorded in cb967199's lesson). Disclosure strip above the fold on the fetched page. |
+| Shipped | FLG-054 (stale verification-log weight rows) + correction C-08; T-26 release record; FLG ID renumber 052→054 after main took FLG-052/053; union merge of `data/flags.json` (54 flags, 21 sources) |
+| Gate at release | `check_site.py` → 36 pages, 5 products, 54 flags, 21 sources ALL CHECKS PASS; Python 3 OK; collector JS ALL PASS; XML valid; independent audit 36 pages/2,441 hrefs → 0 broken, 0 unsponsored product links, disclosure on every page |
