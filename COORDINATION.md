@@ -48,3 +48,9 @@ FLG-010 Analytics is local-only until a self-hosted endpoint is deployed (Q-08).
 ## Handoff / conflict log
 - 2026-11-20 530c2e6c: claimed all tasks, repo empty, no conflicts.
 - PR link + merge result: (to be recorded at T-09 completion)
+
+## T-09 completion (2026-11-20)
+- PR: https://github.com/karagemop466-tech/Affil2/pull/1 — merged (merge commit fdb5d79)
+- GitHub Pages: built, deploy workflow success. Live: https://karagemop466-tech.github.io/Affil2/
+- Final gate: scripts/check_site.py ALL CHECKS PASS (25 pages)
+- Flagged items FLG-001..FLG-010 published on flagged.html; do not block.
