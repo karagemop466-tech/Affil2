@@ -251,7 +251,7 @@ def page(path, title, desc, body, extra_head="", jsonld=None, kicker="", h1=None
     <nav id="primary-nav" aria-label="Primary">{nav}<details class="records"><summary>Records</summary><div>{dash}</div></details></nav>
     <form class="search" action="{up}search.html" method="get" role="search">
       <label class="sr" for="q">Search products and guides</label>
-      <input id="q" name="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
+      <input id="q" type="search" placeholder="Search the kitchen…" autocomplete="off">
       <button type="submit">Search</button>
     </form>
   </div>
@@ -2327,17 +2327,19 @@ def build_disclosure():
     <tr><td><code>outbound_click</code></td><td>A tagged Amazon link is clicked</td>
       <td>Which product a reader actually leaves for</td></tr>
     <tr><td><code>guide_read</code></td><td>A guide page loads</td><td>Whether guides get read, not just listed</td></tr>
-    <tr><td><code>search</code></td><td>A search query returns results</td>
-      <td>What readers look for and do not find</td></tr>
+    <tr><td><code>search</code></td><td>A built-in search runs</td>
+      <td>Result count only &mdash; the words typed are not recorded</td></tr>
     <tr><td><code>suggestion_rank</code></td><td>A proposal is reordered on the Decision Center</td>
       <td>Which direction is actually preferred</td></tr>
   </tbody>
 </table>
-<p>All five are counted in your browser's local storage and nothing else. No cookie is set, no request
-  carries your data to a third party, and no fingerprinting is used. There is no analytics script, no
-  pixel and no tag manager on this site. A self-hosted endpoint could replace local storage later,
-  and the event names are fixed so that swap would not require editing any page &mdash; but until
-  that endpoint exists, nothing leaves your device.</p>
+<p>All five are counted in your browser's local storage and nothing else. Search words are held in
+  session storage only long enough to reach the results page; they are not placed in a request URL.
+  Normal page requests still reach the GitHub Pages host as ordinary traffic, but no analytics request
+  carries these events anywhere. No cookie is set and no fingerprinting is used. There is no analytics
+  script, no pixel and no tag manager on this site. A self-hosted endpoint could replace local storage
+  later, and the event names are fixed so that swap would not require editing any page &mdash; but
+  until that endpoint exists, no measured event leaves your device.</p>
 <p>You can clear everything we store by clearing site data for this domain, and you can export it
   first: <button type="button" id="exportEvents" class="ghostbtn">Export my event log (CSV)</button></p>
 
@@ -2465,14 +2467,14 @@ def build_search():
 <h1>Search</h1>
 <form class="searchpage" action="search.html" method="get" role="search">
   <label class="sr" for="sq">Search products, guides and records</label>
-  <input id="sq" name="q" type="search" placeholder="Try: two baskets, 450, wireless, capacity">
+  <input id="sq" type="search" placeholder="Try: two baskets, 450, wireless, capacity">
   <button type="submit">Search</button>
 </form>
-<p class="small" id="searchMeta">Searching across {len(index)} pages on this site. Nothing is sent to
-  a server &mdash; the index is embedded below and matched in your browser.</p>
+<p class="small" id="searchMeta">Search matches run in your browser across {len(index)} pages. Built-in search terms are carried in
+  session storage, not in the request URL. Normal page requests still reach the GitHub Pages host.</p>
 <div id="results" class="results" aria-live="polite"></div>
 <script type="application/json" id="searchIndex">{idx}</script>
-<h2>Popular starting points</h2>
+<h2>Three places to start</h2>
 <div class="grid">
   <article class="card"><h3><a href="guides/basket-vs-oven.html">Basket or oven-style?</a></h3>
     <p>The first decision, and the one that eliminates the most options.</p></article>
@@ -2483,8 +2485,8 @@ def build_search():
 </div>
 """
     BUILT.append(page("search.html", f"Search — {SITE}",
-                      "Search the products, guides and records on this site. Matching happens in "
-                      "your browser; nothing is sent to a server.",
+                      "Search products, guides and records in your browser. Built-in search terms are "
+                      "not included in the request URL.",
                       body, jsonld={"@context": "https://schema.org", "@type": "SearchResultsPage",
                                     "name": "Search", "url": BASE + "search.html"}))
 
