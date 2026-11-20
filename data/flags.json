@@ -22,12 +22,12 @@
   {
     "id": "FLG-005",
     "title": "Prices/ratings blank",
-    "detail": "No price, rating, review count, BSR or commission shown. Unverified fields left blank per Program Policies \u00a72(b)."
+    "detail": "No price, rating, review count, BSR or commission shown. Unverified fields left blank per Program Policies §2(b)."
   },
   {
     "id": "FLG-006",
     "title": "Canonical host unset",
-    "detail": "No custom domain chosen. Canonical tags use placeholder host \u2014 update before indexing."
+    "detail": "No custom domain chosen. Canonical tags use placeholder host — update before indexing."
   },
   {
     "id": "FLG-007",
@@ -48,5 +48,25 @@
     "id": "FLG-010",
     "title": "Analytics local-only",
     "detail": "Click counter runs in-browser until a self-hosted endpoint is deployed. See Q-08."
+  },
+  {
+    "id": "FLG-011",
+    "title": "Submitted short link resolution is intermittent or blocked",
+    "detail": "link.amazon/B0c8moW59 returns an Amazon checkpoint/continue interstitial with no destination in 2 of 2 attempts (177269f3 and 530c2e6c). link.amazon/B00hJ57DV resolved to /dp/B08DKYBTPH in 2 of 3 attempts; one attempt showed no destination. link.amazon/B04G1MEwY, B02NbDxp3 and B0f3GKalj resolved to the ASINs recorded in data/products.json. Destinations from short links are observed only; the intended ASIN remains unconfirmed (FLG-001). Do not claim the short links are invalid."
+  },
+  {
+    "id": "FLG-012",
+    "title": "P-03 live title conflicts with stored spec",
+    "detail": "Live listing https://www.amazon.com/dp/B08DKYBTPH (fetched 2026-11-20) title: 'Chefman Air Fryer 8 Qt | TurboFry 4-in-1 with 450°F Hi-Fry Option'. Stored spec range 200-400°F is not supported by the title and was not verified against the spec table. Spec field should be blank until verified."
+  },
+  {
+    "id": "FLG-013",
+    "title": "P-05 live title omits [2025 Model] label",
+    "detail": "Live listing https://www.amazon.com/dp/B0DZFD6R9Z (fetched 2026-11-20) title: 'CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes ... | Gen3'. The stored title includes '[2025 Model]', which the live title does not show. Stored title is not confirmed."
+  },
+  {
+    "id": "FLG-014",
+    "title": "P-04 live title conflicts with stored description; upper temperature unchecked",
+    "detail": "Live listing https://www.amazon.com/dp/B0DHZTCNR5 title (per 177269f3 fetch record) describes IP67 waterproofing; stored spec says 'Highly waterproof', which is not a verifiable listing value. The stored 572°F upper range has not been checked against the listing or manufacturer page. Re-fetch before use."
   }
 ]
