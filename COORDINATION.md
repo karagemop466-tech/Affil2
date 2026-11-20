@@ -1468,3 +1468,95 @@ and `scripts/check_site.py` (all owned by T-30 / `57fc3be0`). Also untouched: `a
 values, `scripts/research_engine.py`, `scripts/campaign_optimizer.py` (T-28/T-29, `505e685a`),
 existing flags `FLG-001..051` and existing `SG-`/`Q-` rows. Generated HTML is never hand-merged:
 the merged generator is re-run and the gate decides.
+
+## Session `arena/19dbf5e2-affil2` — completion record (2026-11-20)
+
+### T-31 — traffic wave (done)
+
+Six new guides in `scripts/traffic_guides.py`, published through the existing generator path so they
+arrive with the rest of the machinery (sitemap, feed, `findability.txt`, homepage rail, reading
+estimate, product line at the end):
+
+| Guide | Angle | Every figure from |
+|---|---|---|
+| `dual-basket-worth-it` | Is two baskets worth it, or are you buying a hinge | P-01 / P-03 / P-02 register rows |
+| `what-presets-tell-you` | What a preset count can and cannot tell you | P-02 (24 vs 25) and P-03 (four named presets) |
+| `ice-water-test` | The USDA calibration test, quoted not paraphrased | USDA FSIS Food Thermometers (S24) + P-04 / P-05 |
+| `reheating-to-165` | The 165 °F rule and what a temperature range is not | USDA chart (S22) + P-01 / P-02 / P-04 |
+| `what-a-certification-line-means` | What "cETL approved" and "NIST and NSF" promise | OSHA NRTL programme (new **S25**) + P-01 / P-03 / P-04 |
+| `appliance-gift-checklist` | Five checks before gifting an appliance in December | dimensions, box contents, warranty lines in the register |
+
+Deliberately absent, and said so on the pages: prices, ratings, review counts, cook times, and any
+claim that anybody here cooked in these units. Three guide images were generated for the site
+(`assets/img/guide-dual-basket.jpg`, `guide-ice-water.jpg`, `guide-gift-counter.jpg`), each captioned
+as an original illustration. The homepage "Latest guides" rail now draws the **newest** three rather
+than the first three, so a returning reader sees the wave.
+
+Verification: the two external documents quoted were fetched and read this session — the USDA FSIS
+Food Thermometers factsheet (ice-water method: stem ≥2 in, ≥30 s, should read 32 °F; boiling 212 °F at
+sea level, altitude −2 to −5 °F; "most food thermometers will give an accurate reading within 2 to 4
+degrees F"; care guidance "most thermometers should not be immersed"; the types table) and OSHA's NRTL
+programme page (recognition of private-sector labs, scope of standards, what a registered mark
+signifies). Both are in `data/sources.json` (S24 pre-existing, S25 added here) with the official URL,
+and the guide links them.
+
+### T-32 — imagery layer (done)
+
+All five products shared **two** image files across 36 pages, and a thermometer card could sit under
+a photo of three fryers. Five renderings were made for the site and wired per product into `card()`,
+`buybox()` (the category and shop boxes) and the product-page hero, with per-product alt text, and
+each product page now carries its own `og:image` / `twitter:image` instead of the homepage kitchen.
+This stays labelled as illustration: the site holds no licence for Amazon photography and has no
+API-supplied imagery, so FLG-007 remains open and **FLG-055** records the owner's real choice
+(keep labelled renderings, go illustration-only, or wait for Creators API assets — Q-25).
+
+### T-33 — decision paths and registers (done)
+
+`suggestions.html` opens with **Choose a path, not a row**: three coherent paths, each with what it
+needs, what it must not do, and how you would know it worked — A finish the storefront (one hour of
+account work, no code), B grow the traffic (cadence + Search Console, then measured topics),
+C build the machine (collector, Creators API, gated drafting). Five new proposals SG-36…SG-40, each
+with a verifiable "how to check it" cell, and the shortlist table grew to match.
+`questions.html` gained **Q-24…Q-28**: the brand and byline, whether labelled renderings are
+acceptable, the cadence you will actually keep, the next three products, and whether cook times are
+ever allowed here. Every row says who can answer and how to go and get it; none is answered with a
+guess.
+
+### T-34 — gated draft pipeline (done)
+
+`scripts/draft_guide.py`: a topic brief becomes `data/drafts/<slug>.json` marked **unapproved**,
+after a lint that rejects a dollar amount, a star rating, a review count, any figure that
+`data/products.json` does not mark verified (or the USDA chart does not carry), any contested figure
+stated without the other figure beside it, an unknown product or source ID, a missing
+no-hands-on-testing statement, a missing affiliate-link statement, and a page with no shape.
+`approve` requires a named reviewer **and** a clean lint — it refuses when a name is typed over a
+failing draft (that refusal is a test). Approval still publishes nothing: publication means a human
+moves the record into a guide module and the build gate passes. 13 Python tests, including 9 new ones
+for this pipeline.
+
+### Defects found on main while working, and fixed here
+
+* **FLG-052** — three unresolved git merge-conflict markers were committed inside `assets/style.css`
+  (lines 684/753/834). Both sides' rules were kept; only the marker lines were deleted. A rule to
+  fail the build on merge markers is *requested* of the `check_site.py` owner (T-30) rather than
+  applied, per the claim boundary.
+* **FLG-053** — two published guides printed `&#8212;` and `&#183;` as literal text in their lede,
+  verdict and one meta description, because entities were stored in fields the renderer escapes.
+  Normalised centrally in the generator; regression test added.
+* **FLG-054** — two guides asserted "7 min read"/"6 min read" beside a computed "about 2 min". The
+  hand-written numbers were removed; the computed one stays.
+* **FLG-056** — `tests/test_site.py` asserted the literal string "built 36 pages", so publishing any
+  new guide broke CI. The count is now derived from the pages on disk, and a new test checks every
+  guide record against the sitemap, the feed and `findability.txt`.
+* **FLG-057** — the reading estimate ignored tables and checklists, so it under-counted every guide it
+  printed; it now measures the whole page.
+
+### Gates and tests at the end of this session
+
+| Check | Result |
+|---|---|
+| `python3 scripts/build_site.py` | built 42 pages, idempotent (two consecutive builds are byte-identical) |
+| `python3 scripts/check_site.py` | 42 pages, 5 product records, 57 flags, 20 sources — ALL CHECKS PASS |
+| `python3 -m unittest discover -s tests` | 13 tests OK |
+| `node tests/test_collector.js` | ALL JS COLLECTOR AND CLIENT TESTS PASS |
+| Scope discipline | `README.md`, `EXECUTIVE-SUMMARY.md`, `data/verification-2026-11-20-pass3.json` and the verification sections of `build_site.py` / `check_site.py` untouched (T-30's claim); `data/flags.json` and `data/sources.json` appended only |
