@@ -1,20 +1,26 @@
 # Executive Summary — ShopNow Kitchen (Affil2)
 
-Date: 2026-11-20 · Tracking ID supplied: shopnow047c-20 (UNVERIFIED, FLG-002) · Session: 530c2e6c
+Date: 2026-11-20 · Tracking ID supplied: shopnow047c-20 (UNVERIFIED, FLG-002)
 
 ## What was built
-A publication-style Amazon affiliate site (static HTML, GitHub Pages) covering 5 submitted links in 2 categories: 3 air fryers (P-01–P-03) and 2 meat thermometers (P-04–P-05). Front page leads with products; guides are question-shaped; every spec traces to an official Amazon listing; every outbound link is marked (paid link) with rel=sponsored nofollow; disclosure sits above the fold on every page and repeats in the footer.
+A static, GitHub Pages buyer-guide site for 5 submitted links: 3 air fryers (P-01–P-03) and 2 meat thermometers (P-04–P-05). Every figure traces to an official Amazon listing; every outbound link is marked sponsored; disclosure appears above the fold and in the footer.
 
-## Verified (official sources, 2026-11-20)
-- B04G1MEwY → B0CDY277D3 Chefman 6 Qt Dual Basket (RJ38-SQPF-3TDB-2W) — amazon.com/dp/B0CDY277D3
-- B02NbDxp3 → B09B7SB46R Emeril Lagasse 26 QT French Door (see FLG-009) — amazon.com/dp/B09B7SB46R
-- B00hJ57DV → B08DKYBTPH Chefman TurboFry Touch 8-Qt (RJ38-SQSS-8T) — amazon.com/dp/B08DKYBTPH
-- B0c8moW59 → B0DHZTCNR5 ThermoMaven 1 Sec (HT07) — amazon.com/dp/B0DHZTCNR5
-- B0f3GKalj → B0DZFD6R9Z CHEF iQ Sense Gen3 (CQ60-3C-Z1-E) — amazon.com/dp/B0DZFD6R9Z
-- Program sources S01–S04 (Operating Agreement, Program Policies, FTC, Google).
+## Observed destinations (kept separate from intended ASINs)
+- P-01: https://link.amazon/B04G1MEwY → B0CDY277D3 · CHEFMAN 6 Quart Dual Basket Air Fryer Oven with Easy View Windows, Sync Finish, Hi-Fry, Auto Shutoff, 2 Independent 3Qt Nonstick Dishwasher Safe Frying Baskets, Digital Double Air Fryer - Black · amazon.com/dp/B0CDY277D3
+- P-02: https://link.amazon/B02NbDxp3 → B09B7SB46R · Emeril Lagasse 26QT French Door Multi-Function Air Fryer Toaster Oven | Countertop Convection Cooker, 24 One-Touch Preset Options, Extra Large Interior, Six Cooking Accessories Included · amazon.com/dp/B09B7SB46R
+- P-03: https://link.amazon/B00hJ57DV → B08DKYBTPH · Chefman Air Fryer 8 Qt | TurboFry® 4-in-1 with 450°F Hi-Fry Option for Crispier Results | Bake, Dehydrate, Frozen | XL Nonstick Dishwasher-Safe Basket | Stainless Steel · amazon.com/dp/B08DKYBTPH
+- P-04: https://link.amazon/B0c8moW59 → NOT CONFIRMED (FLG-012) · ThermoMaven 1 Sec Professional Digital Meat Thermometer, ±0.5℉ Accuracy | NIST&NSF Certified, Auto-Rotate Bright LED Screen, IP67 Waterproof for Grill BBQ, Stocking Stuffers Gifts for Men, Black · amazon.com/dp/B0DHZTCNR5
+- P-05: https://link.amazon/B0f3GKalj → B0DZFD6R9Z · CHEF iQ Sense | Smart Wireless Meat Thermometer | 3 Ultra-Thin Probes | WiFi Unlimited Range | 1000°F Heat Safe | 5 Sensors | BBQ, Grill, Oven, Smoker, Air Fryer | Gen3 · amazon.com/dp/B0DZFD6R9Z
 
-## Not verified (blank + flagged)
-Intended ASINs, tracking-ID activity, short-link compliance, Special Link tests, prices, ratings, commissions, CHEF iQ battery conflict, Emeril conflicts. See flagged.html and questions.html (Q-01…Q-12).
+## Checked 2026-11-20
+- Four short links resolved to the observed ASINs; P-04's short link (B0c8moW59) returned a checkpoint page and is unconfirmed (FLG-012).
+- Corrections: P-03 power 1000 W (FLG-017); P-05 warranty two-year (FLG-019); titles now exact listing text (FLG-020).
+- Disclosure checked against Operating Agreement §5 (S01); sponsored links per Google (S04); endorsement per FTC (S03).
+
+## Not verified (blank, flagged)
+- Intended ASINs (FLG-001); tracking-ID activity (FLG-002); short-link compliance (FLG-003); Special Link test (FLG-004).
+- Prices, ratings, sales ranks, commissions (FLG-005).
+- Conflicts: P-02 24 vs 25 presets (FLG-021); P-03 temperature (FLG-018); P-05 battery 50 h (FLG-008); P-02 model (FLG-009).
 
 ## Next
-Answer Q-01…Q-04, rank suggestions SG-01…SG-12 on suggestions.html, then test one Special Link per product before scaling.
+Owner decisions in questions.html; one Special Link test per product before scaling; see flagged.html for all irregularities.
