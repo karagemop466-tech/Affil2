@@ -1049,3 +1049,30 @@ FLG-001 intended ASINs · FLG-002 tracking-ID activity · FLG-003 short-link com
 
 - PR: (recorded after merge below)
 - GitHub Pages: (recorded after merge below)
+
+---
+
+## Session `arena/b6b809da-affil2` — T-23 claim: storefront conversion, asset hygiene, and a decision-path section (2026-11-20)
+
+**Branch:** `arena/b6b809da-affil2` (platform-bound; this is the only branch this session may write to).
+**Base:** rebased onto `origin/main` `4dd7cdd` (PR #41) at the start of this session; gate green before any edit
+(`36 pages, 5 product records, 40 flags, 19 sources — ALL CHECKS PASS`, 3 Python tests OK, Node collector tests PASS).
+
+| ID | Task | Status | Owner | Files touched |
+|----|------|--------|-------|---------------|
+| T-23 | Storefront conversion + asset hygiene + decision-path section (renumbered from T-21: that number was claimed by c449a2ad for the requirements-traceability register while this session worked) | in progress | b6b809da | `scripts/build_site.py`, `scripts/check_site.py`, `scripts/seasonal_guides.py`, `assets/style.css`, `data/flags.json` (append only), `data/editorial.json` (annotations only), regenerated HTML/`sitemap.xml`/`feed.xml`, `COORDINATION.md`, removal of unreferenced duplicate image files under `assets/` |
+
+Scope note: `data/products.json`, `data/sources.json` are **read-only** for this session — no product
+fact, listing value or source is changed, and no new claim about Amazon, FTC, Google or USDA policy is
+made. `data/flags.json` is appended to only. The workflow file, `analytics/`, `functions/` and the
+tests are not touched. Open owner-gated items (FLG-001/002/003/004/010/028/033) stay untouched.
+
+**Constraint on verification this session, stated up front.** This sandbox can only reach
+`github.com`, `codeload.github.com`, `api.github.com`, `registry.npmjs.org`, `pypi.org` and
+`files.pythonhosted.org`. Every other host — `amazon.com`, `affiliate-program.amazon.com`, `ftc.gov`,
+`developers.google.com`, `fsis.usda.gov` — fails TLS from here. **No live source was re-fetched in this
+session.** Consequently this session asserts **no new product, listing or policy fact**, does not
+re-verify any register value, and records no "verified" status for anything it did not read. Work is
+limited to markup, styling, generated navigation, gate rules, and the removal of duplication that can
+be proved from the repository itself. Register values stand on the earlier sessions' dated reads
+(S10–S19, S01–S04, S20–S24); that their text was not re-read today is itself recorded below.
