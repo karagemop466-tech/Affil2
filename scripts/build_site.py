@@ -2054,6 +2054,61 @@ SUGGESTIONS = [
          why="Most visitors arrive with a decision, not a desire to read a matrix. A shortlist converts reading into a next step without inventing a 'best of' verdict.",
          impact="High — decision support", effort="Done in this session", status="Shipped",
          verify="compare.html, 'Three questions, then a shortlist'. Weights are visible in the page source; nothing is sent anywhere."),
+    dict(id="SG-36", title="Publish a dated wave of guides, not more permanent pages",
+         what="Six guides written for the six weeks that follow: whether a dual basket is worth it, "
+              "what a preset count means, the USDA ice-water test, the 165 degree rule for leftovers, "
+              "what a certification line promises, and the five checks before gifting an appliance in "
+              "December. Each one lands in the sitemap, the feed and the findability profile the moment "
+              "it is built, and the homepage rail now points at the newest wave instead of the oldest.",
+         why="A small site cannot out-publish a review empire, but it can out-date it. Timely pages "
+             "written from checked sources are the only traffic route that does not need an ad budget, "
+             "and a page dated three times a week reads as a publication rather than a dump.",
+         impact="High — organic entry points", effort="Done", status="Shipped",
+         verify="guides.html lists every guide with its kicker; guides/ice-water-test.html and the other "
+                "five are live and linked from the homepage. tests/test_site.py fails if a guide record "
+                "is missing from the sitemap, the feed or findability.txt."),
+    dict(id="SG-37", title="Give every product its own image, and label it honestly",
+         what="Five original renderings, one per product, replacing the two files every card shared; "
+              "each product page and card now uses its own image, and each product page carries that "
+              "image as its og:image so a share looks like the product page rather than the homepage.",
+         why="Three images doing the work of thirty-six pages is the loudest tell that a site was "
+             "generated rather than made. No Amazon photography is licensed to this site, so the "
+             "honest fix is original art with a caption that says what it is — not borrowed product "
+             "shots.",
+         impact="High — first impression and shares", effort="Done", status="Shipped",
+         verify="assets/photos/p01..p05.jpg, and the caption on every use. Owner decision still open: "
+                "keep labelled renderings, or drop figures altogether."),
+    dict(id="SG-38", title="Repair the defects the gate could not see, then teach the gate",
+         what="Three unresolved merge-conflict markers had been committed to main inside the "
+              "stylesheet; two published guides showed raw HTML entities to readers; two others "
+              "printed a reading time three times the real one. All three were found by reading the "
+              "output line by line, fixed at the generator, and covered by a new regression test.",
+         why="A build gate catches what its author thought of. The things that make a site look "
+             "machine-made are exactly the things nobody wrote a rule for, so the fix has to be a "
+             "human read plus a new rule, in that order.",
+         impact="High — credibility of every page", effort="Done", status="Shipped",
+         verify="assets/style.css has no markers and balanced braces; tests/test_site.py asserts no "
+                "double-escaped entity and one computed reading time per guide."),
+    dict(id="SG-39", title="Automate the draft, gate the publication",
+         what="scripts/draft_guide.py turns a topic brief into a guide draft and runs the compliance "
+              "lint on it — no prices, no ratings, no figure the register does not mark verified, no "
+              "claim without a source — then writes it to data/drafts/ marked unapproved. Nothing it "
+              "produces can reach the site until a human changes one field.",
+         why="The brief asks for automation and compliance at once. The only honest shape for that is "
+             "a machine that can draft and a gate that it cannot open, so the automation improves the "
+             "queue instead of bypassing the reviewer.",
+         impact="Medium — publishing throughput", effort="Done", status="Shipped",
+         verify="python3 scripts/draft_guide.py --list prints the queue with its statuses; the test "
+                "suite rejects a draft that quotes a price or an unverified number."),
+    dict(id="SG-40", title="Stop publishing the same page twice under two names",
+         what="Choose one masthead decision: is ShopNow Kitchen a brand the owner stands behind, a "
+              "personal byline, or a working title? The issue line currently reads 'VOL. 01 / NOVEMBER "
+              "2026', which implies an archive that does not exist.",
+         why="Authorship and a stable name are the two E-E-A-T signals a small review site can actually "
+             "control, and a volume number is a promise readers check.",
+         impact="Medium — trust and indexing", effort="Owner decision",
+         status="Open — needs the owner", verify="about.html and the masthead in build_site.py; "
+                "the numbering should be generated from a real count once it is true."),
 ]
 
 
@@ -2091,6 +2146,57 @@ def build_suggestions():
     <li>Use the arrows to order the shortlist, then export the ranking. Nothing is built from this
       page without an explicit choice recorded in the worksheet at the bottom.</li>
   </ol>
+</div>
+
+<h2>Choose a path, not a row</h2>
+<p class="muted">Thirty-five rows is a backlog, and a backlog is not a decision. The open items sort
+  into three coherent paths. Each one says what it needs from you, what it must not do, and how you
+  would know it worked. Pick one path, then rank inside it &mdash; the paths are ordered by what
+  unblocks what, not by how interesting they are to build.</p>
+<div class="path-grid">
+  <article class="path">
+    <p class="kicker">Path A &middot; finish the storefront</p>
+    <h3>Make the five products earn, before adding a sixth</h3>
+    <p>Nothing here needs code. It needs an hour of account work: confirm the Associate ID is active,
+      run the one-per-product Special Link test and record where each click landed, choose a domain,
+      and say who the masthead belongs to.</p>
+    <p class="small"><strong>Needs:</strong> Q-01, Q-02, Q-04, Q-05, Q-24 &mdash; all owner-side.</p>
+    <p class="small"><strong>Must not:</strong> publish a price, a rating or a borrowed product photo
+      while waiting; the site publishes <em>no</em> price for a reason (SG-13 governs when that can
+      change).</p>
+    <p class="small"><strong>You will know it worked when:</strong> one tagged click per product
+      appears in the Associates report with the right ASIN. Until then every traffic number on this
+      site measures reading, not earning.</p>
+  </article>
+  <article class="path">
+    <p class="kicker">Path B &middot; grow the traffic</p>
+    <h3>Publish on a clock, then let queries pick the topics</h3>
+    <p>Verify Search Console, submit the sitemap, keep the wave coming at a fixed cadence, and replace
+      this session's topic guesses with the queries people actually arrive on. The machinery is
+      already here: feed, sitemap, findability profile, dated guides, an internal search that sends
+      nothing to a server.</p>
+    <p class="small"><strong>Needs:</strong> SG-10, SG-16, SG-18, SG-29, SG-32; Q-20, Q-26.</p>
+    <p class="small"><strong>Must not:</strong> chase volume. A guide added to fill a slot without a
+      checked source is the thing that made this site look generated in the first place.</p>
+    <p class="small"><strong>You will know it worked when:</strong> the top three search queries in a
+      month each map to a page that exists, and at least one page earns a click from a query nobody
+      wrote a guide for yet.</p>
+  </article>
+  <article class="path">
+    <p class="kicker">Path C &middot; build the machine</p>
+    <h3>Automate research, drafting and measurement &mdash; with the gate welded shut</h3>
+    <p>Deploy the collector so clicks are counted somewhere other than a browser, apply for Creators
+      API access so prices and licensed imagery can be shown legally and product data can be pulled
+      rather than copied, then let the research engine, the campaign advisor and the gated draft
+      pipeline drive the queue. Nothing published without a human flipping its status field.</p>
+    <p class="small"><strong>Needs:</strong> SG-25, SG-26, SG-31, SG-13; Q-19, Q-27. Owner approvals
+      at three separate points.</p>
+    <p class="small"><strong>Must not:</strong> auto-publish, auto-price, or auto-claim. The brief
+      asks for automation and policy compliance at once; the only shape that survives is a drafter
+      that cannot publish.</p>
+    <p class="small"><strong>You will know it worked when:</strong> the campaign ledger has its first
+      dated row with a non-zero figure taken from an authorised report &mdash; not from a model.</p>
+  </article>
 </div>
 
 <h2>Proposals</h2>
@@ -2288,6 +2394,44 @@ QUESTIONS = [
      "The shortlist on compare.html currently asks category, household size, cooking style and counter depth. Those were inferred from the listings we cover, not from reader feedback, because there is no reader feedback yet.",
      "Once Search Console and the collector are live, compare which answers readers actually select against which product pages they open. Replace any question that does not change the shortlist.",
      "Decision-tool quality (SG-35)", "Owner + measured data", "Waiting on analytics"),
+    ("Q-24", "Is 'ShopNow Kitchen' a name you will stand behind, and who signs the pages?",
+     "The masthead, the 'VOL. 01 / NOVEMBER 2026' issue line and the About page all imply a "
+     "publication. Nothing recorded here says the owner adopted the name, and no person is "
+     "accountable for the editorial claims.",
+     "Decide the name and the byline in one sentence, then let about.html and the issue line be "
+     "generated from that decision. If no person will sign it, drop the volume number rather than "
+     "imply an archive.",
+     "Brand, byline and indexing under one identity (SG-40, FLG-046)", "Owner", "Not decided"),
+    ("Q-25", "Are original renderings acceptable on product pages, or must imagery be photographic?",
+     "The site has no licence for Amazon product photography and will not scrape it. Today the five "
+     "products each have an original rendering, captioned as illustrative on every page it appears on.",
+     "Choose one: keep labelled renderings, fall back to the line-drawing SVGs, or wait for "
+     "API-supplied imagery after Creators API acceptance. Any of the three is defensible; borrowing "
+     "someone else's photos is not.",
+     "Product pages, shares and the display-licence question (SG-15, SG-37, FLG-007, FLG-055)",
+     "Owner", "Open since this pass"),
+    ("Q-26", "What publishing cadence will you actually keep?",
+     "Six guides went out in one wave because a wave is cheap. A cadence is a promise, and an "
+     "unkept one looks worse than none: the front page is dated, the feed is dated, and the file "
+     "history shows six sprints of edits on single days.",
+     "Pick a number per week and a name that publishes it, then let the calendar drive the next topic "
+     "from measured queries (Q-20) rather than from this session's guesses.",
+     "Traffic growth and whether SG-16 and SG-18 mean anything", "Owner", "Undecided"),
+    ("Q-27", "Which three products should the next wave be built around?",
+     "Everything on this site descends from five submitted links. Growth needs either more supplied "
+     "links or Creators API access, and this session will not invent a sixth product to fill a slot.",
+     "Send the next links, or approve pulling candidates from the API once the account qualifies; "
+     "until then the research engine's topic list is the only honest input.",
+     "Category expansion, and whether the platform is real or a blueprint (SG-31, Q-19)",
+     "Owner", "No input yet"),
+    ("Q-28", "Should guides carry cook times and recipes once hands-on testing exists?",
+     "Six of the twelve topic ideas in the internal backlog die without a kitchen. The current policy "
+     "refuses to print a minute nobody measured, which is why this wave quotes listings and USDA "
+     "temperatures and no cook times at all.",
+     "Decide whether to buy or borrow units for testing, or to keep the spec-and-decision lane and "
+     "write the recipes from a published authority with its own citation. Do not let a future session "
+     "split the difference silently.",
+     "The whole editorial identity of the site (SG-23, Q-16)", "Owner", "Deferred by policy"),
 ]
 
 
@@ -2418,17 +2562,17 @@ phrase that reads like it was produced by filling in a template."""
         ("A · Air fryer buying", "A no-hype checklist for comparing air fryer capacity", "guides/capacity-checklist.html", "Live", "Feeds compare.html"),
         ("A · Air fryer buying", "How to assess cleanup and counter-space trade-offs", "guides/cleanup-counter-space.html", "Live", "Cross-links air fryer pages"),
         ("A · Air fryer buying", "Air fryer for a small kitchen: three measurements", "guides/small-kitchen-air-fryer.html", "Live", "Captures apartment queries"),
-        ("A · Air fryer buying", "Basket or oven-style: which fits a family of four", "Not written", "Proposed", "Search Console may confirm or kill this title"),
+        ("A · Air fryer buying", "Is a dual-basket air fryer worth it, or are you just buying two baskets?", "guides/dual-basket-worth-it.html", "Live", "Shipped in the November 2026 wave; compares P-01 and P-03 without crowning a winner"),
         ("B · Holiday and seasonal", "Air fryer at Thanksgiving: what actually fits", "guides/air-fryer-thanksgiving.html", "Live", "Seasonal spike, Nov 2026"),
-        ("B · Holiday and seasonal", "Turkey thermometer maths: the USDA minimums", "Not written", "Proposed", "USDA chart is already the source of record (S22)"),
-        ("B · Holiday and seasonal", "Black Friday air fryer shortlist for gifting", "Not written", "Proposed, no prices", "Black Friday is 2026-11-27; must not print prices (SG-13)"),
+        ("B · Holiday and seasonal", "Reheating leftovers is a temperature, not a guess", "guides/reheating-to-165.html", "Live", "Carries the USDA chart (S22) and refuses to publish cook times"),
+        ("B · Holiday and seasonal", "Gifting an appliance in December: the five checks", "guides/appliance-gift-checklist.html", "Live", "Written with no price line at all, which is what SG-13 requires (Black Friday is 2026-11-27)"),
         ("B · Holiday and seasonal", "Wireless or instant-read for a long smoker cook", "guides/instant-vs-wireless.html", "Live", "Holiday brisket and turkey season"),
         ("C · Thermometer education", "How to read accuracy claims: plus-or-minus 0.5 and NIST", "guides/thermometer-accuracy.html", "Live", "Trust content, supports both thermometer pages"),
-        ("C · Thermometer education", "Is NIST certification on a listing a guarantee", "Not written", "Proposed", "Honest answer: it is a seller statement (FLG-035)"),
-        ("C · Thermometer education", "USDA doneness temperatures for the holiday bird", "Not written", "Proposed", "Reuses S22; strong internal-link target"),
+        ("C · Thermometer education", "The 30-second ice-water test USDA publishes", "guides/ice-water-test.html", "Live", "Method quoted from S24, not paraphrased"),
+        ("C · Thermometer education", "What a certification line on a spec sheet promises", "guides/what-a-certification-line-means.html", "Live", "Answers the NIST and NSF question with OSHA\u2019s own definition"),
         ("D · Multi-function appliances", "Questions to ask before buying a multi-function appliance", "guides/multi-function-questions.html", "Live", "Umbrella guide for the oven category"),
-        ("D · Multi-function appliances", "Emeril 26QT: 24 or 25 presets, and why it matters less than fit", "Not written", "Proposed", "Turns FLG-021 into the article"),
-        ("D · Multi-function appliances", "Chefman dual basket versus the 8-quart: the counter-space decision", "Not written", "Proposed", "Compares P-01 and P-03 without crowning a winner"),
+        ("D · Multi-function appliances", "How many presets do you actually need?", "guides/what-presets-tell-you.html", "Live", "Turns the 24-versus-25 contradiction into the article instead of hiding it"),
+        ("A · Air fryer buying", "Which fits a family of four: the four-dish worksheet", "Not written", "Proposed", "The dual-basket and capacity pages cover the math; a family-of-four title waits for Search Console (Q-20)"),
     ])
 
     standards_rows = "".join(f"<tr><td>{esc(a)}</td><td>{esc(b)}</td></tr>" for a, b in [
@@ -2479,7 +2623,7 @@ phrase that reads like it was produced by filling in a template."""
     to end of December; New Year health angle from January.</li>
   <li><strong>Category rails</strong> — Air Fryers and Meat Thermometers as illustrated card rails,
     three cards each, each card naming a trade-off.</li>
-  <li><strong>Latest guides</strong> — four most recent, question-shaped.</li>
+  <li><strong>Latest guides</strong> — three most recent, question-shaped, drawn from the live guide list rather than a hand-picked trio.</li>
   <li><strong>Refusals</strong> — "What we will never print", three bullets. This is the most
     persuasive trust module on the page.</li>
   <li><strong>Footer</strong> — the dashboard group: Decision Center, this brief, Open Questions,

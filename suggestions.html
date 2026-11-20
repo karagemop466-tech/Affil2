@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Decision Center — ShopNow Kitchen</title>
-<meta name="description" content="35 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<meta name="description" content="40 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
 <link rel="canonical" href="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta property="og:site_name" content="ShopNow Kitchen">
 <meta property="og:title" content="Decision Center — ShopNow Kitchen">
-<meta property="og:description" content="35 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
+<meta property="og:description" content="40 proposals for this site, with honest status, ranked before anything is built. Review the shortlist and choose a path.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://karagemop466-tech.github.io/Affil2/suggestions.html">
 <meta name="twitter:card" content="summary_large_image">
@@ -55,9 +55,60 @@
   </ol>
 </div>
 
+<h2>Choose a path, not a row</h2>
+<p class="muted">Thirty-five rows is a backlog, and a backlog is not a decision. The open items sort
+  into three coherent paths. Each one says what it needs from you, what it must not do, and how you
+  would know it worked. Pick one path, then rank inside it &mdash; the paths are ordered by what
+  unblocks what, not by how interesting they are to build.</p>
+<div class="path-grid">
+  <article class="path">
+    <p class="kicker">Path A &middot; finish the storefront</p>
+    <h3>Make the five products earn, before adding a sixth</h3>
+    <p>Nothing here needs code. It needs an hour of account work: confirm the Associate ID is active,
+      run the one-per-product Special Link test and record where each click landed, choose a domain,
+      and say who the masthead belongs to.</p>
+    <p class="small"><strong>Needs:</strong> Q-01, Q-02, Q-04, Q-05, Q-24 &mdash; all owner-side.</p>
+    <p class="small"><strong>Must not:</strong> publish a price, a rating or a borrowed product photo
+      while waiting; the site publishes <em>no</em> price for a reason (SG-13 governs when that can
+      change).</p>
+    <p class="small"><strong>You will know it worked when:</strong> one tagged click per product
+      appears in the Associates report with the right ASIN. Until then every traffic number on this
+      site measures reading, not earning.</p>
+  </article>
+  <article class="path">
+    <p class="kicker">Path B &middot; grow the traffic</p>
+    <h3>Publish on a clock, then let queries pick the topics</h3>
+    <p>Verify Search Console, submit the sitemap, keep the wave coming at a fixed cadence, and replace
+      this session's topic guesses with the queries people actually arrive on. The machinery is
+      already here: feed, sitemap, findability profile, dated guides, an internal search that sends
+      nothing to a server.</p>
+    <p class="small"><strong>Needs:</strong> SG-10, SG-16, SG-18, SG-29, SG-32; Q-20, Q-26.</p>
+    <p class="small"><strong>Must not:</strong> chase volume. A guide added to fill a slot without a
+      checked source is the thing that made this site look generated in the first place.</p>
+    <p class="small"><strong>You will know it worked when:</strong> the top three search queries in a
+      month each map to a page that exists, and at least one page earns a click from a query nobody
+      wrote a guide for yet.</p>
+  </article>
+  <article class="path">
+    <p class="kicker">Path C &middot; build the machine</p>
+    <h3>Automate research, drafting and measurement &mdash; with the gate welded shut</h3>
+    <p>Deploy the collector so clicks are counted somewhere other than a browser, apply for Creators
+      API access so prices and licensed imagery can be shown legally and product data can be pulled
+      rather than copied, then let the research engine, the campaign advisor and the gated draft
+      pipeline drive the queue. Nothing published without a human flipping its status field.</p>
+    <p class="small"><strong>Needs:</strong> SG-25, SG-26, SG-31, SG-13; Q-19, Q-27. Owner approvals
+      at three separate points.</p>
+    <p class="small"><strong>Must not:</strong> auto-publish, auto-price, or auto-claim. The brief
+      asks for automation and policy compliance at once; the only shape that survives is a drafter
+      that cannot publish.</p>
+    <p class="small"><strong>You will know it worked when:</strong> the campaign ledger has its first
+      dated row with a non-zero figure taken from an authorised report &mdash; not from a model.</p>
+  </article>
+</div>
+
 <h2>Proposals</h2>
 <table id="sugTable" class="decision">
-  <caption>35 proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
+  <caption>40 proposals with honest status. "Shipped" means it is live and verifiable now.</caption>
   <thead><tr><th scope="col">ID</th><th scope="col">Proposal</th><th scope="col">Why it matters</th>
     <th scope="col">Impact</th><th scope="col">Cost</th><th scope="col">Status</th>
     <th scope="col">How to check it</th><th scope="col">Your rank</th></tr></thead>
@@ -514,6 +565,71 @@
   <td class="nowrap">
     <button type="button" class="rankbtn" data-up="SG-35" aria-label="Move SG-35 up">&uarr;</button>
     <button type="button" class="rankbtn" data-down="SG-35" aria-label="Move SG-35 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-36">
+  <td class="nowrap"><strong>SG-36</strong></td>
+  <td><strong>Publish a dated wave of guides, not more permanent pages</strong><br><span class="small">Six guides written for the six weeks that follow: whether a dual basket is worth it, what a preset count means, the USDA ice-water test, the 165 degree rule for leftovers, what a certification line promises, and the five checks before gifting an appliance in December. Each one lands in the sitemap, the feed and the findability profile the moment it is built, and the homepage rail now points at the newest wave instead of the oldest.</span></td>
+  <td>A small site cannot out-publish a review empire, but it can out-date it. Timely pages written from checked sources are the only traffic route that does not need an ad budget, and a page dated three times a week reads as a publication rather than a dump.</td>
+  <td>High — organic entry points</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">guides.html lists every guide with its kicker; guides/ice-water-test.html and the other five are live and linked from the homepage. tests/test_site.py fails if a guide record is missing from the sitemap, the feed or findability.txt.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-36" aria-label="Move SG-36 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-36" aria-label="Move SG-36 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-37">
+  <td class="nowrap"><strong>SG-37</strong></td>
+  <td><strong>Give every product its own image, and label it honestly</strong><br><span class="small">Five original renderings, one per product, replacing the two files every card shared; each product page and card now uses its own image, and each product page carries that image as its og:image so a share looks like the product page rather than the homepage.</span></td>
+  <td>Three images doing the work of thirty-six pages is the loudest tell that a site was generated rather than made. No Amazon photography is licensed to this site, so the honest fix is original art with a caption that says what it is — not borrowed product shots.</td>
+  <td>High — first impression and shares</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">assets/photos/p01..p05.jpg, and the caption on every use. Owner decision still open: keep labelled renderings, or drop figures altogether.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-37" aria-label="Move SG-37 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-37" aria-label="Move SG-37 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-38">
+  <td class="nowrap"><strong>SG-38</strong></td>
+  <td><strong>Repair the defects the gate could not see, then teach the gate</strong><br><span class="small">Three unresolved merge-conflict markers had been committed to main inside the stylesheet; two published guides showed raw HTML entities to readers; two others printed a reading time three times the real one. All three were found by reading the output line by line, fixed at the generator, and covered by a new regression test.</span></td>
+  <td>A build gate catches what its author thought of. The things that make a site look machine-made are exactly the things nobody wrote a rule for, so the fix has to be a human read plus a new rule, in that order.</td>
+  <td>High — credibility of every page</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">assets/style.css has no markers and balanced braces; tests/test_site.py asserts no double-escaped entity and one computed reading time per guide.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-38" aria-label="Move SG-38 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-38" aria-label="Move SG-38 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-39">
+  <td class="nowrap"><strong>SG-39</strong></td>
+  <td><strong>Automate the draft, gate the publication</strong><br><span class="small">scripts/draft_guide.py turns a topic brief into a guide draft and runs the compliance lint on it — no prices, no ratings, no figure the register does not mark verified, no claim without a source — then writes it to data/drafts/ marked unapproved. Nothing it produces can reach the site until a human changes one field.</span></td>
+  <td>The brief asks for automation and compliance at once. The only honest shape for that is a machine that can draft and a gate that it cannot open, so the automation improves the queue instead of bypassing the reviewer.</td>
+  <td>Medium — publishing throughput</td>
+  <td>Done</td>
+  <td><span class="pill shipped">Shipped</span></td>
+  <td class="small">python3 scripts/draft_guide.py --list prints the queue with its statuses; the test suite rejects a draft that quotes a price or an unverified number.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-39" aria-label="Move SG-39 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-39" aria-label="Move SG-39 down">&darr;</button>
+    <span class="rank" aria-live="polite"></span>
+  </td>
+</tr><tr data-sug="SG-40">
+  <td class="nowrap"><strong>SG-40</strong></td>
+  <td><strong>Stop publishing the same page twice under two names</strong><br><span class="small">Choose one masthead decision: is ShopNow Kitchen a brand the owner stands behind, a personal byline, or a working title? The issue line currently reads 'VOL. 01 / NOVEMBER 2026', which implies an archive that does not exist.</span></td>
+  <td>Authorship and a stable name are the two E-E-A-T signals a small review site can actually control, and a volume number is a promise readers check.</td>
+  <td>Medium — trust and indexing</td>
+  <td>Owner decision</td>
+  <td><span class="pill open">Open — needs the owner</span></td>
+  <td class="small">about.html and the masthead in build_site.py; the numbering should be generated from a real count once it is true.</td>
+  <td class="nowrap">
+    <button type="button" class="rankbtn" data-up="SG-40" aria-label="Move SG-40 up">&uarr;</button>
+    <button type="button" class="rankbtn" data-down="SG-40" aria-label="Move SG-40 down">&darr;</button>
     <span class="rank" aria-live="polite"></span>
   </td>
 </tr></tbody>

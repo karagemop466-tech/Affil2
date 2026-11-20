@@ -3,133 +3,140 @@
     "id": "S01",
     "name": "Amazon Associates Program Operating Agreement (Section 5: disclosure wording)",
     "url": "https://affiliate-program.amazon.com/help/operating/agreement",
-    "used_for": "Mandatory disclosure statement “As an Amazon Associate I earn from qualifying purchases.” (§5). Checked verbatim on 2026-11-20.",
+    "used_for": "Mandatory disclosure statement \u201cAs an Amazon Associate I earn from qualifying purchases.\u201d (\u00a75). Checked verbatim on 2026-11-20.",
     "checked": "2026-11-20"
   },
   {
     "id": "S02",
     "name": "Amazon Associates Program Policies (Commission Income, Participation Requirements, IP License & Agent Terms)",
     "url": "https://affiliate-program.amazon.com/help/operating/policies",
-    "used_for": "Commission Income Statement §2(d)/(e)/(g) (search-referred, redirecting links, improperly formatted links). Participation Requirements §2(a)/(b) (Special Links; prices/availability only via Amazon-served links or API), §5 (no ML model training without express prior written approval), §6(t)/(v)/(w)/(y) (ratings, no cloaking, clear short links, no price tracking). IP License §1, §2(e)/(h)/(i)/(k) (no LLM/ML training, image/PAC caching & attribution), §4 Agent Terms (Agent/[name] user-agent identification).",
+    "used_for": "Commission Income Statement \u00a72(d)/(e)/(g) (search-referred, redirecting links, improperly formatted links). Participation Requirements \u00a72(a)/(b) (Special Links; prices/availability only via Amazon-served links or API), \u00a75 (no ML model training without express prior written approval), \u00a76(t)/(v)/(w)/(y) (ratings, no cloaking, clear short links, no price tracking). IP License \u00a71, \u00a72(e)/(h)/(i)/(k) (no LLM/ML training, image/PAC caching & attribution), \u00a74 Agent Terms (Agent/[name] user-agent identification).",
     "checked": "2026-11-20"
   },
   {
     "id": "S03",
-    "name": "FTC — Endorsement Guides: What People Are Asking",
+    "name": "FTC \u2014 Endorsement Guides: What People Are Asking",
     "url": "https://www.ftc.gov/business-guidance/resources/ftcs-endorsement-guides-what-people-are-asking",
     "used_for": "Material connections (affiliate/paid links) must be disclosed clearly and conspicuously near the endorsement, not buried on another page.",
     "checked": "2026-11-20"
   },
   {
     "id": "S04",
-    "name": "Google Search Central — Qualify your outbound links",
+    "name": "Google Search Central \u2014 Qualify your outbound links",
     "url": "https://developers.google.com/search/docs/crawling-indexing/qualify-outbound-links",
     "used_for": "Use rel=\"sponsored\" (alone or combined with rel=\"nofollow\") for paid and affiliate links.",
     "checked": "2026-11-20"
   },
   {
     "id": "S10",
-    "name": "Amazon listing B0CDY277D3 (P-01) — checked directly",
+    "name": "Amazon listing B0CDY277D3 (P-01) \u2014 checked directly",
     "url": "https://www.amazon.com/dp/B0CDY277D3",
-    "used_for": "P-01 title, model RJ38-SQPF-3TDB-2W, dimensions, weight (13.3 lb), power (1700 W), temperature (200–450 °F), warranty, capacity conflict (6 qt vs 6 L).",
+    "used_for": "P-01 title, model RJ38-SQPF-3TDB-2W, dimensions, weight (13.3 lb), power (1700 W), temperature (200\u2013450 \u00b0F), warranty, capacity conflict (6 qt vs 6 L).",
     "checked": "2026-11-20"
   },
   {
     "id": "S11",
-    "name": "Amazon listing B09B7SB46R (P-02) — checked directly",
+    "name": "Amazon listing B09B7SB46R (P-02) \u2014 checked directly",
     "url": "https://www.amazon.com/dp/B09B7SB46R",
-    "used_for": "P-02 title, model 4-00675-02X-VN, capacity (26 qt / 24.6 L), dimensions, temperature (75–500 °F), power (1700 W), preset conflict (24 vs 25), accessory conflict (6 vs 7).",
+    "used_for": "P-02 title, model 4-00675-02X-VN, capacity (26 qt / 24.6 L), dimensions, temperature (75\u2013500 \u00b0F), power (1700 W), preset conflict (24 vs 25), accessory conflict (6 vs 7).",
     "checked": "2026-11-20"
   },
   {
     "id": "S12",
-    "name": "Amazon listing B08DKYBTPH (P-03) — checked directly",
+    "name": "Amazon listing B08DKYBTPH (P-03) \u2014 checked directly",
     "url": "https://www.amazon.com/dp/B08DKYBTPH",
-    "used_for": "P-03 title, model RJ38-SQSS-8T / Large Air Fryer, capacity (8 qt), dimensions, weight (12.8 lb), wattage conflict (1700 W specs vs 1000 W bullets), temp conflict (400 °F vs 450 °F Hi-Fry), presets, warranty.",
+    "used_for": "P-03 title, model RJ38-SQSS-8T / Large Air Fryer, capacity (8 qt), dimensions, weight (12.8 lb), wattage conflict (1700 W specs vs 1000 W bullets), temp conflict (400 \u00b0F vs 450 \u00b0F Hi-Fry), presets, warranty.",
     "checked": "2026-11-20"
   },
   {
     "id": "S13",
-    "name": "Amazon listing B0DHZTCNR5 (P-04) — checked directly",
+    "name": "Amazon listing B0DHZTCNR5 (P-04) \u2014 checked directly",
     "url": "https://www.amazon.com/dp/B0DHZTCNR5",
-    "used_for": "P-04 title, model HT07, response time (1 s), accuracy (±0.5 °F, 0.1° resolution), upper temp (572 °F), length/depth (6.5 in), NIST/NSF claim, Wipe Clean care, included components.",
+    "used_for": "P-04 title, model HT07, response time (1 s), accuracy (\u00b10.5 \u00b0F, 0.1\u00b0 resolution), upper temp (572 \u00b0F), length/depth (6.5 in), NIST/NSF claim, Wipe Clean care, included components.",
     "checked": "2026-11-20"
   },
   {
     "id": "S14",
-    "name": "Amazon listing B0DZFD6R9Z (P-05) — checked directly",
+    "name": "Amazon listing B0DZFD6R9Z (P-05) \u2014 checked directly",
     "url": "https://www.amazon.com/dp/B0DZFD6R9Z",
-    "used_for": "P-05 title, model CQ60-3C-Z1-E, probes (3 + hub, 4.75 in), heat (1000 °F), 5 sensors, Wi-Fi/Bluetooth, battery (50 h current vs 70 h prior), warranty conflict (two-year assurance vs 3 Year).",
+    "used_for": "P-05 title, model CQ60-3C-Z1-E, probes (3 + hub, 4.75 in), heat (1000 \u00b0F), 5 sensors, Wi-Fi/Bluetooth, battery (50 h current vs 70 h prior), warranty conflict (two-year assurance vs 3 Year).",
     "checked": "2026-11-20"
   },
   {
     "id": "S15",
-    "name": "Short link link.amazon/B04G1MEwY (P-01) — followed redirect",
+    "name": "Short link link.amazon/B04G1MEwY (P-01) \u2014 followed redirect",
     "url": "https://link.amazon/B04G1MEwY",
     "used_for": "Observed redirect target B0CDY277D3.",
     "checked": "2026-11-20"
   },
   {
     "id": "S16",
-    "name": "Short link link.amazon/B02NbDxp3 (P-02) — followed redirect",
+    "name": "Short link link.amazon/B02NbDxp3 (P-02) \u2014 followed redirect",
     "url": "https://link.amazon/B02NbDxp3",
     "used_for": "Observed redirect target B09B7SB46R.",
     "checked": "2026-11-20"
   },
   {
     "id": "S17",
-    "name": "Short link link.amazon/B00hJ57DV (P-03) — followed redirect",
+    "name": "Short link link.amazon/B00hJ57DV (P-03) \u2014 followed redirect",
     "url": "https://link.amazon/B00hJ57DV",
     "used_for": "Observed redirect target B08DKYBTPH (intermittent checkpoint/500 observed earlier; FLG-011).",
     "checked": "2026-11-20"
   },
   {
     "id": "S18",
-    "name": "Short link link.amazon/B0c8moW59 (P-04) — followed redirect on re-test",
+    "name": "Short link link.amazon/B0c8moW59 (P-04) \u2014 followed redirect on re-test",
     "url": "https://link.amazon/B0c8moW59",
     "used_for": "Earlier pass returned checkpoint/500 4/4 times (FLG-012); follow-up fetch on 2026-11-20 resolved directly to amazon.com/dp/B0DHZTCNR5 (intermittent stability remains flagged under FLG-011).",
     "checked": "2026-11-20"
   },
   {
     "id": "S19",
-    "name": "Short link link.amazon/B0f3GKalj (P-05) — followed redirect",
+    "name": "Short link link.amazon/B0f3GKalj (P-05) \u2014 followed redirect",
     "url": "https://link.amazon/B0f3GKalj",
     "used_for": "Observed redirect target B0DZFD6R9Z (intermittent homepage redirect observed earlier; FLG-011).",
     "checked": "2026-11-20"
   },
   {
     "id": "S20",
-    "name": "Amazon Creators API — Register for Creators API (onboarding requirements)",
+    "name": "Amazon Creators API \u2014 Register for Creators API (onboarding requirements)",
     "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/onboarding/register-for-creators-api",
     "used_for": "Access is limited to Associates whose account has been reviewed and received final acceptance into the program, and who have referred qualified sales. Only the primary account owner can register. Checked verbatim on 2026-11-20.",
     "checked": "2026-11-20"
   },
   {
     "id": "S21",
-    "name": "Amazon Creators API — PA-API 5 deprecation notice",
+    "name": "Amazon Creators API \u2014 PA-API 5 deprecation notice",
     "url": "https://affiliate-program.amazon.com/creatorsapi/docs/en-us/paapiv5-deprecation",
     "used_for": "States that Product Advertising API 5.0 is deprecated and returns HTTP 403 Forbidden (AccessDeniedException); Creators API is the supported successor.",
     "checked": "2026-11-20"
   },
   {
     "id": "S22",
-    "name": "USDA FSIS — Safe Minimum Internal Temperature Chart",
+    "name": "USDA FSIS \u2014 Safe Minimum Internal Temperature Chart",
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/safe-temperature-chart",
-    "used_for": "Official minimum internal cooking temperatures: poultry 165 °F (73.9 °C); ground meats 160 °F (71.1 °C); beef, pork, veal and lamb steaks, chops and roasts 145 °F (62.8 °C) with a 3-minute rest; fish and shellfish 145 °F (62.8 °C); leftovers and casseroles 165 °F (73.9 °C).",
+    "used_for": "Official minimum internal cooking temperatures: poultry 165 \u00b0F (73.9 \u00b0C); ground meats 160 \u00b0F (71.1 \u00b0C); beef, pork, veal and lamb steaks, chops and roasts 145 \u00b0F (62.8 \u00b0C) with a 3-minute rest; fish and shellfish 145 \u00b0F (62.8 \u00b0C); leftovers and casseroles 165 \u00b0F (73.9 \u00b0C).",
     "checked": "2026-11-20"
   },
   {
     "id": "S23",
-    "name": "FTC — Disclosures 101 for Social Media Influencers",
+    "name": "FTC \u2014 Disclosures 101 for Social Media Influencers",
     "url": "https://www.ftc.gov/business-guidance/resources/disclosures-101-social-media-influencers",
     "used_for": "Supports the placement rule this site follows: make sure people will see and understand the disclosure, place it so it is hard to miss, and do not bury it at the end of a page or anywhere that requires a click to reveal. Checked verbatim on 2026-11-20.",
     "checked": "2026-11-20"
   },
   {
     "id": "S24",
-    "name": "USDA FSIS — Food Thermometers (Calibration & Use)",
+    "name": "USDA FSIS \u2014 Food Thermometers (Calibration & Use)",
     "url": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/food-thermometers",
-    "used_for": "Official ice-water calibration test (immerse stem ≥2 inches in ice-water slurry for ≥30 seconds; calibrated thermometer reads 32 °F) and proper stem placement.",
+    "used_for": "Official ice-water calibration test (immerse stem \u22652 inches in ice-water slurry for \u226530 seconds; calibrated thermometer reads 32 \u00b0F) and proper stem placement.",
+    "checked": "2026-11-20"
+  },
+  {
+    "id": "S25",
+    "name": "OSHA \u2014 Nationally Recognized Testing Laboratory (NRTL) Program",
+    "url": "https://www.osha.gov/nationally-recognized-testing-laboratory-program",
+    "used_for": "What an NRTL is and what a registered certification mark signifies, quoted in the certification guide: recognition of private-sector labs, a scope of test standards, and conformance to one or more appropriate product safety test standards. Checked verbatim on 2026-11-20.",
     "checked": "2026-11-20"
   }
 ]
